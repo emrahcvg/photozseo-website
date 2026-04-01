@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { languages, defaultLang, type Lang, useTranslations } from '../../i18n/ui';
+export function getStaticPaths() { return Object.keys(languages).filter((l) => l !== defaultLang).map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+---
+<Layout title={t('support.title')} lang={lang}>
+  <h1>{t('support.title')}</h1>
+  <p>{t('support.intro')}</p>
+  <h2>{t('support.contact.title')}</h2>
+  <p>{t('support.contact.email')} <a href="mailto:support@photozseo.com">support@photozseo.com</a></p>
+  <p>{t('support.contact.response')}</p>
+  <h2>{t('support.faq.title')}</h2>
+  <h3>{t('support.faq.upgrade.q')}</h3><p>{t('support.faq.upgrade.a')}</p>
+  <h3>{t('support.faq.restore.q')}</h3><p>{t('support.faq.restore.a')}</p>
+  <h3>{t('support.faq.cancel.q')}</h3><p>{t('support.faq.cancel.a')}</p>
+  <h3>{t('support.faq.privacy.q')}</h3><p>{t('support.faq.privacy.a')}</p>
+  <h3>{t('support.faq.platforms.q')}</h3><p>{t('support.faq.platforms.a')}</p>
+  <h3>{t('support.faq.bug.q')}</h3><p>{t('support.faq.bug.a')}</p>
+</Layout>
+<style>
+  h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.25rem; color: #1a1a1a; }
+</style>

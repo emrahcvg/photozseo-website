@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultLang, useTranslations } from '../i18n/ui';
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+<Layout title={t('privacy.title')} lang={lang}>
+  <h1>{t('privacy.title')}</h1>
+  <p><strong>{t('privacy.updated')}</strong> {t('privacy.date')}</p>
+  <h2>{t('privacy.overview.title')}</h2><p>{t('privacy.overview.desc')}</p>
+  <h2>{t('privacy.collection.title')}</h2><p>{t('privacy.collection.desc')}</p>
+  <ul><li><strong>{t('privacy.collection.photos')}</strong></li><li><strong>{t('privacy.collection.account')}</strong></li><li><strong>{t('privacy.collection.purchase')}</strong></li></ul>
+  <h2>{t('privacy.thirdparty.title')}</h2><ul><li>{t('privacy.thirdparty.apple')}</li><li>{t('privacy.thirdparty.revenuecat')} <a href="https://www.revenuecat.com/privacy">RevenueCat Privacy Policy</a>.</li></ul>
+  <h2>{t('privacy.storage.title')}</h2><p>{t('privacy.storage.desc')}</p>
+  <h2>{t('privacy.camera.title')}</h2><p>{t('privacy.camera.desc')}</p>
+  <h2>{t('privacy.children.title')}</h2><p>{t('privacy.children.desc')}</p>
+  <h2>{t('privacy.changes.title')}</h2><p>{t('privacy.changes.desc')}</p>
+  <h2>{t('privacy.contact.title')}</h2><p>{t('privacy.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+</Layout>

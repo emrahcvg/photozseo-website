@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultLang, useTranslations } from '../i18n/ui';
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+<Layout title={t('delete.title')} lang={lang}>
+  <h1>{t('delete.title')}</h1>
+  <p>{t('delete.intro')}</p>
+  <h2>{t('delete.app.title')}</h2>
+  <ol><li>{t('delete.app.s1')}</li><li>{t('delete.app.s2')}</li><li>{t('delete.app.s3')}</li><li>{t('delete.app.s4')}</li><li>{t('delete.app.s5')}</li></ol>
+  <p>{t('delete.app.note')}</p>
+  <h2>{t('delete.email.title')}</h2>
+  <p>{t('delete.email.desc')}</p>
+  <p>{t('delete.email.response')}</p>
+  <h2>{t('delete.what.title')}</h2>
+  <ul><li>{t('delete.what.f1')}</li><li>{t('delete.what.f2')}</li><li>{t('delete.what.f3')}</li></ul>
+  <h2>{t('delete.notaffected.title')}</h2>
+  <ul><li>{t('delete.notaffected.f1')}</li><li>{t('delete.notaffected.f2')}</li></ul>
+  <p><strong>{t('delete.warning')}</strong></p>
+</Layout>
+<style>
+  ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  ol li { margin-bottom: 0.5rem; }
+</style>

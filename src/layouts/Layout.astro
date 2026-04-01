@@ -1,0 +1,177 @@
+---
+import { languages, rtlLanguages, defaultLang, type Lang, useTranslations } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  lang?: Lang;
+}
+
+const { title, lang = defaultLang } = Astro.props;
+const t = useTranslations(lang);
+const isRtl = rtlLanguages.includes(lang);
+const prefix = lang === defaultLang ? '' : `/${lang}`;
+---
+
+<!doctype html>
+<html lang={lang} dir={isRtl ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="photoZseo - Product Photo SEO Optimizer for E-commerce Sellers" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | photoZseo</title>
+  </head>
+  <body>
+    <nav>
+      <a href={`${prefix}/`} class="logo">photoZseo</a>
+      <div class="nav-links">
+        <a href={`${prefix}/#pricing`}>{t('nav.pricing')}</a>
+        <a href={`${prefix}/support`}>{t('nav.support')}</a>
+        <a href={`${prefix}/privacy`}>{t('nav.privacy')}</a>
+        <a href={`${prefix}/terms`}>{t('nav.terms')}</a>
+      </div>
+      <div class="lang-picker">
+        <select onchange={`window.location.href=this.value`}>
+          {Object.entries(languages).map(([code, name]) => {
+            const langPrefix = code === defaultLang ? '' : `/${code}`;
+            const currentPath = Astro.url.pathname.replace(/^\/(en|zh|tr|es|de|ja|pt|hi|ur|ar|fa|ko)/, '');
+            return (
+              <option value={`${langPrefix}${currentPath || '/'}`} selected={code === lang}>
+                {name}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    </nav>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <div class="footer-links">
+        <a href={`${prefix}/privacy`}>{t('footer.privacy')}</a>
+        <a href={`${prefix}/terms`}>{t('footer.terms')}</a>
+        <a href={`${prefix}/support`}>{t('footer.support')}</a>
+        <a href={`${prefix}/delete-account`}>{t('footer.delete')}</a>
+      </div>
+      <p>&copy; {new Date().getFullYear()} photoZseo. {t('footer.rights')}</p>
+    </footer>
+    <style is:global>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: #1a1a1a;
+        line-height: 1.6;
+        background: #fafafa;
+      }
+      [dir="rtl"] {
+        font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: #fff;
+        border-bottom: 1px solid #e5e5e5;
+        max-width: 960px;
+        margin: 0 auto;
+        gap: 1rem;
+      }
+      .logo {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+      .nav-links a {
+        color: #666;
+        text-decoration: none;
+        font-size: 0.9rem;
+      }
+      .nav-links a:hover {
+        color: #1a1a1a;
+      }
+      .lang-picker select {
+        padding: 0.3rem 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 0.85rem;
+        color: #444;
+        cursor: pointer;
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      footer {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+        color: #999;
+        font-size: 0.85rem;
+        border-top: 1px solid #e5e5e5;
+      }
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        color: #999;
+        text-decoration: none;
+        font-size: 0.85rem;
+      }
+      .footer-links a:hover {
+        color: #666;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+      }
+      p, li {
+        margin-bottom: 0.75rem;
+        color: #444;
+      }
+      ul {
+        padding-left: 1.5rem;
+      }
+      [dir="rtl"] ul {
+        padding-left: 0;
+        padding-right: 1.5rem;
+      }
+      a {
+        color: #0066cc;
+      }
+      @media (max-width: 600px) {
+        nav {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+        .nav-links {
+          gap: 1rem;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+    </style>
+  </body>
+</html>

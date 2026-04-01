@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { languages, defaultLang, type Lang, useTranslations } from '../../i18n/ui';
+export function getStaticPaths() { return Object.keys(languages).filter((l) => l !== defaultLang).map((lang) => ({ params: { lang } })); }
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+---
+<Layout title={t('terms.title')} lang={lang}>
+  <h1>{t('terms.title')}</h1>
+  <p><strong>{t('terms.updated')}</strong> {t('terms.date')}</p>
+  <h2>{t('terms.acceptance.title')}</h2><p>{t('terms.acceptance.desc')}</p>
+  <h2>{t('terms.description.title')}</h2><p>{t('terms.description.desc')}</p>
+  <h2>{t('terms.subscriptions.title')}</h2>
+  <ul><li>{t('terms.subscriptions.f1')}</li><li>{t('terms.subscriptions.f2')}</li><li>{t('terms.subscriptions.f3')}</li><li>{t('terms.subscriptions.f4')}</li><li>{t('terms.subscriptions.f5')}</li></ul>
+  <h2>{t('terms.trial.title')}</h2><p>{t('terms.trial.desc')}</p>
+  <h2>{t('terms.ip.title')}</h2><p>{t('terms.ip.desc')}</p>
+  <h2>{t('terms.use.title')}</h2><p>{t('terms.use.desc')}</p>
+  <ul><li>{t('terms.use.f1')}</li><li>{t('terms.use.f2')}</li><li>{t('terms.use.f3')}</li></ul>
+  <h2>{t('terms.disclaimer.title')}</h2><p>{t('terms.disclaimer.desc')}</p>
+  <h2>{t('terms.liability.title')}</h2><p>{t('terms.liability.desc')}</p>
+  <h2>{t('terms.changes.title')}</h2><p>{t('terms.changes.desc')}</p>
+  <h2>{t('terms.contact.title')}</h2><p>{t('terms.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+</Layout>
