@@ -17,18 +17,47 @@ const prefix = lang === defaultLang ? '' : `/${lang}`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="photoZseo - Product Photo SEO Optimizer for E-commerce Sellers" />
+    <meta name="description" content="photoZseo — The all-in-one product photo optimizer for e-commerce sellers. Shoot, resize, compress, SEO-rename, remove backgrounds & push to Shopify. No computer needed. 60+ platform presets." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1B7FE3" />
+    <link rel="canonical" href={`https://photozseo.com${Astro.url.pathname}`} />
     <title>{title} | photoZseo</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} | photoZseo`} />
+    <meta property="og:description" content="Product photo optimizer for 60+ e-commerce platforms. Resize, compress, SEO-rename, remove backgrounds — all on your phone." />
+    <meta property="og:url" content={`https://photozseo.com${Astro.url.pathname}`} />
+    <meta property="og:site_name" content="photoZseo" />
+    <meta property="og:locale" content={lang} />
+    <meta property="og:image" content="https://photozseo.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | photoZseo`} />
+    <meta name="twitter:description" content="Product photo optimizer for 60+ e-commerce platforms. No computer needed." />
+    <meta name="twitter:image" content="https://photozseo.com/og-image.png" />
+
+    <!-- SEO extras -->
+    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content="product photo optimizer, e-commerce photo, SEO filename, image resize, background removal, Shopify push, Amazon photo size, Etsy image specs, TikTok Shop photo, Instagram Shopping, product photography app" />
+    <link rel="sitemap" href="/sitemap.xml" />
   </head>
   <body>
     <nav>
-      <a href={`${prefix}/`} class="logo">photoZseo</a>
+      <a href={`${prefix}/`} class="logo">
+        <span class="logo-icon">📷</span> photo<span class="logo-z">Z</span>seo
+      </a>
       <div class="nav-links">
+        <a href={`${prefix}/#features`}>{t('nav.features')}</a>
         <a href={`${prefix}/#pricing`}>{t('nav.pricing')}</a>
         <a href={`${prefix}/support`}>{t('nav.support')}</a>
-        <a href={`${prefix}/privacy`}>{t('nav.privacy')}</a>
-        <a href={`${prefix}/terms`}>{t('nav.terms')}</a>
       </div>
       <div class="lang-picker">
         <select onchange={`window.location.href=this.value`}>
@@ -64,9 +93,9 @@ const prefix = lang === defaultLang ? '' : `/${lang}`;
       }
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: #1a1a1a;
+        color: #1a1a2e;
         line-height: 1.6;
-        background: #fafafa;
+        background: #F2F2F7;
       }
       [dir="rtl"] {
         font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
@@ -76,17 +105,31 @@ const prefix = lang === defaultLang ? '' : `/${lang}`;
         justify-content: space-between;
         align-items: center;
         padding: 1rem 2rem;
-        background: #fff;
-        border-bottom: 1px solid #e5e5e5;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid #E5E7EB;
         max-width: 960px;
         margin: 0 auto;
         gap: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
       .logo {
         font-size: 1.25rem;
         font-weight: 700;
-        color: #1a1a1a;
+        color: #1a1a2e;
         text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .logo-icon {
+        font-size: 1.3rem;
+      }
+      .logo-z {
+        color: #1B7FE3;
       }
       .nav-links {
         display: flex;
