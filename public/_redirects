@@ -1,0 +1,8 @@
+# Legacy /en/ prefix → canonical (prefixDefaultLocale: false)
+/en              /              301
+/en/             /              301
+/en/*            /:splat        301
+
+# Normalize index paths
+/index.html      /              301
+/home            /              301

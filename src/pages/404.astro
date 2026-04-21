@@ -1,0 +1,105 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultLang } from '../i18n/ui';
+---
+
+<Layout title="Page not found" lang={defaultLang}>
+  <section class="nf">
+    <div class="nf-code">404</div>
+    <h1 class="nf-title" data-i18n="title">Page not found</h1>
+    <p class="nf-lead" data-i18n="lead">
+      The link may be broken, or the page may have been moved.
+    </p>
+    <div class="nf-actions">
+      <a href="/" class="nf-btn nf-btn-primary" data-i18n="home">Return home</a>
+      <a href="/support" class="nf-btn" data-i18n="support">Contact support</a>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      const dict = {
+        en: { title: 'Page not found', lead: 'The link may be broken, or the page may have been moved.', home: 'Return home', support: 'Contact support' },
+        tr: { title: 'Sayfa bulunamadı', lead: 'Bağlantı kırılmış veya sayfa taşınmış olabilir.', home: 'Ana sayfaya dön', support: 'Destekle iletişim' },
+        es: { title: 'Página no encontrada', lead: 'El enlace puede estar roto o la página puede haberse movido.', home: 'Volver al inicio', support: 'Contactar soporte' },
+        de: { title: 'Seite nicht gefunden', lead: 'Der Link ist möglicherweise defekt oder die Seite wurde verschoben.', home: 'Zur Startseite', support: 'Support kontaktieren' },
+        pt: { title: 'Página não encontrada', lead: 'O link pode estar quebrado ou a página pode ter sido movida.', home: 'Voltar ao início', support: 'Contatar suporte' },
+        ja: { title: 'ページが見つかりません', lead: 'リンクが壊れているか、ページが移動された可能性があります。', home: 'ホームに戻る', support: 'サポートに問い合わせる' },
+        ko: { title: '페이지를 찾을 수 없습니다', lead: '링크가 끊어졌거나 페이지가 이동되었을 수 있습니다.', home: '홈으로 돌아가기', support: '지원팀 문의' },
+        zh: { title: '页面未找到', lead: '链接可能已失效，或页面已被移动。', home: '返回首页', support: '联系支持' },
+        hi: { title: 'पृष्ठ नहीं मिला', lead: 'लिंक टूटा हो सकता है या पृष्ठ स्थानांतरित किया गया हो सकता है।', home: 'मुखपृष्ठ पर लौटें', support: 'सहायता से संपर्क करें' },
+        ar: { title: 'الصفحة غير موجودة', lead: 'قد يكون الرابط معطلاً أو تم نقل الصفحة.', home: 'العودة إلى الصفحة الرئيسية', support: 'تواصل مع الدعم' },
+        ur: { title: 'صفحہ نہیں ملا', lead: 'ممکن ہے لنک ٹوٹا ہوا ہو یا صفحہ منتقل کر دیا گیا ہو۔', home: 'صفحہ اول پر واپس', support: 'سپورٹ سے رابطہ' },
+        fa: { title: 'صفحه یافت نشد', lead: 'ممکن است پیوند شکسته باشد یا صفحه جابجا شده باشد.', home: 'بازگشت به خانه', support: 'تماس با پشتیبانی' },
+      };
+      const match = location.pathname.match(/^\/([a-z]{2})(\/|$)/);
+      const lang = match && dict[match[1]] ? match[1] : 'en';
+      if (lang === 'en') return;
+      document.documentElement.lang = lang;
+      if (['ar', 'ur', 'fa'].includes(lang)) document.documentElement.dir = 'rtl';
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (key && dict[lang][key]) el.textContent = dict[lang][key];
+      });
+      const supportLink = document.querySelector('.nf-btn:not(.nf-btn-primary)');
+      if (supportLink) supportLink.setAttribute('href', `/${lang}/support`);
+      document.title = `${dict[lang].title} | photoZseo`;
+    })();
+  </script>
+
+  <style>
+    .nf {
+      text-align: center;
+      padding: 4rem 1rem 5rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .nf-code {
+      font-size: 5rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #1B7FE3;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .nf-title {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+      color: #1a1a2e;
+    }
+    .nf-lead {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    .nf-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nf-btn {
+      display: inline-block;
+      padding: 0.75rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.95rem;
+      color: #1a1a2e;
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .nf-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .nf-btn-primary {
+      background: #1B7FE3;
+      color: #fff;
+      border-color: #1B7FE3;
+    }
+    .nf-btn-primary:hover {
+      background: #1666b8;
+    }
+  </style>
+</Layout>
