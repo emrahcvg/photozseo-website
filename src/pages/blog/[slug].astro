@@ -1,0 +1,214 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { defaultLang } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const lang = defaultLang;
+---
+
+<Layout title={post.data.title} lang={lang}>
+  <article class="post">
+    <a href="/blog" class="post-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>All posts</span>
+    </a>
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+        <span>· {post.data.readingMinutes} min read</span>
+      </div>
+      <h1>{post.data.title}</h1>
+      <p class="post-lead">{post.data.description}</p>
+      <div class="post-tags">
+        {post.data.tags.map((tag) => <span class="post-tag">{tag}</span>)}
+      </div>
+    </header>
+
+    <div class="post-body">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      <h3>Ready to ship product photos that actually convert?</h3>
+      <a href="#" class="post-cta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Get photoZseo on the App Store
+      </a>
+    </footer>
+  </article>
+
+  <style>
+    .post {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #86868b;
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    .post-back:hover { color: #0071e3; }
+    .post-header {
+      padding: 1rem 0 2rem;
+      border-bottom: 1px solid #e5e5ea;
+      margin-bottom: 2rem;
+    }
+    .post-meta {
+      display: flex;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: #86868b;
+      margin-bottom: 0.85rem;
+    }
+    .post-header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1d1d1f;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.85rem;
+    }
+    .post-lead {
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .post-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      background: #f5f5f7;
+      color: #86868b;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    .post-body {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #2a2a35;
+    }
+    .post-body :global(h2) {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin: 2.25rem 0 0.85rem;
+      letter-spacing: -0.01em;
+    }
+    .post-body :global(h3) {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin: 1.75rem 0 0.6rem;
+    }
+    .post-body :global(p) {
+      margin-bottom: 1rem;
+      color: #444;
+    }
+    .post-body :global(ul),
+    .post-body :global(ol) {
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .post-body :global(li) {
+      margin-bottom: 0.35rem;
+      color: #444;
+    }
+    .post-body :global(code) {
+      font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+      font-size: 0.9em;
+      background: #f5f5f7;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      color: #0071e3;
+    }
+    .post-body :global(blockquote) {
+      border-left: 3px solid #0071e3;
+      padding: 0.3rem 0 0.3rem 1rem;
+      margin: 1rem 0;
+      color: #555;
+      font-style: italic;
+      background: #f5f9ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .post-body :global(table) {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .post-body :global(th),
+    .post-body :global(td) {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e5ea;
+    }
+    .post-body :global(th) {
+      background: #f5f5f7;
+      color: #86868b;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .post-body :global(a) {
+      color: #0071e3;
+      text-decoration: underline;
+      text-decoration-color: rgba(0,113,227,0.3);
+      text-underline-offset: 2px;
+    }
+
+    .post-footer {
+      margin-top: 3rem;
+      padding: 2.5rem 2rem;
+      background: #1d1d1f;
+      color: #fff;
+      border-radius: 20px;
+      text-align: center;
+    }
+    .post-footer h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 0 0 1.25rem;
+    }
+    .post-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #fff;
+      color: #1d1d1f;
+      padding: 0.85rem 1.5rem;
+      border-radius: 980px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.2s;
+    }
+    .post-cta:hover { transform: scale(1.04); }
+  </style>
+</Layout>

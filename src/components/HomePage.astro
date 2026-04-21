@@ -8,6 +8,100 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+type SpecRow = { name: string; size: string; format: string; notes: string };
+const specPlatforms: Record<string, SpecRow[]> = {
+  'specs.cat.global': [
+    { name: 'Amazon — Main', size: '2000×2000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Amazon — Secondary', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.max10' },
+    { name: 'Etsy', size: '2000×2000', format: 'JPEG · PNG', notes: 'specs.notes.max20' },
+    { name: 'Shopify', size: '2048×2048', format: 'JPEG · PNG · WebP', notes: 'specs.notes.max20' },
+    { name: 'eBay', size: '1600×1600', format: 'JPEG', notes: 'specs.notes.max12' },
+    { name: 'Walmart', size: '2200×2200', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.turkey': [
+    { name: 'Trendyol', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Hepsiburada', size: '800×800', format: 'JPEG', notes: 'specs.notes.min800' },
+    { name: 'n11', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Amazon Türkiye', size: '2000×2000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Çiçeksepeti', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'LC Waikiki Marketplace', size: '1200×1800 (2:3)', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'PttAVM', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Pazarama', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.europe': [
+    { name: 'Allegro (PL)', size: '1600×1600', format: 'JPEG', notes: 'specs.notes.min500' },
+    { name: 'bol.com (NL)', size: '1800×1800', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Cdiscount (FR)', size: '1500×1500', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Kaufland (DE)', size: '1200×1200', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Zalando', size: '762×1100 (portrait)', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'eMAG (RO)', size: '1200×1200', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Otto (DE)', size: '1400×1400', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Fruugo', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.americas': [
+    { name: 'Mercado Libre', size: '1200×1200', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.mea': [
+    { name: 'noon', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Jumia', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.asia': [
+    { name: 'AliExpress', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Shopee', size: '1024×1024', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Lazada', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Coupang (KR)', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'Flipkart (IN)', size: '2000×2000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.social': [
+    { name: 'Instagram — Feed', size: '1080×1080', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Instagram — Portrait', size: '1080×1350 (4:5)', format: 'JPEG', notes: 'specs.notes.portrait' },
+    { name: 'Instagram — Story/Reel', size: '1080×1920 (9:16)', format: 'JPEG', notes: 'specs.notes.story' },
+    { name: 'TikTok Shop', size: '1340×1340', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Facebook Shops', size: '1024×1024', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Pinterest Shopping', size: '1000×1500 (2:3)', format: 'JPEG · PNG', notes: 'specs.notes.vertical' },
+    { name: 'YouTube Shopping', size: '1280×720 (16:9)', format: 'JPEG · PNG', notes: 'specs.notes.landscape' },
+    { name: 'WhatsApp Catalog', size: '1024×1024', format: 'JPEG', notes: 'specs.notes.max5' },
+  ],
+  'specs.cat.socialAsia': [
+    { name: 'WeChat Shops', size: '800×800', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Xiaohongshu (RED)', size: '1242×1660 (3:4)', format: 'JPEG', notes: 'specs.notes.portrait34' },
+    { name: 'Douyin Shop', size: '1200×1200', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Pinduoduo', size: '750×750', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'LINE Shopping', size: '1040×1040', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Kakao Commerce', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Meesho (IN)', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+  ],
+  'specs.cat.c2c': [
+    { name: 'Vinted', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Depop', size: '1280×1280', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Wallapop', size: '1200×1200', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Leboncoin (FR)', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Kleinanzeigen (DE)', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Dolap (TR)', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Haraj (SA)', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Dubizzle (UAE)', size: '1200×1200', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'OpenSooq', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+    { name: 'Jiji', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.square' },
+  ],
+  'specs.cat.b2b': [
+    { name: 'Alibaba B2B', size: '1000×1000', format: 'JPEG', notes: 'specs.notes.whitebg' },
+    { name: 'WooCommerce', size: '800×800', format: 'JPEG · WebP', notes: 'specs.notes.flexible' },
+  ],
+};
+const specOrder = [
+  'specs.cat.global',
+  'specs.cat.turkey',
+  'specs.cat.europe',
+  'specs.cat.americas',
+  'specs.cat.mea',
+  'specs.cat.asia',
+  'specs.cat.social',
+  'specs.cat.socialAsia',
+  'specs.cat.c2c',
+  'specs.cat.b2b',
+];
+const specTotal = Object.values(specPlatforms).reduce((n, arr) => n + arr.length, 0);
 ---
 
 <!-- JSON-LD: SoftwareApplication -->
@@ -40,9 +134,13 @@ const t = useTranslations(lang);
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "What are the Amazon product photo size requirements?", "acceptedAnswer": { "@type": "Answer", "text": "Amazon requires product images between 1000x1000 and 2000x2000 pixels. photoZseo auto-configures these specs with one tap." }},
-    { "@type": "Question", "name": "What is the best universal product photo size?", "acceptedAnswer": { "@type": "Answer", "text": "1200x1200 pixels, square (1:1), white background meets requirements for virtually every platform." }},
-    { "@type": "Question", "name": "How many platforms does photoZseo support?", "acceptedAnswer": { "@type": "Answer", "text": "photoZseo supports 60+ platforms including Amazon, Walmart, Etsy, Shopify, eBay, TikTok Shop, Instagram Shopping, Trendyol, Hepsiburada, Poshmark, and more." }}
+    { "@type": "Question", "name": t('faq.q1'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a1') }},
+    { "@type": "Question", "name": t('faq.q2'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a2') }},
+    { "@type": "Question", "name": t('faq.q3'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a3') }},
+    { "@type": "Question", "name": t('faq.q4'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a4') }},
+    { "@type": "Question", "name": t('faq.q5'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a5') }},
+    { "@type": "Question", "name": t('faq.q6'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a6') }},
+    { "@type": "Question", "name": t('faq.q7'), "acceptedAnswer": { "@type": "Answer", "text": t('faq.a7') }}
   ]
 })} />
 
@@ -95,13 +193,118 @@ const t = useTranslations(lang);
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
         App Store
       </a>
-      <a href="#" class="hero-btn hero-btn-android">
+      <span class="hero-btn-soon" aria-disabled="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13.83V10.17C3 9.52 3.53 9 4.17 9s1.17.52 1.17 1.17v3.66c0 .65-.52 1.17-1.17 1.17S3 14.48 3 13.83m4.17 2V8.17c0-.65.52-1.17 1.17-1.17h7.33c.65 0 1.17.52 1.17 1.17v7.66c0 .65-.52 1.17-1.17 1.17h-.33v2.83c0 .65-.52 1.17-1.17 1.17s-1.17-.52-1.17-1.17V17h-1.67v2.83c0 .65-.52 1.17-1.17 1.17-.64 0-1.16-.52-1.16-1.17V17h-.34c-.65 0-1.17-.52-1.17-1.17h.01zm.83-9L6.63 4.15a.24.24 0 01.08-.32.24.24 0 01.32.08l1.4 2.72c1.07-.48 2.27-.75 3.57-.75s2.5.27 3.57.75l1.4-2.72a.24.24 0 01.32-.08c.11.06.15.21.08.32L16 6.83c2.39 1.25 3.96 3.52 4 6.17H4c.04-2.65 1.61-4.92 4-6.17M10 9.17a.67.67 0 100-1.34.67.67 0 000 1.34m4 0a.67.67 0 100-1.34.67.67 0 000 1.34M18.67 9c-.65 0-1.17.52-1.17 1.17v3.66c0 .65.52 1.17 1.17 1.17.64 0 1.16-.52 1.16-1.17V10.17c0-.65-.52-1.17-1.16-1.17"/></svg>
-        Google Play
-      </a>
+        <span>Google Play</span>
+        <span class="hero-btn-badge">{t('home.soon')}</span>
+      </span>
     </div>
     <p class="hero-footnote">{t('home.footnote')}</p>
   </section>
+
+  <!-- ===== 1.5. STATS STRIP ===== -->
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-num">60<span class="stat-plus">+</span></div>
+      <div class="stat-label">{t('stats.platforms')}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">12</div>
+      <div class="stat-label">{t('stats.languages')}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">100<span class="stat-plus">%</span></div>
+      <div class="stat-label">{t('stats.ondevice')}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num"><span class="stat-plus">&lt;</span>3<span class="stat-plus">s</span></div>
+      <div class="stat-label">{t('stats.speed')}</div>
+    </div>
+  </section>
+
+  <!-- ===== 1.7. BEFORE / AFTER SLIDER ===== -->
+  <section class="ba" id="before-after">
+    <h2 class="section-title">{t('ba.title')}</h2>
+    <p class="section-sub">{t('ba.sub')}</p>
+
+    <div class="ba-stage" id="ba-stage">
+      <!-- After layer (full, under) -->
+      <div class="ba-layer ba-after" aria-hidden="true">
+        <div class="ba-inner ba-inner-after">
+          <div class="ba-product ba-product-after"></div>
+          <div class="ba-tag ba-tag-after">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>photoZseo</span>
+          </div>
+          <div class="ba-label ba-label-after">2000×2000 · 180 KB · .webp</div>
+        </div>
+      </div>
+      <!-- Before layer (clipped, on top) -->
+      <div class="ba-layer ba-before" id="ba-before">
+        <div class="ba-inner ba-inner-before">
+          <div class="ba-product ba-product-before"></div>
+          <div class="ba-tag ba-tag-before">IMG_4829.jpg</div>
+          <div class="ba-label ba-label-before">4032×3024 · 5.2 MB · tilted</div>
+        </div>
+      </div>
+      <!-- Handle -->
+      <button class="ba-handle" id="ba-handle" type="button" aria-label={t('ba.drag')}>
+        <span class="ba-handle-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </button>
+      <!-- Corner badges -->
+      <span class="ba-corner ba-corner-before">{t('ba.before')}</span>
+      <span class="ba-corner ba-corner-after">{t('ba.after')}</span>
+    </div>
+    <p class="ba-hint">{t('ba.hint')}</p>
+  </section>
+
+  <script>
+    // Simple before/after slider — drag & tap
+    (() => {
+      const stage = document.getElementById('ba-stage');
+      const before = document.getElementById('ba-before');
+      const handle = document.getElementById('ba-handle');
+      if (!stage || !before || !handle) return;
+      let pct = 52;
+
+      const apply = (p: number) => {
+        pct = Math.max(4, Math.min(96, p));
+        before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+        handle.style.left = `${pct}%`;
+      };
+
+      const setFromX = (clientX: number) => {
+        const rect = stage.getBoundingClientRect();
+        const x = clientX - rect.left;
+        apply((x / rect.width) * 100);
+      };
+
+      let dragging = false;
+      const onDown = (e: PointerEvent) => {
+        dragging = true;
+        stage.setPointerCapture?.(e.pointerId);
+        setFromX(e.clientX);
+      };
+      const onMove = (e: PointerEvent) => {
+        if (!dragging) return;
+        setFromX(e.clientX);
+      };
+      const onUp = (e: PointerEvent) => {
+        dragging = false;
+        stage.releasePointerCapture?.(e.pointerId);
+      };
+
+      stage.addEventListener('pointerdown', onDown);
+      stage.addEventListener('pointermove', onMove);
+      stage.addEventListener('pointerup', onUp);
+      stage.addEventListener('pointercancel', onUp);
+
+      apply(52);
+    })();
+  </script>
 
   <!-- ===== 2. PLATFORM BAND ===== -->
   <section class="platforms-band">
@@ -262,6 +465,61 @@ const t = useTranslations(lang);
     </div>
   </section>
 
+  <!-- ===== 4.2. PLATFORM SPEC TABLE ===== -->
+  <section class="specs" id="specs">
+    <h2 class="section-title">{t('specs.title')}</h2>
+    <p class="section-sub">{t('specs.sub')}</p>
+    <div class="specs-count">
+      <strong>{specTotal}</strong> {t('specs.countLabel')}
+    </div>
+
+    <div class="specs-wrap">
+      {specOrder.map((catKey, catIdx) => (
+        <details class="specs-cat" open={catIdx < 2}>
+          <summary>
+            <span class="specs-cat-name">{t(catKey as any)}</span>
+            <span class="specs-cat-count">{specPlatforms[catKey].length}</span>
+            <svg class="specs-cat-caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </summary>
+
+          <div class="specs-header">
+            <span>{t('specs.col.platform')}</span>
+            <span>{t('specs.col.size')}</span>
+            <span>{t('specs.col.format')}</span>
+            <span>{t('specs.col.notes')}</span>
+          </div>
+          {specPlatforms[catKey].map((row) => (
+            <div class="specs-row">
+              <span class="specs-platform">{row.name}</span>
+              <span class="specs-size">{row.size}</span>
+              <span class="specs-format">{row.format}</span>
+              <span class="specs-notes">{t(row.notes as any)}</span>
+            </div>
+          ))}
+        </details>
+      ))}
+    </div>
+    <p class="specs-footnote">{t('specs.footnote')}</p>
+  </section>
+
+  <!-- ===== 4.5. FAQ ===== -->
+  <section class="faq" id="faq">
+    <h2 class="section-title">{t('faq.title')}</h2>
+    <p class="section-sub">{t('faq.sub')}</p>
+
+    <div class="faq-list">
+      {[1,2,3,4,5,6,7].map((i) => (
+        <details class="faq-item">
+          <summary>
+            <span class="faq-q">{t(`faq.q${i}` as any)}</span>
+            <svg class="faq-caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <p class="faq-a">{t(`faq.a${i}` as any)}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
   <!-- ===== 5. PRICING ===== -->
   <section class="pricing" id="pricing">
     <h2 class="section-title">{t('pricing.title')}</h2>
@@ -327,10 +585,11 @@ const t = useTranslations(lang);
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
         App Store
       </a>
-      <a href="#" class="hero-btn hero-btn-android">
+      <span class="hero-btn-soon" aria-disabled="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13.83V10.17C3 9.52 3.53 9 4.17 9s1.17.52 1.17 1.17v3.66c0 .65-.52 1.17-1.17 1.17S3 14.48 3 13.83m4.17 2V8.17c0-.65.52-1.17 1.17-1.17h7.33c.65 0 1.17.52 1.17 1.17v7.66c0 .65-.52 1.17-1.17 1.17h-.33v2.83c0 .65-.52 1.17-1.17 1.17s-1.17-.52-1.17-1.17V17h-1.67v2.83c0 .65-.52 1.17-1.17 1.17-.64 0-1.16-.52-1.16-1.17V17h-.34c-.65 0-1.17-.52-1.17-1.17h.01zm.83-9L6.63 4.15a.24.24 0 01.08-.32.24.24 0 01.32.08l1.4 2.72c1.07-.48 2.27-.75 3.57-.75s2.5.27 3.57.75l1.4-2.72a.24.24 0 01.32-.08c.11.06.15.21.08.32L16 6.83c2.39 1.25 3.96 3.52 4 6.17H4c.04-2.65 1.61-4.92 4-6.17M10 9.17a.67.67 0 100-1.34.67.67 0 000 1.34m4 0a.67.67 0 100-1.34.67.67 0 000 1.34M18.67 9c-.65 0-1.17.52-1.17 1.17v3.66c0 .65.52 1.17 1.17 1.17.64 0 1.16-.52 1.16-1.17V10.17c0-.65-.52-1.17-1.16-1.17"/></svg>
-        Google Play
-      </a>
+        <span>Google Play</span>
+        <span class="hero-btn-badge">{t('home.soon')}</span>
+      </span>
     </div>
   </section>
 
@@ -469,7 +728,287 @@ const t = useTranslations(lang);
   .hero-btn:hover { transform: scale(1.04); opacity: 0.92; }
   .hero-btn-ios { background: #1d1d1f; color: #fff; }
   .hero-btn-android { background: #fff; color: #1d1d1f; border: 1px solid #d2d2d7; }
+  .hero-btn-soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.25rem 0.85rem 1.5rem;
+    border-radius: 980px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: #f5f5f7;
+    color: #86868b;
+    border: 1px solid #e5e5ea;
+    cursor: not-allowed;
+    user-select: none;
+  }
+  .hero-btn-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #FF9500;
+    color: #fff;
+    padding: 0.15rem 0.45rem;
+    border-radius: 6px;
+  }
+  .final-cta .hero-btn-soon {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.55);
+    border-color: rgba(255,255,255,0.15);
+  }
   .hero-footnote { font-size: 0.8rem; color: #86868b; margin-bottom: 0; }
+
+  /* ===== 1.5. STATS STRIP ===== */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    padding: 2rem 0 1rem;
+  }
+  .stat-card {
+    text-align: center;
+    padding: 1.25rem 0.5rem;
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 16px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    border-color: #0071e3;
+  }
+  .stat-num {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(135deg, #0071e3, #34C759);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-plus {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  .stat-label {
+    font-size: 0.78rem;
+    color: #86868b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== 1.7. BEFORE / AFTER SLIDER ===== */
+  .ba {
+    padding: 3rem 0 2rem;
+  }
+  .ba-stage {
+    position: relative;
+    max-width: 720px;
+    margin: 0 auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 20px;
+    overflow: hidden;
+    user-select: none;
+    touch-action: none;
+    cursor: ew-resize;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.08);
+    border: 1px solid #e5e5ea;
+    background: #1d1d1f;
+  }
+  .ba-layer {
+    position: absolute;
+    inset: 0;
+  }
+  .ba-before {
+    clip-path: inset(0 48% 0 0);
+    will-change: clip-path;
+    z-index: 2;
+  }
+  .ba-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ba-inner-after {
+    background:
+      radial-gradient(circle at 50% 40%, #f8f8fa 0%, #eaeaee 100%);
+  }
+  .ba-inner-before {
+    background:
+      linear-gradient(135deg, #2a2520 0%, #4a3f32 100%);
+    filter: saturate(0.7) brightness(0.85);
+  }
+  /* Stylized product silhouette — a fragrance / bottle shape using pure CSS */
+  .ba-product {
+    position: relative;
+    width: 38%;
+    height: 64%;
+    border-radius: 40px 40px 24px 24px;
+    transition: none;
+  }
+  .ba-product::before,
+  .ba-product::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  /* Cap */
+  .ba-product::before {
+    top: -14%;
+    width: 36%;
+    height: 18%;
+    border-radius: 10px 10px 4px 4px;
+  }
+  /* Label */
+  .ba-product::after {
+    top: 55%;
+    width: 82%;
+    height: 22%;
+    border-radius: 6px;
+  }
+
+  .ba-product-after {
+    background: linear-gradient(145deg, #0071e3 0%, #1B7FE3 50%, #34C759 100%);
+    box-shadow:
+      inset -10px 0 18px rgba(0,0,0,0.15),
+      inset 10px 0 18px rgba(255,255,255,0.2),
+      0 18px 30px -8px rgba(0,113,227,0.35);
+  }
+  .ba-product-after::before {
+    background: #1a1a2e;
+    box-shadow: inset -4px 0 6px rgba(0,0,0,0.4);
+  }
+  .ba-product-after::after {
+    background: rgba(255,255,255,0.9);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .ba-product-before {
+    background: linear-gradient(145deg, #4a5c7a 0%, #3a4a60 50%, #2e6b42 100%);
+    transform: rotate(-6deg) scale(0.82) translateY(6%);
+    filter: blur(0.6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+    opacity: 0.9;
+  }
+  .ba-product-before::before {
+    background: #111;
+  }
+  .ba-product-before::after {
+    background: rgba(200,200,200,0.4);
+  }
+
+  .ba-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .ba-tag-after {
+    background: rgba(52,199,89,0.15);
+    color: #1d1d1f;
+    border: 1px solid rgba(52,199,89,0.4);
+  }
+  .ba-tag-before {
+    background: rgba(0,0,0,0.55);
+    color: #e5e5ea;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .ba-label {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+  }
+  .ba-label-after {
+    background: rgba(255,255,255,0.85);
+    color: #1d1d1f;
+    backdrop-filter: blur(8px);
+  }
+  .ba-label-before {
+    background: rgba(0,0,0,0.55);
+    color: #f5f5f7;
+  }
+
+  .ba-corner {
+    position: absolute;
+    top: 14px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ba-corner-before {
+    right: 52%;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+  }
+  .ba-corner-after {
+    right: 14px;
+    background: #0071e3;
+    color: #fff;
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 0;
+    left: 52%;
+    width: 3px;
+    height: 100%;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 0 18px rgba(0,0,0,0.35);
+    transform: translateX(-50%);
+    border: 0;
+    padding: 0;
+    cursor: ew-resize;
+    z-index: 4;
+    will-change: left;
+  }
+  .ba-handle-pill {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: #fff;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+  .ba-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #86868b;
+    margin-top: 1rem;
+  }
 
   /* ===== 2. PLATFORM BAND ===== */
   .platforms-band {
@@ -639,6 +1178,182 @@ const t = useTranslations(lang);
     border-radius: 12px;
     font-size: 0.85rem;
     color: #1d1d1f;
+  }
+
+  /* ===== 4.2. SPEC TABLE ===== */
+  .specs {
+    padding: 4rem 0 2rem;
+  }
+  .specs-count {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #86868b;
+    margin-bottom: 1.75rem;
+  }
+  .specs-count strong {
+    font-size: 1.1rem;
+    color: #0071e3;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .specs-wrap {
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .specs-cat {
+    border-top: 1px solid #e5e5ea;
+  }
+  .specs-cat:first-of-type {
+    border-top: 0;
+  }
+  .specs-cat summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    font-size: 0.95rem;
+    background: #fafafc;
+    user-select: none;
+  }
+  .specs-cat summary::-webkit-details-marker { display: none; }
+  .specs-cat[open] summary {
+    background: #f0f5ff;
+    border-bottom: 1px solid #dbeafe;
+  }
+  .specs-cat-name {
+    flex: 1;
+  }
+  .specs-cat-count {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: #fff;
+    color: #0071e3;
+    border: 1px solid #d2e0f7;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+  }
+  .specs-cat-caret {
+    color: #86868b;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+  .specs-cat[open] .specs-cat-caret {
+    transform: rotate(180deg);
+    color: #0071e3;
+  }
+  .specs-header,
+  .specs-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.4fr 1.2fr 1.3fr;
+    align-items: center;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.85rem;
+    gap: 0.75rem;
+  }
+  .specs-header {
+    background: #f5f5f7;
+    font-weight: 600;
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.7rem;
+    border-bottom: 1px solid #e5e5ea;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+  .specs-row {
+    border-top: 1px solid #f5f5f7;
+    transition: background 0.15s;
+  }
+  .specs-row:hover {
+    background: #fafafc;
+  }
+  .specs-platform {
+    font-weight: 600;
+    color: #1d1d1f;
+  }
+  .specs-size {
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+    font-size: 0.82rem;
+    color: #0071e3;
+    font-weight: 500;
+  }
+  .specs-format {
+    color: #555;
+    font-size: 0.82rem;
+  }
+  .specs-notes {
+    color: #86868b;
+    font-size: 0.82rem;
+  }
+  .specs-footnote {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #86868b;
+    margin-top: 1rem;
+  }
+
+  /* ===== 4.5. FAQ ===== */
+  .faq {
+    padding: 4rem 0 2rem;
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item[open] {
+    border-color: #0071e3;
+  }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.1rem 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    user-select: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-q {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    line-height: 1.4;
+  }
+  .faq-caret {
+    color: #86868b;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+  .faq-item[open] .faq-caret {
+    transform: rotate(180deg);
+    color: #0071e3;
+  }
+  .faq-a {
+    padding: 0 1.3rem 1.2rem;
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
   }
 
   /* ===== 5. PRICING ===== */
@@ -826,6 +1541,13 @@ const t = useTranslations(lang);
       0%, 100% { opacity: 0.4; transform: rotate(90deg) translateX(0); }
       50% { opacity: 1; transform: rotate(90deg) translateX(4px); }
     }
+    .stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+    .stat-num {
+      font-size: 1.8rem;
+    }
     .steps {
       flex-direction: column;
       align-items: center;
@@ -849,6 +1571,23 @@ const t = useTranslations(lang);
     }
     .pricing-layout {
       grid-template-columns: 1fr;
+    }
+    .specs-header {
+      display: none;
+    }
+    .specs-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+      padding: 1rem 1.1rem;
+    }
+    .specs-platform {
+      font-size: 1rem;
+      margin-bottom: 0.15rem;
+    }
+    .specs-size,
+    .specs-format,
+    .specs-notes {
+      font-size: 0.78rem;
     }
     .section-title {
       font-size: 1.8rem;

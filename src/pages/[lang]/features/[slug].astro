@@ -1,0 +1,28 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import FeaturePage from '../../../components/FeaturePage.astro';
+import { languages, defaultLang, type Lang, useTranslations } from '../../../i18n/ui';
+
+type Slug = 'seo-filenames' | 'background-removal' | 'platform-presets';
+
+export function getStaticPaths() {
+  const slugs = ['seo-filenames', 'background-removal', 'platform-presets'];
+  const langs = Object.keys(languages).filter((l) => l !== defaultLang);
+  const paths: { params: { lang: string; slug: string } }[] = [];
+  for (const lang of langs) {
+    for (const slug of slugs) {
+      paths.push({ params: { lang, slug } });
+    }
+  }
+  return paths;
+}
+
+const { lang, slug } = Astro.params;
+const langKey = lang as Lang;
+const t = useTranslations(langKey);
+const title = t(`feature.${slug}.title` as any);
+---
+
+<Layout title={title} lang={langKey}>
+  <FeaturePage slug={slug as Slug} lang={langKey} />
+</Layout>

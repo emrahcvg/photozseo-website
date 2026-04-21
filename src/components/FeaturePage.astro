@@ -1,0 +1,287 @@
+---
+import type { Lang } from '../i18n/ui';
+import { useTranslations, defaultLang } from '../i18n/ui';
+
+interface Props {
+  slug: 'seo-filenames' | 'background-removal' | 'platform-presets';
+  lang: Lang;
+}
+
+const { slug, lang } = Astro.props;
+const t = useTranslations(lang);
+const prefix = lang === defaultLang ? '' : `/${lang}`;
+
+const key = (suffix: string) => `feature.${slug}.${suffix}` as any;
+---
+
+<section class="feat-hero">
+  <a class="feat-back" href={`${prefix}/`}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    <span>{t('feature.back')}</span>
+  </a>
+  <span class="feat-tag">{t('feature.tag')}</span>
+  <h1 class="feat-title">{t(key('title'))}</h1>
+  <p class="feat-lead">{t(key('lead'))}</p>
+</section>
+
+<section class="feat-benefits">
+  {[1, 2, 3].map((i) => (
+    <div class="feat-benefit">
+      <div class="feat-benefit-num">0{i}</div>
+      <h3>{t(key(`b${i}.title`))}</h3>
+      <p>{t(key(`b${i}.desc`))}</p>
+    </div>
+  ))}
+</section>
+
+<section class="feat-how">
+  <h2 class="section-title">{t('feature.how')}</h2>
+  <ol class="feat-steps">
+    {[1, 2, 3].map((i) => (
+      <li>
+        <span class="feat-step-n">{i}</span>
+        <div>
+          <h4>{t(key(`s${i}.title`))}</h4>
+          <p>{t(key(`s${i}.desc`))}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section class="feat-related">
+  <h2 class="section-title">{t('feature.related')}</h2>
+  <div class="feat-related-grid">
+    {(['seo-filenames', 'background-removal', 'platform-presets'] as const)
+      .filter((s) => s !== slug)
+      .map((s) => (
+        <a class="feat-related-card" href={`${prefix}/features/${s}`}>
+          <h4>{t(`feature.${s}.title` as any)}</h4>
+          <span class="feat-related-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </a>
+      ))}
+  </div>
+</section>
+
+<section class="feat-cta">
+  <h2>{t('cta.title')}</h2>
+  <p>{t('cta.desc')}</p>
+  <a href="#" class="feat-cta-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+    App Store
+  </a>
+</section>
+
+<style>
+  .feat-hero {
+    text-align: center;
+    padding: 3rem 1rem 2.5rem;
+    background: linear-gradient(180deg, #fff 0%, #f5f5f7 100%);
+    border-radius: 20px;
+    margin: -2rem -2rem 2rem;
+  }
+  .feat-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #86868b;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  .feat-back:hover { color: #0071e3; }
+  .feat-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #0071e3;
+    background: rgba(0,113,227,0.1);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+  .feat-title {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #1d1d1f;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .feat-lead {
+    font-size: 1.15rem;
+    color: #555;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .feat-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem 0 3rem;
+  }
+  .feat-benefit {
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .feat-benefit:hover {
+    transform: translateY(-2px);
+    border-color: #0071e3;
+  }
+  .feat-benefit-num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #86868b;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+  .feat-benefit h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+  .feat-benefit p {
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .feat-how {
+    padding: 3rem 0;
+  }
+  .feat-steps {
+    list-style: none;
+    padding: 0;
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .feat-steps li {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 14px;
+  }
+  .feat-step-n {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #0071e3;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feat-steps h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 0.3rem;
+  }
+  .feat-steps p {
+    font-size: 0.88rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .feat-related {
+    padding: 3rem 0;
+  }
+  .feat-related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .feat-related-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.15rem 1.25rem;
+    background: #fff;
+    border: 1px solid #e5e5ea;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #1d1d1f;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .feat-related-card:hover {
+    border-color: #0071e3;
+    transform: translateY(-1px);
+  }
+  .feat-related-card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .feat-related-arrow {
+    color: #86868b;
+  }
+  .feat-related-card:hover .feat-related-arrow { color: #0071e3; }
+
+  .feat-cta {
+    text-align: center;
+    background: #1d1d1f;
+    color: #fff;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    margin: 2rem -2rem -2rem;
+  }
+  .feat-cta h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .feat-cta p {
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1.75rem;
+  }
+  .feat-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    color: #1d1d1f;
+    padding: 0.85rem 1.75rem;
+    border-radius: 980px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .feat-cta-btn:hover { transform: scale(1.04); }
+
+  @media (max-width: 768px) {
+    .feat-hero {
+      margin: -1rem -1rem 1.5rem;
+      padding: 2rem 1rem;
+    }
+    .feat-title { font-size: 1.9rem; }
+    .feat-lead { font-size: 1rem; }
+    .feat-benefits { grid-template-columns: 1fr; }
+    .feat-related-grid { grid-template-columns: 1fr; }
+    .feat-cta { margin: 1.5rem -1rem -1rem; padding: 2.5rem 1rem; }
+    .feat-cta h2 { font-size: 1.5rem; }
+  }
+</style>

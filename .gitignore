@@ -22,3 +22,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# editor
+.vscode/
+
+# local asset workspace (not for public)
+public/logo-calisma/
+
+# internal content drafts
+CONTENT.md
+SCENE-1-BRIEF.md

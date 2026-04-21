@@ -57,6 +57,7 @@ const prefix = lang === defaultLang ? '' : `/${lang}`;
       <div class="nav-links">
         <a href={`${prefix}/#features`}>{t('nav.features')}</a>
         <a href={`${prefix}/#pricing`}>{t('nav.pricing')}</a>
+        {lang === defaultLang && <a href="/blog">Blog</a>}
         <a href={`${prefix}/support`}>{t('nav.support')}</a>
       </div>
       <div class="lang-picker">
