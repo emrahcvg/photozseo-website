@@ -1,8 +1,10 @@
 name: Deploy to Cloudflare Pages
 
+# Disabled: wrangler 4.85 has a ByteString bug with non-ASCII characters in
+# git metadata (Turkish chars in commit bodies trip the HTTP header encoder).
+# Manual local deploy works: `npx wrangler pages deploy dist --project-name=photozseo --branch=main`
+# Re-enable once cloudflare/workers-sdk fixes the encoder upstream.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
