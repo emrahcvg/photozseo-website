@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultLang } from '../i18n/ui';
+
+const title = 'Accessibility Statement | photoZseo';
+const description = 'photoZseo is committed to WCAG 2.1 AA accessibility. VoiceOver, Dynamic Type, color-blind safe palettes, RTL layouts and keyboard navigation across iPhone, iPad, Mac and the web.';
+const updated = 'May 11, 2026';
+---
+
+<Layout title={title} description={description} lang={defaultLang}>
+  <article class="legal">
+    <header class="legal-head">
+      <p class="kicker">Accessibility</p>
+      <h1>Accessibility Statement</h1>
+      <p class="updated"><strong>Last updated:</strong> {updated}</p>
+      <p class="lede">
+        photoZseo is built so that every seller — regardless of vision, motor or
+        cognitive ability — can capture, optimize and sell product photos on
+        every marketplace. This statement summarizes what we conform to, what
+        we still have to fix, and how to reach us if something blocks you.
+      </p>
+    </header>
+
+    <h2>Our commitment</h2>
+    <p>
+      We target <strong>WCAG 2.1 Level AA</strong> as the minimum bar for both the
+      photoZseo iOS / iPadOS / macOS app and this website. We treat accessibility
+      as a product requirement, not a checklist — every new feature ships with
+      VoiceOver labels, color-blind safe palettes, and Dynamic Type review.
+    </p>
+
+    <h2>Conformance status</h2>
+    <p>
+      The photoZseo app and website are <strong>partially conformant</strong> with
+      <a href="https://www.w3.org/TR/WCAG21/" rel="noopener">WCAG 2.1 AA</a>. Partial
+      means most content meets the standard but some areas — listed under "Known
+      limitations" below — are still being audited or fixed.
+    </p>
+    <p>Standards we align with:</p>
+    <ul>
+      <li><strong>WCAG 2.1 AA</strong> — Web Content Accessibility Guidelines</li>
+      <li><strong>Section 508</strong> (US federal procurement standard)</li>
+      <li><strong>EN 301 549</strong> (European Accessibility Act, EAA — effective June 2025)</li>
+      <li><strong>ADA Title III</strong> (US Americans with Disabilities Act, public accommodations)</li>
+      <li><strong>Apple Human Interface Guidelines — Accessibility</strong></li>
+    </ul>
+
+    <h2>Accessibility features in the iOS / iPadOS / macOS app</h2>
+    <p>photoZseo is engineered with the iOS accessibility APIs from day one:</p>
+    <ul>
+      <li><strong>VoiceOver fully supported.</strong> Every button, image, OCR result and product card has a localized accessibility label. OCR and barcode chips can be tapped to copy by VoiceOver users.</li>
+      <li><strong>Dynamic Type</strong> on every screen — text scales up to <code>.accessibility2</code>. Layouts reflow rather than truncate.</li>
+      <li><strong>Color-blind safe palette.</strong> Status, badge and category colors are validated against the four common color-vision deficiencies (protanopia, deuteranopia, tritanopia, achromatopsia). 27 automated tests guard contrast and shape-redundancy.</li>
+      <li><strong>WCAG 1.4.11 non-text contrast.</strong> All interactive controls meet a 3:1 contrast ratio against their backgrounds in both Light and Dark modes.</li>
+      <li><strong>Color is never the only signal.</strong> Status changes pair color with an icon, shape or text label.</li>
+      <li><strong>Reduce Motion respected.</strong> Animations, parallax and the camera preview tilt are dampened when the OS-level setting is on.</li>
+      <li><strong>RTL layouts</strong> are first-class for Arabic, Urdu and Persian — not mirrored heuristics, but hand-tuned screens.</li>
+      <li><strong>Keyboard navigation on iPad and Mac.</strong> Tab order, focus rings, keyboard shortcuts and right-click menus throughout.</li>
+      <li><strong>Switch Control</strong> compatible — every actionable element is reachable as a single focusable item.</li>
+      <li><strong>Haptic + visual feedback</strong> for critical actions (capture, save, delete) so non-audio users don't miss confirmations.</li>
+      <li><strong>Speak Screen and Spoken Content</strong> work with all on-screen text.</li>
+      <li><strong>Alt text for exports.</strong> photoZseo auto-generates descriptive alt text for every exported product photo — your end customers get an accessible listing, not just you.</li>
+    </ul>
+
+    <h2>Accessibility features on this website</h2>
+    <ul>
+      <li>Semantic HTML5 landmarks: <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code></li>
+      <li>Keyboard-navigable throughout — visible focus styles, no keyboard traps</li>
+      <li>ARIA labels on language picker, marketplace strip and decorative SVGs</li>
+      <li>Color contrast meets WCAG AA in both default (dark) presentation</li>
+      <li>Responsive layout from 320 px up — text reflows, never requires horizontal scrolling at 320 px width</li>
+      <li>No autoplaying audio, no animations longer than 5 seconds, no flashing content above the seizure threshold</li>
+      <li>Localized to 12 languages with correct <code>lang</code> and <code>dir</code> attributes</li>
+      <li>Forms (where present) use explicit <code>&lt;label&gt;</code>s and clear error messaging</li>
+    </ul>
+
+    <h2>Compatibility</h2>
+    <p>photoZseo and this website are designed to work with:</p>
+    <ul>
+      <li><strong>iOS / iPadOS 17 and later</strong>: VoiceOver, Switch Control, Voice Control, Dynamic Type, Reduce Motion, Increase Contrast, Smart Invert</li>
+      <li><strong>macOS 14 and later</strong>: VoiceOver, Full Keyboard Access, Zoom</li>
+      <li><strong>Web browsers</strong>: Safari 17+, Chrome 120+, Firefox 121+, Edge 120+ — paired with screen readers (NVDA, JAWS, VoiceOver, TalkBack)</li>
+    </ul>
+
+    <h2>Known limitations</h2>
+    <p>
+      We're not perfect yet. The following areas are known gaps; we're working on
+      them and welcome reports of others:
+    </p>
+    <ul>
+      <li>Manual end-to-end audit by a third-party accessibility tester is in progress; a full conformance report will be published when complete.</li>
+      <li>Some advanced camera overlays (live ROI rectangles) communicate solely through visual position; a textual VoiceOver announcement is being added in a future release.</li>
+      <li>Older blog posts may use screenshots without comprehensive alt text — we are back-filling.</li>
+      <li>PDF exports (B2B quotes) are tagged for selectable text but not yet fully WCAG 2.1 tagged-PDF compliant. On the roadmap.</li>
+    </ul>
+
+    <h2>Assessment approach</h2>
+    <p>photoZseo accessibility is assessed continuously through:</p>
+    <ul>
+      <li>27 automated tests for color contrast, Dynamic Type clipping and VoiceOver label coverage (CI gated)</li>
+      <li>Manual QA against the WCAG 2.1 AA checklist before every App Store release</li>
+      <li>Real-device testing on iPhone, iPad and Mac with VoiceOver and Voice Control</li>
+      <li>Color-vision simulators (protanopia, deuteranopia, tritanopia, achromatopsia)</li>
+      <li>Static analysis on every pull request</li>
+    </ul>
+
+    <h2>Feedback &amp; contact</h2>
+    <p>
+      Hit a barrier? Email <a href="mailto:accessibility@photozseo.com">accessibility@photozseo.com</a>
+      or <a href="mailto:support@photozseo.com">support@photozseo.com</a> with the
+      device, OS version, screen and what blocked you. We aim to respond within
+      <strong>2 business days</strong> and to deliver a fix or a documented workaround
+      within <strong>30 days</strong> for issues that block use of the product.
+    </p>
+    <p>
+      If you don't get a satisfactory response, you may also contact your national
+      accessibility authority:
+    </p>
+    <ul>
+      <li><strong>United States:</strong> <a href="https://www.ada.gov" rel="noopener">ADA.gov</a></li>
+      <li><strong>European Union:</strong> the national EAA authority in your member state</li>
+      <li><strong>United Kingdom:</strong> <a href="https://www.equalityhumanrights.com" rel="noopener">Equality and Human Rights Commission</a></li>
+      <li><strong>Turkey (KVKK / engelli hakları):</strong> <a href="https://www.aile.gov.tr" rel="noopener">T.C. Aile ve Sosyal Hizmetler Bakanlığı</a></li>
+    </ul>
+
+    <h2>This statement</h2>
+    <p>
+      Prepared on {updated} by the photoZseo team. We review and update this
+      statement at least annually, and after any major feature release.
+    </p>
+  </article>
+
+  <style>
+    .legal { max-width: 760px; margin: 0 auto; }
+    .legal-head { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .legal .kicker {
+      display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent, #4FD1C5);
+      padding: 6px 10px; border-radius: 999px; margin-bottom: 14px;
+      background: rgba(79,209,197,0.12); border: 1px solid rgba(79,209,197,0.28);
+    }
+    .legal h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px;
+    }
+    .legal .updated { color: rgba(245,247,251,0.66); margin-bottom: 16px; font-size: 14px; }
+    .legal .lede { color: rgba(245,247,251,0.85); font-size: 17px; line-height: 1.65; }
+    .legal h2 {
+      font-size: 22px; margin-top: 36px; margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .legal p, .legal li { color: rgba(245,247,251,0.75); }
+    .legal ul { padding-left: 22px; }
+    .legal li { margin-bottom: 8px; line-height: 1.6; }
+    .legal code {
+      font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+      font-size: 0.9em; padding: 2px 6px; border-radius: 6px;
+      background: rgba(255,255,255,0.06); color: var(--accent, #4FD1C5);
+    }
+    .legal a { color: var(--accent, #4FD1C5); text-decoration: underline; text-underline-offset: 3px; }
+    .legal a:hover { color: #fff; }
+  </style>
+</Layout>

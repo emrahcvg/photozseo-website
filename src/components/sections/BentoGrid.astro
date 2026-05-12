@@ -1,0 +1,188 @@
+---
+import CountUp from '../islands/CountUp.tsx';
+
+interface BentoContent {
+  headKicker: string;
+  headTitle: string;
+  headSub: string;
+  csv: { label: string; sub: string };
+  exif: { label: string; gpsStripped: string };
+  langs: { label: string; sublabel: string };
+  stats: { label: string; marketplaces: string; seoFields: string; devices: string; noTrackers: string };
+}
+
+interface Props { content: BentoContent }
+const { content } = Astro.props as Props;
+---
+
+<section class="bento">
+  <div class="container">
+    <div class="bento-head" data-reveal>
+      <span class="kicker">{content.headKicker}</span>
+      <h2>{content.headTitle}</h2>
+      <p>{content.headSub}</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento-cell bento-csv" data-reveal>
+        <div class="bento-label">{content.csv.label}</div>
+        <div class="bento-bignum">
+          <CountUp client:visible to={46} suffix="+" />
+        </div>
+        <div class="bento-sublabel">{content.csv.sub}</div>
+        <div class="bento-rows" aria-hidden="true">
+          <div class="brow brow-h"><span>title</span><span>handle</span><span>tags</span><span>alt_text</span><span>image_1</span></div>
+          <div class="brow"><span>Genuine Leather Crossbody Bag</span><span>genuine-leather-crossbody-bag</span><span>leather, crossbody, italian</span><span>Brown leather crossbody bag, front view</span><span>genuine-leather-crossbody-bag-front-1.jpg</span></div>
+          <div class="brow"><span>Organic Lavender Soy Candle</span><span>organic-lavender-soy-candle</span><span>candle, lavender, vegan, soy</span><span>Hand-poured lavender soy candle, amber glass</span><span>organic-lavender-soy-candle-front-1.jpg</span></div>
+          <div class="brow"><span>Vintage Brass Pocket Watch</span><span>vintage-brass-pocket-watch</span><span>vintage, brass, watch, gift</span><span>Engraved vintage brass pocket watch, open dial</span><span>vintage-brass-pocket-watch-front-1.jpg</span></div>
+          <div class="brow brow-loading"><span>type your title…</span><span>auto-filled</span><span>auto-filled</span><span>auto-filled</span><span>auto-filled</span></div>
+        </div>
+      </div>
+
+      <div class="bento-cell bento-exif" data-reveal>
+        <div class="bento-label">{content.exif.label}</div>
+        <pre class="bento-code"><code><span class="ck">Artist</span>: <span class="cv">photoZseo / Indie Seller</span>
+<span class="ck">Copyright</span>: <span class="cv">© 2026 Indie Seller</span>
+<span class="ck">Software</span>: <span class="cv">photoZseo 1.0</span>
+<span class="ck">Make</span>: <span class="cv">Apple</span>
+<span class="ck">Model</span>: <span class="cv">iPhone 17 Pro</span>
+<span class="ck">ISO</span>: <span class="cv">100</span>
+<span class="ck">f/stop</span>: <span class="cv">1.78</span>
+<span class="ck">Dimensions</span>: <span class="cv">4032 × 3024</span>
+<span class="ck">GPS</span>: <span class="cv-removed">{content.exif.gpsStripped}</span></code></pre>
+      </div>
+
+      <div class="bento-cell bento-langs" data-reveal>
+        <div class="bento-label">{content.langs.label}</div>
+        <div class="bento-bignum">12</div>
+        <div class="bento-flags">
+          <span title="English">🇺🇸</span><span title="Turkish">🇹🇷</span>
+          <span title="German">🇩🇪</span><span title="Spanish">🇪🇸</span>
+          <span title="French">🇫🇷</span><span title="Portuguese">🇵🇹</span>
+          <span title="Japanese">🇯🇵</span><span title="Korean">🇰🇷</span>
+          <span title="Chinese">🇨🇳</span><span title="Arabic">🇸🇦</span>
+          <span title="Hindi">🇮🇳</span><span title="Persian">🇮🇷</span>
+        </div>
+        <div class="bento-sublabel">{content.langs.sublabel}</div>
+      </div>
+
+      <div class="bento-cell bento-stats" data-reveal>
+        <div class="bento-label">{content.stats.label}</div>
+        <div class="bento-stats-grid">
+          <div>
+            <div class="bento-bignum-sm"><CountUp client:visible to={46} suffix="+" /></div>
+            <div class="bento-sublabel-sm">{content.stats.marketplaces}</div>
+          </div>
+          <div>
+            <div class="bento-bignum-sm"><CountUp client:visible to={9} /></div>
+            <div class="bento-sublabel-sm">{content.stats.seoFields}</div>
+          </div>
+          <div>
+            <div class="bento-bignum-sm"><CountUp client:visible to={3} /></div>
+            <div class="bento-sublabel-sm">{content.stats.devices}</div>
+          </div>
+          <div>
+            <div class="bento-bignum-sm">0</div>
+            <div class="bento-sublabel-sm">{content.stats.noTrackers}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .bento { padding: 100px 0; position: relative; }
+  .bento-head { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .bento-head h2 { font-size: clamp(28px, 4.5vw, 48px); letter-spacing: -0.025em; line-height: 1.05; margin: 14px 0 12px; }
+  .bento-head p { color: var(--text-muted); font-size: 17px; }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(220px, auto);
+    gap: 18px;
+  }
+  .bento-cell {
+    background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 26px;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .bento-cell:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.18); }
+  .bento-cell::before {
+    content: ''; position: absolute; inset: 0; border-radius: 24px;
+    background: radial-gradient(600px at var(--mx, 50%) var(--my, 50%), rgba(79,209,197,0.10), transparent 60%);
+    opacity: 0; transition: opacity .25s ease;
+    pointer-events: none;
+  }
+  .bento-cell:hover::before { opacity: 1; }
+  .bento-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px;
+  }
+  .bento-bignum {
+    font-size: clamp(48px, 7vw, 96px); font-weight: 700;
+    letter-spacing: -0.04em; line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 6px;
+  }
+  .bento-sublabel { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+
+  .bento-csv { grid-column: span 3; grid-row: span 2; }
+  .bento-rows { display: flex; flex-direction: column; gap: 4px; margin-top: auto; font-family: var(--font-mono); font-size: 10.5px; }
+  .brow {
+    display: grid; grid-template-columns: 1.5fr 1.5fr 1.4fr 1.6fr 2fr; gap: 8px;
+    padding: 8px 10px; border-radius: 6px;
+    background: rgba(0,0,0,0.25); color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.04);
+    white-space: nowrap; overflow: hidden;
+  }
+  .brow span { overflow: hidden; text-overflow: ellipsis; }
+  .brow span:last-child { color: var(--accent); }
+  .brow-h { background: rgba(79,209,197,0.08); color: var(--accent); font-weight: 600; }
+  .brow-loading { color: var(--text-dim); animation: pulse-bg 1.8s ease-in-out infinite; }
+  @keyframes pulse-bg { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+  .bento-exif { grid-column: span 3; grid-row: span 2; }
+  .bento-code {
+    font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7;
+    color: var(--text); white-space: pre; overflow: auto;
+    background: rgba(0,0,0,0.30); border-radius: 12px; padding: 16px 18px;
+    margin-top: auto; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .ck { color: var(--accent); }
+  .cv { color: var(--text-muted); }
+  .cv-removed { color: #F87171; text-decoration: line-through; text-decoration-color: rgba(248,113,113,0.5); }
+
+  .bento-langs { grid-column: span 3; }
+  .bento-flags { display: flex; flex-wrap: wrap; gap: 10px; font-size: 24px; margin: 10px 0; }
+
+  .bento-stats { grid-column: span 3; }
+  .bento-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+  .bento-bignum-sm {
+    font-size: 32px; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--accent); line-height: 1;
+  }
+  .bento-sublabel-sm { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  @media (max-width: 1000px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .bento-csv, .bento-exif, .bento-langs, .bento-stats { grid-column: span 2; grid-row: auto; }
+  }
+  @media (max-width: 600px) {
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-csv, .bento-exif, .bento-langs, .bento-stats { grid-column: span 1; }
+    .bento-code { font-size: 11px; padding: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brow-loading { animation: none !important; }
+  }
+</style>

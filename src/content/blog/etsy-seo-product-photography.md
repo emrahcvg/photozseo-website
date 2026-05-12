@@ -42,7 +42,7 @@ What doesn't:
 
 > *"mug"*
 
-photoZseo writes alt text from the same product name + direction pairing that drives the filename. Every exported image carries its alt text in the XMP metadata, and photoZseo's push-to-Shopify integration copies it into the alt field automatically. For Etsy, paste the suggested alt text into the "Photo description" box when you add the image.
+photoZseo writes alt text from the same product name + direction pairing that drives the filename. Every exported image carries its alt text in the XMP metadata, and photoZseo's Shopify CSV export copies it into the alt field automatically. For Etsy, paste the suggested alt text into the "Photo description" box when you add the image.
 
 ## The 3-photo formula that converts
 

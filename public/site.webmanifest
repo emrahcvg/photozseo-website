@@ -1,19 +1,17 @@
 {
-  "name": "photoZseo",
+  "name": "photoZseo — Product Photos & SEO for 60+ Marketplaces",
   "short_name": "photoZseo",
+  "description": "Turn one photo into 60+ marketplace-ready listings. AI auto-fills SEO. iPhone, iPad, Mac.",
   "icons": [
-    {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "/icon-64.png", "sizes": "64x64", "type": "image/png" },
+    { "src": "/icon-128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-256.png", "sizes": "256x256", "type": "image/png" },
+    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "theme_color": "#1B7FE3",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#0B0E1A",
+  "background_color": "#0B0E1A",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
 }

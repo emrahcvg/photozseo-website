@@ -1,219 +1,239 @@
 ---
 import { languages, rtlLanguages, defaultLang, type Lang, useTranslations } from '../i18n/ui';
+import { getHomeContent } from '../i18n/home';
 
 interface Props {
   title: string;
+  description?: string;
   lang?: Lang;
+  fullBleed?: boolean;
+  ogImage?: string;
 }
 
-const { title, lang = defaultLang } = Astro.props;
+const {
+  title,
+  description = 'photoZseo — Turn one photo into 46+ marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol & more. 7-day free trial.',
+  lang = defaultLang,
+  fullBleed = false,
+  ogImage = '/og-image.png',
+} = Astro.props;
 const t = useTranslations(lang);
+const c = getHomeContent(lang);
 const isRtl = rtlLanguages.includes(lang);
 const prefix = lang === defaultLang ? '' : `/${lang}`;
+const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
 ---
 
 <!doctype html>
 <html lang={lang} dir={isRtl ? 'rtl' : 'ltr'}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="photoZseo — The all-in-one product photo optimizer for e-commerce sellers. Shoot, resize, compress, SEO-rename, remove backgrounds & push to Shopify. No computer needed. 25+ platform presets." />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#1B7FE3" />
-    <link rel="canonical" href={`https://photozseo.com${Astro.url.pathname}`} />
-    <title>{title} | photoZseo</title>
+    <meta name="theme-color" content="#0B0E1A" />
+    <link rel="canonical" href={pageUrl} />
+    <title>{title}</title>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={`${title} | photoZseo`} />
-    <meta property="og:description" content="Product photo optimizer for 25+ e-commerce platforms. Resize, compress, SEO-rename, remove backgrounds — all on your phone." />
-    <meta property="og:url" content={`https://photozseo.com${Astro.url.pathname}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
     <meta property="og:site_name" content="photoZseo" />
     <meta property="og:locale" content={lang} />
-    <meta property="og:image" content="https://photozseo.com/og-image.png" />
+    <meta property="og:image" content={`https://photozseo.com${ogImage}`} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={`${title} | photoZseo`} />
-    <meta name="twitter:description" content="Product photo optimizer for 25+ e-commerce platforms. No computer needed." />
-    <meta name="twitter:image" content="https://photozseo.com/og-image.png" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`https://photozseo.com${ogImage}`} />
 
     <!-- SEO extras -->
-    <meta name="robots" content="index, follow" />
-    <meta name="keywords" content="product photo optimizer, e-commerce photo, SEO filename, image resize, background removal, Shopify push, Amazon photo size, Etsy image specs, TikTok Shop photo, Instagram Shopping, product photography app" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="keywords" content="product photo app, marketplace listing tool, Amazon photo size, Shopify product photo, Etsy listing app, AI SEO product description, background removal app, EXIF metadata, B2B quote app, iPhone product photography, ecommerce photo optimizer" />
+    <meta name="apple-itunes-app" content="app-id=APP_STORE_ID_TBD" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <slot name="head" />
   </head>
-  <body>
-    <nav>
-      <a href={`${prefix}/`} class="logo">
-        <span class="logo-icon">📷</span> photo<span class="logo-z">Z</span>seo
-      </a>
-      <div class="nav-links">
-        <a href={`${prefix}/#features`}>{t('nav.features')}</a>
-        <a href={`${prefix}/#pricing`}>{t('nav.pricing')}</a>
-        {lang === defaultLang && <a href="/blog">Blog</a>}
-        <a href={`${prefix}/support`}>{t('nav.support')}</a>
-      </div>
-      <div class="lang-picker">
-        <select onchange={`window.location.href=this.value`}>
-          {Object.entries(languages).map(([code, name]) => {
-            const langPrefix = code === defaultLang ? '' : `/${code}`;
-            const currentPath = Astro.url.pathname.replace(/^\/(en|zh|tr|es|de|ja|pt|hi|ur|ar|fa|ko)/, '');
-            return (
-              <option value={`${langPrefix}${currentPath || '/'}`} selected={code === lang}>
-                {name}
-              </option>
-            );
-          })}
-        </select>
+  <body class={fullBleed ? 'full-bleed' : ''}>
+    <nav class="site-nav">
+      <div class="nav-inner">
+        <a href={`${prefix}/`} class="logo">
+          <img src="/icon-128.png" alt="" width="40" height="40" class="logo-mark" aria-hidden="true"/>
+          photoZseo
+        </a>
+        <div class="nav-links">
+          <a href={`${prefix}/#features`}>{c.nav.features}</a>
+          <a href={`${prefix}/#pricing`}>{c.nav.pricing}</a>
+          <a href={`${prefix}/#faq`}>{c.nav.faq}</a>
+          {lang === defaultLang && <a href="/blog">{c.nav.blog}</a>}
+          <a href={`${prefix}/support`}>{c.nav.support}</a>
+        </div>
+        <div class="nav-right">
+          <div class="lang-picker">
+            <select onchange={`window.location.href=this.value`} aria-label="Language">
+              {Object.entries(languages).map(([code, name]) => {
+                const langPrefix = code === defaultLang ? '' : `/${code}`;
+                const currentPath = Astro.url.pathname.replace(/^\/(en|zh|tr|es|de|ja|pt|hi|ur|ar|fa|ko)/, '');
+                return (
+                  <option value={`${langPrefix}${currentPath || '/'}`} selected={code === lang}>
+                    {name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <a href={`${prefix}/#download`} class="nav-cta">{c.nav.getApp}</a>
+        </div>
       </div>
     </nav>
     <main>
       <slot />
     </main>
-    <footer>
-      <div class="footer-links">
-        <a href={`${prefix}/privacy`}>{t('footer.privacy')}</a>
-        <a href={`${prefix}/terms`}>{t('footer.terms')}</a>
-        <a href={`${prefix}/support`}>{t('footer.support')}</a>
-        <a href={`${prefix}/delete-account`}>{t('footer.delete')}</a>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="logo">
+            <img src="/icon-128.png" alt="" width="40" height="40" class="logo-mark" aria-hidden="true"/>
+            photoZseo
+          </div>
+          <p class="footer-tag">{c.footer.tag}</p>
+        </div>
+        <div class="footer-links">
+          <a href={`${prefix}/privacy`}>{c.footer.privacy}</a>
+          <a href={`${prefix}/terms`}>{c.footer.terms}</a>
+          <a href={`${prefix}/support`}>{c.footer.support}</a>
+          <a href={`${prefix}/accessibility`}>{c.footer.accessibility}</a>
+          <a href={`${prefix}/delete-account`}>{c.footer.deleteAccount}</a>
+          <a href="mailto:support@photozseo.com">support@photozseo.com</a>
+        </div>
       </div>
-      <p>&copy; {new Date().getFullYear()} photoZseo. {t('footer.rights')}</p>
+      <p class="footer-copy">&copy; {new Date().getFullYear()} photoZseo. {c.footer.rights}</p>
     </footer>
     <style is:global>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      :root {
+        --bg: #0B0E1A;
+        --bg-elevated: #11152A;
+        --bg-card: rgba(255,255,255,0.04);
+        --border: rgba(255,255,255,0.08);
+        --border-strong: rgba(255,255,255,0.16);
+        --text: #F5F7FB;
+        --text-muted: rgba(245,247,251,0.66);
+        --text-dim: rgba(245,247,251,0.48);
+        --accent: #4FD1C5;
+        --accent-2: #6C8CFF;
+        --gold: #F5C467;
+        --success: #10B981;
+        --gradient-hero: radial-gradient(ellipse at top, rgba(108,140,255,0.18), transparent 60%), radial-gradient(ellipse at 30% 80%, rgba(79,209,197,0.12), transparent 55%), #0B0E1A;
+        --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+        --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
       }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: #1a1a2e;
-        line-height: 1.6;
-        background: #F2F2F7;
+        font-family: var(--font);
+        color: var(--text);
+        line-height: 1.55;
+        background: var(--gradient-hero);
+        background-attachment: fixed;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
-      [dir="rtl"] {
-        font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      img { max-width: 100%; display: block; }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { color: var(--text); }
+      [dir="rtl"] { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+
+      /* NAV */
+      .site-nav {
+        position: sticky; top: 0; z-index: 100;
+        background: rgba(11,14,26,0.72);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border-bottom: 1px solid var(--border);
       }
-      nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 2rem;
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid #E5E7EB;
-        max-width: 960px;
-        margin: 0 auto;
-        gap: 1rem;
-        position: sticky;
-        top: 0;
-        z-index: 100;
+      .nav-inner {
+        max-width: 1200px; margin: 0 auto;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 24px; gap: 16px;
       }
       .logo {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1a1a2e;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
+        display: inline-flex; align-items: center; gap: 10px;
+        font-weight: 700; font-size: 20px; color: var(--text);
+        letter-spacing: -0.015em;
       }
-      .logo-icon {
-        font-size: 1.3rem;
+      .logo-mark {
+        width: 40px; height: 40px;
+        display: inline-block; flex-shrink: 0;
       }
-      .logo-z {
-        color: #1B7FE3;
-      }
-      .nav-links {
-        display: flex;
-        gap: 1.5rem;
-      }
+      .nav-links { display: flex; gap: 22px; }
       .nav-links a {
-        color: #666;
-        text-decoration: none;
-        font-size: 0.9rem;
+        color: var(--text-muted); font-size: 14px; font-weight: 500;
+        transition: color .15s ease;
       }
-      .nav-links a:hover {
-        color: #1a1a1a;
-      }
+      .nav-links a:hover { color: var(--text); }
+      .nav-right { display: flex; align-items: center; gap: 12px; }
       .lang-picker select {
-        padding: 0.3rem 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        background: #fff;
-        font-size: 0.85rem;
-        color: #444;
-        cursor: pointer;
+        padding: 7px 10px; border-radius: 8px; font-size: 13px;
+        background: rgba(255,255,255,0.06); color: var(--text);
+        border: 1px solid var(--border-strong); cursor: pointer;
       }
-      main {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 2rem;
+      .nav-cta {
+        padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+        background: var(--text); color: #0B0E1A;
+        transition: transform .15s ease, background .15s ease;
       }
-      footer {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 2rem;
-        text-align: center;
-        color: #999;
-        font-size: 0.85rem;
-        border-top: 1px solid #e5e5e5;
+      .nav-cta:hover { transform: translateY(-1px); background: var(--accent); color: #0B0E1A; }
+
+      /* MAIN — full-bleed by default for homepage */
+      body.full-bleed main { max-width: 100%; padding: 0; }
+      body:not(.full-bleed) main {
+        max-width: 880px; margin: 0 auto; padding: 48px 24px;
+        background: rgba(255,255,255,0.02);
       }
-      .footer-links {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
+      body:not(.full-bleed) main h1 { font-size: 36px; margin-bottom: 18px; letter-spacing: -0.02em; }
+      body:not(.full-bleed) main h2 { font-size: 22px; margin-top: 28px; margin-bottom: 10px; letter-spacing: -0.01em; }
+      body:not(.full-bleed) main p,
+      body:not(.full-bleed) main li { color: var(--text-muted); margin-bottom: 12px; }
+      body:not(.full-bleed) main ul { padding-left: 22px; }
+
+      /* FOOTER */
+      .site-footer { border-top: 1px solid var(--border); margin-top: 80px; padding: 48px 24px 32px; }
+      .footer-inner {
+        max-width: 1200px; margin: 0 auto;
+        display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap;
       }
-      .footer-links a {
-        color: #999;
-        text-decoration: none;
-        font-size: 0.85rem;
+      .footer-brand { max-width: 320px; }
+      .footer-tag { color: var(--text-muted); font-size: 14px; margin-top: 10px; }
+      .footer-links { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+      .footer-links a { color: var(--text-muted); font-size: 14px; }
+      .footer-links a:hover { color: var(--text); }
+      .footer-copy {
+        max-width: 1200px; margin: 32px auto 0; padding-top: 24px;
+        border-top: 1px solid var(--border);
+        font-size: 13px; color: var(--text-dim); text-align: center;
       }
-      .footer-links a:hover {
-        color: #666;
+
+      @media (max-width: 800px) {
+        .nav-inner { flex-wrap: wrap; padding: 12px 16px; }
+        .nav-links { order: 3; width: 100%; justify-content: center; gap: 18px; font-size: 13px; }
+        .footer-inner { flex-direction: column; gap: 20px; }
       }
-      h1 {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
-      }
-      h2 {
-        font-size: 1.4rem;
-        margin-top: 2rem;
-        margin-bottom: 0.75rem;
-      }
-      p, li {
-        margin-bottom: 0.75rem;
-        color: #444;
-      }
-      ul {
-        padding-left: 1.5rem;
-      }
-      [dir="rtl"] ul {
-        padding-left: 0;
-        padding-right: 1.5rem;
-      }
-      a {
-        color: #0066cc;
-      }
-      @media (max-width: 600px) {
-        nav {
-          flex-direction: column;
-          gap: 0.75rem;
-        }
-        .nav-links {
-          gap: 1rem;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
+      @media (max-width: 500px) {
+        .nav-cta { display: none; }
+        .nav-links a { font-size: 12px; }
       }
     </style>
   </body>

@@ -1,0 +1,51 @@
+---
+const ROW = [
+  'Amazon','Shopify','Etsy','eBay','Walmart','Trendyol','AliExpress','Mercado Libre',
+  'WooCommerce','WhatsApp Catalog','Instagram Shopping','TikTok Shop','Pinterest',
+  'Temu','SHEIN','DHgate','Tmall','1688','Made-in-China','Global Sources',
+];
+---
+
+<section class="marquee-section">
+  <div class="marquee-stage">
+    <div class="marquee">
+      <div class="marquee-track">
+        {[...ROW, ...ROW].map((m) => <span class="m-pill">{m}</span>)}
+      </div>
+    </div>
+    <div class="marquee-fade marquee-fade-l"></div>
+    <div class="marquee-fade marquee-fade-r"></div>
+  </div>
+</section>
+
+<style>
+  .marquee-section { padding: 48px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .marquee-stage { position: relative; overflow: hidden; }
+  .marquee {
+    display: flex; overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .marquee-track {
+    display: flex; gap: 28px; flex-shrink: 0;
+    animation: marquee-fwd 60s linear infinite;
+    will-change: transform;
+  }
+  @keyframes marquee-fwd { to { transform: translateX(-50%); } }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .m-pill {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 18px; font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition: color .15s ease;
+  }
+  .m-pill:hover { color: var(--text); }
+  .marquee-fade { position: absolute; top: 0; bottom: 0; width: 120px; pointer-events: none; z-index: 2; }
+  .marquee-fade-l { left: 0; background: linear-gradient(90deg, #0B0E1A, transparent); }
+  .marquee-fade-r { right: 0; background: linear-gradient(270deg, #0B0E1A, transparent); }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none !important; }
+  }
+</style>

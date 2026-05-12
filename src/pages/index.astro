@@ -1,11 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HomePage from '../components/HomePage.astro';
-import { defaultLang, useTranslations } from '../i18n/ui';
-const lang = defaultLang;
-const t = useTranslations(lang);
+import { defaultLang } from '../i18n/ui';
+
+const title = 'photoZseo — Product Photos & SEO for 46+ Marketplaces';
+const description = 'Turn one iPhone photo into 46+ marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol & more. B2B quote builder. 7-day free trial.';
 ---
 
-<Layout title={t('hero.tagline').slice(0, 50)} lang={lang}>
-  <HomePage lang={lang} />
+<Layout title={title} description={description} lang={defaultLang} fullBleed={true}>
+  <HomePage lang={defaultLang} />
 </Layout>
