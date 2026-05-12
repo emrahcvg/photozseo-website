@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { languages, defaultLang, type Lang } from '../../i18n/ui';
+import '../../styles/legal.css';
 
 export function getStaticPaths() {
   return Object.keys(languages)

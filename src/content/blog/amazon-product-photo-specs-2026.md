@@ -1,9 +1,24 @@
 ---
 title: "Amazon product photo requirements in 2026"
 description: "Exact sizes, file types and background rules Amazon enforces on product images — and how to pass them on the first upload."
-pubDate: 2026-04-18
+pubDate: 2026-05-08
 readingMinutes: 5
 tags: [amazon, product-photos, seo]
+tldr:
+  - "Amazon's main image must be 1000×1000 minimum (2000×2000 recommended), 1:1 square, pure white #FFFFFF background, JPEG, sRGB, under 10 MB."
+  - "The fastest rejection causes: near-white instead of true white, product smaller than 85% of the frame, watermarks or text on the main image."
+  - "Stay under 600 KB per image after compression — Amazon's CDN re-encodes anything bigger and page-speed weights into your conversion rank."
+faqs:
+  - q: "What's the minimum image size for Amazon product photos?"
+    a: "1000 pixels on the longest side is the absolute minimum. Below that, Amazon disables the zoom feature on your listing — and zoom-less listings are deranked by the algorithm. Aim for 2000×2000 to give Amazon room to re-compress without softening."
+  - q: "Is JPEG or PNG better for Amazon listings?"
+    a: "JPEG. Amazon accepts TIFF, PNG and GIF too, but JPEG compresses smaller, processes faster on Amazon's CDN, and there's no transparency benefit on a #FFFFFF background. Save at sRGB color space, quality 80–85."
+  - q: "Does Amazon require pure white backgrounds for every photo?"
+    a: "Only the main image — that's the rule Amazon enforces with automated checks. Secondary images can show the product in context, on a model, with packaging, or in lifestyle scenes. The first photo is the gatekeeper."
+  - q: "How big should the product be in the frame?"
+    a: "Amazon's guideline is at least 85% of the image. Products smaller than that often fail the automated review or get manually flagged on category audits. Center the product and crop tight."
+  - q: "Can I upload HEIC photos from my iPhone to Amazon?"
+    a: "No. Amazon expects JPEG, TIFF, PNG or GIF. Convert HEIC to JPEG before upload — photoZseo's Amazon preset does this automatically and trims the file to 200–600 KB without visible quality loss."
 ---
 
 Amazon rejects listings before most sellers ever see them. The culprit is almost always the photo — a file that's too heavy, a background that isn't truly white, or an aspect ratio the platform quietly refuses.
