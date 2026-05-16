@@ -3,10 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import FeaturePage from '../../components/FeaturePage.astro';
 import { defaultLang, useTranslations } from '../../i18n/ui';
 
-type Slug = 'seo-filenames' | 'background-removal' | 'platform-presets';
+type Slug = 'seo-filenames' | 'platform-presets';
 
 export function getStaticPaths() {
-  const slugs = ['seo-filenames', 'background-removal', 'platform-presets'];
+  const slugs = ['seo-filenames', 'platform-presets'];
   return slugs.map((slug) => ({ params: { slug } }));
 }
 

@@ -3,7 +3,7 @@ import type { Lang } from '../i18n/ui';
 import { useTranslations, defaultLang } from '../i18n/ui';
 
 interface Props {
-  slug: 'seo-filenames' | 'background-removal' | 'platform-presets';
+  slug: 'seo-filenames' | 'platform-presets';
   lang: Lang;
 }
 
@@ -52,7 +52,7 @@ const key = (suffix: string) => `feature.${slug}.${suffix}` as any;
 <section class="feat-related">
   <h2 class="section-title">{t('feature.related')}</h2>
   <div class="feat-related-grid">
-    {(['seo-filenames', 'background-removal', 'platform-presets'] as const)
+    {(['seo-filenames', 'platform-presets'] as const)
       .filter((s) => s !== slug)
       .map((s) => (
         <a class="feat-related-card" href={`${prefix}/features/${s}`}>

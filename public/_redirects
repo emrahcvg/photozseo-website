@@ -6,3 +6,17 @@
 # Normalize index paths
 /index.html      /              301
 /home            /              301
+
+# Removed feature page → features index (preserve SEO equity)
+/features/background-removal         /features          301
+/zh/features/background-removal      /zh/features       301
+/tr/features/background-removal      /tr/features       301
+/es/features/background-removal      /es/features       301
+/de/features/background-removal      /de/features       301
+/ja/features/background-removal      /ja/features       301
+/pt/features/background-removal      /pt/features       301
+/hi/features/background-removal      /hi/features       301
+/ur/features/background-removal      /ur/features       301
+/ar/features/background-removal      /ar/features       301
+/fa/features/background-removal      /fa/features       301
+/ko/features/background-removal      /ko/features       301

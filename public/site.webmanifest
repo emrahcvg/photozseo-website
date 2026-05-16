@@ -1,7 +1,7 @@
 {
-  "name": "photoZseo — Product Photos & SEO for 46+ Marketplaces",
+  "name": "photoZseo — Product Photos & SEO for 46 Marketplaces",
   "short_name": "photoZseo",
-  "description": "Turn one photo into 46+ marketplace-ready listings. AI auto-fills SEO. iPhone, iPad, Mac.",
+  "description": "Turn one photo into 46 marketplace-ready listings. AI auto-fills SEO. iPhone, iPad, Mac.",
   "icons": [
     { "src": "/icon-64.png", "sizes": "64x64", "type": "image/png" },
     { "src": "/icon-128.png", "sizes": "128x128", "type": "image/png" },
