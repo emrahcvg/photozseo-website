@@ -1,0 +1,24 @@
+---
+import type { Manifest } from '../../storefront/types';
+import { groupProductsByCategory } from '../../storefront/manifest';
+import StoreHeader from './StoreHeader.astro';
+import CategorySection from './CategorySection.astro';
+import StoreFooter from './StoreFooter.astro';
+import '../../styles/storefront.css';
+
+interface Props {
+  manifest: Manifest;
+  locale: string;
+}
+
+const { manifest, locale } = Astro.props;
+const groups = groupProductsByCategory(manifest);
+---
+
+<main class="sf-store">
+  <StoreHeader store={manifest.store} locale={locale} />
+  {groups.map((group) => (
+    <CategorySection group={group} locale={locale} currency={manifest.store.currency} />
+  ))}
+  <StoreFooter slug={manifest.store.slug} locale={locale} />
+</main>
