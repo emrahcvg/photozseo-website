@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "pages:dev": "wrangler pages dev dist --kv STORE_KV --compatibility-date=2024-11-01"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
