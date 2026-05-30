@@ -1,0 +1,25 @@
+---
+import type { CategoryGroup } from '../../storefront/manifest';
+import { resolveLocalized } from '../../storefront/manifest';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  group: CategoryGroup;
+  locale: string;
+  currency: string;
+}
+
+const { group, locale, currency } = Astro.props;
+const heading = group.category
+  ? resolveLocalized(group.category.name, locale)
+  : (locale === 'tr' ? 'Diğer' : 'Other');
+---
+
+<section class="sf-section">
+  <h2 class="sf-section__title">{heading}</h2>
+  <div class="sf-grid">
+    {group.products.map((product) => (
+      <ProductCard product={product} locale={locale} currency={currency} />
+    ))}
+  </div>
+</section>
