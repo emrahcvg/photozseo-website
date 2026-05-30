@@ -32,3 +32,6 @@ public/logo-calisma/
 # internal content drafts
 CONTENT.md
 SCENE-1-BRIEF.md
+
+# Cloudflare local dev state
+.wrangler/
