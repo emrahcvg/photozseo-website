@@ -50,8 +50,14 @@ const hasMultiple = images.length > 1;
     if (!images.length) return;
 
     const lightbox = root.querySelector<HTMLElement>('[data-sf-lightbox]');
-    const lightboxImg = root.querySelector<HTMLImageElement>('[data-sf-lightbox-img]');
-    const counter = root.querySelector<HTMLElement>('[data-sf-counter]');
+    // Portal the lightbox to <body> so it escapes the gallery's grid/stacking
+    // context and reliably covers the whole viewport above sibling columns.
+    if (lightbox && lightbox.parentElement !== document.body) {
+      document.body.appendChild(lightbox);
+    }
+    // Query controls from the lightbox (now on body), not from root.
+    const lightboxImg = lightbox?.querySelector<HTMLImageElement>('[data-sf-lightbox-img]') ?? null;
+    const counter = lightbox?.querySelector<HTMLElement>('[data-sf-counter]') ?? null;
     const mainBtn = root.querySelector<HTMLButtonElement>('[data-sf-open]');
     const mainImg = mainBtn?.querySelector<HTMLImageElement>('img');
 
@@ -111,10 +117,10 @@ const hasMultiple = images.length > 1;
       });
     });
 
-    // lightbox controls
-    root.querySelector('[data-sf-close]')?.addEventListener('click', close);
-    root.querySelector('[data-sf-prev]')?.addEventListener('click', () => { prev(); });
-    root.querySelector('[data-sf-next]')?.addEventListener('click', () => { next(); });
+    // lightbox controls (live inside the lightbox, now portaled to body)
+    lightbox?.querySelector('[data-sf-close]')?.addEventListener('click', close);
+    lightbox?.querySelector('[data-sf-prev]')?.addEventListener('click', () => { prev(); });
+    lightbox?.querySelector('[data-sf-next]')?.addEventListener('click', () => { next(); });
 
     // click backdrop to close
     lightbox?.addEventListener('click', (e) => {
