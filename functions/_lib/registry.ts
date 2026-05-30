@@ -75,3 +75,7 @@ export async function getStore(kv: KVNamespace, slug: string): Promise<StoreReco
     return null;
   }
 }
+
+export async function deleteStore(kv: KVNamespace, slug: string): Promise<void> {
+  await kv.delete(storeKey(slug));
+}

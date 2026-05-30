@@ -4,7 +4,7 @@
  * GET — retrieve the stored manifest JSON; 404 if missing
  */
 
-import { getStore, putStore } from '../../_lib/registry';
+import { getStore, putStore, deleteStore } from '../../_lib/registry';
 import { requireWriteKey } from '../../_lib/auth';
 import type { Manifest } from '../../../src/storefront/types';
 
@@ -58,6 +58,19 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   }
 
   return new Response(JSON.stringify(record.manifest), {
+    status: 200,
+    headers: { 'content-type': 'application/json' },
+  });
+};
+
+export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
+  const denied = requireWriteKey(ctx.request, ctx.env);
+  if (denied) return denied;
+
+  const slug = ctx.params.slug as string;
+  await deleteStore(ctx.env.STORE_KV, slug);
+
+  return new Response(JSON.stringify({ ok: true, slug, deleted: true }), {
     status: 200,
     headers: { 'content-type': 'application/json' },
   });
