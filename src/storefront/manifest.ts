@@ -1,4 +1,4 @@
-import type { Localized, Manifest, Category, Product } from './types';
+import type { Localized, Manifest, Category, Product, StoreLocation } from './types';
 
 export const FALLBACK_LOCALE = 'en';
 
@@ -64,4 +64,42 @@ export function socialHref(type: string, value: string): string {
     default:
       return value;
   }
+}
+
+export function stockLabel(product: Product, locale: string): string | null {
+  const tr = locale === 'tr';
+  if (product.inStock === false || product.stockQty === 0) return tr ? 'Tükendi' : 'Sold out';
+  if (typeof product.stockQty === 'number') {
+    if (product.stockQty <= 5) return tr ? `Son ${product.stockQty}!` : `Only ${product.stockQty} left!`;
+    return tr ? `Stokta ${product.stockQty} adet` : `${product.stockQty} in stock`;
+  }
+  if (product.inStock === true) return tr ? 'Stokta var' : 'In stock';
+  return null;
+}
+
+export function mapHref(location: StoreLocation | undefined): string | null {
+  if (!location) return null;
+  if (typeof location.lat === 'number' && typeof location.lng === 'number') {
+    return `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
+  }
+  const q = [location.city, location.country].filter(Boolean).join(', ');
+  if (!q) return null;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+}
+
+export function productWhatsappHref(phone: string, productTitle: string, locale: string): string {
+  const msg = locale === 'tr'
+    ? `Merhaba, "${productTitle}" ürünü hakkında bilgi almak istiyorum.`
+    : `Hello, I'd like info about "${productTitle}".`;
+  return `${whatsappHref(phone)}?text=${encodeURIComponent(msg)}`;
+}
+
+export function storeUrl(slug: string, locale: string, defaultLang: string): string {
+  return locale === defaultLang ? `/store/${slug}` : `/store/${slug}/${locale}`;
+}
+
+export function productUrl(slug: string, productId: string, locale: string, defaultLang: string): string {
+  return locale === defaultLang
+    ? `/store/${slug}/product/${productId}`
+    : `/store/${slug}/${locale}/product/${productId}`;
 }

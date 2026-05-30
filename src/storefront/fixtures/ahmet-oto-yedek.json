@@ -33,6 +33,7 @@
       "currency": "TRY",
       "sku": "TPC-MAT-MY",
       "inStock": true,
+      "stockQty": 12,
       "images": ["https://picsum.photos/seed/p1a/800/800", "https://picsum.photos/seed/p1b/800/800"]
     },
     {
@@ -53,6 +54,7 @@
       "description": { "tr": "Karbon görünümlü.", "en": "Carbon-look finish." },
       "currency": "TRY",
       "inStock": true,
+      "stockQty": 3,
       "images": ["https://picsum.photos/seed/p3a/800/800"]
     }
   ],

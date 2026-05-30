@@ -46,6 +46,7 @@ export interface Product {
   currency?: string;
   sku?: string;
   inStock?: boolean;
+  stockQty?: number;
   images: string[];
 }
 
