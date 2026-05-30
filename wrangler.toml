@@ -3,11 +3,9 @@ pages_build_output_dir = "dist"
 compatibility_date = "2024-11-01"
 
 # KV Namespace binding for the P2 storefront registry.
-# Fill in `id` and `preview_id` after running:
-#   npx wrangler kv namespace create STORE_KV
-#   npx wrangler kv namespace create STORE_KV --preview
+# Created 2026-05-30 on cavusdagins@gmail.com account.
 # For local dev, wrangler pages dev uses --kv STORE_KV (emulated, no account needed).
 [[kv_namespaces]]
 binding = "STORE_KV"
-id = "PLACEHOLDER_FILL_AFTER_CREATING_NAMESPACE"
-preview_id = "PLACEHOLDER_FILL_AFTER_CREATING_NAMESPACE"
+id = "e81c06c817004a22ad3620dcd75e63ac"
+preview_id = "6acbd7403ff54e049fb8827a9115ac01"

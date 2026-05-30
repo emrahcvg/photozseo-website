@@ -5,13 +5,18 @@
  */
 
 import { getStore, putStore } from '../../_lib/registry';
+import { requireWriteKey } from '../../_lib/auth';
 import type { Manifest } from '../../../src/storefront/types';
 
 interface Env {
   STORE_KV: KVNamespace;
+  STORE_WRITE_KEY?: string;
 }
 
 export const onRequestPut: PagesFunction<Env> = async (ctx) => {
+  const denied = requireWriteKey(ctx.request, ctx.env);
+  if (denied) return denied;
+
   const slug = ctx.params.slug as string;
 
   let manifest: Manifest;

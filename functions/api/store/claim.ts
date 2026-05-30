@@ -5,12 +5,17 @@
  */
 
 import { claimSlug, putStore } from '../../_lib/registry';
+import { requireWriteKey } from '../../_lib/auth';
 
 interface Env {
   STORE_KV: KVNamespace;
+  STORE_WRITE_KEY?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
+  const denied = requireWriteKey(ctx.request, ctx.env);
+  if (denied) return denied;
+
   let body: { desiredSlug?: string; phone?: string };
   try {
     body = await ctx.request.json();
