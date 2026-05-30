@@ -74,9 +74,17 @@ export function specRows(
 
 // ── Shipping text ────────────────────────────────────────────────────────────
 
+export function formatWeight(grams: number, locale: string): string {
+  if (grams >= 1000) {
+    const kg = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(grams / 1000);
+    return `${kg} kg`;
+  }
+  return `${grams} g`;
+}
+
 export function shippingText(
   shipping: Product['shipping'] | undefined,
-  _locale: string,
+  locale: string,
 ): string | null {
   if (!shipping) return null;
   const { weightGrams, lengthCM, widthCM, heightCM } = shipping;
@@ -85,7 +93,7 @@ export function shippingText(
   if (!hasDims && !hasWeight) return null;
   let text = '';
   if (hasDims) text += `${lengthCM}×${widthCM}×${heightCM} cm`;
-  if (hasWeight) text += `${text ? ', ' : ''}${weightGrams} g`;
+  if (hasWeight) text += `${text ? ', ' : ''}${formatWeight(weightGrams, locale)}`;
   return text || null;
 }
 

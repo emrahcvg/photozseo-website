@@ -79,7 +79,7 @@ describe('resolveStoreLocale', () => {
     expect(resolveStoreLocale(m, 'de')).toBe('tr');
   });
 });
-import { whatsappHref, socialHref, stockLabel, mapHref, productWhatsappHref, storeUrl, productUrl, slugify, productSlug, uniqueProductSlugs, specRows, shippingText } from './manifest';
+import { whatsappHref, socialHref, stockLabel, mapHref, productWhatsappHref, storeUrl, productUrl, slugify, productSlug, uniqueProductSlugs, specRows, shippingText, formatWeight } from './manifest';
 import type { Product, StoreLocation } from './types';
 
 describe('whatsappHref', () => {
@@ -283,15 +283,30 @@ describe('specRows', () => {
 });
 
 describe('shippingText', () => {
-  it('all dims + weight', () => {
+  it('all dims + weight in kg (en)', () => {
     const s = { weightGrams: 3200, lengthCM: 60, widthCM: 45, heightCM: 8 };
-    expect(shippingText(s, 'en')).toBe('60×45×8 cm, 3200 g');
+    expect(shippingText(s, 'en')).toBe('60×45×8 cm, 3.2 kg');
   });
-  it('weight only', () => {
+  it('weight in kg uses locale decimal separator (tr)', () => {
+    expect(shippingText({ weightGrams: 3200 }, 'tr')).toBe('3,2 kg');
+  });
+  it('weight under 1kg stays grams', () => {
     expect(shippingText({ weightGrams: 250 }, 'en')).toBe('250 g');
   });
   it('null when nothing', () => {
     expect(shippingText({}, 'en')).toBeNull();
     expect(shippingText(undefined, 'en')).toBeNull();
+  });
+});
+
+describe('formatWeight', () => {
+  it('grams below 1000', () => {
+    expect(formatWeight(250, 'en')).toBe('250 g');
+  });
+  it('kg with en decimal', () => {
+    expect(formatWeight(3200, 'en')).toBe('3.2 kg');
+  });
+  it('kg with tr decimal', () => {
+    expect(formatWeight(1500, 'tr')).toBe('1,5 kg');
   });
 });
