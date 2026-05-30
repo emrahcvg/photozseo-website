@@ -79,3 +79,25 @@ describe('resolveStoreLocale', () => {
     expect(resolveStoreLocale(m, 'de')).toBe('tr');
   });
 });
+import { whatsappHref, socialHref } from './manifest';
+
+describe('whatsappHref', () => {
+  it('numaradan rakam-dışı karakterleri temizler', () => {
+    expect(whatsappHref('+90 555 111 22 33')).toBe('https://wa.me/905551112233');
+  });
+});
+
+describe('socialHref', () => {
+  it('instagram kullanıcı adından URL üretir', () => {
+    expect(socialHref('instagram', '@ahmetoto')).toBe('https://instagram.com/ahmetoto');
+  });
+  it('telegram kullanıcı adından URL üretir', () => {
+    expect(socialHref('telegram', 'ahmetoto')).toBe('https://t.me/ahmetoto');
+  });
+  it('zaten URL ise olduğu gibi döner', () => {
+    expect(socialHref('website', 'https://ornek.com')).toBe('https://ornek.com');
+  });
+  it('bilinmeyen tipte değeri olduğu gibi döner', () => {
+    expect(socialHref('other', 'serbest-metin')).toBe('serbest-metin');
+  });
+});
