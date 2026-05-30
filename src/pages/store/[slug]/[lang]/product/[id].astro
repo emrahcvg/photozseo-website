@@ -1,0 +1,35 @@
+---
+import StoreLayout from '../../../../../layouts/StoreLayout.astro';
+import ProductDetail from '../../../../../components/storefront/ProductDetail.astro';
+import { getAllManifests, getManifestBySlug } from '../../../../../storefront/source';
+import { resolveStoreLocale, resolveLocalized, uniqueProductSlugs } from '../../../../../storefront/manifest';
+import { defaultLang } from '../../../../../i18n/ui';
+
+export function getStaticPaths() {
+  const paths: { params: { slug: string; lang: string; id: string } }[] = [];
+  for (const m of getAllManifests()) {
+    const slugMap = uniqueProductSlugs(m.products, defaultLang);
+    for (const lang of m.store.languages) {
+      for (const product of m.products) {
+        paths.push({ params: { slug: m.store.slug, lang, id: slugMap.get(product.id)! } });
+      }
+    }
+  }
+  return paths;
+}
+
+const { slug, lang, id } = Astro.params;
+const manifest = getManifestBySlug(slug!)!;
+const slugMap = uniqueProductSlugs(manifest.products, defaultLang);
+const product = manifest.products.find((p) => slugMap.get(p.id) === id)!;
+const locale = resolveStoreLocale(manifest, lang);
+
+const productTitle = resolveLocalized(product.title, locale);
+const productDesc = resolveLocalized(product.description, locale)
+  || resolveLocalized(manifest.store.tagline, locale);
+const pageTitle = `${productTitle} — ${manifest.store.displayName}`;
+---
+
+<StoreLayout title={pageTitle} description={productDesc} lang={locale}>
+  <ProductDetail manifest={manifest} product={product} locale={locale} />
+</StoreLayout>

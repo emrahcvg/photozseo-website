@@ -1,0 +1,121 @@
+---
+import type { Manifest, Product } from '../../storefront/types';
+import {
+  resolveLocalized,
+  formatPrice,
+  stockLabel,
+  storeUrl,
+  productWhatsappHref,
+  specRows,
+  shippingText,
+} from '../../storefront/manifest';
+import { defaultLang } from '../../i18n/ui';
+import ProductGallery from './ProductGallery.astro';
+import '../../styles/storefront.css';
+
+interface Props {
+  manifest: Manifest;
+  product: Product;
+  locale: string;
+}
+
+const { manifest, product, locale } = Astro.props;
+
+const title = resolveLocalized(product.title, locale);
+const description = resolveLocalized(product.description, locale);
+const currency = product.currency ?? manifest.store.currency;
+const price = formatPrice(product.price, currency, locale);
+const compareAt = formatPrice(product.compareAtPrice, currency, locale);
+const stock = stockLabel(product, locale);
+const stockClass =
+  product.inStock === false || product.stockQty === 0
+    ? 'sf-stock--out'
+    : typeof product.stockQty === 'number' && product.stockQty <= 5
+      ? 'sf-stock--low'
+      : 'sf-stock--in';
+
+const backHref = storeUrl(manifest.store.slug, locale, defaultLang);
+const backLabel = locale === 'tr' ? 'Mağazaya dön' : 'Back to store';
+
+const phone = manifest.store.contact.whatsapp ?? manifest.store.contact.phone;
+const waHref = phone ? productWhatsappHref(phone, title, locale) : null;
+const waLabel = locale === 'tr' ? 'WhatsApp ile sipariş ver' : 'Order via WhatsApp';
+
+const noPrice = locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for price';
+
+const rows = specRows(product, locale);
+const ship = shippingText(product.shipping, locale);
+const specsHeading = locale === 'tr' ? 'Ürün Özellikleri' : 'Product details';
+---
+
+<div class="sf-store">
+  <a class="sf-back" href={backHref}>← {backLabel}</a>
+
+  <div class="sf-detail">
+    <div class="sf-detail__gallery">
+      <ProductGallery images={product.images} alt={title} />
+    </div>
+
+    <div class="sf-detail__info">
+      <h1 class="sf-detail__title">{title}</h1>
+
+      <div class="sf-card__price">
+        {price ? (
+          <>
+            <span class="sf-card__amount">{price}</span>
+            {compareAt && <span class="sf-card__compare">{compareAt}</span>}
+          </>
+        ) : (
+          <span class="sf-card__contact">{noPrice}</span>
+        )}
+      </div>
+
+      {stock && <span class={`sf-stock ${stockClass}`}>{stock}</span>}
+
+      {product.sku && (
+        <p class="sf-detail__sku">SKU: {product.sku}</p>
+      )}
+
+      {description && (
+        <p class="sf-detail__desc">{description}</p>
+      )}
+
+      {rows.length > 0 && (
+        <div class="sf-specs-section">
+          <h2 class="sf-specs-heading">{specsHeading}</h2>
+          <dl class="sf-specs">
+            {rows.map((row) => (
+              <div>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {ship && (
+        <p class="sf-detail__ship">📦 {ship}</p>
+      )}
+
+      {product.tags && product.tags.length > 0 && (
+        <div class="sf-tags">
+          {product.tags.map((tag) => (
+            <span class="sf-tag">#{tag}</span>
+          ))}
+        </div>
+      )}
+
+      {waHref && (
+        <a
+          class="sf-btn sf-btn--order"
+          href={waHref}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {waLabel}
+        </a>
+      )}
+    </div>
+  </div>
+</div>

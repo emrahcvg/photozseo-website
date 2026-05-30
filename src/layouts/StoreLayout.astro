@@ -1,0 +1,76 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  lang?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'photoZseo — Turn one photo into 46 marketplace-ready listings.',
+  lang = 'en',
+  ogImage = '/og-image.png',
+} = Astro.props;
+
+const rtl = ['ar', 'ur', 'fa'].includes(lang);
+const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
+const ogImageAbsolute = ogImage.startsWith('http') ? ogImage : `https://photozseo.com${ogImage}`;
+---
+
+<!doctype html>
+<html lang={lang} dir={rtl ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="canonical" href={pageUrl} />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={ogImageAbsolute} />
+    <meta property="og:locale" content={lang} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbsolute} />
+
+    <!-- SEO -->
+    <meta name="robots" content="index, follow" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #f6f7f9;
+    color: #1a1d23;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  [dir="rtl"] { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+</style>

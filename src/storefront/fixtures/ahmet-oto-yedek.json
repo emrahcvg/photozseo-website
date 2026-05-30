@@ -25,35 +25,71 @@
   "products": [
     {
       "id": "p1",
+      "slug": "tesla-model-y-paspas-seti",
       "categoryId": "c1",
       "title": { "tr": "Tesla Model Y Paspas Seti", "en": "Model Y Floor Mat Set" },
-      "description": { "tr": "Tam oturan, su geçirmez paspas seti.", "en": "Custom-fit, waterproof mat set." },
+      "description": {
+        "tr": "Tesla Model Y için tam oturan, su geçirmez TPE paspas seti. Kaymaz taban, kolay temizlenir yüzey ve yüksek kenar tasarımıyla kabini korur. Tüm hava koşullarına uygundur.",
+        "en": "Custom-fit, waterproof TPE floor mat set for Tesla Model Y. Anti-slip backing, easy-clean surface and raised edges protect your cabin in all weather."
+      },
       "price": 1499,
       "compareAtPrice": 1899,
       "currency": "TRY",
       "sku": "TPC-MAT-MY",
       "inStock": true,
-      "images": ["https://picsum.photos/seed/p1a/800/800", "https://picsum.photos/seed/p1b/800/800"]
+      "stockQty": 12,
+      "images": ["https://picsum.photos/seed/p1a/800/800", "https://picsum.photos/seed/p1b/800/800"],
+      "tags": ["tesla", "model y", "paspas", "aksesuar"],
+      "attributes": {
+        "color": { "tr": "Siyah", "en": "Black" },
+        "material": { "tr": "TPE Kauçuk", "en": "TPE Rubber" },
+        "warrantyMonths": 24,
+        "countryOfOrigin": "TR",
+        "barcode": "8690000000001"
+      },
+      "shipping": { "weightGrams": 3200, "lengthCM": 60, "widthCM": 45, "heightCM": 8 }
     },
     {
       "id": "p2",
+      "slug": "ic-ambiyans-led-kit",
       "categoryId": "c2",
       "title": { "tr": "İç Ambiyans LED Kiti", "en": "Interior Ambient LED Kit" },
-      "description": { "tr": "16 renk, uygulama kontrollü.", "en": "16 colors, app controlled." },
+      "description": {
+        "tr": "16 renk seçeneği ve uygulama kontrolüyle Tesla iç mekanınızı kişiselleştirin. USB bağlantılı, kesip yapıştırılabilen LED şerit kolay montaj sağlar. Müzik senkronizasyon modu dahildir.",
+        "en": "Personalize your Tesla interior with 16 colors and app control. USB-powered, cuttable LED strip installs in minutes. Music sync mode included."
+      },
       "price": 899,
       "currency": "TRY",
       "sku": "TPC-LED-AMB",
       "inStock": false,
-      "images": ["https://picsum.photos/seed/p2a/800/800"]
+      "images": ["https://picsum.photos/seed/p2a/800/800"],
+      "tags": ["tesla", "led", "aydınlatma", "ambiyans"],
+      "attributes": {
+        "color": { "tr": "RGB Çok Renkli", "en": "RGB Multicolor" },
+        "material": { "tr": "Silikon + Yapışkanlı Bant", "en": "Silicone + Adhesive Tape" },
+        "warrantyMonths": 12
+      },
+      "shipping": { "weightGrams": 320, "lengthCM": 25, "widthCM": 10, "heightCM": 4 }
     },
     {
       "id": "p3",
+      "slug": "plaka-cercevesi",
       "categoryId": "c2",
       "title": { "tr": "Plaka Çerçevesi", "en": "License Plate Frame" },
-      "description": { "tr": "Karbon görünümlü.", "en": "Carbon-look finish." },
+      "description": {
+        "tr": "Karbon görünümlü yüksek dayanımlı ABS plaka çerçevesi. Tesla logolu tasarımı aracınıza sportif bir görünüm katar. Paslanmaz vida takımı dahildir.",
+        "en": "High-durability ABS license plate frame with carbon-look finish. Tesla-logo design adds a sporty accent. Stainless screw set included."
+      },
       "currency": "TRY",
       "inStock": true,
-      "images": ["https://picsum.photos/seed/p3a/800/800"]
+      "stockQty": 3,
+      "images": ["https://picsum.photos/seed/p3a/800/800"],
+      "tags": ["tesla", "plaka", "aksesuar", "karbon"],
+      "attributes": {
+        "material": { "tr": "ABS Plastik (Karbon Desen)", "en": "ABS Plastic (Carbon Pattern)" },
+        "countryOfOrigin": "CN"
+      },
+      "shipping": { "weightGrams": 180, "lengthCM": 35, "widthCM": 15, "heightCM": 2 }
     }
   ],
   "meta": {

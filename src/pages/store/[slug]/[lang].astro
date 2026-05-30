@@ -1,9 +1,8 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import StoreLayout from '../../../layouts/StoreLayout.astro';
 import StorePage from '../../../components/storefront/StorePage.astro';
 import { getAllManifests, getManifestBySlug } from '../../../storefront/source';
 import { resolveStoreLocale, resolveLocalized } from '../../../storefront/manifest';
-import { type Lang } from '../../../i18n/ui';
 
 export function getStaticPaths() {
   const paths: { params: { slug: string; lang: string } }[] = [];
@@ -22,6 +21,6 @@ const title = manifest.meta.seo?.title ?? manifest.store.displayName;
 const description = manifest.meta.seo?.description ?? resolveLocalized(manifest.store.tagline, locale);
 ---
 
-<Layout title={title} description={description} lang={locale as Lang} fullBleed>
+<StoreLayout title={title} description={description} lang={locale}>
   <StorePage manifest={manifest} locale={locale} />
-</Layout>
+</StoreLayout>

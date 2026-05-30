@@ -1,0 +1,141 @@
+---
+interface Props {
+  images: string[];
+  alt: string;
+}
+
+const { images, alt } = Astro.props;
+const hasMultiple = images.length > 1;
+---
+
+<div class="sf-gallery" data-sf-gallery>
+  <button class="sf-gallery__main" data-sf-open aria-label={`View ${alt} image`}>
+    <img src={images[0] ?? ''} alt={alt} width="800" height="800" loading="eager" />
+  </button>
+
+  {hasMultiple && (
+    <div class="sf-gallery__thumbs" role="list">
+      {images.map((src, i) => (
+        <button
+          class="sf-gallery__thumb"
+          data-sf-index={i}
+          aria-label={`View image ${i + 1} of ${images.length}`}
+          role="listitem"
+        >
+          <img src={src} alt={`${alt} ${i + 1}`} width="64" height="64" loading="lazy" />
+        </button>
+      ))}
+    </div>
+  )}
+
+  <div class="sf-lightbox" data-sf-lightbox role="dialog" aria-modal="true" aria-label="Image lightbox" hidden>
+    <button class="sf-lightbox__close" data-sf-close aria-label="Close">&#x2715;</button>
+    <button class="sf-lightbox__prev" data-sf-prev aria-label="Previous">&#x2039;</button>
+    <img class="sf-lightbox__img" data-sf-lightbox-img src="" alt={alt} />
+    <button class="sf-lightbox__next" data-sf-next aria-label="Next">&#x203a;</button>
+    <span class="sf-lightbox__counter" data-sf-counter></span>
+  </div>
+
+  <script type="application/json" data-sf-images set:html={JSON.stringify(images)}></script>
+</div>
+
+<script>
+  (function () {
+    const root = document.querySelector<HTMLElement>('[data-sf-gallery]');
+    if (!root) return;
+
+    const jsonEl = root.querySelector<HTMLScriptElement>('[data-sf-images]');
+    if (!jsonEl) return;
+    const images: string[] = JSON.parse(jsonEl.textContent ?? '[]');
+    if (!images.length) return;
+
+    const lightbox = root.querySelector<HTMLElement>('[data-sf-lightbox]');
+    // Portal the lightbox to <body> so it escapes the gallery's grid/stacking
+    // context and reliably covers the whole viewport above sibling columns.
+    if (lightbox && lightbox.parentElement !== document.body) {
+      document.body.appendChild(lightbox);
+    }
+    // Query controls from the lightbox (now on body), not from root.
+    const lightboxImg = lightbox?.querySelector<HTMLImageElement>('[data-sf-lightbox-img]') ?? null;
+    const counter = lightbox?.querySelector<HTMLElement>('[data-sf-counter]') ?? null;
+    const mainBtn = root.querySelector<HTMLButtonElement>('[data-sf-open]');
+    const mainImg = mainBtn?.querySelector<HTMLImageElement>('img');
+
+    let current = 0;
+
+    function open(index: number) {
+      current = ((index % images.length) + images.length) % images.length;
+      update();
+      if (lightbox) {
+        lightbox.hidden = false;
+        lightbox.classList.add('is-open');
+      }
+      document.body.style.overflow = 'hidden';
+      lightboxImg?.focus();
+    }
+
+    function close() {
+      if (lightbox) {
+        lightbox.hidden = true;
+        lightbox.classList.remove('is-open');
+      }
+      document.body.style.overflow = '';
+      mainBtn?.focus();
+    }
+
+    function update() {
+      if (lightboxImg) lightboxImg.src = images[current] ?? '';
+      if (counter) counter.textContent = `${current + 1} / ${images.length}`;
+      // update thumb active state
+      (root as HTMLElement).querySelectorAll<HTMLButtonElement>('[data-sf-index]').forEach((btn) => {
+        const idx = parseInt(btn.dataset.sfIndex ?? '0', 10);
+        btn.classList.toggle('sf-gallery__thumb--active', idx === current);
+      });
+      // update main image to match selected thumb
+      if (mainImg) mainImg.src = images[current] ?? '';
+    }
+
+    function prev() {
+      current = ((current - 1) + images.length) % images.length;
+      update();
+    }
+
+    function next() {
+      current = (current + 1) % images.length;
+      update();
+    }
+
+    // main image button — open lightbox at current thumb selection
+    mainBtn?.addEventListener('click', () => open(current));
+
+    // thumb buttons
+    root.querySelectorAll<HTMLButtonElement>('[data-sf-index]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.sfIndex ?? '0', 10);
+        current = idx;
+        update();
+      });
+    });
+
+    // lightbox controls (live inside the lightbox, now portaled to body)
+    lightbox?.querySelector('[data-sf-close]')?.addEventListener('click', close);
+    lightbox?.querySelector('[data-sf-prev]')?.addEventListener('click', () => { prev(); });
+    lightbox?.querySelector('[data-sf-next]')?.addEventListener('click', () => { next(); });
+
+    // click backdrop to close
+    lightbox?.addEventListener('click', (e) => {
+      if (e.target === lightbox) close();
+    });
+
+    // keyboard
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox || lightbox.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+    });
+
+    // initialise thumb highlights
+    update();
+  })();
+</script>
