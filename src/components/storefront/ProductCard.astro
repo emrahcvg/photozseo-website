@@ -8,16 +8,17 @@ interface Props {
   currency: string;
   slug: string;
   defaultLang: string;
+  productSlug: string;
 }
 
-const { product, locale, currency, slug, defaultLang } = Astro.props;
+const { product, locale, currency, slug, defaultLang, productSlug } = Astro.props;
 const title = resolveLocalized(product.title, locale);
 const description = resolveLocalized(product.description, locale);
 const price = formatPrice(product.price, product.currency ?? currency, locale);
 const compareAt = formatPrice(product.compareAtPrice, product.currency ?? currency, locale);
 const image = product.images[0] ?? '';
 const soldOut = product.inStock === false;
-const href = productUrl(slug, product.id, locale, defaultLang);
+const href = productUrl(slug, productSlug, locale, defaultLang);
 const stock = stockLabel(product, locale);
 const stockClass =
   product.inStock === false || product.stockQty === 0

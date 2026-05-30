@@ -2,14 +2,16 @@
 import StoreLayout from '../../../../../layouts/StoreLayout.astro';
 import ProductDetail from '../../../../../components/storefront/ProductDetail.astro';
 import { getAllManifests, getManifestBySlug } from '../../../../../storefront/source';
-import { resolveStoreLocale, resolveLocalized } from '../../../../../storefront/manifest';
+import { resolveStoreLocale, resolveLocalized, uniqueProductSlugs } from '../../../../../storefront/manifest';
+import { defaultLang } from '../../../../../i18n/ui';
 
 export function getStaticPaths() {
   const paths: { params: { slug: string; lang: string; id: string } }[] = [];
   for (const m of getAllManifests()) {
+    const slugMap = uniqueProductSlugs(m.products, defaultLang);
     for (const lang of m.store.languages) {
       for (const product of m.products) {
-        paths.push({ params: { slug: m.store.slug, lang, id: product.id } });
+        paths.push({ params: { slug: m.store.slug, lang, id: slugMap.get(product.id)! } });
       }
     }
   }
@@ -18,7 +20,8 @@ export function getStaticPaths() {
 
 const { slug, lang, id } = Astro.params;
 const manifest = getManifestBySlug(slug!)!;
-const product = manifest.products.find((p) => p.id === id)!;
+const slugMap = uniqueProductSlugs(manifest.products, defaultLang);
+const product = manifest.products.find((p) => slugMap.get(p.id) === id)!;
 const locale = resolveStoreLocale(manifest, lang);
 
 const productTitle = resolveLocalized(product.title, locale);
