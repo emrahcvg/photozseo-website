@@ -1,0 +1,68 @@
+{
+  "store": {
+    "slug": "ahmet-oto-yedek",
+    "displayName": "Ahmet Oto Yedek",
+    "logo": "https://picsum.photos/seed/ahmetlogo/200/200",
+    "tagline": { "tr": "Orijinal Tesla yedek parça", "en": "Genuine Tesla spare parts" },
+    "location": { "city": "İstanbul", "country": "TR", "lat": 41.0, "lng": 29.0 },
+    "contact": {
+      "phone": "+905551112233",
+      "whatsapp": "+905551112233",
+      "email": "ahmet@example.com",
+      "address": "Kadıköy, İstanbul",
+      "social": [
+        { "type": "instagram", "value": "ahmetoto" },
+        { "type": "telegram", "value": "ahmetoto" }
+      ]
+    },
+    "languages": ["tr", "en"],
+    "currency": "TRY"
+  },
+  "categories": [
+    { "id": "c1", "name": { "tr": "Paspaslar", "en": "Floor Mats" } },
+    { "id": "c2", "name": { "tr": "Aydınlatma", "en": "Lighting" } }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "categoryId": "c1",
+      "title": { "tr": "Tesla Model Y Paspas Seti", "en": "Model Y Floor Mat Set" },
+      "description": { "tr": "Tam oturan, su geçirmez paspas seti.", "en": "Custom-fit, waterproof mat set." },
+      "price": 1499,
+      "compareAtPrice": 1899,
+      "currency": "TRY",
+      "sku": "TPC-MAT-MY",
+      "inStock": true,
+      "images": ["https://picsum.photos/seed/p1a/800/800", "https://picsum.photos/seed/p1b/800/800"]
+    },
+    {
+      "id": "p2",
+      "categoryId": "c2",
+      "title": { "tr": "İç Ambiyans LED Kiti", "en": "Interior Ambient LED Kit" },
+      "description": { "tr": "16 renk, uygulama kontrollü.", "en": "16 colors, app controlled." },
+      "price": 899,
+      "currency": "TRY",
+      "sku": "TPC-LED-AMB",
+      "inStock": false,
+      "images": ["https://picsum.photos/seed/p2a/800/800"]
+    },
+    {
+      "id": "p3",
+      "categoryId": "c2",
+      "title": { "tr": "Plaka Çerçevesi", "en": "License Plate Frame" },
+      "description": { "tr": "Karbon görünümlü.", "en": "Carbon-look finish." },
+      "currency": "TRY",
+      "inStock": true,
+      "images": ["https://picsum.photos/seed/p3a/800/800"]
+    }
+  ],
+  "meta": {
+    "version": 1,
+    "updatedAt": "2026-05-30T18:00:00Z",
+    "seo": {
+      "title": "Ahmet Oto Yedek — Tesla Yedek Parça",
+      "description": "Orijinal Tesla yedek parça ve aksesuar mağazası.",
+      "keywords": ["tesla", "yedek parça", "oto aksesuar"]
+    }
+  }
+}
