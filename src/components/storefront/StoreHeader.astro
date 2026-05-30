@@ -28,8 +28,11 @@ const locationText = [store.location?.city, store.location?.country].filter(Bool
   {tagline && <p class="sf-header__tagline">{tagline}</p>}
   {locationText && <p class="sf-header__location">📍 {locationText}</p>}
   <nav class="sf-header__contact" aria-label={locale === 'tr' ? 'İletişim' : 'Contact'}>
-    {buttons.map((b) => (
-      <a class="sf-btn" href={b.href} target="_blank" rel="noopener noreferrer">{b.label}</a>
-    ))}
+    {buttons.map((b) => {
+      const external = !/^(tel:|mailto:)/.test(b.href);
+      return (
+        <a class="sf-btn" href={b.href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{b.label}</a>
+      );
+    })}
   </nav>
 </header>

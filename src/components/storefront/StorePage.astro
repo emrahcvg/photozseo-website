@@ -15,10 +15,10 @@ const { manifest, locale } = Astro.props;
 const groups = groupProductsByCategory(manifest);
 ---
 
-<main class="sf-store">
+<div class="sf-store">
   <StoreHeader store={manifest.store} locale={locale} />
   {groups.map((group) => (
     <CategorySection group={group} locale={locale} currency={manifest.store.currency} />
   ))}
   <StoreFooter slug={manifest.store.slug} locale={locale} />
-</main>
+</div>
