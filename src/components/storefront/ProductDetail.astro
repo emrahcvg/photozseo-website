@@ -6,6 +6,8 @@ import {
   stockLabel,
   storeUrl,
   productWhatsappHref,
+  specRows,
+  shippingText,
 } from '../../storefront/manifest';
 import { defaultLang } from '../../i18n/ui';
 import ProductGallery from './ProductGallery.astro';
@@ -40,6 +42,10 @@ const waHref = phone ? productWhatsappHref(phone, title, locale) : null;
 const waLabel = locale === 'tr' ? 'WhatsApp ile sipariş ver' : 'Order via WhatsApp';
 
 const noPrice = locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for price';
+
+const rows = specRows(product, locale);
+const ship = shippingText(product.shipping, locale);
+const specsHeading = locale === 'tr' ? 'Ürün Özellikleri' : 'Product details';
 ---
 
 <div class="sf-store">
@@ -72,6 +78,32 @@ const noPrice = locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for p
 
       {description && (
         <p class="sf-detail__desc">{description}</p>
+      )}
+
+      {rows.length > 0 && (
+        <div class="sf-specs-section">
+          <h2 class="sf-specs-heading">{specsHeading}</h2>
+          <dl class="sf-specs">
+            {rows.map((row) => (
+              <div>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {ship && (
+        <p class="sf-detail__ship">📦 {ship}</p>
+      )}
+
+      {product.tags && product.tags.length > 0 && (
+        <div class="sf-tags">
+          {product.tags.map((tag) => (
+            <span class="sf-tag">#{tag}</span>
+          ))}
+        </div>
       )}
 
       {waHref && (
