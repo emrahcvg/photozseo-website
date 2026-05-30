@@ -1,6 +1,6 @@
 ---
 import type { StoreInfo } from '../../storefront/types';
-import { resolveLocalized, whatsappHref, socialHref } from '../../storefront/manifest';
+import { resolveLocalized, whatsappHref, socialHref, mapHref } from '../../storefront/manifest';
 
 interface Props {
   store: StoreInfo;
@@ -20,13 +20,18 @@ for (const s of c.social ?? []) {
 }
 
 const locationText = [store.location?.city, store.location?.country].filter(Boolean).join(', ');
+const map = mapHref(store.location);
 ---
 
 <header class="sf-header">
   {store.logo && <img class="sf-header__logo" src={store.logo} alt={store.displayName} width="96" height="96" />}
   <h1 class="sf-header__name">{store.displayName}</h1>
   {tagline && <p class="sf-header__tagline">{tagline}</p>}
-  {locationText && <p class="sf-header__location">📍 {locationText}</p>}
+  {locationText && (
+    map
+      ? <a class="sf-header__location sf-header__location--link" href={map} target="_blank" rel="noopener noreferrer">📍 {locationText}</a>
+      : <p class="sf-header__location">📍 {locationText}</p>
+  )}
   <nav class="sf-header__contact" aria-label={locale === 'tr' ? 'İletişim' : 'Contact'}>
     {buttons.map((b) => {
       const external = !/^(tel:|mailto:)/.test(b.href);

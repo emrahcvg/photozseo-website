@@ -1,6 +1,7 @@
 ---
 import type { Manifest } from '../../storefront/types';
 import { groupProductsByCategory } from '../../storefront/manifest';
+import { defaultLang } from '../../i18n/ui';
 import StoreHeader from './StoreHeader.astro';
 import CategorySection from './CategorySection.astro';
 import StoreFooter from './StoreFooter.astro';
@@ -13,12 +14,13 @@ interface Props {
 
 const { manifest, locale } = Astro.props;
 const groups = groupProductsByCategory(manifest);
+const slug = manifest.store.slug;
 ---
 
 <div class="sf-store">
   <StoreHeader store={manifest.store} locale={locale} />
   {groups.map((group) => (
-    <CategorySection group={group} locale={locale} currency={manifest.store.currency} />
+    <CategorySection group={group} locale={locale} currency={manifest.store.currency} slug={slug} defaultLang={defaultLang} />
   ))}
   <StoreFooter slug={manifest.store.slug} locale={locale} />
 </div>
