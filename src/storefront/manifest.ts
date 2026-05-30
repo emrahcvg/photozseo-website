@@ -1,5 +1,94 @@
 import type { Localized, Manifest, Category, Product, StoreLocation } from './types';
 
+// ── Slug helpers ────────────────────────────────────────────────────────────
+
+const TR_MAP: Record<string, string> = {
+  ç: 'c', Ç: 'c',
+  ğ: 'g', Ğ: 'g',
+  ı: 'i', İ: 'i',
+  ö: 'o', Ö: 'o',
+  ş: 's', Ş: 's',
+  ü: 'u', Ü: 'u',
+};
+
+export function slugify(text: string): string {
+  if (!text) return '';
+  // Transliterate Turkish chars first
+  let s = text.replace(/[çÇğĞıİöÖşŞüÜ]/g, (c) => TR_MAP[c] ?? c);
+  // Strip remaining diacritics via NFD decomposition
+  s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  // Lowercase, replace non-alphanumeric runs with dash
+  s = s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return s;
+}
+
+export function productSlug(product: Product, primaryLocale: string): string {
+  if (product.slug && product.slug.trim() !== '') return product.slug;
+  return slugify(resolveLocalized(product.title, primaryLocale));
+}
+
+export function uniqueProductSlugs(products: Product[], primaryLocale: string): Map<string, string> {
+  const map = new Map<string, string>();
+  const taken = new Set<string>();
+  for (const p of products) {
+    const base = productSlug(p, primaryLocale);
+    let candidate = base;
+    let n = 2;
+    while (taken.has(candidate)) {
+      candidate = `${base}-${n++}`;
+    }
+    taken.add(candidate);
+    map.set(p.id, candidate);
+  }
+  return map;
+}
+
+// ── Spec rows ────────────────────────────────────────────────────────────────
+
+export function specRows(
+  product: Product,
+  locale: string,
+): { label: string; value: string }[] {
+  const a = product.attributes;
+  if (!a) return [];
+  const tr = locale === 'tr';
+  const rows: { label: string; value: string }[] = [];
+
+  const add = (labelTr: string, labelEn: string, value: string | undefined) => {
+    if (value && value.trim() !== '') rows.push({ label: tr ? labelTr : labelEn, value });
+  };
+
+  add('Renk', 'Color', resolveLocalized(a.color, locale) || undefined);
+  add('Beden', 'Size', resolveLocalized(a.size, locale) || undefined);
+  add('Malzeme', 'Material', resolveLocalized(a.material, locale) || undefined);
+  add('Cinsiyet', 'Gender', resolveLocalized(a.gender, locale) || undefined);
+  add('Yaş grubu', 'Age group', resolveLocalized(a.ageGroup, locale) || undefined);
+  if (typeof a.warrantyMonths === 'number' && a.warrantyMonths > 0) {
+    rows.push({ label: tr ? 'Garanti' : 'Warranty', value: tr ? `${a.warrantyMonths} ay` : `${a.warrantyMonths} mo` });
+  }
+  add('Menşei', 'Origin', a.countryOfOrigin);
+  add('Barkod', 'Barcode', a.barcode);
+
+  return rows;
+}
+
+// ── Shipping text ────────────────────────────────────────────────────────────
+
+export function shippingText(
+  shipping: Product['shipping'] | undefined,
+  _locale: string,
+): string | null {
+  if (!shipping) return null;
+  const { weightGrams, lengthCM, widthCM, heightCM } = shipping;
+  const hasDims = lengthCM != null && widthCM != null && heightCM != null;
+  const hasWeight = weightGrams != null;
+  if (!hasDims && !hasWeight) return null;
+  let text = '';
+  if (hasDims) text += `${lengthCM}×${widthCM}×${heightCM} cm`;
+  if (hasWeight) text += `${text ? ', ' : ''}${weightGrams} g`;
+  return text || null;
+}
+
 export const FALLBACK_LOCALE = 'en';
 
 export function resolveLocalized(

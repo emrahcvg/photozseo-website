@@ -48,6 +48,24 @@ export interface Product {
   inStock?: boolean;
   stockQty?: number;
   images: string[];
+  slug?: string;
+  tags?: string[];
+  attributes?: {
+    color?: Localized;
+    size?: Localized;
+    material?: Localized;
+    gender?: Localized;
+    ageGroup?: Localized;
+    warrantyMonths?: number;
+    countryOfOrigin?: string;
+    barcode?: string;
+  };
+  shipping?: {
+    weightGrams?: number;
+    lengthCM?: number;
+    widthCM?: number;
+    heightCM?: number;
+  };
 }
 
 export interface ManifestMeta {

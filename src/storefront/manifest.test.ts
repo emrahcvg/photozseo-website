@@ -79,7 +79,7 @@ describe('resolveStoreLocale', () => {
     expect(resolveStoreLocale(m, 'de')).toBe('tr');
   });
 });
-import { whatsappHref, socialHref, stockLabel, mapHref, productWhatsappHref, storeUrl, productUrl } from './manifest';
+import { whatsappHref, socialHref, stockLabel, mapHref, productWhatsappHref, storeUrl, productUrl, slugify, productSlug, uniqueProductSlugs, specRows, shippingText } from './manifest';
 import type { Product, StoreLocation } from './types';
 
 describe('whatsappHref', () => {
@@ -178,10 +178,120 @@ describe('storeUrl', () => {
 });
 
 describe('productUrl', () => {
-  it('default lang — /store/slug/product/p1', () => {
-    expect(productUrl('ahmet-oto', 'p1', 'en', 'en')).toBe('/store/ahmet-oto/product/p1');
+  it('default lang — /store/slug/product/tesla-model-y-paspas-seti', () => {
+    expect(productUrl('ahmet-oto', 'tesla-model-y-paspas-seti', 'en', 'en')).toBe('/store/ahmet-oto/product/tesla-model-y-paspas-seti');
   });
-  it('other lang — /store/slug/tr/product/p1', () => {
-    expect(productUrl('ahmet-oto', 'p1', 'tr', 'en')).toBe('/store/ahmet-oto/tr/product/p1');
+  it('other lang — /store/slug/tr/product/tesla-model-y-paspas-seti', () => {
+    expect(productUrl('ahmet-oto', 'tesla-model-y-paspas-seti', 'tr', 'en')).toBe('/store/ahmet-oto/tr/product/tesla-model-y-paspas-seti');
+  });
+});
+
+describe('slugify', () => {
+  it('Turkish chars + spaces', () => {
+    expect(slugify('Tesla Model Y Paspas Seti')).toBe('tesla-model-y-paspas-seti');
+  });
+  it('İ (capital dotted I) → i', () => {
+    expect(slugify('İç Ambiyans LED Kiti')).toBe('ic-ambiyans-led-kiti');
+  });
+  it('ç,ş transliteration', () => {
+    expect(slugify('Çelik Şönt')).toBe('celik-sont');
+  });
+  it('trims leading/trailing spaces', () => {
+    expect(slugify('  hello world  ')).toBe('hello-world');
+  });
+  it('empty string → empty string', () => {
+    expect(slugify('')).toBe('');
+  });
+});
+
+describe('productSlug', () => {
+  const base: Product = { id: 'p1', title: { tr: 'Tesla Model Y Paspas Seti', en: 'Model Y Floor Mat Set' }, images: [] };
+
+  it('uses product.slug when set', () => {
+    expect(productSlug({ ...base, slug: 'tesla-model-y-paspas-seti' }, 'tr')).toBe('tesla-model-y-paspas-seti');
+  });
+  it('derives slug from title when product.slug not set', () => {
+    expect(productSlug(base, 'tr')).toBe('tesla-model-y-paspas-seti');
+  });
+  it('falls back to en title when locale not available', () => {
+    expect(productSlug(base, 'de')).toBe('model-y-floor-mat-set');
+  });
+});
+
+describe('uniqueProductSlugs', () => {
+  it('assigns unique slugs, deduplicating with -2 suffix', () => {
+    const p1: Product = { id: 'p1', title: { en: 'Mat' }, images: [] };
+    const p2: Product = { id: 'p2', title: { en: 'Mat' }, images: [] };
+    const map = uniqueProductSlugs([p1, p2], 'en');
+    expect(map.get('p1')).toBe('mat');
+    expect(map.get('p2')).toBe('mat-2');
+  });
+  it('assigns -3 for third duplicate', () => {
+    const p1: Product = { id: 'p1', title: { en: 'X' }, images: [] };
+    const p2: Product = { id: 'p2', title: { en: 'X' }, images: [] };
+    const p3: Product = { id: 'p3', title: { en: 'X' }, images: [] };
+    const map = uniqueProductSlugs([p1, p2, p3], 'en');
+    expect(map.get('p3')).toBe('x-3');
+  });
+  it('non-conflicting slugs stay unchanged', () => {
+    const p1: Product = { id: 'p1', title: { en: 'Alpha' }, images: [] };
+    const p2: Product = { id: 'p2', title: { en: 'Beta' }, images: [] };
+    const map = uniqueProductSlugs([p1, p2], 'en');
+    expect(map.get('p1')).toBe('alpha');
+    expect(map.get('p2')).toBe('beta');
+  });
+});
+
+describe('specRows', () => {
+  it('returns rows for defined attributes in order', () => {
+    const p: Product = {
+      id: 'p1', title: { en: 'T' }, images: [],
+      attributes: {
+        color: { tr: 'Siyah', en: 'Black' },
+        material: { tr: 'TPE Kauçuk', en: 'TPE Rubber' },
+        warrantyMonths: 24,
+        countryOfOrigin: 'TR',
+        barcode: '8690000000001',
+      },
+    };
+    const rows = specRows(p, 'en');
+    expect(rows).toEqual([
+      { label: 'Color', value: 'Black' },
+      { label: 'Material', value: 'TPE Rubber' },
+      { label: 'Warranty', value: '24 mo' },
+      { label: 'Origin', value: 'TR' },
+      { label: 'Barcode', value: '8690000000001' },
+    ]);
+  });
+  it('returns tr labels for tr locale', () => {
+    const p: Product = {
+      id: 'p1', title: { tr: 'T' }, images: [],
+      attributes: { color: { tr: 'Siyah', en: 'Black' }, warrantyMonths: 12 },
+    };
+    const rows = specRows(p, 'tr');
+    expect(rows[0]).toEqual({ label: 'Renk', value: 'Siyah' });
+    expect(rows[1]).toEqual({ label: 'Garanti', value: '12 ay' });
+  });
+  it('empty attributes → []', () => {
+    const p: Product = { id: 'p1', title: { en: 'T' }, images: [], attributes: {} };
+    expect(specRows(p, 'en')).toEqual([]);
+  });
+  it('no attributes → []', () => {
+    const p: Product = { id: 'p1', title: { en: 'T' }, images: [] };
+    expect(specRows(p, 'en')).toEqual([]);
+  });
+});
+
+describe('shippingText', () => {
+  it('all dims + weight', () => {
+    const s = { weightGrams: 3200, lengthCM: 60, widthCM: 45, heightCM: 8 };
+    expect(shippingText(s, 'en')).toBe('60×45×8 cm, 3200 g');
+  });
+  it('weight only', () => {
+    expect(shippingText({ weightGrams: 250 }, 'en')).toBe('250 g');
+  });
+  it('null when nothing', () => {
+    expect(shippingText({}, 'en')).toBeNull();
+    expect(shippingText(undefined, 'en')).toBeNull();
   });
 });
