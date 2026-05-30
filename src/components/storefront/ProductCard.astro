@@ -1,0 +1,39 @@
+---
+import type { Product } from '../../storefront/types';
+import { resolveLocalized, formatPrice } from '../../storefront/manifest';
+
+interface Props {
+  product: Product;
+  locale: string;
+  currency: string;
+}
+
+const { product, locale, currency } = Astro.props;
+const title = resolveLocalized(product.title, locale);
+const description = resolveLocalized(product.description, locale);
+const price = formatPrice(product.price, product.currency ?? currency, locale);
+const compareAt = formatPrice(product.compareAtPrice, product.currency ?? currency, locale);
+const image = product.images[0] ?? '';
+const soldOut = product.inStock === false;
+---
+
+<article class="sf-card">
+  <div class="sf-card__media">
+    {image && <img src={image} alt={title} loading="lazy" width="800" height="800" />}
+    {soldOut && <span class="sf-card__badge">{locale === 'tr' ? 'Tükendi' : 'Sold out'}</span>}
+  </div>
+  <div class="sf-card__body">
+    <h3 class="sf-card__title">{title}</h3>
+    {description && <p class="sf-card__desc">{description}</p>}
+    <div class="sf-card__price">
+      {price ? (
+        <>
+          <span class="sf-card__amount">{price}</span>
+          {compareAt && <span class="sf-card__compare">{compareAt}</span>}
+        </>
+      ) : (
+        <span class="sf-card__contact">{locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for price'}</span>
+      )}
+    </div>
+  </div>
+</article>

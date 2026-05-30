@@ -1,0 +1,17 @@
+---
+interface Props {
+  slug: string;
+  locale: string;
+}
+
+const { slug, locale } = Astro.props;
+const poweredBy = locale === 'tr' ? 'Bu mağaza photoZseo ile oluşturuldu' : 'This store was created with photoZseo';
+const reportLabel = locale === 'tr' ? 'Bu mağazayı şikayet et' : 'Report this store';
+const reportHref = `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report store: ' + slug)}`;
+---
+
+<footer class="sf-footer">
+  <a class="sf-footer__brand" href="https://photozseo.com" target="_blank" rel="noopener noreferrer">{poweredBy}</a>
+  <span class="sf-footer__sep">·</span>
+  <a class="sf-footer__report" href={reportHref}>{reportLabel}</a>
+</footer>

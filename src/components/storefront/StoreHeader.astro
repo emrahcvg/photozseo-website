@@ -1,0 +1,38 @@
+---
+import type { StoreInfo } from '../../storefront/types';
+import { resolveLocalized, whatsappHref, socialHref } from '../../storefront/manifest';
+
+interface Props {
+  store: StoreInfo;
+  locale: string;
+}
+
+const { store, locale } = Astro.props;
+const tagline = resolveLocalized(store.tagline, locale);
+const c = store.contact;
+
+const buttons: { label: string; href: string }[] = [];
+if (c.whatsapp) buttons.push({ label: 'WhatsApp', href: whatsappHref(c.whatsapp) });
+if (c.phone) buttons.push({ label: locale === 'tr' ? 'Ara' : 'Call', href: `tel:${c.phone}` });
+if (c.email) buttons.push({ label: 'E-mail', href: `mailto:${c.email}` });
+for (const s of c.social ?? []) {
+  buttons.push({ label: s.type, href: socialHref(s.type, s.value) });
+}
+
+const locationText = [store.location?.city, store.location?.country].filter(Boolean).join(', ');
+---
+
+<header class="sf-header">
+  {store.logo && <img class="sf-header__logo" src={store.logo} alt={store.displayName} width="96" height="96" />}
+  <h1 class="sf-header__name">{store.displayName}</h1>
+  {tagline && <p class="sf-header__tagline">{tagline}</p>}
+  {locationText && <p class="sf-header__location">📍 {locationText}</p>}
+  <nav class="sf-header__contact" aria-label={locale === 'tr' ? 'İletişim' : 'Contact'}>
+    {buttons.map((b) => {
+      const external = !/^(tel:|mailto:)/.test(b.href);
+      return (
+        <a class="sf-btn" href={b.href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{b.label}</a>
+      );
+    })}
+  </nav>
+</header>
