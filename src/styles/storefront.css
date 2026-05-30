@@ -183,7 +183,7 @@
 .sf-lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: #0a0c12;
   display: flex;
   align-items: center;
   justify-content: center;
