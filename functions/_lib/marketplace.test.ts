@@ -250,3 +250,70 @@ describe('getOrama', () => {
     expect(idx2).toBe(idx1);
   });
 });
+
+import { searchProducts } from './marketplace';
+
+// translate.test.ts'teki fakeAI deseni.
+function fakeAI(map: Record<string, string> = {}) {
+  let calls = 0;
+  const ai = {
+    run: async (_m: string, inputs: any) => {
+      calls++;
+      const user = (inputs.messages ?? []).find((x: any) => x.role === 'user')?.content ?? '';
+      return { response: map[user] ?? user };
+    },
+  };
+  return { ai, get calls() { return calls; } };
+}
+
+describe('searchProducts', () => {
+  it('sadece listed mağaza ürünlerini filtre + facet ile döner', async () => {
+    // beta (marketplaceListed:false) hariç tutulur → yalnız acme'nin 2 ürünü.
+    const { db } = await seedTwoStores();
+    const { ai } = fakeAI();
+    const res = await searchProducts(db as any, ai as any, {});
+    expect(res.total).toBe(2);
+    expect(res.facets.categories['electronics.phones']).toBe(1);
+    expect(res.facets.cities['Istanbul']).toBeGreaterThan(0);
+  });
+
+  it('q full-text Orama ile filtreler', async () => {
+    const { db } = await seedTwoStores();
+    const { ai } = fakeAI();
+    const res = await searchProducts(db as any, ai as any, { q: 'Tava' });
+    expect(res.total).toBe(1);
+    expect(res.items[0].title).toBe('Tava');
+  });
+
+  it('categoryId + minPrice filtreler', async () => {
+    // Yalnız listed acme görünür: p1 electronics.phones@100, p2 home.kitchen@50.
+    const { db } = await seedTwoStores();
+    const { ai } = fakeAI();
+    const res = await searchProducts(db as any, ai as any, { categoryId: 'electronics.phones', minPrice: 60 });
+    expect(res.total).toBe(1);
+    expect(res.items[0].price).toBe(100);
+  });
+
+  it('sort price_asc fiyata göre sıralar', async () => {
+    const { db } = await seedTwoStores();
+    const { ai } = fakeAI();
+    const res = await searchProducts(db as any, ai as any, { sort: 'price_asc' });
+    const prices = res.items.map((r) => r.price);
+    expect(prices).toEqual([...prices].sort((a, b) => (a! - b!)));
+  });
+
+  it('q farklı dildeyse AI ile kanonik dile çevirir', async () => {
+    const { db } = await seedTwoStores();
+    // Kanonik dil tr (makeRecord languages[0]='tr'). İngilizce sorgu "Pan" → "Tava".
+    const { ai, calls } = fakeAI({ Pan: 'Tava' });
+    const res = await searchProducts(db as any, ai as any, { q: 'Pan', lang: 'en' });
+    expect(res.items.some((r) => r.title === 'Tava')).toBe(true);
+  });
+
+  it('q kanonik dildeyse AI çağrılmaz', async () => {
+    const { db } = await seedTwoStores();
+    const f = fakeAI();
+    await searchProducts(db as any, f.ai as any, { q: 'Tava', lang: 'tr' });
+    expect(f.calls).toBe(0);
+  });
+});

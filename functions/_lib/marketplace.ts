@@ -296,3 +296,91 @@ export async function getOrama(db: D1Database): Promise<OramaIndex> {
 export function __resetOramaCache(): void {
   _oramaCache = null;
 }
+
+// ── Sorgu çevirisi (kanonik dile) ──────────────────────────────────────────────
+
+const LANG_NAMES: Record<string, string> = {
+  en: 'English', tr: 'Turkish', de: 'German', es: 'Spanish', pt: 'Portuguese',
+  ja: 'Japanese', ko: 'Korean', zh: 'Chinese (Simplified)', ar: 'Arabic',
+  fa: 'Persian', ur: 'Urdu', hi: 'Hindi',
+};
+
+// Kanonik dili D1 store satırlarından çıkar (çoğunluk / ilk listed store dili).
+async function inferCanonicalLang(db: D1Database): Promise<string> {
+  const stores = await fetchListedStores(db);
+  return stores[0]?.lang ?? DEFAULT_LANG;
+}
+
+async function translateQuery(ai: AiBinding, q: string, fromLang: string, toLang: string): Promise<string> {
+  if (fromLang === toLang) return q;
+  const src = LANG_NAMES[fromLang] ?? fromLang;
+  const tgt = LANG_NAMES[toLang] ?? toLang;
+  const system = `You are a search query translator. Translate the user's product search query from ${src} to ${tgt}. Output ONLY the translated query — no quotes, no notes.`;
+  try {
+    const res = await ai.run('@cf/meta/llama-3.1-8b-instruct', {
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: q },
+      ],
+      max_tokens: 64,
+      temperature: 0.1,
+    });
+    const out = (res.response ?? res.translated_text ?? '').trim();
+    return out || q;
+  } catch {
+    return q; // graceful: çeviri başarısızsa orijinal sorgu
+  }
+}
+
+// ── searchProducts ─────────────────────────────────────────────────────────────
+
+async function joinedRows(db: D1Database): Promise<JoinedRow[]> {
+  const products = await fetchAllProducts(db);
+  const stores = await fetchListedStores(db);
+  const cityBySlug = new Map(stores.map((s) => [s.slug, s.city]));
+  const listedSlugs = new Set(stores.map((s) => s.slug));
+  // Sadece listed mağazaların ürünleri pazar yerinde görünür.
+  return products
+    .filter((p) => listedSlugs.has(p.store_slug))
+    .map((p) => ({ ...p, city: cityBySlug.get(p.store_slug) ?? '' }));
+}
+
+function sortRows(rows: JoinedRow[], sort?: SearchOpts['sort']): JoinedRow[] {
+  const r = [...rows];
+  if (sort === 'price_asc') r.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
+  else if (sort === 'price_desc') r.sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity));
+  else r.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? '')); // new
+  return r;
+}
+
+export async function searchProducts(
+  db: D1Database,
+  ai: AiBinding,
+  opts: SearchOpts,
+): Promise<{ items: ProductRow[]; facets: Facets; total: number }> {
+  let rows = await joinedRows(db);
+
+  // 1) Full-text (Orama) — q varsa eşleşen id'lere indir.
+  if (opts.q && opts.q.trim() !== '') {
+    const canonical = await inferCanonicalLang(db);
+    const queryLang = opts.lang ?? canonical;
+    const term = await translateQuery(ai, opts.q.trim(), queryLang, canonical);
+    const orama = await getOrama(db);
+    const res = await search(orama.db, { term, limit: 1000 });
+    const ids = new Set(res.hits.map((h) => String(h.document.id)));
+    rows = rows.filter((r) => ids.has(r.id));
+  }
+
+  // 2) Yapısal filtreler.
+  rows = applyFilters(rows, opts);
+
+  // 3) Facet'ler filtrelenmiş küme üzerinden.
+  const facets = computeFacets(rows);
+
+  // 4) Sırala + sayfala.
+  const sorted = sortRows(rows, opts.sort);
+  const total = sorted.length;
+  const items = paginate(sorted, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
+
+  return { items, facets, total };
+}
