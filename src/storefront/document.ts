@@ -21,6 +21,8 @@ export interface DocumentOptions {
   alternates?: AlternateLink[];
   ogImage?: string;
   jsonLd?: string; // already JSON.stringify'd, NOT yet escaped for </script>
+  stylesheets?: string[];
+  bodyScripts?: string[];
 }
 
 /** Neutralize a closing-script sequence so JSON-LD can't break out of its tag. */
@@ -75,11 +77,19 @@ export function renderDocument(opts: DocumentOptions): string {
   if (ogImage) head += `\n<meta name="twitter:image" content="${esc(ogImage)}" />`;
 
   head += `
-<meta name="robots" content="index, follow" />
-<link rel="stylesheet" href="/storefront.css" />`;
+<meta name="robots" content="index, follow" />`;
+  const sheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css'];
+  for (const href of sheets) {
+    head += `\n<link rel="stylesheet" href="${esc(href)}" />`;
+  }
 
   if (jsonLd) {
     head += `\n<script type="application/ld+json">${safeJsonLd(jsonLd)}</script>`;
+  }
+
+  let bodyScripts = '';
+  for (const src of opts.bodyScripts ?? []) {
+    bodyScripts += `<script src="${esc(src)}" defer></script>`;
   }
 
   return `<!doctype html>
@@ -87,6 +97,6 @@ export function renderDocument(opts: DocumentOptions): string {
 <head>
 ${head}
 </head>
-<body>${body}</body>
+<body>${body}${bodyScripts}</body>
 </html>`;
 }
