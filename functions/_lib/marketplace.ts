@@ -174,3 +174,46 @@ export async function removeStoreFromD1(db: D1Database, slug: string): Promise<v
   await db.prepare(`DELETE FROM products WHERE store_slug = ?`).bind(slug).run();
   await db.prepare(`DELETE FROM stores WHERE slug = ?`).bind(slug).run();
 }
+
+// ── Listeleme sorguları (D1'den çek, JS'te filtre/sırala/sayfala) ─────────────
+
+async function fetchAllProducts(db: D1Database): Promise<ProductRow[]> {
+  const { results } = await db.prepare(
+    `SELECT id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at
+     FROM products`
+  ).all<ProductRow>();
+  return results ?? [];
+}
+
+async function fetchListedStores(db: D1Database): Promise<StoreRow[]> {
+  const { results } = await db.prepare(
+    `SELECT slug, name, city, country, iban, iban_name, whatsapp, listed, lang, index_version, updated_at
+     FROM stores WHERE listed = 1`
+  ).all<StoreRow>();
+  return results ?? [];
+}
+
+function paginate<T>(items: T[], limit?: number, offset?: number): T[] {
+  const start = offset ?? 0;
+  const end = limit != null ? start + limit : undefined;
+  return items.slice(start, end);
+}
+
+export async function listStores(
+  db: D1Database,
+  opts: { limit?: number; offset?: number },
+): Promise<{ items: StoreRow[]; total: number }> {
+  const all = await fetchListedStores(db);
+  all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
+  return { items: paginate(all, opts.limit, opts.offset), total: all.length };
+}
+
+export async function listNewProducts(
+  db: D1Database,
+  opts: { limit?: number; offset?: number; categoryId?: string },
+): Promise<{ items: ProductRow[]; total: number }> {
+  let all = await fetchAllProducts(db);
+  if (opts.categoryId) all = all.filter((p) => p.category_id === opts.categoryId);
+  all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
+  return { items: paginate(all, opts.limit, opts.offset), total: all.length };
+}

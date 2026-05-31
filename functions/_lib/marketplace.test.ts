@@ -156,3 +156,45 @@ describe('removeStoreFromD1', () => {
     expect(tables.products).toHaveLength(0);
   });
 });
+
+import { listStores, listNewProducts } from './marketplace';
+
+async function seedTwoStores() {
+  const { db, tables } = makeFakeD1();
+  await upsertStoreToD1(db as any, 'acme', makeRecord({ displayName: 'ACME' }, [
+    { id: 'p1', categoryId: 'electronics.phones', title: { tr: 'Telefon' }, price: 100, inStock: true, images: ['a.jpg'] },
+    { id: 'p2', categoryId: 'home.kitchen', title: { tr: 'Tava' }, price: 50, inStock: true, images: ['b.jpg'] },
+  ]));
+  await upsertStoreToD1(db as any, 'beta', makeRecord({ slug: 'beta', displayName: 'BETA', marketplaceListed: false }, [
+    { id: 'p3', categoryId: 'electronics.phones', title: { tr: 'Telefon2' }, price: 200, inStock: false, images: ['c.jpg'] },
+  ]));
+  return { db, tables };
+}
+
+describe('listStores', () => {
+  it('sadece listed=1 mağazaları döner', async () => {
+    const { db } = await seedTwoStores();
+    const res = await listStores(db as any, {});
+    expect(res.total).toBe(1);
+    expect(res.items[0].slug).toBe('acme');
+  });
+});
+
+describe('listNewProducts', () => {
+  it('tüm ürünleri döner (limit yok)', async () => {
+    const { db } = await seedTwoStores();
+    const res = await listNewProducts(db as any, {});
+    expect(res.total).toBe(3);
+  });
+  it('categoryId filtreler', async () => {
+    const { db } = await seedTwoStores();
+    const res = await listNewProducts(db as any, { categoryId: 'electronics.phones' });
+    expect(res.total).toBe(2);
+  });
+  it('limit + offset uygular', async () => {
+    const { db } = await seedTwoStores();
+    const res = await listNewProducts(db as any, { limit: 1, offset: 1 });
+    expect(res.items).toHaveLength(1);
+    expect(res.total).toBe(3); // total filtre sonrası ama sayfalama öncesi
+  });
+});
