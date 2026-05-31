@@ -1,0 +1,101 @@
+{
+  "taxonomyVersion": 1,
+  "nodes": [
+    {
+      "id": "electronics",
+      "name": { "en": "Electronics", "tr": "Elektronik", "de": "Elektronik", "es": "Electrónica", "pt": "Eletrônicos", "ja": "電化製品", "ko": "전자제품", "zh": "电子产品", "ar": "إلكترونيات", "fa": "الکترونیک", "hi": "इलेक्ट्रॉनिक्स", "ur": "الیکٹرانکس" },
+      "children": [
+        { "id": "electronics.phones", "name": { "en": "Phones & Accessories", "tr": "Telefon ve Aksesuar", "de": "Telefone & Zubehör", "es": "Teléfonos y accesorios", "pt": "Telefones e acessórios", "ja": "電話・アクセサリー", "ko": "휴대폰 및 액세서리", "zh": "手机及配件", "ar": "الهواتف والإكسسوارات", "fa": "تلفن و لوازم جانبی", "hi": "फ़ोन और सहायक उपकरण", "ur": "فون اور لوازمات" } },
+        { "id": "electronics.computers", "name": { "en": "Computers & Tablets", "tr": "Bilgisayar ve Tablet", "de": "Computer & Tablets", "es": "Computadoras y tabletas", "pt": "Computadores e tablets", "ja": "コンピュータ・タブレット", "ko": "컴퓨터 및 태블릿", "zh": "电脑和平板", "ar": "أجهزة الكمبيوتر والأجهزة اللوحية", "fa": "رایانه و تبلت", "hi": "कंप्यूटर और टैबलेट", "ur": "کمپیوٹر اور ٹیبلٹ" } },
+        { "id": "electronics.audio", "name": { "en": "Audio & Headphones", "tr": "Ses ve Kulaklık", "de": "Audio & Kopfhörer", "es": "Audio y auriculares", "pt": "Áudio e fones", "ja": "オーディオ・ヘッドホン", "ko": "오디오 및 헤드폰", "zh": "音频和耳机", "ar": "الصوت وسماعات الرأس", "fa": "صوت و هدفون", "hi": "ऑडियो और हेडफ़ोन", "ur": "آڈیو اور ہیڈ فون" } }
+      ]
+    },
+    {
+      "id": "clothing",
+      "name": { "en": "Clothing & Apparel", "tr": "Giyim", "de": "Kleidung", "es": "Ropa", "pt": "Vestuário", "ja": "衣料品", "ko": "의류", "zh": "服装", "ar": "الملابس", "fa": "پوشاک", "hi": "कपड़े", "ur": "کپڑے" },
+      "children": [
+        { "id": "clothing.womens", "name": { "en": "Women's Clothing", "tr": "Kadın Giyim", "de": "Damenmode", "es": "Ropa de mujer", "pt": "Roupa feminina", "ja": "レディース", "ko": "여성 의류", "zh": "女装", "ar": "ملابس نسائية", "fa": "پوشاک زنانه", "hi": "महिलाओं के कपड़े", "ur": "خواتین کے کپڑے" } },
+        { "id": "clothing.mens", "name": { "en": "Men's Clothing", "tr": "Erkek Giyim", "de": "Herrenmode", "es": "Ropa de hombre", "pt": "Roupa masculina", "ja": "メンズ", "ko": "남성 의류", "zh": "男装", "ar": "ملابس رجالية", "fa": "پوشاک مردانه", "hi": "पुरुषों के कपड़े", "ur": "مردوں کے کپڑے" } },
+        { "id": "clothing.kids", "name": { "en": "Kids & Baby", "tr": "Çocuk ve Bebek", "de": "Kinder & Baby", "es": "Niños y bebés", "pt": "Crianças e bebês", "ja": "キッズ・ベビー", "ko": "아동 및 유아", "zh": "儿童和婴儿", "ar": "أطفال ورضع", "fa": "کودک و نوزاد", "hi": "बच्चे और शिशु", "ur": "بچے اور شیر خوار" } },
+        { "id": "clothing.shoes", "name": { "en": "Shoes", "tr": "Ayakkabı", "de": "Schuhe", "es": "Calzado", "pt": "Calçados", "ja": "靴", "ko": "신발", "zh": "鞋类", "ar": "أحذية", "fa": "کفش", "hi": "जूते", "ur": "جوتے" } }
+      ]
+    },
+    {
+      "id": "home",
+      "name": { "en": "Home & Garden", "tr": "Ev ve Bahçe", "de": "Haus & Garten", "es": "Hogar y jardín", "pt": "Casa e jardim", "ja": "ホーム・ガーデン", "ko": "홈 & 가든", "zh": "家居和园艺", "ar": "المنزل والحديقة", "fa": "خانه و باغ", "hi": "घर और बगीचा", "ur": "گھر اور باغ" },
+      "children": [
+        { "id": "home.furniture", "name": { "en": "Furniture", "tr": "Mobilya", "de": "Möbel", "es": "Muebles", "pt": "Móveis", "ja": "家具", "ko": "가구", "zh": "家具", "ar": "أثاث", "fa": "مبلمان", "hi": "फर्नीचर", "ur": "فرنیچر" } },
+        { "id": "home.kitchen", "name": { "en": "Kitchen & Dining", "tr": "Mutfak ve Sofra", "de": "Küche & Esszimmer", "es": "Cocina y comedor", "pt": "Cozinha e jantar", "ja": "キッチン・ダイニング", "ko": "주방 및 식탁", "zh": "厨房和餐饮", "ar": "المطبخ والطعام", "fa": "آشپزخانه و ناهارخوری", "hi": "रसोई और भोजन", "ur": "باورچی خانہ اور کھانا" } },
+        { "id": "home.decor", "name": { "en": "Home Decor", "tr": "Ev Dekorasyonu", "de": "Wohndeko", "es": "Decoración", "pt": "Decoração", "ja": "ホームデコール", "ko": "홈 데코", "zh": "家居装饰", "ar": "ديكور المنزل", "fa": "دکوراسیون منزل", "hi": "घर की सजावट", "ur": "گھر کی سجاوٹ" } }
+      ]
+    },
+    {
+      "id": "beauty",
+      "name": { "en": "Beauty & Personal Care", "tr": "Kozmetik ve Kişisel Bakım", "de": "Schönheit & Körperpflege", "es": "Belleza y cuidado personal", "pt": "Beleza e cuidados pessoais", "ja": "美容・パーソナルケア", "ko": "뷰티 & 퍼스널케어", "zh": "美容和个人护理", "ar": "الجمال والعناية الشخصية", "fa": "زیبایی و مراقبت شخصی", "hi": "सौंदर्य और व्यक्तिगत देखभाल", "ur": "خوبصورتی اور ذاتی نگہداشت" },
+      "children": [
+        { "id": "beauty.makeup", "name": { "en": "Makeup", "tr": "Makyaj", "de": "Make-up", "es": "Maquillaje", "pt": "Maquiagem", "ja": "メイクアップ", "ko": "메이크업", "zh": "化妆", "ar": "مكياج", "fa": "آرایش", "hi": "मेकअप", "ur": "میک اپ" } },
+        { "id": "beauty.skincare", "name": { "en": "Skincare", "tr": "Cilt Bakımı", "de": "Hautpflege", "es": "Cuidado de la piel", "pt": "Cuidados com a pele", "ja": "スキンケア", "ko": "스킨케어", "zh": "护肤", "ar": "العناية بالبشرة", "fa": "مراقبت از پوست", "hi": "त्वचा की देखभाल", "ur": "جلد کی نگہداشت" } },
+        { "id": "beauty.fragrance", "name": { "en": "Fragrance", "tr": "Parfüm", "de": "Düfte", "es": "Fragancia", "pt": "Perfume", "ja": "フレグランス", "ko": "향수", "zh": "香水", "ar": "العطور", "fa": "عطر", "hi": "सुगंध", "ur": "خوشبو" } }
+      ]
+    },
+    {
+      "id": "jewelry",
+      "name": { "en": "Jewelry & Accessories", "tr": "Takı ve Aksesuar", "de": "Schmuck & Accessoires", "es": "Joyería y accesorios", "pt": "Joias e acessórios", "ja": "ジュエリー・アクセサリー", "ko": "주얼리 & 액세서리", "zh": "珠宝和配饰", "ar": "المجوهرات والإكسسوارات", "fa": "جواهرات و لوازم جانبی", "hi": "आभूषण और सहायक उपकरण", "ur": "زیورات اور لوازمات" },
+      "children": [
+        { "id": "jewelry.rings", "name": { "en": "Rings", "tr": "Yüzükler", "de": "Ringe", "es": "Anillos", "pt": "Anéis", "ja": "指輪", "ko": "반지", "zh": "戒指", "ar": "خواتم", "fa": "انگشتر", "hi": "अंगूठियाँ", "ur": "انگوٹھیاں" } },
+        { "id": "jewelry.necklaces", "name": { "en": "Necklaces", "tr": "Kolyeler", "de": "Halsketten", "es": "Collares", "pt": "Colares", "ja": "ネックレス", "ko": "목걸이", "zh": "项链", "ar": "قلائد", "fa": "گردنبند", "hi": "हार", "ur": "ہار" } },
+        { "id": "jewelry.watches", "name": { "en": "Watches", "tr": "Saatler", "de": "Uhren", "es": "Relojes", "pt": "Relógios", "ja": "腕時計", "ko": "시계", "zh": "手表", "ar": "ساعات", "fa": "ساعت", "hi": "घड़ियाँ", "ur": "گھڑیاں" } }
+      ]
+    },
+    {
+      "id": "toys",
+      "name": { "en": "Toys & Games", "tr": "Oyuncak ve Oyun", "de": "Spielzeug & Spiele", "es": "Juguetes y juegos", "pt": "Brinquedos e jogos", "ja": "おもちゃ・ゲーム", "ko": "장난감 및 게임", "zh": "玩具和游戏", "ar": "الألعاب", "fa": "اسباب‌بازی و بازی", "hi": "खिलौने और खेल", "ur": "کھلونے اور کھیل" },
+      "children": []
+    },
+    {
+      "id": "sports",
+      "name": { "en": "Sports & Outdoors", "tr": "Spor ve Outdoor", "de": "Sport & Freizeit", "es": "Deportes y aire libre", "pt": "Esportes e ar livre", "ja": "スポーツ・アウトドア", "ko": "스포츠 & 아웃도어", "zh": "运动和户外", "ar": "الرياضة والأنشطة الخارجية", "fa": "ورزش و فضای باز", "hi": "खेल और आउटडोर", "ur": "کھیل اور آؤٹ ڈور" },
+      "children": []
+    },
+    {
+      "id": "books",
+      "name": { "en": "Books & Stationery", "tr": "Kitap ve Kırtasiye", "de": "Bücher & Schreibwaren", "es": "Libros y papelería", "pt": "Livros e papelaria", "ja": "本・文房具", "ko": "도서 및 문구", "zh": "图书和文具", "ar": "الكتب والقرطاسية", "fa": "کتاب و لوازم‌التحریر", "hi": "किताबें और स्टेशनरी", "ur": "کتابیں اور اسٹیشنری" },
+      "children": []
+    },
+    {
+      "id": "food",
+      "name": { "en": "Food & Beverages", "tr": "Gıda ve İçecek", "de": "Lebensmittel & Getränke", "es": "Alimentos y bebidas", "pt": "Alimentos e bebidas", "ja": "食品・飲料", "ko": "식품 및 음료", "zh": "食品和饮料", "ar": "الطعام والمشروبات", "fa": "غذا و نوشیدنی", "hi": "भोजन और पेय", "ur": "کھانا اور مشروبات" },
+      "children": []
+    },
+    {
+      "id": "pets",
+      "name": { "en": "Pet Supplies", "tr": "Evcil Hayvan Ürünleri", "de": "Haustierbedarf", "es": "Artículos para mascotas", "pt": "Produtos para pets", "ja": "ペット用品", "ko": "반려동물 용품", "zh": "宠物用品", "ar": "مستلزمات الحيوانات الأليفة", "fa": "لوازم حیوانات خانگی", "hi": "पालतू पशु आपूर्ति", "ur": "پالتو جانوروں کا سامان" },
+      "children": []
+    },
+    {
+      "id": "automotive",
+      "name": { "en": "Automotive & Parts", "tr": "Otomotiv ve Parça", "de": "Auto & Teile", "es": "Automotriz y repuestos", "pt": "Automotivo e peças", "ja": "自動車・部品", "ko": "자동차 및 부품", "zh": "汽车及配件", "ar": "السيارات وقطع الغيار", "fa": "خودرو و قطعات", "hi": "ऑटोमोटिव और पुर्जे", "ur": "آٹوموٹو اور پرزے" },
+      "children": []
+    },
+    {
+      "id": "baby",
+      "name": { "en": "Baby & Maternity", "tr": "Bebek ve Anne", "de": "Baby & Mutterschaft", "es": "Bebés y maternidad", "pt": "Bebê e maternidade", "ja": "ベビー・マタニティ", "ko": "유아 및 출산", "zh": "母婴", "ar": "الأطفال والأمومة", "fa": "نوزاد و بارداری", "hi": "शिशु और मातृत्व", "ur": "بچہ اور زچگی" },
+      "children": []
+    },
+    {
+      "id": "health",
+      "name": { "en": "Health & Wellness", "tr": "Sağlık ve Wellness", "de": "Gesundheit & Wellness", "es": "Salud y bienestar", "pt": "Saúde e bem-estar", "ja": "健康・ウェルネス", "ko": "건강 및 웰니스", "zh": "健康养生", "ar": "الصحة والعافية", "fa": "سلامت و تندرستی", "hi": "स्वास्थ्य और कल्याण", "ur": "صحت اور تندرستی" },
+      "children": []
+    },
+    {
+      "id": "office",
+      "name": { "en": "Office & Industrial", "tr": "Ofis ve Endüstriyel", "de": "Büro & Industrie", "es": "Oficina e industrial", "pt": "Escritório e industrial", "ja": "オフィス・産業用", "ko": "사무 및 산업", "zh": "办公和工业", "ar": "المكتب والصناعة", "fa": "اداری و صنعتی", "hi": "कार्यालय और औद्योगिक", "ur": "دفتر اور صنعتی" },
+      "children": []
+    },
+    {
+      "id": "art",
+      "name": { "en": "Art & Handmade", "tr": "Sanat ve El Yapımı", "de": "Kunst & Handgemacht", "es": "Arte y hecho a mano", "pt": "Arte e artesanal", "ja": "アート・ハンドメイド", "ko": "예술 및 수공예", "zh": "艺术和手工", "ar": "الفن واليدوي", "fa": "هنر و دست‌ساز", "hi": "कला और हस्तनिर्मित", "ur": "آرٹ اور دستکاری" },
+      "children": []
+    }
+  ]
+}
