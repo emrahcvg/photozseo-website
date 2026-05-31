@@ -86,7 +86,7 @@ export function renderProductCard(p: ProductRow, locale: string): string {
     html += '      <div class="mk-card__media-empty" aria-hidden="true">📷</div>\n';
   }
   if (soldOut) {
-    html += `      <span class="mk-card__badge">${escapeHtml(locale === 'tr' ? 'Tükendi' : 'Sold out')}</span>\n`;
+    html += `      <span class="mk-card__badge">${escapeHtml(mt(locale, 'soldOut'))}</span>\n`;
   }
   html += '    </div>\n';
   html += '    <div class="mk-card__body">\n';
@@ -94,7 +94,7 @@ export function renderProductCard(p: ProductRow, locale: string): string {
   if (price) {
     html += `      <span class="mk-card__price">${escapeHtml(price)}</span>\n`;
   } else {
-    html += `      <span class="mk-card__price mk-card__price--contact">${escapeHtml(locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for price')}</span>\n`;
+    html += `      <span class="mk-card__price mk-card__price--contact">${escapeHtml(mt(locale, 'contactForPrice'))}</span>\n`;
   }
   html += '    </div>\n';
   html += '  </article>\n';
@@ -147,7 +147,7 @@ function renderTrustBadge(locale: string): string {
 
 /** Footer: trust badge (repeat) + report link to the moderation/kill-switch channel. */
 export function renderMarketFooter(locale: string): string {
-  const reportHref = `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report marketplace listing')}`;
+  const reportHref = `mailto:support@photozseo.com?subject=${encodeURIComponent('Report marketplace listing')}`;
   let html = '<footer class="mk-footer">\n';
   html += `  <p class="mk-trust">${escapeHtml(mt(locale, 'trustBadge'))}</p>\n`;
   html += `  <a class="mk-footer__report" href="${escapeAttr(reportHref)}">${escapeHtml(mt(locale, 'report'))}</a>\n`;

@@ -236,8 +236,8 @@ import { renderMarketFooter } from './marketplace';
 
 describe('renderMarketFooter', () => {
   const html = renderMarketFooter('en');
-  it('has a report mailto to abuse@photozseo.com', () => {
-    expect(html).toContain('mailto:abuse@photozseo.com');
+  it('has a report mailto to support@photozseo.com', () => {
+    expect(html).toContain('mailto:support@photozseo.com');
     expect(html).toContain('Report');
   });
   it('repeats the trust badge', () => {
@@ -248,7 +248,7 @@ describe('renderMarketFooter', () => {
 describe('renderMarketHome includes footer', () => {
   it('home body contains the report link', () => {
     const html = renderMarketHome({ products: [], stores: [], categories: [], locale: 'en' });
-    expect(html).toContain('mailto:abuse@photozseo.com');
+    expect(html).toContain('mailto:support@photozseo.com');
   });
 });
 
