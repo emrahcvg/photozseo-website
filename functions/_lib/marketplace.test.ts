@@ -305,7 +305,7 @@ describe('searchProducts', () => {
   it('q farklı dildeyse AI ile kanonik dile çevirir', async () => {
     const { db } = await seedTwoStores();
     // Kanonik dil tr (makeRecord languages[0]='tr'). İngilizce sorgu "Pan" → "Tava".
-    const { ai, calls } = fakeAI({ Pan: 'Tava' });
+    const { ai } = fakeAI({ Pan: 'Tava' });
     const res = await searchProducts(db as any, ai as any, { q: 'Pan', lang: 'en' });
     expect(res.items.some((r) => r.title === 'Tava')).toBe(true);
   });

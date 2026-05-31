@@ -12,7 +12,7 @@
 
 import type { StoreRecord } from './registry';
 import type { Manifest } from '../../src/storefront/types';
-import { resolveLocalized, uniqueProductSlugs, productUrl, SUPPORTED_LOCALES } from '../../src/storefront/manifest';
+import { resolveLocalized, uniqueProductSlugs, productUrl } from '../../src/storefront/manifest';
 import { create, insertMultiple, search, type Orama } from '@orama/orama';
 import type { AiBinding } from './translate';
 
@@ -383,4 +383,26 @@ export async function searchProducts(
   const items = paginate(sorted, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
 
   return { items, facets, total };
+}
+
+// ── Write-through orkestratör (PUT/DELETE handler'larından çağrılır) ──────────
+
+/**
+ * Mağaza yayınlandığında çağrılır. marketplaceListed true ise D1'e upsert eder,
+ * false (opt-out) ise D1'den düşürür. Her iki durumda index_version'ı artırır
+ * (Orama'nın yeniden kurulmasını tetikler). best-effort: hata fırlatabilir,
+ * çağıran graceful yakalar.
+ */
+export async function syncStoreToMarketplace(
+  db: D1Database,
+  slug: string,
+  record: StoreRecord,
+): Promise<void> {
+  const listed = record.manifest.store.marketplaceListed === true;
+  if (listed) {
+    await upsertStoreToD1(db, slug, record);
+  } else {
+    await removeStoreFromD1(db, slug);
+  }
+  await bumpIndexVersion(db);
 }
