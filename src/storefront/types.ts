@@ -77,6 +77,8 @@ export interface Product {
 export interface ManifestMeta {
   version: number;
   updatedAt: string;
+  // iOS publish'te yazılır; web kanonik taxonomy.json'a göre doğrular (opsiyonel/geriye uyumlu).
+  taxonomyVersion?: number;
   seo?: {
     title?: string;
     description?: string;
