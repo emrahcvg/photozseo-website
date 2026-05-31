@@ -217,3 +217,82 @@ export async function listNewProducts(
   all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
   return { items: paginate(all, opts.limit, opts.offset), total: all.length };
 }
+
+// ── Facet + filtre (saf) ──────────────────────────────────────────────────────
+
+export interface SearchOpts {
+  q?: string;
+  lang?: string;
+  categoryId?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  city?: string;
+  inStock?: boolean;
+  sort?: 'new' | 'price_asc' | 'price_desc';
+  limit?: number;
+  offset?: number;
+}
+
+// Filtre/facet için store şehri lazım — products satırına city eklenmemiş olduğundan
+// arama yolu products'ı stores ile JS'te birleştirir (aşağıda joinedRows).
+interface JoinedRow extends ProductRow {
+  city: string;
+}
+
+export function applyFilters(rows: JoinedRow[], opts: SearchOpts): JoinedRow[] {
+  return rows.filter((r) => {
+    if (opts.categoryId && r.category_id !== opts.categoryId) return false;
+    if (opts.minPrice != null && (r.price == null || r.price < opts.minPrice)) return false;
+    if (opts.maxPrice != null && (r.price == null || r.price > opts.maxPrice)) return false;
+    if (opts.city && r.city !== opts.city) return false;
+    if (opts.inStock === true && r.stock <= 0) return false;
+    return true;
+  });
+}
+
+export function computeFacets(rows: JoinedRow[]): Facets {
+  const categories: Record<string, number> = {};
+  const cities: Record<string, number> = {};
+  let priceMin: number | null = null;
+  let priceMax: number | null = null;
+  for (const r of rows) {
+    if (r.category_id) categories[r.category_id] = (categories[r.category_id] ?? 0) + 1;
+    if (r.city) cities[r.city] = (cities[r.city] ?? 0) + 1;
+    if (typeof r.price === 'number') {
+      priceMin = priceMin == null ? r.price : Math.min(priceMin, r.price);
+      priceMax = priceMax == null ? r.price : Math.max(priceMax, r.price);
+    }
+  }
+  return { categories, cities, priceMin, priceMax };
+}
+
+// ── Orama indeks (tembel, modül-global cache, version damgası) ────────────────
+
+let _oramaCache: OramaIndex | null = null;
+
+async function buildOrama(db: D1Database, version: number): Promise<OramaIndex> {
+  const products = await fetchAllProducts(db);
+  const oramaDb = create({
+    schema: { id: 'string', title: 'string', description: 'string', tags: 'string' },
+  }) as OramaIndex['db'];
+  const docs: OramaDoc[] = products.map((p) => ({
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    tags: p.tags.replace(/,/g, ' '),
+  }));
+  if (docs.length > 0) await insertMultiple(oramaDb, docs);
+  return { db: oramaDb, version };
+}
+
+export async function getOrama(db: D1Database): Promise<OramaIndex> {
+  const version = await getIndexVersion(db);
+  if (_oramaCache && _oramaCache.version === version) return _oramaCache;
+  _oramaCache = await buildOrama(db, version);
+  return _oramaCache;
+}
+
+/** Test-only: modül-global Orama cache'ini sıfırlar. Production'da çağrılmaz. */
+export function __resetOramaCache(): void {
+  _oramaCache = null;
+}

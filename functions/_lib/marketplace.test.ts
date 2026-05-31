@@ -1,9 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { __resetOramaCache } from './marketplace';
 import {
   storeRecordToStoreFields,
   storeRecordToProductRows,
   type ProductRow,
 } from './marketplace';
+
+beforeEach(() => __resetOramaCache());
 import type { StoreRecord } from './registry';
 import type { Manifest } from '../../src/storefront/types';
 
@@ -196,5 +199,54 @@ describe('listNewProducts', () => {
     const res = await listNewProducts(db as any, { limit: 1, offset: 1 });
     expect(res.items).toHaveLength(1);
     expect(res.total).toBe(3); // total filtre sonrası ama sayfalama öncesi
+  });
+});
+
+import { getOrama, computeFacets, applyFilters } from './marketplace';
+
+describe('computeFacets', () => {
+  it('kategori + şehir sayar, fiyat aralığı bulur', () => {
+    const rows: any[] = [
+      { category_id: 'a', city: 'Istanbul', price: 100 },
+      { category_id: 'a', city: 'Izmir', price: 50 },
+      { category_id: 'b', city: 'Istanbul', price: 200 },
+    ];
+    const f = computeFacets(rows);
+    expect(f.categories['a']).toBe(2);
+    expect(f.categories['b']).toBe(1);
+    expect(f.cities['Istanbul']).toBe(2);
+    expect(f.priceMin).toBe(50);
+    expect(f.priceMax).toBe(200);
+  });
+});
+
+describe('applyFilters', () => {
+  const rows: any[] = [
+    { id: '1', category_id: 'a', city: 'Istanbul', price: 100, stock: 5 },
+    { id: '2', category_id: 'b', city: 'Izmir', price: 50, stock: 0 },
+    { id: '3', category_id: 'a', city: 'Istanbul', price: 300, stock: 2 },
+  ];
+  it('categoryId filtreler', () => {
+    expect(applyFilters(rows, { categoryId: 'a' }).map((r) => r.id)).toEqual(['1', '3']);
+  });
+  it('fiyat aralığı', () => {
+    expect(applyFilters(rows, { minPrice: 60, maxPrice: 200 }).map((r) => r.id)).toEqual(['1']);
+  });
+  it('inStock', () => {
+    expect(applyFilters(rows, { inStock: true }).map((r) => r.id)).toEqual(['1', '3']);
+  });
+  it('city', () => {
+    expect(applyFilters(rows, { city: 'Izmir' }).map((r) => r.id)).toEqual(['2']);
+  });
+});
+
+describe('getOrama', () => {
+  it('D1\'den indeks kurar; index_version değişince yeniden kurar', async () => {
+    const { db } = await seedTwoStores();
+    const idx1 = await getOrama(db as any);
+    expect(idx1.version).toBe(await getIndexVersion(db as any));
+    // version artmadıkça aynı instance dönmeli (cache)
+    const idx2 = await getOrama(db as any);
+    expect(idx2).toBe(idx1);
   });
 });
