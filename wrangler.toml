@@ -16,9 +16,9 @@ binding = "AI"
 
 # D1 — Marketplace kanonik veritabanı (P1, 2026-05-31).
 # Local dev: `wrangler d1 execute MARKET_DB --local` miniflare ile emüle eder, account gerekmez.
-# Production database_id: ilk `wrangler d1 create photozseo-marketplace` çıktısıyla doldurulacak (deploy adımı).
+# Production D1 oluşturuldu 2026-05-31 (cavusdagins@gmail.com, region EEUR).
 [[d1_databases]]
 binding = "MARKET_DB"
 database_name = "photozseo-marketplace"
-database_id = "PLACEHOLDER_PRODUCTION_DB_ID"
+database_id = "277c0a85-476e-4b03-a3eb-bf3d60d8f239"
 migrations_dir = "migrations"
