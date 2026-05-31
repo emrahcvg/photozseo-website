@@ -8,12 +8,19 @@
  */
 
 import { getStore } from '../_lib/registry';
-import { renderStoreBody, renderProductBody } from '../../src/storefront/render';
-import { renderDocument } from '../../src/storefront/document';
+import {
+  renderStoreBody,
+  renderProductBody,
+  buildStoreJsonLd,
+  buildProductJsonLd,
+} from '../../src/storefront/render';
+import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import {
   resolveStoreLocale,
   uniqueProductSlugs,
   resolveLocalized,
+  storeUrl,
+  productUrl,
 } from '../../src/storefront/manifest';
 
 interface Env {
@@ -82,9 +89,17 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const { manifest } = record;
   const locale = resolveStoreLocale(manifest, lang);
 
+  // Origin for absolute SEO URLs (canonical / hreflang / og), derived from the request.
+  const origin = new URL(ctx.request.url).origin;
+  const languages = manifest.store.languages ?? [];
+
   let htmlBody: string;
   let pageTitle: string;
   let pageDesc: string;
+  let canonical: string;
+  let alternates: AlternateLink[];
+  let ogImage: string | undefined;
+  let jsonLd: string;
 
   if (productSlugReq) {
     // Find product by slug
@@ -98,13 +113,22 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
       });
     }
 
+    const pSlug = slugMap.get(product.id) ?? product.id;
     htmlBody = renderProductBody(manifest, product, locale, DEFAULT_LANG);
     pageTitle = resolveLocalized(product.title, locale) + ' — ' + manifest.store.displayName;
     pageDesc = resolveLocalized(product.description, locale).slice(0, 160);
+    canonical = origin + productUrl(slug, pSlug, locale, DEFAULT_LANG);
+    alternates = languages.map((l) => ({ lang: l, href: origin + productUrl(slug, pSlug, l, DEFAULT_LANG) }));
+    ogImage = product.images[0] ?? manifest.store.logo ?? `${origin}/og-image.png`;
+    jsonLd = buildProductJsonLd(manifest, product, locale, canonical);
   } else {
     htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG);
     pageTitle = manifest.meta.seo?.title ?? manifest.store.displayName;
     pageDesc = manifest.meta.seo?.description ?? resolveLocalized(manifest.store.tagline, locale);
+    canonical = origin + storeUrl(slug, locale, DEFAULT_LANG);
+    alternates = languages.map((l) => ({ lang: l, href: origin + storeUrl(slug, l, DEFAULT_LANG) }));
+    ogImage = manifest.store.logo ?? manifest.products[0]?.images[0] ?? `${origin}/og-image.png`;
+    jsonLd = buildStoreJsonLd(manifest, locale, canonical);
   }
 
   const html = renderDocument({
@@ -112,6 +136,10 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     description: pageDesc,
     lang: locale,
     body: htmlBody,
+    canonical,
+    alternates,
+    ogImage,
+    jsonLd,
   });
 
   return new Response(html, {

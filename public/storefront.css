@@ -1,5 +1,65 @@
 /* Canonical source: src/styles/storefront.css — keep in sync until Astro store routes are removed (P2 Batch 3). */
+html { scroll-behavior: smooth; }
 .sf-store { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+
+/* CONTROLS (currency + language switchers) */
+.sf-controls {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  justify-content: center; margin-top: 16px;
+}
+.sf-control { display: flex; flex-direction: column; gap: 3px; text-align: start; }
+.sf-control__label { font-size: 0.72rem; color: #9ca3af; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.sf-select {
+  appearance: none; -webkit-appearance: none;
+  padding: 7px 30px 7px 12px; border: 1px solid #d8dce3; border-radius: 8px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235b626e' d='M6 8L2 4h8z'/%3E%3C/svg%3E") no-repeat right 10px center;
+  font-size: 0.9rem; color: #1a1d23; cursor: pointer; font-weight: 500;
+}
+.sf-select:hover { border-color: #1a1d23; }
+.sf-rate-note { width: 100%; text-align: center; font-size: 0.78rem; color: #9ca3af; }
+
+/* TOOLBAR (search + category jump nav) */
+.sf-toolbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px);
+  margin: 24px 0 8px; padding: 12px 0; border-bottom: 1px solid #e2e5ea;
+}
+.sf-search {
+  width: 100%; padding: 10px 14px; border: 1px solid #d8dce3; border-radius: 10px;
+  font-size: 0.95rem; color: #1a1d23; box-sizing: border-box;
+}
+.sf-search:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+.sf-catnav {
+  display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto;
+  margin-top: 10px; padding-bottom: 2px; scrollbar-width: thin;
+}
+.sf-catnav__link {
+  flex-shrink: 0; padding: 5px 12px; border-radius: 999px; background: #f3f4f6;
+  color: #5b626e; font-size: 0.82rem; font-weight: 500; text-decoration: none;
+  white-space: nowrap; transition: background 0.15s ease, color 0.15s ease;
+}
+.sf-catnav__link:hover { background: #1a1d23; color: #fff; }
+.sf-no-results { text-align: center; color: #9ca3af; padding: 24px 0; margin: 0; }
+
+/* CATEGORY SECTION ANCHOR OFFSET (sticky toolbar) */
+.sf-section { scroll-margin-top: 120px; }
+
+/* EMPTY MEDIA PLACEHOLDER */
+.sf-card__media-empty,
+.sf-gallery__empty {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%; aspect-ratio: 1 / 1;
+  background: #f0f1f3; color: #c4c9d1; font-size: 2.5rem;
+}
+.sf-gallery__empty { border-radius: 12px; border: 1px solid #e2e5ea; }
+
+/* PRODUCT DETAIL TOP (back link + controls) */
+.sf-detail-top {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  justify-content: space-between; margin-bottom: 20px;
+}
+.sf-detail-top .sf-controls { margin-top: 0; justify-content: flex-end; }
+.sf-detail-top .sf-back { margin-block-end: 0; }
 
 /* HEADER */
 .sf-header { text-align: center; padding: 32px 0 24px; }
