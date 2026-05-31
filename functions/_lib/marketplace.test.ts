@@ -184,21 +184,23 @@ describe('listStores', () => {
 });
 
 describe('listNewProducts', () => {
-  it('tüm ürünleri döner (limit yok)', async () => {
+  it('yalnız listed mağaza ürünlerini döner (limit yok)', async () => {
+    // beta (marketplaceListed:false) hariç → yalnız acme'nin 2 ürünü.
     const { db } = await seedTwoStores();
     const res = await listNewProducts(db as any, {});
-    expect(res.total).toBe(3);
+    expect(res.total).toBe(2);
   });
-  it('categoryId filtreler', async () => {
+  it('categoryId filtreler (listed-only)', async () => {
+    // beta p3 electronics.phones unlisted → sadece acme p1 kalır.
     const { db } = await seedTwoStores();
     const res = await listNewProducts(db as any, { categoryId: 'electronics.phones' });
-    expect(res.total).toBe(2);
+    expect(res.total).toBe(1);
   });
   it('limit + offset uygular', async () => {
     const { db } = await seedTwoStores();
     const res = await listNewProducts(db as any, { limit: 1, offset: 1 });
     expect(res.items).toHaveLength(1);
-    expect(res.total).toBe(3); // total filtre sonrası ama sayfalama öncesi
+    expect(res.total).toBe(2); // total filtre sonrası ama sayfalama öncesi (listed-only)
   });
 });
 

@@ -212,10 +212,13 @@ export async function listNewProducts(
   db: D1Database,
   opts: { limit?: number; offset?: number; categoryId?: string },
 ): Promise<{ items: ProductRow[]; total: number }> {
-  let all = await fetchAllProducts(db);
+  // Opt-in tutarlılığı: yalnız listed mağaza ürünleri görünür (joinedRows listed-only).
+  let all = await joinedRows(db);
   if (opts.categoryId) all = all.filter((p) => p.category_id === opts.categoryId);
   all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
-  return { items: paginate(all, opts.limit, opts.offset), total: all.length };
+  const total = all.length;
+  const items = paginate(all, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
+  return { items, total };
 }
 
 // ── Facet + filtre (saf) ──────────────────────────────────────────────────────
