@@ -677,10 +677,51 @@ export function renderProductBody(
     html += '      </div>\n';
   }
 
-  // WhatsApp order button
+  // WhatsApp order button (direct, single-product)
   if (waHref) {
     html += `      <a class="sf-btn sf-btn--order" href="${escapeAttr(waHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(waLabel)}</a>\n`;
   }
+
+  // Marketplace cart (store-scoped). IBAN/ibanName/whatsapp come from the manifest store record.
+  const wa = store.contact.whatsapp ?? store.contact.phone ?? '';
+  const pay = (store as unknown as { payment?: { iban?: string; ibanName?: string } }).payment;
+  const addLabel = locale === 'tr' ? 'Sepete Ekle' : 'Add to cart';
+  const sendLabel = locale === 'tr' ? 'Sepeti Gönder' : 'Send cart';
+  const nameL = locale === 'tr' ? 'Ad Soyad' : 'Full name';
+  const phoneL = locale === 'tr' ? 'Telefon' : 'Phone';
+  const addrL = locale === 'tr' ? 'Adres' : 'Address';
+  const noteL = locale === 'tr' ? 'Not' : 'Note';
+  const reqL = locale === 'tr' ? 'Bu alan zorunludur' : 'This field is required';
+  const refL = locale === 'tr' ? 'Sipariş referansı' : 'Order reference';
+  const payL = locale === 'tr' ? 'Havale ile ödeme' : 'Pay by bank transfer';
+  const priceForCart = product.price != null ? String(product.price) : '';
+  const curForCart = product.currency ?? store.currency;
+
+  html += `      <button type="button" class="sf-btn sf-btn--cart" data-mk-add="${escapeAttr(product.id)}" data-mk-title="${escapeAttr(title)}" data-mk-price="${escapeAttr(priceForCart)}" data-mk-currency="${escapeAttr(curForCart)}">${escapeHtml(addLabel)}</button>\n`;
+
+  html += `      <div class="sf-cart" data-mk-cart-root data-mk-slug="${escapeAttr(store.slug)}" data-mk-whatsapp="${escapeAttr(wa)}">\n`;
+  html += '        <ul class="sf-cart__list" data-mk-cart-list></ul>\n';
+  html += `        <p class="sf-cart__total">${escapeHtml(locale === 'tr' ? 'Toplam' : 'Total')}: <span data-mk-total>0.00</span></p>\n`;
+  html += '        <form class="sf-cart__form" data-mk-order-form novalidate>\n';
+  html += `          <label>${escapeHtml(nameL)}<input name="name" required /></label><span data-mk-err="name" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
+  html += `          <label>${escapeHtml(phoneL)}<input name="phone" type="tel" required /></label><span data-mk-err="phone" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
+  html += `          <label>${escapeHtml(addrL)}<textarea name="address" required></textarea></label><span data-mk-err="address" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
+  html += `          <label>${escapeHtml(noteL)}<textarea name="note"></textarea></label>\n`;
+  html += `          <button type="submit" class="sf-btn sf-btn--order">${escapeHtml(sendLabel)}</button>\n`;
+  html += '        </form>\n';
+  html += '        <div class="sf-cart__payment" data-mk-payment hidden>\n';
+  html += `          <p>${escapeHtml(refL)}: <strong data-mk-ref></strong></p>\n`;
+  html += `          <p>${escapeHtml(payL)}</p>\n`;
+  if (pay?.iban) {
+    html += `          <p>IBAN: <strong>${escapeHtml(pay.iban)}</strong></p>\n`;
+  }
+  if (pay?.ibanName) {
+    html += `          <p>${escapeHtml(locale === 'tr' ? 'Hesap adı' : 'Account name')}: <strong>${escapeHtml(pay.ibanName)}</strong></p>\n`;
+  }
+  html += `          <p>${escapeHtml(locale === 'tr' ? 'Ödeme açıklaması' : 'Payment description')}: <strong data-mk-paydesc></strong></p>\n`;
+  html += '        </div>\n';
+  html += '      </div>\n';
+  html += '      <script src="/marketplace-cart.js" defer></script>\n';
 
   html += '    </div>\n'; // sf-detail__info
   html += '  </div>\n'; // sf-detail
