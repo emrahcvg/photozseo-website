@@ -324,26 +324,40 @@ function controlsScript(locale: string): string {
       catch (e) { return amount.toFixed(2) + ' ' + currency; }
     }
 
-    function applyCurrency(target, rates) {
+    // Does converting to target require rates? Only if some item is in another currency.
+    function needsRates(target) {
       var els = document.querySelectorAll('[data-sf-amount]');
-      els.forEach(function (el) {
+      for (var i = 0; i < els.length; i++) {
+        var from = els[i].getAttribute('data-sf-currency') || base;
+        if (from !== target) return true;
+      }
+      return false;
+    }
+
+    // Convert EVERY price to the target currency. Items already in the target keep their original
+    // formatting; others are cross-converted (amount / rate[from] * rate[target]).
+    function applyCurrency(target, rates) {
+      var anyConverted = false;
+      document.querySelectorAll('[data-sf-amount]').forEach(function (el) {
         var amount = parseFloat(el.getAttribute('data-sf-amount'));
         var from = el.getAttribute('data-sf-currency') || base;
         var orig = el.getAttribute('data-sf-orig') || '';
         if (isNaN(amount)) return;
-        if (target === from || !rates) { el.textContent = orig; return; }
-        var rFrom = rates[from], rTo = rates[target];
-        if (!rFrom || !rTo) { el.textContent = orig; return; }
-        var converted = (amount / rFrom) * rTo;
+        if (from === target || !rates || !rates[from] || !rates[target]) {
+          el.textContent = orig;
+          return;
+        }
+        var converted = (amount / rates[from]) * rates[target];
         el.textContent = '≈ ' + fmt(converted, target);
+        anyConverted = true;
       });
-      if (note) note.hidden = !rates || target === base;
+      if (note) note.hidden = !anyConverted;
     }
 
     function onChange() {
       var target = curSel.value;
       try { localStorage.setItem('sf-currency', target); } catch (e) {}
-      if (target === base) { applyCurrency(target, null); return; }
+      if (!needsRates(target)) { applyCurrency(target, null); return; }
       if (ratesCache) { applyCurrency(target, ratesCache); return; }
       fetch('/api/rates/' + encodeURIComponent(base))
         .then(function (r) { return r.json(); })
@@ -354,7 +368,8 @@ function controlsScript(locale: string): string {
     }
 
     curSel.addEventListener('change', onChange);
-    if (curSel.value !== base) onChange();
+    // Normalize all prices to the selected currency on load (fixes mixed-currency stores).
+    onChange();
   }
 
   // ---- Product search filter ----
