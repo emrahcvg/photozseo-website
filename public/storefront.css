@@ -84,6 +84,16 @@ html { scroll-behavior: smooth; }
 .sf-header__location--link:hover { color: #1d1d1f; }
 .sf-header__contact { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
+/* MOBİL responsive — dar ekranda başlık taşmasın */
+@media (max-width: 480px) {
+  .sf-store { padding: 16px 16px 56px; }
+  .sf-header { padding: 8px 0 22px; }
+  .sf-header__name { font-size: 1.7rem; }
+  .sf-header__tagline { font-size: 0.95rem; }
+  .sf-section__title { font-size: 1.25rem; }
+  .sf-topbar { flex-wrap: wrap; }
+}
+
 /* BUTTONS */
 .sf-btn {
   display: inline-block; padding: 9px 18px; border-radius: 999px;
