@@ -35,10 +35,16 @@
   // SP-XXXXX random reference, client-side only (no persistence/counter → no backend).
   function generateRef() {
     var alphabet = '0123456789ABCDEFGHJKMNPQRSTUVWXYZ';
-    var bytes = new Uint8Array(5);
-    (self.crypto || window.crypto).getRandomValues(bytes);
+    var cryptoObj = (typeof self !== 'undefined' && self.crypto) || (typeof window !== 'undefined' && window.crypto) || null;
     var out = '';
-    for (var i = 0; i < 5; i++) { out += alphabet[bytes[i] % alphabet.length]; }
+    if (cryptoObj && cryptoObj.getRandomValues) {
+      var bytes = new Uint8Array(5);
+      cryptoObj.getRandomValues(bytes);
+      for (var i = 0; i < 5; i++) { out += alphabet[bytes[i] % alphabet.length]; }
+    } else {
+      // Eski/güvensiz bağlamda crypto yoksa: sipariş akışı kilitlenmesin (ref benzersizlik kritik değil).
+      for (var j = 0; j < 5; j++) { out += alphabet[Math.floor(Math.random() * alphabet.length)]; }
+    }
     return 'SP-' + out;
   }
 
@@ -117,7 +123,8 @@
         if (payBox) payBox.hidden = false;
         var descOut = root.querySelector('[data-mk-paydesc]');
         if (descOut) descOut.textContent = ref;
-        window.open(buildWhatsappUrl(whatsapp, slug, data, ref), '_blank', 'noopener');
+        var waWin = window.open(buildWhatsappUrl(whatsapp, slug, data, ref), '_blank');
+        if (waWin) waWin.opener = null;
       });
     }
 

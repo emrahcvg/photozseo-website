@@ -108,9 +108,12 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
 
   // /market/search
   if (parts[0] === 'search' && parts.length === 1) {
+    const rawSort = u.searchParams.get('sort');
+    const sort: SearchQuery['sort'] =
+      rawSort === 'price_asc' || rawSort === 'price_desc' ? rawSort : 'new';
     const q: SearchQuery = {
       q: u.searchParams.get('q') ?? undefined,
-      sort: (u.searchParams.get('sort') as SearchQuery['sort']) ?? 'new',
+      sort,
       categoryId: u.searchParams.get('categoryId') ?? undefined,
       city: u.searchParams.get('city') ?? undefined,
       minPrice: u.searchParams.has('minPrice') ? Number(u.searchParams.get('minPrice')) : undefined,
