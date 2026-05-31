@@ -29,6 +29,12 @@ export interface StoreInfo {
   contact: StoreContact;
   languages: string[];
   currency: string;
+  // Marketplace (P3 iOS tarafından yazılır — geriye uyumlu, opsiyonel).
+  marketplaceListed?: boolean;
+  payment?: {
+    iban?: string;
+    ibanName?: string;
+  };
 }
 
 export interface Category {
