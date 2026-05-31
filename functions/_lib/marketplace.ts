@@ -54,6 +54,7 @@ export interface Facets {
   cities: Record<string, number>;
   priceMin: number | null;
   priceMax: number | null;
+  inStockCount: number;
 }
 
 // Orama doc + indeks tipi.
@@ -273,7 +274,8 @@ export function computeFacets(rows: JoinedRow[]): Facets {
       priceMax = priceMax == null ? r.price : Math.max(priceMax, r.price);
     }
   }
-  return { categories, cities, priceMin, priceMax };
+  const inStockCount = rows.filter((r) => r.stock > 0).length;
+  return { categories, cities, priceMin, priceMax, inStockCount };
 }
 
 // ── Orama indeks (tembel, modül-global cache, version damgası) ────────────────

@@ -10,7 +10,7 @@ const product: ProductRow = {
 };
 const store: StoreRow = { slug: 's', name: 'Shop', city: 'Istanbul', country: 'TR', listed: 1 };
 // P1-shaped facets (Record maps + priceMin/priceMax); the router adapts to render shape.
-const facets: LibFacets = { categories: { c1: 1 }, cities: { Istanbul: 1 }, priceMin: 0, priceMax: 100 };
+const facets: LibFacets = { categories: { c1: 1 }, cities: { Istanbul: 1 }, priceMin: 0, priceMax: 100, inStockCount: 1 };
 
 const deps = {
   searchProducts: async () => ({ items: [product], facets, total: 1 }),

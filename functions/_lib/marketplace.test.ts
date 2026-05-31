@@ -209,9 +209,9 @@ import { getOrama, computeFacets, applyFilters } from './marketplace';
 describe('computeFacets', () => {
   it('kategori + şehir sayar, fiyat aralığı bulur', () => {
     const rows: any[] = [
-      { category_id: 'a', city: 'Istanbul', price: 100 },
-      { category_id: 'a', city: 'Izmir', price: 50 },
-      { category_id: 'b', city: 'Istanbul', price: 200 },
+      { category_id: 'a', city: 'Istanbul', price: 100, stock: 5 },
+      { category_id: 'a', city: 'Izmir', price: 50, stock: 0 },
+      { category_id: 'b', city: 'Istanbul', price: 200, stock: 3 },
     ];
     const f = computeFacets(rows);
     expect(f.categories['a']).toBe(2);
@@ -219,6 +219,7 @@ describe('computeFacets', () => {
     expect(f.cities['Istanbul']).toBe(2);
     expect(f.priceMin).toBe(50);
     expect(f.priceMax).toBe(200);
+    expect(f.inStockCount).toBe(2);
   });
 });
 

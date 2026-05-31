@@ -60,7 +60,7 @@ function adaptFacets(f: LibFacets | Facets): Facets {
     categories,
     cities,
     priceRange: { min: lib.priceMin ?? 0, max: lib.priceMax ?? 0 },
-    inStockCount: 0,
+    inStockCount: lib.inStockCount ?? 0,
   };
 }
 
