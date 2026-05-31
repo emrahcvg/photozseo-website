@@ -69,14 +69,10 @@ function stockClass(product: Product): string {
 function renderPriceBlock(product: Product, locale: string, fallbackCurrency: string): string {
   const currency = product.currency ?? fallbackCurrency;
   const price = formatPrice(product.price, currency, locale);
-  const compareAt = formatPrice(product.compareAtPrice, currency, locale);
 
   let html = '<div class="sf-card__price">\n';
   if (price) {
     html += `  <span class="sf-card__amount sf-price" data-sf-amount="${product.price}" data-sf-currency="${escapeHtml(currency)}" data-sf-orig="${escapeHtml(price)}">${escapeHtml(price)}</span>\n`;
-    if (compareAt) {
-      html += `  <span class="sf-card__compare sf-price" data-sf-amount="${product.compareAtPrice}" data-sf-currency="${escapeHtml(currency)}" data-sf-orig="${escapeHtml(compareAt)}">${escapeHtml(compareAt)}</span>\n`;
-    }
   } else {
     const contactTxt = locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for price';
     html += `  <span class="sf-card__contact">${escapeHtml(contactTxt)}</span>\n`;
@@ -159,12 +155,12 @@ function renderStoreHeader(manifest: Manifest, locale: string, defaultLang: stri
   const map = mapHref(store.location);
   const contactLabel = locale === 'tr' ? 'İletişim' : 'Contact';
 
-  const buttons: { label: string; href: string }[] = [];
-  if (c.whatsapp) buttons.push({ label: 'WhatsApp', href: whatsappHref(c.whatsapp) });
-  if (c.phone) buttons.push({ label: locale === 'tr' ? 'Ara' : 'Call', href: `tel:${c.phone}` });
-  if (c.email) buttons.push({ label: 'E-mail', href: `mailto:${c.email}` });
+  const buttons: { label: string; href: string; cls: string }[] = [];
+  if (c.whatsapp) buttons.push({ label: 'WhatsApp', href: whatsappHref(c.whatsapp), cls: 'sf-btn sf-btn--wa' });
+  if (c.phone) buttons.push({ label: locale === 'tr' ? 'Ara' : 'Call', href: `tel:${c.phone}`, cls: 'sf-btn sf-btn--ghost' });
+  if (c.email) buttons.push({ label: 'E-mail', href: `mailto:${c.email}`, cls: 'sf-btn sf-btn--ghost' });
   for (const s of c.social ?? []) {
-    buttons.push({ label: escapeHtml(s.type), href: socialHref(s.type, s.value) });
+    buttons.push({ label: escapeHtml(s.type), href: socialHref(s.type, s.value), cls: 'sf-btn sf-btn--ghost' });
   }
 
   let html = '<header class="sf-header">\n';
@@ -192,12 +188,10 @@ function renderStoreHeader(manifest: Manifest, locale: string, defaultLang: stri
     for (const b of buttons) {
       const external = !/^(tel:|mailto:)/.test(b.href);
       const extras = external ? ' target="_blank" rel="noopener noreferrer"' : '';
-      html += `    <a class="sf-btn" href="${escapeAttr(b.href)}"${extras}>${escapeHtml(b.label)}</a>\n`;
+      html += `    <a class="${b.cls}" href="${escapeAttr(b.href)}"${extras}>${escapeHtml(b.label)}</a>\n`;
     }
     html += '  </nav>\n';
   }
-
-  html += renderControls(locale, store.currency, store.languages ?? [], (l) => storeUrl(store.slug, l, defaultLang));
 
   html += '</header>\n';
 
@@ -228,9 +222,7 @@ function renderProductCard(
   html += renderCardMedia(image, title, soldOut, locale);
   html += '    <div class="sf-card__body">\n';
   html += `      <h3 class="sf-card__title">${escapeHtml(title)}</h3>\n`;
-  if (description) {
-    html += `      <p class="sf-card__desc">${escapeHtml(description)}</p>\n`;
-  }
+  // Açıklama grid kartında gösterilmez (Apple-style sade kart); `description` yalnız aramada kullanılır.
   html += renderPriceBlock(product, locale, currency).replace(/^/gm, '    ').trimStart();
   if (stock) {
     html += `      <span class="sf-stock ${escapeHtml(sc)}">${escapeHtml(stock)}</span>\n`;
@@ -257,13 +249,16 @@ function renderToolbar(
   html += `  <input type="search" class="sf-search" data-sf-search-input placeholder="${escapeHtml(searchPlaceholder)}" aria-label="${escapeHtml(searchPlaceholder)}" />\n`;
 
   if (groups.length > 1) {
+    const allLabel = tr ? 'Tümü' : 'All';
+    const totalCount = groups.reduce((n, g) => n + g.products.length, 0);
     html += `  <nav class="sf-catnav" aria-label="${escapeHtml(catsLabel)}">\n`;
+    html += `    <button type="button" class="sf-catnav__link sf-catnav__link--active" data-sf-cat="all">${escapeHtml(allLabel)} <span class="sf-catnav__count">${totalCount}</span></button>\n`;
     for (const group of groups) {
       const id = group.category ? `cat-${group.category.id}` : 'cat-other';
       const name = group.category
         ? resolveLocalized(group.category.name, locale)
         : (tr ? 'Diğer' : 'Other');
-      html += `    <a class="sf-catnav__link" href="#${escapeAttr(id)}">${escapeHtml(name)}</a>\n`;
+      html += `    <button type="button" class="sf-catnav__link" data-sf-cat="${escapeAttr(id)}">${escapeHtml(name)} <span class="sf-catnav__count">${group.products.length}</span></button>\n`;
     }
     html += '  </nav>\n';
   }
@@ -392,6 +387,26 @@ function controlsScript(locale: string): string {
       if (noRes) noRes.hidden = anyVisible || !q;
     });
   }
+
+  // ---- Category filter: clicking a chip shows only that category's products ----
+  var catChips = document.querySelectorAll('.sf-catnav__link');
+  if (catChips.length) {
+    catChips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var cat = chip.getAttribute('data-sf-cat');
+        document.querySelectorAll('.sf-section').forEach(function (sec) {
+          var match = sec.getAttribute('data-sf-cat') === cat;
+          sec.style.display = (cat === 'all' || match) ? '' : 'none';
+          // Tek kategori seçilince tam grid (alta doğru, hepsi); Tümü'de yatay şerit.
+          sec.classList.toggle('sf-section--expanded', cat !== 'all' && match);
+        });
+        for (var i = 0; i < catChips.length; i++) {
+          catChips[i].classList.toggle('sf-catnav__link--active', catChips[i] === chip);
+        }
+        if (input) input.value = '';
+      });
+    });
+  }
 })();
 </script>\n`;
 }
@@ -413,6 +428,9 @@ export function renderStoreBody(
 
   let html = '<div class="sf-store">\n';
 
+  html += '<div class="sf-topbar">\n';
+  html += renderControls(locale, store.currency, store.languages ?? [], (l) => storeUrl(store.slug, l, defaultLang));
+  html += '</div>\n';
   html += renderStoreHeader(manifest, locale, defaultLang);
   html += renderToolbar(groups, locale);
 
@@ -422,8 +440,8 @@ export function renderStoreBody(
       : (locale === 'tr' ? 'Diğer' : 'Other');
     const id = group.category ? `cat-${group.category.id}` : 'cat-other';
 
-    html += `<section class="sf-section" id="${escapeAttr(id)}">\n`;
-    html += `  <h2 class="sf-section__title">${escapeHtml(heading)}</h2>\n`;
+    html += `<section class="sf-section" id="${escapeAttr(id)}" data-sf-cat="${escapeAttr(id)}">\n`;
+    html += `  <h2 class="sf-section__title">${escapeHtml(heading)} <span class="sf-section__count">${group.products.length}</span></h2>\n`;
     html += '  <div class="sf-grid">\n';
     for (const product of group.products) {
       const pSlug = slugMap.get(product.id) ?? product.id;
