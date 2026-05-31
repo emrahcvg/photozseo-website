@@ -62,6 +62,12 @@ describe('renderDocument', () => {
     expect(html).toContain('name="robots" content="index, follow"');
   });
 
+  it('overrides robots when provided (noindex for search pages)', () => {
+    const html = renderDocument({ title: 'T', lang: 'en', body: '', robots: 'noindex, follow' });
+    expect(html).toContain('name="robots" content="noindex, follow"');
+    expect(html).not.toContain('content="index, follow"');
+  });
+
   it('includes extra stylesheets when provided', () => {
     const html = renderDocument({ title: 't', lang: 'en', body: 'x', stylesheets: ['/marketplace.css'] });
     expect(html).toContain('href="/marketplace.css"');
