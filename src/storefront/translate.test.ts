@@ -127,7 +127,7 @@ describe('getTranslatedManifest', () => {
     const kv = fakeKV();
     const failingAI: AiBinding = { run: async () => { throw new Error('rate limit'); } };
     const out = await getTranslatedManifest(failingAI, kv as unknown as KVNamespace, 'x', baseManifest, 'en', 'de');
-    expect(kv.store.has('i18n:v2:x:de:v3')).toBe(false);       // kısmi → cache'lenmez (tekrar denenir)
+    expect(kv.store.has('i18n:v3:x:de:v3')).toBe(false);       // kısmi → cache'lenmez (tekrar denenir)
     expect(out.products[0].title.de).toBe('Steel Bottle');     // graceful: kaynak metin gösterilir
   });
 
@@ -135,7 +135,7 @@ describe('getTranslatedManifest', () => {
     const kv = fakeKV();
     const { ai } = fakeAI('[de]');
     await getTranslatedManifest(ai, kv as unknown as KVNamespace, 'x', baseManifest, 'en', 'de');
-    expect(kv.store.has('i18n:v2:x:de:v3')).toBe(true);
+    expect(kv.store.has('i18n:v3:x:de:v3')).toBe(true);
 
     // İkinci çağrı AI'a hiç gitmemeli (tam-manifest cache).
     const second = fakeAI('[de]');

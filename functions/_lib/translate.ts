@@ -21,7 +21,7 @@ const MODEL = '@cf/meta/llama-3.1-8b-instruct';
 const STRING_TTL = 60 * 60 * 24 * 30; // 30 gün
 const MANIFEST_TTL = 60 * 60 * 24 * 7; // 7 gün (sürüm anahtarı zaten değişince yenilenir)
 const MAX_CONCURRENCY = 6;
-const CACHE_VERSION = 'v2'; // model değişti → eski m2m100 cache'ini geçersiz kıl
+const CACHE_VERSION = 'v3'; // v2 kısmi (retry/complete-only öncesi) cache'leri geçersiz kıl
 
 /** Prompt için dil adları (LLM İngilizce dil adıyla daha iyi sonuç verir). */
 const LANG_NAMES: Record<string, string> = {
