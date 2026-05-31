@@ -21,7 +21,9 @@ function fakeAI(prefix = '[t]') {
   const ai: AiBinding = {
     run: async (_model, inputs) => {
       calls++;
-      return { translated_text: `${prefix}${inputs.text as string}` };
+      const messages = (inputs.messages ?? []) as { role: string; content: string }[];
+      const user = messages.find((m) => m.role === 'user')?.content ?? '';
+      return { response: `${prefix}${user}` };
     },
   };
   return { ai, get calls() { return calls; } };
@@ -125,7 +127,7 @@ describe('getTranslatedManifest', () => {
     const kv = fakeKV();
     const { ai } = fakeAI('[de]');
     await getTranslatedManifest(ai, kv as unknown as KVNamespace, 'x', baseManifest, 'en', 'de');
-    expect(kv.store.has('i18n:x:de:v3')).toBe(true);
+    expect(kv.store.has('i18n:v2:x:de:v3')).toBe(true);
 
     // İkinci çağrı AI'a hiç gitmemeli (tam-manifest cache).
     const second = fakeAI('[de]');

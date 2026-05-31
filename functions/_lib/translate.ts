@@ -13,26 +13,43 @@ import type { Manifest, Localized } from '../../src/storefront/types';
 
 // Workers AI binding (minimal tip).
 export interface AiBinding {
-  run(model: string, inputs: Record<string, unknown>): Promise<{ translated_text?: string }>;
+  run(model: string, inputs: Record<string, unknown>): Promise<{ response?: string; translated_text?: string }>;
 }
 
-const MODEL = '@cf/meta/m2m100-1.2b';
+// Instruct LLM — m2m100-1.2b'den çok daha iyi/tam çeviri (özellikle uzun teknik metin).
+const MODEL = '@cf/meta/llama-3.1-8b-instruct';
 const STRING_TTL = 60 * 60 * 24 * 30; // 30 gün
 const MANIFEST_TTL = 60 * 60 * 24 * 7; // 7 gün (sürüm anahtarı zaten değişince yenilenir)
-const MAX_CONCURRENCY = 8;
+const MAX_CONCURRENCY = 6;
+const CACHE_VERSION = 'v2'; // model değişti → eski m2m100 cache'ini geçersiz kıl
+
+/** Prompt için dil adları (LLM İngilizce dil adıyla daha iyi sonuç verir). */
+const LANG_NAMES: Record<string, string> = {
+  en: 'English', tr: 'Turkish', de: 'German', es: 'Spanish', pt: 'Portuguese',
+  ja: 'Japanese', ko: 'Korean', zh: 'Chinese (Simplified)', ar: 'Arabic',
+  fa: 'Persian', ur: 'Urdu', hi: 'Hindi',
+};
+
+/** LLM çıktısını temizle: çevreleyen tırnak/etiket/kod-bloğu kalıntılarını at. */
+function cleanLLM(raw: string): string {
+  let s = raw.trim();
+  s = s.replace(/^```[a-z]*\n?|\n?```$/gi, '').trim();
+  // "Translation:" gibi önekleri at
+  s = s.replace(/^(translation|çeviri|übersetzung)\s*[:：]\s*/i, '').trim();
+  // Çevreleyen tek/çift tırnakları at
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith('“') && s.endsWith('”'))) {
+    s = s.slice(1, -1).trim();
+  }
+  return s;
+}
 
 function manifestKey(slug: string, lang: string, version: number): string {
-  return `i18n:${slug}:${lang}:v${version}`;
+  return `i18n:${CACHE_VERSION}:${slug}:${lang}:v${version}`;
 }
 
 async function sha1(text: string): Promise<string> {
   const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-/** m2m100 dil kodu eşlemesi (çoğu birebir). */
-function m2mLang(locale: string): string {
-  return locale; // en, tr, de, es, pt, ja, ko, zh, ar, fa, ur, hi — m2m100 ile uyumlu
 }
 
 /**
@@ -48,27 +65,34 @@ async function translateStrings(
 ): Promise<Map<string, string>> {
   const unique = [...new Set(texts.filter((t) => t && t.trim() !== ''))];
   const out = new Map<string, string>();
+  const srcName = LANG_NAMES[sourceLang] ?? sourceLang;
+  const tgtName = LANG_NAMES[targetLang] ?? targetLang;
+  const system = `You are a professional e-commerce translator. Translate the user's text from ${srcName} to ${tgtName}. Output ONLY the translation — no quotes, no notes, no explanations. Preserve product names/brands, model codes, numbers, units and emojis as-is. Keep it natural and concise for an online store.`;
 
   let i = 0;
   async function worker() {
     while (i < unique.length) {
       const text = unique[i++];
       try {
-        const key = `t:${targetLang}:${await sha1(text)}`;
+        const key = `t:${CACHE_VERSION}:${targetLang}:${await sha1(text)}`;
         const cached = await kv.get(key);
         if (cached !== null) {
           out.set(text, cached);
           continue;
         }
         const res = await ai.run(MODEL, {
-          text,
-          source_lang: m2mLang(sourceLang),
-          target_lang: m2mLang(targetLang),
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: text },
+          ],
+          max_tokens: 1024,
+          temperature: 0.2,
         });
-        const translated = (res.translated_text ?? '').trim() || text;
+        const raw = res.response ?? res.translated_text ?? '';
+        const translated = cleanLLM(raw) || text;
         out.set(text, translated);
-        // Hata olsa bile orijinali cache'leme; sadece gerçek çeviriyi sakla.
-        if (res.translated_text) {
+        // Yalnızca gerçek (boş olmayan) çeviriyi sakla.
+        if (raw.trim() !== '') {
           await kv.put(key, translated, { expirationTtl: STRING_TTL });
         }
       } catch {
