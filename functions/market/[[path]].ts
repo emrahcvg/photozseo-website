@@ -134,6 +134,8 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css'],
       bodyScripts: ['/marketplace-enhance.js'],
+      // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
+      robots: 'noindex, follow',
     }));
   }
 

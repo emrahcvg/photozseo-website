@@ -23,6 +23,7 @@ export interface DocumentOptions {
   jsonLd?: string; // already JSON.stringify'd, NOT yet escaped for </script>
   stylesheets?: string[];
   bodyScripts?: string[];
+  robots?: string; // varsayılan "index, follow"; arama sonuç sayfaları "noindex, follow" geçer
 }
 
 /** Neutralize a closing-script sequence so JSON-LD can't break out of its tag. */
@@ -77,7 +78,7 @@ export function renderDocument(opts: DocumentOptions): string {
   if (ogImage) head += `\n<meta name="twitter:image" content="${esc(ogImage)}" />`;
 
   head += `
-<meta name="robots" content="index, follow" />`;
+<meta name="robots" content="${esc(opts.robots ?? 'index, follow')}" />`;
   const sheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css'];
   for (const href of sheets) {
     head += `\n<link rel="stylesheet" href="${esc(href)}" />`;
