@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://photozseo.com/sitemap.xml
-Sitemap: https://photozseo.com/marketplace-sitemap.xml
+Sitemap: https://photozseo.com/marketplace-sitemap
