@@ -13,3 +13,12 @@ preview_id = "6acbd7403ff54e049fb8827a9115ac01"
 # Workers AI — storefront on-demand çevirisi (m2m100). Edge'de çalışır, harici key yok.
 [ai]
 binding = "AI"
+
+# D1 — Marketplace kanonik veritabanı (P1, 2026-05-31).
+# Local dev: `wrangler d1 execute MARKET_DB --local` miniflare ile emüle eder, account gerekmez.
+# Production D1 oluşturuldu 2026-05-31 (cavusdagins@gmail.com, region EEUR).
+[[d1_databases]]
+binding = "MARKET_DB"
+database_name = "photozseo-marketplace"
+database_id = "277c0a85-476e-4b03-a3eb-bf3d60d8f239"
+migrations_dir = "migrations"

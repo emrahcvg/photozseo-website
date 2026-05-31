@@ -61,4 +61,17 @@ describe('renderDocument', () => {
     const html = renderDocument({ title: 'T', lang: 'en', body: '' });
     expect(html).toContain('name="robots" content="index, follow"');
   });
+
+  it('includes extra stylesheets when provided', () => {
+    const html = renderDocument({ title: 't', lang: 'en', body: 'x', stylesheets: ['/marketplace.css'] });
+    expect(html).toContain('href="/marketplace.css"');
+  });
+  it('includes body scripts when provided', () => {
+    const html = renderDocument({ title: 't', lang: 'en', body: 'x', bodyScripts: ['/marketplace-enhance.js'] });
+    expect(html).toContain('<script src="/marketplace-enhance.js" defer></script>');
+  });
+  it('still loads /storefront.css by default (no regression)', () => {
+    const html = renderDocument({ title: 't', lang: 'en', body: 'x' });
+    expect(html).toContain('/storefront.css');
+  });
 });

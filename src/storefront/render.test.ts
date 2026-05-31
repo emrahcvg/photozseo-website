@@ -110,3 +110,25 @@ describe('renderProductBody', () => {
     expect(html).toContain('wa.me/');
   });
 });
+
+describe('renderProductBody — marketplace cart', () => {
+  const html = renderProductBody(manifest, p1, 'tr', 'tr');
+  it('renders a cart-add button with product data attributes', () => {
+    expect(html).toContain('data-mk-add="' + p1.id + '"');
+    expect(html).toContain('data-mk-title=');
+    expect(html).toContain('data-mk-price=');
+  });
+  it('renders a cart root scoped to the store slug', () => {
+    expect(html).toContain('data-mk-cart-root');
+    expect(html).toContain('data-mk-slug="' + manifest.store.slug + '"');
+  });
+  it('loads marketplace-cart.js', () => {
+    expect(html).toContain('/marketplace-cart.js');
+  });
+  it('renders the order form with required fields', () => {
+    expect(html).toContain('data-mk-order-form');
+    expect(html).toContain('name="name"');
+    expect(html).toContain('name="phone"');
+    expect(html).toContain('name="address"');
+  });
+});

@@ -29,6 +29,12 @@ export interface StoreInfo {
   contact: StoreContact;
   languages: string[];
   currency: string;
+  // Marketplace (P3 iOS tarafından yazılır — geriye uyumlu, opsiyonel).
+  marketplaceListed?: boolean;
+  payment?: {
+    iban?: string;
+    ibanName?: string;
+  };
 }
 
 export interface Category {
@@ -71,6 +77,8 @@ export interface Product {
 export interface ManifestMeta {
   version: number;
   updatedAt: string;
+  // iOS publish'te yazılır; web kanonik taxonomy.json'a göre doğrular (opsiyonel/geriye uyumlu).
+  taxonomyVersion?: number;
   seo?: {
     title?: string;
     description?: string;
