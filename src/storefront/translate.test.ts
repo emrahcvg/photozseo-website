@@ -60,7 +60,7 @@ describe('translateManifest', () => {
   it('translates tagline, category, title, description, attribute color', async () => {
     const kv = fakeKV();
     const { ai } = fakeAI('[de]');
-    const out = await translateManifest(ai, kv as unknown as KVNamespace, baseManifest, 'en', 'de');
+    const { manifest: out } = await translateManifest(ai, kv as unknown as KVNamespace, baseManifest, 'en', 'de');
 
     expect(out.store.tagline?.de).toBe('[de]Best gear');
     expect(out.categories[0].name.de).toBe('[de]Bottles');
@@ -72,14 +72,14 @@ describe('translateManifest', () => {
   it('does NOT translate the brand displayName', async () => {
     const kv = fakeKV();
     const { ai } = fakeAI('[de]');
-    const out = await translateManifest(ai, kv as unknown as KVNamespace, baseManifest, 'en', 'de');
+    const { manifest: out } = await translateManifest(ai, kv as unknown as KVNamespace, baseManifest, 'en', 'de');
     expect(out.store.displayName).toBe('ACME');
   });
 
   it('keeps source EN keys intact', async () => {
     const kv = fakeKV();
     const { ai } = fakeAI();
-    const out = await translateManifest(ai, kv as unknown as KVNamespace, baseManifest, 'en', 'de');
+    const { manifest: out } = await translateManifest(ai, kv as unknown as KVNamespace, baseManifest, 'en', 'de');
     expect(out.products[0].title.en).toBe('Steel Bottle');
   });
 
@@ -90,7 +90,7 @@ describe('translateManifest', () => {
       ...baseManifest,
       products: [{ ...baseManifest.products[0], title: { en: 'Steel Bottle', de: 'Stahlflasche' } }],
     };
-    const out = await translateManifest(ai, kv as unknown as KVNamespace, m, 'en', 'de');
+    const { manifest: out } = await translateManifest(ai, kv as unknown as KVNamespace, m, 'en', 'de');
     expect(out.products[0].title.de).toBe('Stahlflasche'); // korunur, yeniden çevrilmez
   });
 
@@ -121,6 +121,14 @@ describe('getTranslatedManifest', () => {
     const kv = fakeKV();
     const out = await getTranslatedManifest(undefined, kv as unknown as KVNamespace, 'x', baseManifest, 'en', 'de');
     expect(out.products[0].title.de).toBeUndefined();
+  });
+
+  it('does NOT cache the whole manifest when a translation fails (so it retries)', async () => {
+    const kv = fakeKV();
+    const failingAI: AiBinding = { run: async () => { throw new Error('rate limit'); } };
+    const out = await getTranslatedManifest(failingAI, kv as unknown as KVNamespace, 'x', baseManifest, 'en', 'de');
+    expect(kv.store.has('i18n:v2:x:de:v3')).toBe(false);       // kısmi → cache'lenmez (tekrar denenir)
+    expect(out.products[0].title.de).toBe('Steel Bottle');     // graceful: kaynak metin gösterilir
   });
 
   it('caches the whole translated manifest by version', async () => {

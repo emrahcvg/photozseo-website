@@ -62,47 +62,58 @@ async function translateStrings(
   texts: string[],
   sourceLang: string,
   targetLang: string,
-): Promise<Map<string, string>> {
+): Promise<{ map: Map<string, string>; failed: number }> {
   const unique = [...new Set(texts.filter((t) => t && t.trim() !== ''))];
   const out = new Map<string, string>();
+  let failed = 0;
   const srcName = LANG_NAMES[sourceLang] ?? sourceLang;
   const tgtName = LANG_NAMES[targetLang] ?? targetLang;
   const system = `You are a professional e-commerce translator. Translate the user's text from ${srcName} to ${tgtName}. Output ONLY the translation — no quotes, no notes, no explanations. Preserve product names/brands, model codes, numbers, units and emojis as-is. Keep it natural and concise for an online store.`;
+
+  async function callOnce(text: string): Promise<string> {
+    const res = await ai.run(MODEL, {
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: text },
+      ],
+      max_tokens: 1024,
+      temperature: 0.2,
+    });
+    return (res.response ?? res.translated_text ?? '').trim();
+  }
 
   let i = 0;
   async function worker() {
     while (i < unique.length) {
       const text = unique[i++];
-      try {
-        const key = `t:${CACHE_VERSION}:${targetLang}:${await sha1(text)}`;
-        const cached = await kv.get(key);
-        if (cached !== null) {
-          out.set(text, cached);
-          continue;
-        }
-        const res = await ai.run(MODEL, {
-          messages: [
-            { role: 'system', content: system },
-            { role: 'user', content: text },
-          ],
-          max_tokens: 1024,
-          temperature: 0.2,
-        });
-        const raw = res.response ?? res.translated_text ?? '';
-        const translated = cleanLLM(raw) || text;
-        out.set(text, translated);
-        // Yalnızca gerçek (boş olmayan) çeviriyi sakla.
-        if (raw.trim() !== '') {
-          await kv.put(key, translated, { expirationTtl: STRING_TTL });
-        }
-      } catch {
-        out.set(text, text); // başarısızlıkta kaynağı koru (graceful)
+      const key = `t:${CACHE_VERSION}:${targetLang}:${await sha1(text)}`;
+      const cached = await kv.get(key);
+      if (cached !== null) {
+        out.set(text, cached);
+        continue;
       }
+      // 1 retry — Workers AI burst rate-limit'leri için.
+      let raw = '';
+      for (let attempt = 0; attempt < 2 && raw === ''; attempt++) {
+        try {
+          raw = await callOnce(text);
+        } catch {
+          raw = '';
+        }
+      }
+      if (raw === '') {
+        out.set(text, text); // başarısız → kaynağı koru, CACHE'LEME (sonraki istek tekrar dener)
+        failed++;
+        continue;
+      }
+      const translated = cleanLLM(raw) || text;
+      out.set(text, translated);
+      await kv.put(key, translated, { expirationTtl: STRING_TTL });
     }
   }
 
   await Promise.all(Array.from({ length: Math.min(MAX_CONCURRENCY, unique.length) }, worker));
-  return out;
+  return { map: out, failed };
 }
 
 /** Bir Localized alanın hedef dildeki kaynak metnini toplar (zaten çeviri varsa atlar). */
@@ -135,8 +146,8 @@ export async function translateManifest(
   manifest: Manifest,
   sourceLang: string,
   targetLang: string,
-): Promise<Manifest> {
-  if (sourceLang === targetLang) return manifest;
+): Promise<{ manifest: Manifest; complete: boolean }> {
+  if (sourceLang === targetLang) return { manifest, complete: true };
 
   // 1) Tüm kaynak metinleri topla
   const bag: string[] = [];
@@ -155,13 +166,13 @@ export async function translateManifest(
     }
   }
 
-  if (bag.length === 0) return manifest; // çevrilecek bir şey yok
+  if (bag.length === 0) return { manifest, complete: true }; // çevrilecek bir şey yok
 
   // 2) Çevir
-  const map = await translateStrings(ai, kv, bag, sourceLang, targetLang);
+  const { map, failed } = await translateStrings(ai, kv, bag, sourceLang, targetLang);
 
   // 3) Yeni manifest kopyasına doldur
-  return {
+  const out: Manifest = {
     ...manifest,
     store: {
       ...manifest.store,
@@ -184,6 +195,7 @@ export async function translateManifest(
         : p.attributes,
     })),
   };
+  return { manifest: out, complete: failed === 0 };
 }
 
 /**
@@ -213,8 +225,12 @@ export async function getTranslatedManifest(
   if (!ai) return manifest; // AI binding yok (örn. lokal dev) → kaynak dil
 
   try {
-    const translated = await translateManifest(ai, kv, manifest, sourceLang, targetLang);
-    await kv.put(key, JSON.stringify(translated), { expirationTtl: MANIFEST_TTL });
+    const { manifest: translated, complete } = await translateManifest(ai, kv, manifest, sourceLang, targetLang);
+    // Yalnızca EKSİKSİZ çeviriyi cache'le; kısmi sonuç servis edilir ama cache'lenmez
+    // → sonraki istek başarısız string'leri (per-string cache'te olmayanları) tekrar dener.
+    if (complete) {
+      await kv.put(key, JSON.stringify(translated), { expirationTtl: MANIFEST_TTL });
+    }
     return translated;
   } catch {
     return manifest;
