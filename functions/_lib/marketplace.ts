@@ -136,3 +136,41 @@ export async function bumpIndexVersion(db: D1Database): Promise<number> {
   await db.prepare("UPDATE meta SET value = value + 1 WHERE key = ?").bind('index_version').run();
   return getIndexVersion(db);
 }
+
+// ── Write-through D1 yazma ─────────────────────────────────────────────────────
+
+export async function upsertStoreToD1(db: D1Database, slug: string, record: StoreRecord): Promise<void> {
+  const version = await getIndexVersion(db);
+  const sf = storeRecordToStoreFields(slug, record, version);
+  const rows = storeRecordToProductRows(slug, record);
+
+  // 1) Store satırını upsert.
+  await db.prepare(
+    `INSERT OR REPLACE INTO stores
+       (slug, name, city, country, iban, iban_name, whatsapp, listed, lang, index_version, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    sf.slug, sf.name, sf.city, sf.country, sf.iban, sf.iban_name,
+    sf.whatsapp, sf.listed, sf.lang, sf.index_version, sf.updated_at,
+  ).run();
+
+  // 2) Bu mağazanın eski ürünlerini sil (replace semantiği).
+  await db.prepare(`DELETE FROM products WHERE store_slug = ?`).bind(slug).run();
+
+  // 3) Yeni ürünleri yaz.
+  for (const r of rows) {
+    await db.prepare(
+      `INSERT OR REPLACE INTO products
+         (id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(
+      r.id, r.store_slug, r.title, r.description, r.category_id, r.tags,
+      r.price, r.currency, r.stock, r.image_url, r.product_path, r.updated_at,
+    ).run();
+  }
+}
+
+export async function removeStoreFromD1(db: D1Database, slug: string): Promise<void> {
+  await db.prepare(`DELETE FROM products WHERE store_slug = ?`).bind(slug).run();
+  await db.prepare(`DELETE FROM stores WHERE slug = ?`).bind(slug).run();
+}

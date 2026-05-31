@@ -111,3 +111,48 @@ describe('index version sayacı', () => {
     expect(await getIndexVersion(db as any)).toBe(2);
   });
 });
+
+import { upsertStoreToD1, removeStoreFromD1 } from './marketplace';
+
+describe('upsertStoreToD1', () => {
+  it('store + ürünleri D1\'e yazar; listed=1, ürün id\'leri slug ön ekli', async () => {
+    const { db, tables } = makeFakeD1();
+    const rec = makeRecord({}, [
+      { id: 'p1', categoryId: 'electronics.phones', title: { tr: 'Telefon' }, price: 100, currency: 'USD', inStock: true, images: ['a.jpg'] },
+    ]);
+    await upsertStoreToD1(db as any, 'acme', rec);
+    expect(tables.stores).toHaveLength(1);
+    expect(tables.stores[0].slug).toBe('acme');
+    expect(tables.stores[0].listed).toBe(1);
+    expect(tables.products).toHaveLength(1);
+    expect(tables.products[0].store_slug).toBe('acme');
+    expect(String(tables.products[0].id)).toContain('acme:');
+  });
+
+  it('replace: ikinci upsert eski ürünleri siler, yenileri yazar', async () => {
+    const { db, tables } = makeFakeD1();
+    await upsertStoreToD1(db as any, 'acme', makeRecord({}, [
+      { id: 'p1', title: { tr: 'Eski' }, images: [] },
+      { id: 'p2', title: { tr: 'Eski2' }, images: [] },
+    ]));
+    expect(tables.products).toHaveLength(2);
+    await upsertStoreToD1(db as any, 'acme', makeRecord({}, [
+      { id: 'p3', title: { tr: 'Yeni' }, images: [] },
+    ]));
+    expect(tables.products).toHaveLength(1);
+    expect(tables.products[0].title).toBe('Yeni');
+  });
+});
+
+describe('removeStoreFromD1', () => {
+  it('mağazayı ve tüm ürünlerini D1\'den siler', async () => {
+    const { db, tables } = makeFakeD1();
+    await upsertStoreToD1(db as any, 'acme', makeRecord({}, [
+      { id: 'p1', title: { tr: 'X' }, images: [] },
+    ]));
+    expect(tables.stores).toHaveLength(1);
+    await removeStoreFromD1(db as any, 'acme');
+    expect(tables.stores).toHaveLength(0);
+    expect(tables.products).toHaveLength(0);
+  });
+});
