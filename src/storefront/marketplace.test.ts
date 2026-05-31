@@ -251,3 +251,20 @@ describe('renderMarketHome includes footer', () => {
     expect(html).toContain('mailto:abuse@photozseo.com');
   });
 });
+
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+describe('marketplace.css', () => {
+  const css = readFileSync(fileURLToPath(new URL('../../public/marketplace.css', import.meta.url)), 'utf8');
+  const required = ['.mk-grid', '.mk-card', '.mk-chips', '.mk-stores', '.mk-facets', '.mk-trust', '.mk-searchbar', '.mk-filter-toggle'];
+  it.each(required)('defines %s', (sel) => {
+    expect(css).toContain(sel);
+  });
+  it('has a prefers-color-scheme dark block', () => {
+    expect(css).toContain('prefers-color-scheme: dark');
+  });
+  it('uses a responsive grid (2 cols mobile baseline)', () => {
+    expect(css).toContain('grid-template-columns');
+  });
+});
