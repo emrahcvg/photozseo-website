@@ -139,6 +139,11 @@ export async function bumpIndexVersion(db: D1Database): Promise<number> {
 
 // ── Write-through D1 yazma ─────────────────────────────────────────────────────
 
+// CONCURRENCY: P1 tek-yazar / düşük-trafik varsayımı. Bu fonksiyon atomik DEĞİL —
+// (2) DELETE ile (3) INSERT arası kısa pencerede eşzamanlı bir getOrama, ürünleri
+// silinmiş "stale-ama-tutarlı" bir index kurabilir; index_version bump (syncStoreToMarketplace
+// sonunda) bu durumu bir sonraki sorguda düzeltir. P1 ölçeğinde kabul. Yüksek trafikte
+// DELETE+INSERT'i tek db.batch([...]) (atomik) içine alıp bump'ı da batch'e ekle.
 export async function upsertStoreToD1(db: D1Database, slug: string, record: StoreRecord): Promise<void> {
   const version = await getIndexVersion(db);
   const sf = storeRecordToStoreFields(slug, record, version);
@@ -177,6 +182,8 @@ export async function removeStoreFromD1(db: D1Database, slug: string): Promise<v
 
 // ── Listeleme sorguları (D1'den çek, JS'te filtre/sırala/sayfala) ─────────────
 
+// P1: full-scan + JS filtre kabul (küçük indeks, spec onaylı); N>~5k olunca
+// SQL-side filtre/pagination'a (WHERE/LIMIT/OFFSET) geç.
 async function fetchAllProducts(db: D1Database): Promise<ProductRow[]> {
   const { results } = await db.prepare(
     `SELECT id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at
@@ -309,6 +316,10 @@ const LANG_NAMES: Record<string, string> = {
 };
 
 // Kanonik dili D1 store satırlarından çıkar (çoğunluk / ilk listed store dili).
+// LIMITATION: Her ürün KENDİ mağazasının languages[0]'ında saklanıyor, ama sorgu
+// tek bir stores[0].lang'a çevriliyor. Karışık dilli pazaryerinde diğer dildeki
+// ürünler full-text eşleşmeyebilir; ayrıca stores[0] deterministik sıralı değil
+// (fetchListedStores ORDER BY yok). İleride çoğullu-dil sorgu çevirisi (P2).
 async function inferCanonicalLang(db: D1Database): Promise<string> {
   const stores = await fetchListedStores(db);
   return stores[0]?.lang ?? DEFAULT_LANG;

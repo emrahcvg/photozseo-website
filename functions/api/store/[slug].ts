@@ -33,13 +33,14 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
 
   const existing = await getStore(ctx.env.STORE_KV, slug);
   const version = (existing?.version ?? 0) + 1;
+  const updatedAt = new Date().toISOString(); // KV ve D1 aynı timestamp'i yazsın.
 
   await putStore(ctx.env.STORE_KV, slug, {
     manifest,
     phone: manifest.store.contact?.phone,
     status: 'active',
     version,
-    updatedAt: new Date().toISOString(),
+    updatedAt,
   });
 
   // Write-through D1 (best-effort): pazar yeri indeksini güncelle. KV/render asla bozulmaz.
@@ -50,7 +51,7 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
         phone: manifest.store.contact?.phone,
         status: 'active',
         version,
-        updatedAt: new Date().toISOString(),
+        updatedAt,
       });
     } catch (e) {
       console.error('marketplace D1 sync failed (non-fatal):', e);
