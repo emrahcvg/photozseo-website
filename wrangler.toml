@@ -9,3 +9,7 @@ compatibility_date = "2024-11-01"
 binding = "STORE_KV"
 id = "e81c06c817004a22ad3620dcd75e63ac"
 preview_id = "6acbd7403ff54e049fb8827a9115ac01"
+
+# Workers AI — storefront on-demand çevirisi (m2m100). Edge'de çalışır, harici key yok.
+[ai]
+binding = "AI"

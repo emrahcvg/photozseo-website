@@ -99,6 +99,9 @@ export function shippingText(
 
 export const FALLBACK_LOCALE = 'en';
 
+/** Diller storefront'ta sunulur (hreflang + dil seçici + on-demand çeviri). App'in 12 dili. */
+export const SUPPORTED_LOCALES = ['en', 'tr', 'de', 'es', 'pt', 'ja', 'ko', 'zh', 'ar', 'fa', 'ur', 'hi'];
+
 export function resolveLocalized(
   field: Localized | undefined,
   locale: string,

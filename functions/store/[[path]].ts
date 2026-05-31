@@ -8,6 +8,7 @@
  */
 
 import { getStore } from '../_lib/registry';
+import { getTranslatedManifest, type AiBinding } from '../_lib/translate';
 import {
   renderStoreBody,
   renderProductBody,
@@ -16,15 +17,16 @@ import {
 } from '../../src/storefront/render';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import {
-  resolveStoreLocale,
   uniqueProductSlugs,
   resolveLocalized,
   storeUrl,
   productUrl,
+  SUPPORTED_LOCALES,
 } from '../../src/storefront/manifest';
 
 interface Env {
   STORE_KV: KVNamespace;
+  AI?: AiBinding;
 }
 
 const DEFAULT_LANG = 'en';
@@ -86,12 +88,21 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     });
   }
 
-  const { manifest } = record;
-  const locale = resolveStoreLocale(manifest, lang);
+  const base = record.manifest;
+
+  // Kaynak dil = app'in yazdığı dil. İstenen dil 12-set içindeyse onu, yoksa varsayılanı kullan.
+  const sourceLang = base.store.languages?.[0] ?? DEFAULT_LANG;
+  const locale = (lang && SUPPORTED_LOCALES.includes(lang)) ? lang : DEFAULT_LANG;
+
+  // İstenen dil kaynaktan farklıysa on-demand çevir (KV cache + Workers AI). Graceful fallback.
+  const translated = await getTranslatedManifest(ctx.env.AI, ctx.env.STORE_KV, slug, base, sourceLang, locale);
+
+  // Render manifest'i: dil seçici + hreflang 12 dilin tamamını göstersin.
+  const manifest = { ...translated, store: { ...translated.store, languages: SUPPORTED_LOCALES } };
 
   // Origin for absolute SEO URLs (canonical / hreflang / og), derived from the request.
   const origin = new URL(ctx.request.url).origin;
-  const languages = manifest.store.languages ?? [];
+  const languages = SUPPORTED_LOCALES;
 
   let htmlBody: string;
   let pageTitle: string;
@@ -119,6 +130,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     pageDesc = resolveLocalized(product.description, locale).slice(0, 160);
     canonical = origin + productUrl(slug, pSlug, locale, DEFAULT_LANG);
     alternates = languages.map((l) => ({ lang: l, href: origin + productUrl(slug, pSlug, l, DEFAULT_LANG) }));
+    alternates.push({ lang: 'x-default', href: origin + productUrl(slug, pSlug, DEFAULT_LANG, DEFAULT_LANG) });
     ogImage = product.images[0] ?? manifest.store.logo ?? `${origin}/og-image.png`;
     jsonLd = buildProductJsonLd(manifest, product, locale, canonical);
   } else {
@@ -127,6 +139,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     pageDesc = manifest.meta.seo?.description ?? resolveLocalized(manifest.store.tagline, locale);
     canonical = origin + storeUrl(slug, locale, DEFAULT_LANG);
     alternates = languages.map((l) => ({ lang: l, href: origin + storeUrl(slug, l, DEFAULT_LANG) }));
+    alternates.push({ lang: 'x-default', href: origin + storeUrl(slug, DEFAULT_LANG, DEFAULT_LANG) });
     ogImage = manifest.store.logo ?? manifest.products[0]?.images[0] ?? `${origin}/og-image.png`;
     jsonLd = buildStoreJsonLd(manifest, locale, canonical);
   }
