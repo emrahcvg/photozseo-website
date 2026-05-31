@@ -121,3 +121,18 @@ export function storeRecordToProductRows(slug: string, record: StoreRecord): Pro
     };
   });
 }
+
+// ── index_version sayacı (meta tablosu) ───────────────────────────────────────
+
+export async function getIndexVersion(db: D1Database): Promise<number> {
+  const row = await db
+    .prepare("SELECT value FROM meta WHERE key = ?")
+    .bind('index_version')
+    .first<{ value: number }>();
+  return row?.value ?? 0;
+}
+
+export async function bumpIndexVersion(db: D1Database): Promise<number> {
+  await db.prepare("UPDATE meta SET value = value + 1 WHERE key = ?").bind('index_version').run();
+  return getIndexVersion(db);
+}

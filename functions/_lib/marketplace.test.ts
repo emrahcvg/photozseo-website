@@ -95,3 +95,19 @@ describe('storeRecordToProductRows', () => {
     expect(rows[1].stock).toBe(0);
   });
 });
+
+import { makeFakeD1 } from './fakeD1';
+import { bumpIndexVersion, getIndexVersion } from './marketplace';
+
+describe('index version sayacı', () => {
+  it('getIndexVersion başlangıçta 0', async () => {
+    const { db } = makeFakeD1();
+    expect(await getIndexVersion(db as any)).toBe(0);
+  });
+  it('bumpIndexVersion artırır ve yeni değeri döner', async () => {
+    const { db } = makeFakeD1();
+    expect(await bumpIndexVersion(db as any)).toBe(1);
+    expect(await bumpIndexVersion(db as any)).toBe(2);
+    expect(await getIndexVersion(db as any)).toBe(2);
+  });
+});
