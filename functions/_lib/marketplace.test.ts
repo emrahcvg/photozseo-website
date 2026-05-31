@@ -1,8 +1,97 @@
-// functions/_lib/marketplace.test.ts
 import { describe, it, expect } from 'vitest';
+import {
+  storeRecordToStoreFields,
+  storeRecordToProductRows,
+  type ProductRow,
+} from './marketplace';
+import type { StoreRecord } from './registry';
+import type { Manifest } from '../../src/storefront/types';
 
-describe('marketplace test harness', () => {
-  it('functions/ testleri toplanıyor', () => {
-    expect(1 + 1).toBe(2);
+function makeRecord(over: Partial<Manifest['store']> = {}, products: Manifest['products'] = []): StoreRecord {
+  const manifest: Manifest = {
+    store: {
+      slug: 'acme',
+      displayName: 'ACME Store',
+      tagline: { en: 'Best gear' },
+      location: { city: 'Istanbul', country: 'TR' },
+      contact: { whatsapp: '+905551112233' },
+      languages: ['tr', 'en'],
+      currency: 'USD',
+      marketplaceListed: true,
+      payment: { iban: 'TR0001', ibanName: 'Ahmet Yilmaz' },
+      ...over,
+    },
+    categories: [{ id: 'electronics.phones', name: { en: 'Phones' } }],
+    products,
+    meta: { version: 4, updatedAt: '2026-05-31T10:00:00Z' },
+  };
+  return { manifest, status: 'active', version: 4, updatedAt: '2026-05-31T10:00:00Z' };
+}
+
+describe('storeRecordToStoreFields', () => {
+  it('manifest store alanlarını D1 store satırına eşler; kanonik dil languages[0]', () => {
+    const rec = makeRecord();
+    const f = storeRecordToStoreFields('acme', rec, 99);
+    expect(f.slug).toBe('acme');
+    expect(f.name).toBe('ACME Store');
+    expect(f.city).toBe('Istanbul');
+    expect(f.country).toBe('TR');
+    expect(f.iban).toBe('TR0001');
+    expect(f.iban_name).toBe('Ahmet Yilmaz');
+    expect(f.whatsapp).toBe('+905551112233');
+    expect(f.listed).toBe(1);          // marketplaceListed true → 1
+    expect(f.lang).toBe('tr');         // languages[0]
+    expect(f.index_version).toBe(99);
+    expect(typeof f.updated_at).toBe('string');
+  });
+
+  it('marketplaceListed yoksa/false ise listed=0', () => {
+    const rec = makeRecord({ marketplaceListed: false });
+    expect(storeRecordToStoreFields('acme', rec, 1).listed).toBe(0);
+    const rec2 = makeRecord({ marketplaceListed: undefined });
+    expect(storeRecordToStoreFields('acme', rec2, 1).listed).toBe(0);
+  });
+});
+
+describe('storeRecordToProductRows', () => {
+  it('her ürünü kanonik dilde D1 satırına eşler; id=<slug>:<productSlug>', () => {
+    const rec = makeRecord({}, [
+      {
+        id: 'p1',
+        categoryId: 'electronics.phones',
+        title: { tr: 'Akilli Telefon', en: 'Smart Phone' },
+        description: { tr: 'Hizli', en: 'Fast' },
+        price: 199.9,
+        currency: 'USD',
+        inStock: true,
+        stockQty: 5,
+        images: ['https://drive/img1.jpg'],
+        tags: ['yeni', 'kampanya'],
+      },
+    ]);
+    const rows: ProductRow[] = storeRecordToProductRows('acme', rec);
+    expect(rows).toHaveLength(1);
+    const r = rows[0];
+    expect(r.store_slug).toBe('acme');
+    expect(r.id).toContain('acme:');          // <slug>:<productSlug>
+    expect(r.title).toBe('Akilli Telefon');   // kanonik dil tr
+    expect(r.description).toBe('Hizli');
+    expect(r.category_id).toBe('electronics.phones');
+    expect(r.tags).toBe('yeni,kampanya');     // CSV
+    expect(r.price).toBe(199.9);
+    expect(r.currency).toBe('USD');
+    expect(r.stock).toBe(5);
+    expect(r.image_url).toBe('https://drive/img1.jpg');
+    expect(r.product_path).toContain('/store/acme/product/');
+  });
+
+  it('stockQty yoksa inStock false → stock 0, true → 1', () => {
+    const rec = makeRecord({}, [
+      { id: 'p2', title: { tr: 'X' }, images: [], inStock: true },
+      { id: 'p3', title: { tr: 'Y' }, images: [], inStock: false },
+    ]);
+    const rows = storeRecordToProductRows('acme', rec);
+    expect(rows[0].stock).toBe(1);
+    expect(rows[1].stock).toBe(0);
   });
 });
