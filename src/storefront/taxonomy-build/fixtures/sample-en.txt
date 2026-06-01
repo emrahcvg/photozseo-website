@@ -1,0 +1,8 @@
+# Google_Product_Taxonomy_Version: 2026-03-15
+1 - Animals & Pet Supplies
+3237 - Animals & Pet Supplies > Live Animals
+2 - Animals & Pet Supplies > Pet Supplies
+3 - Animals & Pet Supplies > Pet Supplies > Bird Supplies
+166 - Apparel & Accessories
+1604 - Apparel & Accessories > Clothing
+212 - Apparel & Accessories > Clothing > Shirts & Tops
