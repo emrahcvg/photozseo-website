@@ -98,8 +98,14 @@ describe('socialHref', () => {
   it('zaten URL ise olduğu gibi döner', () => {
     expect(socialHref('website', 'https://ornek.com')).toBe('https://ornek.com');
   });
-  it('bilinmeyen tipte değeri olduğu gibi döner', () => {
-    expect(socialHref('other', 'serbest-metin')).toBe('serbest-metin');
+  it('bilinmeyen tipte protokolsüz değer boş string döner', () => {
+    expect(socialHref('other', 'serbest-metin')).toBe('');
+  });
+  it('bilinmeyen tipte tel: protokolüne izin verir', () => {
+    expect(socialHref('other', 'tel:+905001234567')).toBe('tel:+905001234567');
+  });
+  it('javascript: protokolünü engeller (XSS koruması)', () => {
+    expect(socialHref('other', 'javascript:alert(1)')).toBe('');
   });
 });
 

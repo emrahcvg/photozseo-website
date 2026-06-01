@@ -15,20 +15,43 @@ interface Env {
   MARKET_DB?: D1Database;
 }
 
+const MAX_MANIFEST_BYTES = 2 * 1024 * 1024; // 2 MB — KV value limit 25 MB, bu çok daha düşük
+const VALID_SLUG = /^[a-z0-9][a-z0-9-]{0,98}[a-z0-9]$|^[a-z0-9]$/;
+
+function json400(msg: string) {
+  return new Response(JSON.stringify({ error: msg }), {
+    status: 400,
+    headers: { 'content-type': 'application/json' },
+  });
+}
+
 export const onRequestPut: PagesFunction<Env> = async (ctx) => {
   const denied = requireWriteKey(ctx.request, ctx.env);
   if (denied) return denied;
 
   const slug = ctx.params.slug as string;
+  if (!VALID_SLUG.test(slug)) return json400('Invalid slug');
+
+  const contentLength = Number(ctx.request.headers.get('content-length') ?? 0);
+  if (contentLength > MAX_MANIFEST_BYTES) {
+    return new Response(JSON.stringify({ error: 'Payload too large' }), {
+      status: 413,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
 
   let manifest: Manifest;
   try {
-    manifest = await ctx.request.json();
+    const text = await ctx.request.text();
+    if (text.length > MAX_MANIFEST_BYTES) {
+      return new Response(JSON.stringify({ error: 'Payload too large' }), {
+        status: 413,
+        headers: { 'content-type': 'application/json' },
+      });
+    }
+    manifest = JSON.parse(text);
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
-      status: 400,
-      headers: { 'content-type': 'application/json' },
-    });
+    return json400('Invalid JSON body');
   }
 
   const existing = await getStore(ctx.env.STORE_KV, slug);

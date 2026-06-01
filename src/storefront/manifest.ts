@@ -162,7 +162,9 @@ export function socialHref(type: string, value: string): string {
     case 'whatsapp':
       return whatsappHref(value);
     default:
-      return value;
+      // Unknown type: only allow safe protocols to prevent javascript: XSS
+      if (/^(https?:|tel:|mailto:)/.test(value)) return value;
+      return '';
   }
 }
 
