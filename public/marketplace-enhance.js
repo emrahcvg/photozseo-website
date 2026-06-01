@@ -50,7 +50,65 @@
     });
   }
 
-  function init() { bindPrefetch(); bindViewTransitions(); bindFilterSheet(); }
+  // ── Language switcher: ?lang= param update (preserves other params) ──────────────
+  function bindLangSwitcher() {
+    var sel = document.querySelector('[data-mk-lang]');
+    if (!sel) return;
+    sel.addEventListener('change', function () {
+      var u = new URL(location.href);
+      u.searchParams.set('lang', sel.value);
+      location.href = u.href;
+    });
+  }
+
+  // ── Market currency converter (data-mk-amount / data-mk-currency) ─────────────────
+  function bindCurrency() {
+    var stored;
+    try { stored = localStorage.getItem('sf-currency'); } catch (e) { stored = null; }
+    if (!stored) return;
+
+    var ratesCache = {};
+
+    function fmt(amount, currency, locale) {
+      try { return new Intl.NumberFormat(locale || 'en', { style: 'currency', currency: currency }).format(amount); }
+      catch (e) { return amount.toFixed(2) + ' ' + currency; }
+    }
+
+    function applyTo(target, rates) {
+      document.querySelectorAll('[data-mk-amount]').forEach(function (el) {
+        var amount = parseFloat(el.getAttribute('data-mk-amount'));
+        var from = el.getAttribute('data-mk-currency') || 'USD';
+        var orig = el.getAttribute('data-mk-orig') || '';
+        if (isNaN(amount)) return;
+        if (from === target || !rates || !rates[from] || !rates[target]) {
+          el.textContent = orig;
+          return;
+        }
+        var converted = (amount / rates[from]) * rates[target];
+        el.textContent = '≈ ' + fmt(converted, target);
+      });
+    }
+
+    function convertAll(target) {
+      if (ratesCache[target]) { applyTo(target, ratesCache[target]); return; }
+      var bases = {};
+      document.querySelectorAll('[data-mk-currency]').forEach(function (el) {
+        var b = el.getAttribute('data-mk-currency') || 'USD';
+        if (b !== target) bases[b] = true;
+      });
+      var base = Object.keys(bases)[0] || 'USD';
+      fetch('/api/rates/' + encodeURIComponent(base))
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.rates) { ratesCache[base] = data.rates; applyTo(target, data.rates); }
+        })
+        .catch(function () {});
+    }
+
+    convertAll(stored);
+  }
+
+  function init() { bindPrefetch(); bindViewTransitions(); bindFilterSheet(); bindLangSwitcher(); bindCurrency(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

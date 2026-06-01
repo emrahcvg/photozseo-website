@@ -134,7 +134,7 @@ describe('renderMarketHome', () => {
     expect(html).toContain('name="q"');
   });
   it('renders the New products section heading', () => {
-    expect(html).toContain('New products');
+    expect(html).toContain('Recommended for You');
   });
   it('renders category chips and a store strip', () => {
     expect(html).toContain('/market/c/electronics.phones');
@@ -185,8 +185,8 @@ describe('renderSearchPage', () => {
     expect(html).toContain('name="minPrice"');
     expect(html).toContain('name="maxPrice"');
   });
-  it('marks the active sort option as selected', () => {
-    expect(html).toMatch(/value="new"\s+selected/);
+  it('marks the active sort chip as active', () => {
+    expect(html).toMatch(/value="new"[^>]*mk-sort-chip--active|mk-sort-chip--active[^>]*value="new"/);
   });
   it('renders the mobile filter sheet toggle', () => {
     expect(html).toContain('mk-filter-toggle');

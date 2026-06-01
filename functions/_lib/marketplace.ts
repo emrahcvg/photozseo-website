@@ -23,6 +23,7 @@ const DEFAULT_LANG = 'en';
 export interface ProductRow {
   id: string;
   store_slug: string;
+  store_name?: string;
   title: string;
   description: string;
   category_id: string;
@@ -109,6 +110,7 @@ export function storeRecordToProductRows(slug: string, record: StoreRecord): Pro
     return {
       id: `${slug}:${pSlug}`,
       store_slug: slug,
+      store_name: manifest.store.displayName,
       title: resolveLocalized(p.title, lang),
       description: resolveLocalized(p.description, lang),
       category_id: p.categoryId ?? '',
@@ -354,11 +356,12 @@ async function joinedRows(db: D1Database): Promise<JoinedRow[]> {
   const products = await fetchAllProducts(db);
   const stores = await fetchListedStores(db);
   const cityBySlug = new Map(stores.map((s) => [s.slug, s.city]));
+  const nameBySlug = new Map(stores.map((s) => [s.slug, s.name]));
   const listedSlugs = new Set(stores.map((s) => s.slug));
   // Sadece listed mağazaların ürünleri pazar yerinde görünür.
   return products
     .filter((p) => listedSlugs.has(p.store_slug))
-    .map((p) => ({ ...p, city: cityBySlug.get(p.store_slug) ?? '' }));
+    .map((p) => ({ ...p, city: cityBySlug.get(p.store_slug) ?? '', store_name: p.store_name ?? nameBySlug.get(p.store_slug) }));
 }
 
 function sortRows(rows: JoinedRow[], sort?: SearchOpts['sort']): JoinedRow[] {

@@ -167,7 +167,7 @@ html { scroll-behavior: smooth; }
 }
 .sf-card__body { padding: 14px 6px 6px; }
 .sf-card__title { font-size: 1.05rem; line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 6px; color: #1d1d1f; font-weight: 600; }
-.sf-card__price { margin-bottom: 6px; }
+.sf-card__price { margin-bottom: 6px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .sf-card__amount { font-weight: 700; color: #1d1d1f; }
 .sf-card__compare { text-decoration: line-through; color: #999; margin-inline-start: 6px; font-size: 0.85rem; }
 .sf-card__contact { color: #1d1d1f; font-size: 0.9rem; }
@@ -175,15 +175,21 @@ html { scroll-behavior: smooth; }
 /* STOCK PILL */
 .sf-stock {
   display: inline-block; font-size: 0.78rem; font-weight: 600;
-  padding: 2px 8px; border-radius: 6px; margin-top: 4px;
+  padding: 2px 8px; border-radius: 6px;
 }
 .sf-stock--in  { background: #d1fae5; color: #065f46; }
 .sf-stock--low { background: #fef3c7; color: #92400e; }
 .sf-stock--out { background: #fee2e2; color: #991b1b; }
 
 /* FOOTER */
-.sf-footer { margin-top: 48px; text-align: center; color: #888; font-size: 0.85rem; }
-.sf-footer a { color: #888; }
+.sf-footer {
+  margin-top: 48px; padding: 20px 0 28px;
+  border-top: 1px solid #e2e5ea;
+  text-align: center; color: #888; font-size: 0.85rem;
+}
+.sf-footer a { color: #888; text-decoration: none; }
+.sf-footer a:hover { color: #1d1d1f; text-decoration: underline; }
+.sf-footer__brand { font-weight: 500; }
 .sf-footer__sep { margin: 0 8px; }
 
 /* ===== PRODUCT DETAIL ===== */
@@ -411,3 +417,127 @@ html { scroll-behavior: smooth; }
   border-radius: 999px;
   font-weight: 500;
 }
+
+/* ── Seller chip (product detail) ── */
+.sf-seller-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px 6px 6px; margin-bottom: 16px;
+  background: #F5F5F7; border-radius: 999px;
+  border: 1px solid #E5E5EA;
+}
+.sf-seller-chip__avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #4361EE; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 700; flex-shrink: 0;
+}
+.sf-seller-chip__name {
+  font-size: .85rem; font-weight: 600; color: #1D1D1F;
+}
+.sf-seller-chip__verified {
+  font-size: .7rem; color: #4361EE; flex-shrink: 0;
+}
+
+/* ── Price redesign ── */
+.sf-detail__price-row {
+  display: flex; align-items: baseline; gap: 10px; margin: 4px 0 16px;
+}
+.sf-detail__price {
+  font-size: 1.8rem; font-weight: 700; color: #4361EE; letter-spacing: -.02em;
+}
+.sf-detail__price-compare {
+  font-size: 1.1rem; font-weight: 500; color: #8E8E93;
+  text-decoration: line-through;
+}
+
+/* ── Color swatches ── */
+.sf-swatches-label {
+  font-size: .8rem; font-weight: 600; color: #6E6E73;
+  text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px;
+}
+.sf-swatches {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.sf-swatch {
+  width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: transform .15s, border-color .15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+.sf-swatch:hover { transform: scale(1.15); }
+.sf-swatch--selected { border-color: #1D1D1F; transform: scale(1.15); }
+
+/* ── Buy Now + Add to Cart buttons ── */
+.sf-btn-group {
+  display: flex; flex-direction: column; gap: 10px; margin: 16px 0;
+}
+.sf-btn--buy {
+  display: flex; align-items: center; justify-content: center;
+  padding: 15px; border-radius: 14px;
+  background: #4361EE; color: #fff; border: 0;
+  font: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+  text-align: center; transition: background .15s;
+}
+.sf-btn--buy:hover { background: #3451D1; }
+.sf-btn--cart {
+  display: flex; align-items: center; justify-content: center;
+  padding: 15px; border-radius: 14px;
+  background: #F5F5F7; color: #1D1D1F;
+  border: 1.5px solid #E5E5EA;
+  font: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+  text-align: center; transition: background .15s, border-color .15s;
+}
+.sf-btn--cart:hover { background: #E5E5EA; }
+
+/* ── The Narrative (product description section) ── */
+.sf-narrative {
+  margin: 24px 0; padding: 20px;
+  background: #F5F5F7; border-radius: 16px;
+}
+.sf-narrative__heading {
+  font-size: .72rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: #4361EE; margin: 0 0 8px;
+}
+.sf-narrative__text {
+  font-size: .95rem; line-height: 1.6; color: #1D1D1F; margin: 0;
+}
+
+/* ── Seller Reviews ── */
+.sf-reviews { margin: 28px 0; }
+.sf-reviews__heading {
+  font-size: 1rem; font-weight: 700; margin: 0 0 4px;
+}
+.sf-reviews__summary {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .875rem; color: #6E6E73; margin-bottom: 16px;
+}
+.sf-reviews__stars { color: #FFCC00; letter-spacing: .05em; }
+.sf-review {
+  padding: 14px 0; border-top: 1px solid #E5E5EA;
+}
+.sf-review__meta {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+}
+.sf-review__stars { color: #FFCC00; font-size: .8rem; }
+.sf-review__author { font-weight: 600; font-size: .875rem; }
+.sf-review__text { font-size: .9rem; color: #1D1D1F; line-height: 1.5; margin: 0; }
+
+/* ── AI chat bar (placeholder) ── */
+.sf-ai-chat {
+  position: sticky; bottom: 0; background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid #E5E5EA; padding: 12px 16px;
+  margin: 0 -16px; display: flex; gap: 10px; align-items: center;
+}
+.sf-ai-chat__input {
+  flex: 1; padding: 11px 16px; border: 1.5px solid #E5E5EA;
+  border-radius: 999px; background: #F5F5F7; font: inherit;
+  font-size: .9rem; color: #1D1D1F;
+}
+.sf-ai-chat__input:focus { outline: none; border-color: #4361EE; }
+.sf-ai-chat__btn {
+  width: 40px; height: 40px; border-radius: 50%; border: 0;
+  background: #4361EE; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.sf-ai-chat__btn:hover { background: #3451D1; }

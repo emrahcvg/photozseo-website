@@ -167,7 +167,7 @@ html { scroll-behavior: smooth; }
 }
 .sf-card__body { padding: 14px 6px 6px; }
 .sf-card__title { font-size: 1.05rem; line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 6px; color: #1d1d1f; font-weight: 600; }
-.sf-card__price { margin-bottom: 6px; }
+.sf-card__price { margin-bottom: 6px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .sf-card__amount { font-weight: 700; color: #1d1d1f; }
 .sf-card__compare { text-decoration: line-through; color: #999; margin-inline-start: 6px; font-size: 0.85rem; }
 .sf-card__contact { color: #1d1d1f; font-size: 0.9rem; }
@@ -175,7 +175,7 @@ html { scroll-behavior: smooth; }
 /* STOCK PILL */
 .sf-stock {
   display: inline-block; font-size: 0.78rem; font-weight: 600;
-  padding: 2px 8px; border-radius: 6px; margin-top: 4px;
+  padding: 2px 8px; border-radius: 6px;
 }
 .sf-stock--in  { background: #d1fae5; color: #065f46; }
 .sf-stock--low { background: #fef3c7; color: #92400e; }

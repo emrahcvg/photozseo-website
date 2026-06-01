@@ -5,6 +5,7 @@
  */
 
 import type { Manifest, Product } from './types';
+import { mt } from './marketplace-i18n';
 import {
   resolveLocalized,
   formatPrice,
@@ -20,6 +21,14 @@ import {
   specRows,
   shippingText,
 } from './manifest';
+
+function mkFormatDetailPrice(price: number, currency: string, locale: string): string {
+  try {
+    return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(price);
+  } catch {
+    return `${price.toFixed(2)} ${currency}`;
+  }
+}
 
 // ── XSS protection ────────────────────────────────────────────────────────────
 
@@ -45,7 +54,7 @@ export const SWITCHER_CURRENCIES = [
   'AED', 'SAR', 'RUB', 'BRL', 'INR', 'CAD', 'AUD',
 ];
 
-const LANG_NAMES: Record<string, string> = {
+export const LANG_NAMES: Record<string, string> = {
   en: 'English', tr: 'Türkçe', de: 'Deutsch', es: 'Español',
   pt: 'Português', ja: '日本語', ko: '한국어', zh: '中文',
   ar: 'العربية', fa: 'فارسی', ur: 'اردو', hi: 'हिन्दी',
@@ -65,8 +74,14 @@ function stockClass(product: Product): string {
  * Renders a price block. Each amount carries data-sf-amount / data-sf-currency
  * so the client currency switcher can convert it. The server-rendered text is
  * the base currency, so no-JS visitors still see a correct price.
+ * Optional stock label/class renders inline next to the price.
  */
-function renderPriceBlock(product: Product, locale: string, fallbackCurrency: string): string {
+function renderPriceBlock(
+  product: Product,
+  locale: string,
+  fallbackCurrency: string,
+  stockInfo?: { label: string; cls: string },
+): string {
   const currency = product.currency ?? fallbackCurrency;
   const price = formatPrice(product.price, currency, locale);
 
@@ -74,8 +89,10 @@ function renderPriceBlock(product: Product, locale: string, fallbackCurrency: st
   if (price) {
     html += `  <span class="sf-card__amount sf-price" data-sf-amount="${product.price}" data-sf-currency="${escapeHtml(currency)}" data-sf-orig="${escapeHtml(price)}">${escapeHtml(price)}</span>\n`;
   } else {
-    const contactTxt = locale === 'tr' ? 'Fiyat için iletişime geç' : 'Contact for price';
-    html += `  <span class="sf-card__contact">${escapeHtml(contactTxt)}</span>\n`;
+    html += `  <span class="sf-card__contact">${escapeHtml(mt(locale, 'contactForPrice'))}</span>\n`;
+  }
+  if (stockInfo) {
+    html += `  <span class="sf-stock ${escapeHtml(stockInfo.cls)}">${escapeHtml(stockInfo.label)}</span>\n`;
   }
   html += '</div>\n';
   return html;
@@ -91,8 +108,7 @@ function renderCardMedia(image: string, alt: string, soldOut: boolean, locale: s
     html += '      <div class="sf-card__media-empty" aria-hidden="true">📷</div>\n';
   }
   if (soldOut) {
-    const badge = locale === 'tr' ? 'Tükendi' : 'Sold out';
-    html += `      <span class="sf-card__badge">${escapeHtml(badge)}</span>\n`;
+    html += `      <span class="sf-card__badge">${escapeHtml(mt(locale, 'soldOut'))}</span>\n`;
   }
   html += '    </div>\n';
   return html;
@@ -106,10 +122,9 @@ function renderControls(
   languages: string[],
   langHref: (lang: string) => string,
 ): string {
-  const tr = locale === 'tr';
-  const currencyLabel = tr ? 'Para birimi' : 'Currency';
-  const languageLabel = tr ? 'Dil' : 'Language';
-  const note = tr ? '≈ yaklaşık · kur günlük güncellenir' : '≈ approx · rates updated daily';
+  const currencyLabel = mt(locale, 'currency');
+  const languageLabel = mt(locale, 'language');
+  const note = mt(locale, 'rateNote');
 
   // Currency options — ensure the store's base currency is present.
   const currencies = SWITCHER_CURRENCIES.includes(baseCurrency)
@@ -153,11 +168,11 @@ function renderStoreHeader(manifest: Manifest, locale: string, defaultLang: stri
   const c = store.contact;
   const locationText = [store.location?.city, store.location?.country].filter(Boolean).join(', ');
   const map = mapHref(store.location);
-  const contactLabel = locale === 'tr' ? 'İletişim' : 'Contact';
+  const contactLabel = mt(locale, 'contact');
 
   const buttons: { label: string; href: string; cls: string }[] = [];
   if (c.whatsapp) buttons.push({ label: 'WhatsApp', href: whatsappHref(c.whatsapp), cls: 'sf-btn sf-btn--wa' });
-  if (c.phone) buttons.push({ label: locale === 'tr' ? 'Ara' : 'Call', href: `tel:${c.phone}`, cls: 'sf-btn sf-btn--ghost' });
+  if (c.phone) buttons.push({ label: mt(locale, 'call'), href: `tel:${c.phone}`, cls: 'sf-btn sf-btn--ghost' });
   if (c.email) buttons.push({ label: 'E-mail', href: `mailto:${c.email}`, cls: 'sf-btn sf-btn--ghost' });
   for (const s of c.social ?? []) {
     buttons.push({ label: escapeHtml(s.type), href: socialHref(s.type, s.value), cls: 'sf-btn sf-btn--ghost' });
@@ -223,10 +238,8 @@ function renderProductCard(
   html += '    <div class="sf-card__body">\n';
   html += `      <h3 class="sf-card__title">${escapeHtml(title)}</h3>\n`;
   // Açıklama grid kartında gösterilmez (Apple-style sade kart); `description` yalnız aramada kullanılır.
-  html += renderPriceBlock(product, locale, currency).replace(/^/gm, '    ').trimStart();
-  if (stock) {
-    html += `      <span class="sf-stock ${escapeHtml(sc)}">${escapeHtml(stock)}</span>\n`;
-  }
+  const stockInfo = stock ? { label: stock, cls: sc } : undefined;
+  html += renderPriceBlock(product, locale, currency, stockInfo).replace(/^/gm, '    ').trimStart();
   html += '    </div>\n';
   html += '  </article>\n';
   html += '</a>\n';
@@ -240,16 +253,15 @@ function renderToolbar(
   groups: { category: { id: string; name: Record<string, string> } | null; products: Product[] }[],
   locale: string,
 ): string {
-  const tr = locale === 'tr';
-  const searchPlaceholder = tr ? 'Ürün ara…' : 'Search products…';
-  const catsLabel = tr ? 'Kategoriler' : 'Categories';
-  const noResults = tr ? 'Sonuç bulunamadı' : 'No results found';
+  const searchPlaceholder = mt(locale, 'searchPlaceholder');
+  const catsLabel = mt(locale, 'categories');
+  const noResults = mt(locale, 'noResults');
 
   let html = '<div class="sf-toolbar">\n';
   html += `  <input type="search" class="sf-search" data-sf-search-input placeholder="${escapeHtml(searchPlaceholder)}" aria-label="${escapeHtml(searchPlaceholder)}" />\n`;
 
   if (groups.length > 1) {
-    const allLabel = tr ? 'Tümü' : 'All';
+    const allLabel = mt(locale, 'allCategories');
     const totalCount = groups.reduce((n, g) => n + g.products.length, 0);
     html += `  <nav class="sf-catnav" aria-label="${escapeHtml(catsLabel)}">\n`;
     html += `    <button type="button" class="sf-catnav__link sf-catnav__link--active" data-sf-cat="all">${escapeHtml(allLabel)} <span class="sf-catnav__count">${totalCount}</span></button>\n`;
@@ -257,7 +269,7 @@ function renderToolbar(
       const id = group.category ? `cat-${group.category.id}` : 'cat-other';
       const name = group.category
         ? resolveLocalized(group.category.name, locale)
-        : (tr ? 'Diğer' : 'Other');
+        : mt(locale, 'other');
       html += `    <button type="button" class="sf-catnav__link" data-sf-cat="${escapeAttr(id)}">${escapeHtml(name)} <span class="sf-catnav__count">${group.products.length}</span></button>\n`;
     }
     html += '  </nav>\n';
@@ -271,10 +283,8 @@ function renderToolbar(
 // ── renderStoreFooter ────────────────────────────────────────────────────────
 
 function renderStoreFooter(slug: string, locale: string): string {
-  const poweredBy = locale === 'tr'
-    ? 'Bu mağaza photoZseo ile oluşturuldu'
-    : 'This store was created with photoZseo';
-  const reportLabel = locale === 'tr' ? 'Bu mağazayı şikayet et' : 'Report this store';
+  const poweredBy = mt(locale, 'poweredBy');
+  const reportLabel = mt(locale, 'reportStore');
   const reportHref = `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report store: ' + slug)}`;
 
   return (
@@ -437,7 +447,7 @@ export function renderStoreBody(
   for (const group of groups) {
     const heading = group.category
       ? resolveLocalized(group.category.name, locale)
-      : (locale === 'tr' ? 'Diğer' : 'Other');
+      : mt(locale, 'other');
     const id = group.category ? `cat-${group.category.id}` : 'cat-other';
 
     html += `<section class="sf-section" id="${escapeAttr(id)}" data-sf-cat="${escapeAttr(id)}">\n`;
@@ -606,13 +616,18 @@ export function renderProductBody(
   const stock = stockLabel(product, locale);
   const sc = stockClass(product);
   const backHref = storeUrl(store.slug, locale, defaultLang);
-  const backLabel = locale === 'tr' ? 'Mağazaya dön' : 'Back to store';
+  const backLabel = mt(locale, 'backToStore');
   const phone = store.contact.whatsapp ?? store.contact.phone;
   const waHref = phone ? productWhatsappHref(phone, title, locale) : null;
-  const waLabel = locale === 'tr' ? 'WhatsApp ile sipariş ver' : 'Order via WhatsApp';
-  const specsHeading = locale === 'tr' ? 'Ürün Özellikleri' : 'Product details';
+  const waLabel = mt(locale, 'orderViaWhatsApp');
+  const specsHeading = mt(locale, 'productDetails');
   const rows = specRows(product, locale);
   const ship = shippingText(product.shipping, locale);
+
+  // Renk swatchları için tag renk listesi oluştur
+  const colorTags = (product.tags ?? []).filter((t) =>
+    /^#[0-9a-fA-F]{3,6}$/.test(t) || ['red','blue','green','black','white','yellow','orange','purple','pink','navy','teal','gray','brown'].includes(t.toLowerCase())
+  );
 
   let html = '<div class="sf-store">\n';
   html += '  <div class="sf-detail-top">\n';
@@ -628,14 +643,27 @@ export function renderProductBody(
 
   // Info panel
   html += '    <div class="sf-detail__info">\n';
+
+  // Seller chip
+  const sellerInitial = escapeHtml(store.displayName.charAt(0).toUpperCase());
+  html += `      <div class="sf-seller-chip">\n`;
+  html += `        <span class="sf-seller-chip__avatar">${sellerInitial}</span>\n`;
+  html += `        <span class="sf-seller-chip__name">${escapeHtml(store.displayName)}</span>\n`;
+  html += `        <span class="sf-seller-chip__verified" aria-label="Verified">✓</span>\n`;
+  html += `      </div>\n`;
+
   html += `      <h1 class="sf-detail__title">${escapeHtml(title)}</h1>\n`;
 
-  // Price block (with conversion data attrs)
-  html += renderPriceBlock(product, locale, store.currency).replace(/^/gm, '      ').trimStart();
-
-  // Stock pill
-  if (stock) {
-    html += `      <span class="sf-stock ${escapeHtml(sc)}">${escapeHtml(stock)}</span>\n`;
+  // Price block — new design
+  const currency = product.currency ?? store.currency;
+  const formattedPrice = product.price != null ? mkFormatDetailPrice(product.price, currency, locale) : null;
+  if (formattedPrice) {
+    html += '      <div class="sf-detail__price-row">\n';
+    html += `        <span class="sf-detail__price">${escapeHtml(formattedPrice)}</span>\n`;
+    if (stock) {
+      html += `        <span class="sf-stock ${escapeHtml(sc)}">${escapeHtml(stock)}</span>\n`;
+    }
+    html += '      </div>\n';
   }
 
   // SKU
@@ -643,9 +671,33 @@ export function renderProductBody(
     html += `      <p class="sf-detail__sku">SKU: ${escapeHtml(product.sku)}</p>\n`;
   }
 
-  // Description
+  // Color swatches
+  if (colorTags.length > 0) {
+    html += '      <p class="sf-swatches-label">Select Style</p>\n';
+    html += '      <div class="sf-swatches">\n';
+    colorTags.forEach((tag, i) => {
+      const color = tag.startsWith('#') ? tag : tag;
+      const sel = i === 0 ? ' sf-swatch--selected' : '';
+      html += `        <button type="button" class="sf-swatch${sel}" style="background:${escapeHtml(color)}" aria-label="${escapeHtml(tag)}"></button>\n`;
+    });
+    html += '      </div>\n';
+  }
+
+  // Buy Now + Add to Cart
+  const addLabel = mt(locale, 'addToCart');
+  html += '      <div class="sf-btn-group">\n';
+  if (waHref) {
+    html += `        <a class="sf-btn sf-btn--buy" href="${escapeAttr(waHref)}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n`;
+  }
+  html += `        <button type="button" class="sf-btn sf-btn--cart" data-mk-add="${escapeAttr(product.id)}" data-mk-title="${escapeAttr(title)}" data-mk-price="${escapeAttr(product.price != null ? String(product.price) : '')}" data-mk-currency="${escapeAttr(currency)}">${escapeHtml(addLabel)}</button>\n`;
+  html += '      </div>\n';
+
+  // The Narrative (description)
   if (description) {
-    html += `      <p class="sf-detail__desc">${escapeHtml(description)}</p>\n`;
+    html += '      <div class="sf-narrative">\n';
+    html += '        <p class="sf-narrative__heading">The Narrative</p>\n';
+    html += `        <p class="sf-narrative__text">${escapeHtml(description)}</p>\n`;
+    html += '      </div>\n';
   }
 
   // Specs
@@ -669,39 +721,39 @@ export function renderProductBody(
   }
 
   // Tags
-  if (product.tags && product.tags.length > 0) {
+  const displayTags = (product.tags ?? []).filter((t) => !colorTags.includes(t));
+  if (displayTags.length > 0) {
     html += '      <div class="sf-tags">\n';
-    for (const tag of product.tags) {
+    for (const tag of displayTags) {
       html += `        <span class="sf-tag">#${escapeHtml(tag)}</span>\n`;
     }
     html += '      </div>\n';
   }
 
-  // WhatsApp order button (direct, single-product)
-  if (waHref) {
-    html += `      <a class="sf-btn sf-btn--order" href="${escapeAttr(waHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(waLabel)}</a>\n`;
-  }
+  // Seller Reviews placeholder (static — real reviews need backend)
+  html += '      <div class="sf-reviews">\n';
+  html += `        <h2 class="sf-reviews__heading">Seller Reviews</h2>\n`;
+  html += '        <div class="sf-reviews__summary">\n';
+  html += '          <span class="sf-reviews__stars">★★★★★</span>\n';
+  html += `          <span>${escapeHtml(store.displayName)}</span>\n`;
+  html += '        </div>\n';
+  html += '      </div>\n';
 
-  // Marketplace cart (store-scoped). IBAN/ibanName/whatsapp come from the manifest store record.
+  // Marketplace cart (store-scoped)
   const wa = store.contact.whatsapp ?? store.contact.phone ?? '';
   const pay = (store as unknown as { payment?: { iban?: string; ibanName?: string } }).payment;
-  const addLabel = locale === 'tr' ? 'Sepete Ekle' : 'Add to cart';
-  const sendLabel = locale === 'tr' ? 'Sepeti Gönder' : 'Send cart';
-  const nameL = locale === 'tr' ? 'Ad Soyad' : 'Full name';
-  const phoneL = locale === 'tr' ? 'Telefon' : 'Phone';
-  const addrL = locale === 'tr' ? 'Adres' : 'Address';
-  const noteL = locale === 'tr' ? 'Not' : 'Note';
-  const reqL = locale === 'tr' ? 'Bu alan zorunludur' : 'This field is required';
-  const refL = locale === 'tr' ? 'Sipariş referansı' : 'Order reference';
-  const payL = locale === 'tr' ? 'Havale ile ödeme' : 'Pay by bank transfer';
-  const priceForCart = product.price != null ? String(product.price) : '';
-  const curForCart = product.currency ?? store.currency;
-
-  html += `      <button type="button" class="sf-btn sf-btn--cart" data-mk-add="${escapeAttr(product.id)}" data-mk-title="${escapeAttr(title)}" data-mk-price="${escapeAttr(priceForCart)}" data-mk-currency="${escapeAttr(curForCart)}">${escapeHtml(addLabel)}</button>\n`;
+  const sendLabel = mt(locale, 'sendCart');
+  const nameL = mt(locale, 'name');
+  const phoneL = mt(locale, 'phone');
+  const addrL = mt(locale, 'address');
+  const noteL = mt(locale, 'note');
+  const reqL = mt(locale, 'required');
+  const refL = mt(locale, 'orderRef');
+  const payL = mt(locale, 'payByTransfer');
 
   html += `      <div class="sf-cart" data-mk-cart-root data-mk-slug="${escapeAttr(store.slug)}" data-mk-whatsapp="${escapeAttr(wa)}">\n`;
   html += '        <ul class="sf-cart__list" data-mk-cart-list></ul>\n';
-  html += `        <p class="sf-cart__total">${escapeHtml(locale === 'tr' ? 'Toplam' : 'Total')}: <span data-mk-total>0.00</span></p>\n`;
+  html += `        <p class="sf-cart__total">${escapeHtml(mt(locale, 'total'))}: <span data-mk-total>0.00</span></p>\n`;
   html += '        <form class="sf-cart__form" data-mk-order-form novalidate>\n';
   html += `          <label>${escapeHtml(nameL)}<input name="name" required /></label><span data-mk-err="name" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
   html += `          <label>${escapeHtml(phoneL)}<input name="phone" type="tel" required /></label><span data-mk-err="phone" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
@@ -716,12 +768,18 @@ export function renderProductBody(
     html += `          <p>IBAN: <strong>${escapeHtml(pay.iban)}</strong></p>\n`;
   }
   if (pay?.ibanName) {
-    html += `          <p>${escapeHtml(locale === 'tr' ? 'Hesap adı' : 'Account name')}: <strong>${escapeHtml(pay.ibanName)}</strong></p>\n`;
+    html += `          <p>${escapeHtml(mt(locale, 'ibanName'))}: <strong>${escapeHtml(pay.ibanName)}</strong></p>\n`;
   }
-  html += `          <p>${escapeHtml(locale === 'tr' ? 'Ödeme açıklaması' : 'Payment description')}: <strong data-mk-paydesc></strong></p>\n`;
+  html += `          <p>${escapeHtml(mt(locale, 'paymentDesc'))}: <strong data-mk-paydesc></strong></p>\n`;
   html += '        </div>\n';
   html += '      </div>\n';
   html += '      <script src="/marketplace-cart.js" defer></script>\n';
+
+  // AI chat bar (placeholder)
+  html += '      <div class="sf-ai-chat">\n';
+  html += '        <input class="sf-ai-chat__input" type="text" placeholder="Ask AI about size or fit..." />\n';
+  html += '        <button class="sf-ai-chat__btn" type="button" aria-label="Send">↑</button>\n';
+  html += '      </div>\n';
 
   html += '    </div>\n'; // sf-detail__info
   html += '  </div>\n'; // sf-detail

@@ -13,6 +13,7 @@
  * `adaptFacets` bridges the two so the renderer stays framework-free + testable.
  */
 
+import { htmlResponse } from '../_lib/html-response';
 import {
   searchProducts as realSearch,
   listNewProducts as realListNew,
@@ -70,12 +71,6 @@ function buildAlternates(origin: string, path: string): AlternateLink[] {
   return alts;
 }
 
-function htmlResponse(html: string, status = 200): Response {
-  return new Response(html, {
-    status,
-    headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=60' },
-  });
-}
 
 export async function handleMarket(parts: string[], deps: MarketDeps): Promise<Response> {
   const u = new URL(deps.url);
@@ -101,7 +96,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market'),
       jsonLd: buildItemListJsonLd(newP.items, origin),
-      stylesheets: ['/marketplace.css'],
+      stylesheets: ['/marketplace.css?v=2'],
       bodyScripts: ['/marketplace-enhance.js'],
     }));
   }
@@ -132,7 +127,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/search'),
       jsonLd: buildItemListJsonLd(result.items, origin),
-      stylesheets: ['/marketplace.css'],
+      stylesheets: ['/marketplace.css?v=2'],
       bodyScripts: ['/marketplace-enhance.js'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
@@ -150,7 +145,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
-      stylesheets: ['/marketplace.css'],
+      stylesheets: ['/marketplace.css?v=2'],
       bodyScripts: ['/marketplace-enhance.js'],
     }));
   }
@@ -167,7 +162,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
       jsonLd: buildItemListJsonLd(result.items, origin),
-      stylesheets: ['/marketplace.css'],
+      stylesheets: ['/marketplace.css?v=2'],
       bodyScripts: ['/marketplace-enhance.js'],
     }));
   }
@@ -175,7 +170,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
   return htmlResponse(renderDocument({
     title: 'Not found — photoZseo', description: '', lang: locale,
     body: '<div class="mk"><p style="padding:2rem;text-align:center">Not found</p></div>',
-    stylesheets: ['/marketplace.css'],
+    stylesheets: ['/marketplace.css?v=2'],
   }), 404);
 }
 

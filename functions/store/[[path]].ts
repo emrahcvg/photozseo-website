@@ -7,6 +7,7 @@
  *   /store/<slug>/<lang>/product/<pslug>   → product page, that lang
  */
 
+import { htmlResponse } from '../_lib/html-response';
 import { getStore } from '../_lib/registry';
 import { getTranslatedManifest, type AiBinding } from '../_lib/translate';
 import {
@@ -49,10 +50,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const segments = rawPath.split('/').filter(Boolean);
 
   if (segments.length === 0) {
-    return new Response(notFoundHtml('Mağaza bulunamadı / Store not found'), {
-      status: 404,
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
+    return htmlResponse(notFoundHtml('Mağaza bulunamadı / Store not found'), 404);
   }
 
   // Parse URL pattern
@@ -82,10 +80,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   const record = await getStore(ctx.env.STORE_KV, slug);
   if (!record || !record.manifest?.store) {
-    return new Response(notFoundHtml('Mağaza bulunamadı / Store not found'), {
-      status: 404,
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
+    return htmlResponse(notFoundHtml('Mağaza bulunamadı / Store not found'), 404);
   }
 
   const base = record.manifest;
@@ -118,10 +113,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     const product = manifest.products.find((p) => slugMap.get(p.id) === productSlugReq);
 
     if (!product) {
-      return new Response(notFoundHtml('Ürün bulunamadı / Product not found'), {
-        status: 404,
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      });
+      return htmlResponse(notFoundHtml('Ürün bulunamadı / Product not found'), 404);
     }
 
     const pSlug = slugMap.get(product.id) ?? product.id;
@@ -155,11 +147,5 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     jsonLd,
   });
 
-  return new Response(html, {
-    status: 200,
-    headers: {
-      'content-type': 'text/html; charset=utf-8',
-      'cache-control': 'public, max-age=60',
-    },
-  });
+  return htmlResponse(html);
 };
