@@ -528,25 +528,57 @@ Mevcut `translator.py`'nin `Translator` sınıfını yeniden kullanır; `swarm.p
 
 ```python
 #!/usr/bin/env python3
-"""Batch map çevirici: {id: en_label} -> {id: çeviri}.
+"""Batch map çevirici: {id: en_label} -> {id: çeviri}, PARALEL.
 
 Mevcut translator.py reuse eder; swarm.py'a dokunmaz.
+Tek dil içinde ThreadPoolExecutor ile paralel çevirir; transient
+Google/rate-limit hatasında exponential backoff ile retry yapar.
+Translator (deep_translator) örneği thread'ler arası paylaşılmasın diye
+her görevde yeni örnek kurulur (ucuz, thread-safe).
+
 Kullanım:
-    python translate_map.py <translator_lang_code> <input.json> <output.json>
+    python translate_map.py <lang> <input.json> <output.json> [workers]
 örn:
-    python translate_map.py ar /tmp/stale.json /tmp/out.json
+    python translate_map.py ar /tmp/stale.json /tmp/out.json 8
 """
 import json
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from translator import LANGS, Translator
 
+DEFAULT_WORKERS = 8
+MAX_RETRY = 4
+
+
+def translate_one(lang: str, cid: str, text: str):
+    """Tek bir label'ı çevir; transient hata'da backoff ile retry.
+
+    Dönüş: (id, value|None, error|None). value None ise orchestrator
+    eksik id olarak yakalar (EN'e düşürmeyiz)."""
+    delay = 1.0
+    last = "?"
+    for _ in range(MAX_RETRY):
+        tr = Translator(lang)  # her denemede taze örnek (thread-safe)
+        res = tr.translate(text)
+        if res.error is None or res.error == "empty-source":
+            return cid, res.value, None
+        last = res.error
+        # placeholder/brand hataları retry ile düzelmez; sadece transient'e backoff
+        if "google" not in last:
+            break
+        time.sleep(delay)
+        delay *= 2
+    return cid, None, last
+
 
 def main() -> int:
-    if len(sys.argv) != 4:
-        print("usage: translate_map.py <lang> <input.json> <output.json>", file=sys.stderr)
+    if len(sys.argv) not in (4, 5):
+        print("usage: translate_map.py <lang> <input.json> <output.json> [workers]", file=sys.stderr)
         return 2
     lang, in_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
+    workers = int(sys.argv[4]) if len(sys.argv) == 5 else DEFAULT_WORKERS
     if lang not in LANGS:
         print(f"bilinmeyen dil: {lang} (geçerli: {', '.join(LANGS)})", file=sys.stderr)
         return 2
@@ -554,23 +586,26 @@ def main() -> int:
     with open(in_path, encoding="utf-8") as f:
         src: dict[str, str] = json.load(f)
 
-    tr = Translator(lang)
     out: dict[str, str] = {}
     errors = 0
-    for i, (cid, text) in enumerate(src.items(), 1):
-        res = tr.translate(text)
-        if res.error and res.error not in ("empty-source",):
-            errors += 1
-            # Hata halinde EN'i bırakma; id'yi atla ki orchestrator fark etsin.
-            print(f"[{lang}] {cid} hata: {res.error}", file=sys.stderr)
-            continue
-        out[cid] = res.value
-        if i % 200 == 0:
-            print(f"[{lang}] {i}/{len(src)}", file=sys.stderr)
+    done = 0
+    total = len(src)
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = [ex.submit(translate_one, lang, cid, text) for cid, text in src.items()]
+        for fut in as_completed(futs):
+            cid, value, err = fut.result()
+            done += 1
+            if err is not None:
+                errors += 1
+                print(f"[{lang}] {cid} hata: {err}", file=sys.stderr)
+            else:
+                out[cid] = value
+            if done % 500 == 0:
+                print(f"[{lang}] {done}/{total}", file=sys.stderr)
 
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False)
-    print(f"[{lang}] tamam: {len(out)}/{len(src)} (hata: {errors})", file=sys.stderr)
+    print(f"[{lang}] tamam: {len(out)}/{total} (hata: {errors}, workers: {workers})", file=sys.stderr)
     return 0
 
 
@@ -584,9 +619,9 @@ Run:
 ```bash
 cd ~/Desktop/translation-swarm && source .venv/bin/activate && \
 echo '{"212":"Shirts & Tops","166":"Apparel & Accessories"}' > /tmp/tax_test.json && \
-python translate_map.py ar /tmp/tax_test.json /tmp/tax_out.json && cat /tmp/tax_out.json
+python translate_map.py ar /tmp/tax_test.json /tmp/tax_out.json 4 && cat /tmp/tax_out.json
 ```
-Expected: `/tmp/tax_out.json` içinde `{"212":"<arapça çeviri>","166":"<arapça çeviri>"}`; her iki id de mevcut, değerler boş değil.
+Expected: `/tmp/tax_out.json` içinde `{"212":"<arapça çeviri>","166":"<arapça çeviri>"}`; her iki id de mevcut, değerler boş değil. (Paralel; sıra farklı olabilir.)
 
 - [ ] **Step 3: Commit (translation-swarm reposunda)**
 
@@ -818,7 +853,9 @@ async function makeTranslateFn() {
       const outPath = join(tmpdir(), `tax_out_${lang}.json`);
       await writeFile(inPath, JSON.stringify(inMap), 'utf-8');
       const code = TRANSLATOR_CODE[lang];
-      const r = spawnSync(PY, ['translate_map.py', code, inPath, outPath], {
+      // workers=8: dil-içi paralellik. Diller sıralı çağrılır (aşağıdaki for),
+      // böylece toplam eşzamanlı Google isteği ~8'de kalır (rate-limit/ban koruması).
+      const r = spawnSync(PY, ['translate_map.py', code, inPath, outPath, '8'], {
         cwd: SWARM_DIR, stdio: 'inherit',
       });
       if (r.status !== 0) throw new Error(`translate_map.py başarısız: ${lang}`);
