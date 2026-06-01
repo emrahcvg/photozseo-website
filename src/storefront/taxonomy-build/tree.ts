@@ -3,7 +3,11 @@ import type { RawEntry, TreeNode } from './types';
 export function buildTree(entries: RawEntry[]): TreeNode[] {
   const pathKeyToId = new Map<string, string>();
   for (const e of entries) {
-    pathKeyToId.set(e.path.join(' > '), e.id);
+    const key = e.path.join(' > ');
+    if (pathKeyToId.has(key)) {
+      throw new Error(`çakışan path: ${key}`);
+    }
+    pathKeyToId.set(key, e.id);
   }
 
   return entries.map((e) => {

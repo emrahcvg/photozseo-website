@@ -32,4 +32,10 @@ describe('parse', () => {
     const root = entries.find((e) => e.id === '1');
     expect(root!.path).toEqual(['Animals & Pet Supplies']);
   });
+
+  it('boş path segmenti olan satırı atlar', () => {
+    const broken = '# version: 2026-03-15\n212 -  > Foo\n166 - Apparel\n';
+    const { entries } = parse(broken);
+    expect(entries).toEqual([{ id: '166', path: ['Apparel'] }]);
+  });
 });

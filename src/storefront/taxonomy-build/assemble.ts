@@ -18,6 +18,7 @@ export async function assemble(
   if (!enText) throw new Error('en kaynağı zorunlu');
 
   const enParsed = parse(enText);
+  if (enParsed.entries.length === 0) throw new Error('en kaynağı boş/geçersiz');
   const tree = buildTree(enParsed.entries);
   const enLabels = extractLabels(enParsed.entries);
   const allIds = Object.keys(enLabels);

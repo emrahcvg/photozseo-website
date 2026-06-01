@@ -28,4 +28,12 @@ describe('buildTree', () => {
     const orphan: RawEntry[] = [{ id: '9', path: ['A', 'B'] }];
     expect(() => buildTree(orphan)).toThrow(/parent bulunamadı/);
   });
+
+  it('iki giriş aynı path e map lenince hata fırlatır', () => {
+    const dup: RawEntry[] = [
+      { id: '1', path: ['A'] },
+      { id: '2', path: ['A'] },
+    ];
+    expect(() => buildTree(dup)).toThrow(/çakışan path/);
+  });
 });

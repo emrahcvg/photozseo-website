@@ -5,6 +5,7 @@ export interface LabelCache {
 }
 
 export function hashLabel(text: string): string {
+  // 12 hex'e kısaltma bilinçli: kompakt cache anahtarı, güvenlik amaçlı değil.
   return createHash('sha1').update(text).digest('hex').slice(0, 12);
 }
 

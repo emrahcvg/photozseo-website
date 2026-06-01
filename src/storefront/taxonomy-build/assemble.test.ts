@@ -54,4 +54,9 @@ describe('assemble', () => {
     const broken = { en: sources.en, de: read('sample-en.txt').replace(/^212 .*$/m, '') };
     await expect(assemble(broken, fakeTranslate)).rejects.toThrow(/eksik id/);
   });
+
+  it('en kaynağı hiç giriş içermiyorsa (hata sayfası) hata fırlatır', async () => {
+    const broken = { en: '<html>error page</html>' };
+    await expect(assemble(broken, fakeTranslate)).rejects.toThrow(/en kaynağı boş\/geçersiz/);
+  });
 });

@@ -22,7 +22,7 @@ export function parse(text: string): { version: string; entries: RawEntry[] } {
       .slice(sep + 3)
       .split(' > ')
       .map((s) => s.trim());
-    if (!id || path.length === 0) continue;
+    if (!id || path.some((s) => !s)) continue;
     entries.push({ id, path });
   }
 
