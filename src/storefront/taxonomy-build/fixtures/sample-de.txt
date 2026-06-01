@@ -1,0 +1,8 @@
+# Google_Product_Taxonomy_Version: 2026-03-15
+1 - Tiere & Tierbedarf
+3237 - Tiere & Tierbedarf > Lebende Tiere
+2 - Tiere & Tierbedarf > Tierbedarf
+3 - Tiere & Tierbedarf > Tierbedarf > Vogelbedarf
+166 - Bekleidung & Accessoires
+1604 - Bekleidung & Accessoires > Bekleidung
+212 - Bekleidung & Accessoires > Bekleidung > Shirts & Tops
