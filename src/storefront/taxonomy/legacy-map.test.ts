@@ -19,6 +19,9 @@ describe('mapLegacyId', () => {
   it('zaten google id ise dokunmaz (idempotent)', () => {
     expect(mapLegacyId('267', map)).toBe('267');
   });
+  it('haritada olmayan numeric id de değişmez (idempotency niyeti)', () => {
+    expect(mapLegacyId('9999999', map)).toBe('9999999');
+  });
   it('eski id\'yi google id\'ye çevirir', () => {
     expect(mapLegacyId('electronics.phones', map)).toBe(map['electronics.phones']);
     expect(isGoogleId(mapLegacyId('clothing.shoes', map))).toBe(true);

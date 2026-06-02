@@ -79,7 +79,7 @@ export function renderDocument(opts: DocumentOptions): string {
 
   head += `
 <meta name="robots" content="${esc(opts.robots ?? 'index, follow')}" />`;
-  const sheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css'];
+  const sheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura27'];
   for (const href of sheets) {
     head += `\n<link rel="stylesheet" href="${esc(href)}" />`;
   }
