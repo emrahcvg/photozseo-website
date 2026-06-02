@@ -133,7 +133,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market'),
       jsonLd: buildItemListJsonLd(newP.items, origin),
-      stylesheets: ['/marketplace.css?v=6'],
+      stylesheets: ['/marketplace.css?v=7'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -164,7 +164,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/search'),
       jsonLd: buildItemListJsonLd(result.items, origin),
-      stylesheets: ['/marketplace.css?v=6'],
+      stylesheets: ['/marketplace.css?v=7'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
@@ -182,7 +182,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
-      stylesheets: ['/marketplace.css?v=6'],
+      stylesheets: ['/marketplace.css?v=7'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -205,7 +205,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
       jsonLd,
-      stylesheets: ['/marketplace.css?v=6'],
+      stylesheets: ['/marketplace.css?v=7'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -224,7 +224,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale,
       body,
       robots: 'noindex',
-      stylesheets: ['/marketplace.css?v=6'],
+      stylesheets: ['/marketplace.css?v=7'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -232,7 +232,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
   return htmlResponse(renderDocument({
     title: 'Not found — photoZseo', description: '', lang: locale,
     body: '<div class="mk"><p style="padding:2rem;text-align:center">Not found</p></div>',
-    stylesheets: ['/marketplace.css?v=6'],
+    stylesheets: ['/marketplace.css?v=7'],
   }), 404);
 }
 
