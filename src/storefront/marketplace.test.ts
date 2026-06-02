@@ -325,12 +325,117 @@ describe('buildBreadcrumbJsonLd', () => {
   });
 });
 
+import { renderCategorySidebar, type CategoryTreeNode } from './marketplace';
+
+describe('renderCategorySidebar', () => {
+  const tree: CategoryTreeNode[] = [
+    {
+      id: '222',
+      label: 'Electronics',
+      children: [{ id: '267', label: 'Mobile Phones', children: [] }],
+    },
+    { id: '8', label: 'Arts', children: [] },
+  ];
+
+  const html = renderCategorySidebar(tree, 'en');
+
+  it('renders .mk-sidebar', () => {
+    expect(html).toContain('mk-sidebar');
+  });
+
+  it('renders a <details> for Electronics (has children)', () => {
+    expect(html).toContain('<details class="mk-sidebar__group">');
+    expect(html).toContain('Electronics');
+  });
+
+  it('renders a child link href="/market/c/267" with label "Mobile Phones"', () => {
+    expect(html).toContain('href="/market/c/267"');
+    expect(html).toContain('Mobile Phones');
+  });
+
+  it('renders an "All Electronics" link to /market/c/222', () => {
+    expect(html).toContain('href="/market/c/222"');
+    expect(html).toMatch(/All[^<]*Electronics/);
+  });
+
+  it('renders Arts (no children) as a plain link href="/market/c/8"', () => {
+    expect(html).toContain('href="/market/c/8"');
+    expect(html).toContain('mk-sidebar__link--top');
+    expect(html).toContain('Arts');
+  });
+
+  it('XSS: escapes a malicious label in tree', () => {
+    const xssTree: CategoryTreeNode[] = [
+      { id: 'x1', label: '<script>alert(1)</script>', children: [] },
+    ];
+    const out = renderCategorySidebar(xssTree, 'en');
+    expect(out).not.toContain('<script>alert(1)</script>');
+    expect(out).toContain('&lt;script&gt;');
+  });
+
+  it('XSS: escapes a malicious id in href', () => {
+    const xssTree: CategoryTreeNode[] = [
+      { id: '"><img src=x>', label: 'Bad', children: [] },
+    ];
+    const out = renderCategorySidebar(xssTree, 'en');
+    expect(out).not.toContain('"><img src=x>');
+  });
+
+  it('empty tree renders sidebar with no links', () => {
+    const out = renderCategorySidebar([], 'en');
+    expect(out).toContain('mk-sidebar');
+    expect(out).not.toContain('href="/market/c/');
+  });
+});
+
+describe('renderMarketHome — categoryTree integration', () => {
+  const products: ProductRow[] = [sampleProduct];
+  const stores: StoreRow[] = [{ slug: 'ahmet-oto', name: 'Ahmet Oto', city: 'Istanbul', country: 'TR', listed: 1 }];
+  const cats = [{ id: 'electronics.phones', count: 5 }];
+  const tree: CategoryTreeNode[] = [
+    { id: '222', label: 'Electronics', children: [{ id: '267', label: 'Mobile Phones', children: [] }] },
+    { id: '8', label: 'Arts', children: [] },
+  ];
+
+  it('with categoryTree: renders mk-layout + mk-sidebar + mk-main', () => {
+    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
+    expect(html).toContain('mk-layout');
+    expect(html).toContain('mk-sidebar');
+    expect(html).toContain('mk-main');
+  });
+
+  it('without categoryTree: NO mk-layout (backward compat)', () => {
+    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en' });
+    expect(html).not.toContain('mk-layout');
+    expect(html).not.toContain('mk-sidebar');
+    expect(html).not.toContain('mk-main');
+  });
+
+  it('empty categoryTree ([]) also produces no layout wrapper', () => {
+    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: [] });
+    expect(html).not.toContain('mk-layout');
+  });
+
+  it('header (.mk-top) is still rendered when sidebar present', () => {
+    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
+    expect(html).toContain('mk-top');
+    expect(html).toContain('mk-logo');
+  });
+
+  it('existing content (hero, chips, products) preserved inside mk-main', () => {
+    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
+    expect(html).toContain('mk-hero');
+    expect(html).toContain('mk-chips');
+    expect(html).toContain('Tesla Model Y Floor Mats');
+  });
+});
+
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 describe('marketplace.css', () => {
   const css = readFileSync(fileURLToPath(new URL('../../public/marketplace.css', import.meta.url)), 'utf8');
-  const required = ['.mk-grid', '.mk-card', '.mk-chips', '.mk-stores', '.mk-facets', '.mk-trust', '.mk-searchbar', '.mk-filter-toggle'];
+  const required = ['.mk-grid', '.mk-card', '.mk-chips', '.mk-stores', '.mk-facets', '.mk-trust', '.mk-searchbar', '.mk-filter-toggle', '.mk-sidebar', '.mk-layout'];
   it.each(required)('defines %s', (sel) => {
     expect(css).toContain(sel);
   });
