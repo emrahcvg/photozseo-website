@@ -377,3 +377,19 @@ img{display:block;}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   outline:3px solid var(--mk-accent);outline-offset:2px;}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+/* ═══════════════════════════════════════════════════════════════════
+   AURA '27 ÇATI — /market, /store ile AYNI tasarım dili (geri-alınabilir).
+   Token-tabanlı: tek :root override tüm market'i Aura'ya çevirir.
+   Geri almak için bu bloğu sil.
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --mk-accent:   #6d5cff;
+  --mk-accent-h: #5a4bd6;
+  --mk-radius:   22px;
+  --mk-radius-sm:14px;
+  --mk-shadow:   0 6px 22px -12px rgba(28, 34, 68, 0.30);
+  --mk-shadow-h: 0 18px 50px -22px rgba(28, 34, 68, 0.35);
+}
+@media (prefers-color-scheme: light) { :root { --mk-bg: #eef1f7; } }
+/* ════════════════ AURA '27 ÇATI SONU ════════════════ */
