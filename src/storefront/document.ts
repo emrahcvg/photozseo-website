@@ -20,7 +20,7 @@ export interface DocumentOptions {
   canonical?: string;
   alternates?: AlternateLink[];
   ogImage?: string;
-  jsonLd?: string; // already JSON.stringify'd, NOT yet escaped for </script>
+  jsonLd?: string | string[]; // already JSON.stringify'd, NOT yet escaped for </script>; dizi verilirse her blok ayrı <script> olarak eklenir
   stylesheets?: string[];
   bodyScripts?: string[];
   robots?: string; // varsayılan "index, follow"; arama sonuç sayfaları "noindex, follow" geçer
@@ -85,7 +85,8 @@ export function renderDocument(opts: DocumentOptions): string {
   }
 
   if (jsonLd) {
-    head += `\n<script type="application/ld+json">${safeJsonLd(jsonLd)}</script>`;
+    const blocks = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+    for (const b of blocks) head += `\n<script type="application/ld+json">${safeJsonLd(b)}</script>`;
   }
 
   let bodyScripts = '';
