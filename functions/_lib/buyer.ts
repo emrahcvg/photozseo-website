@@ -59,3 +59,42 @@ export async function removeFavorite(
     .bind(ownerKey, storeSlug, productSlug)
     .run();
 }
+
+export interface CartItem {
+  productSlug: string;
+  qty: number;
+}
+
+/** Sahibin bir mağazadaki sepet kalemlerini döner. */
+export async function getCart(db: D1Like, ownerKey: string, storeSlug: string): Promise<CartItem[]> {
+  const { results } = await db
+    .prepare('SELECT product_slug, qty FROM cart_items WHERE owner_key = ? AND store_slug = ?')
+    .bind(ownerKey, storeSlug)
+    .all<{ product_slug: string; qty: number }>();
+  return results.map((r) => ({ productSlug: r.product_slug, qty: r.qty }));
+}
+
+/** Sepet kalemini ayarlar; qty<=0 ise kalemi siler, aksi halde upsert eder. */
+export async function setCartItem(
+  db: D1Like, ownerKey: string, storeSlug: string, productSlug: string, qty: number, now: string,
+): Promise<void> {
+  if (qty <= 0) {
+    await db
+      .prepare('DELETE FROM cart_items WHERE owner_key = ? AND store_slug = ? AND product_slug = ?')
+      .bind(ownerKey, storeSlug, productSlug)
+      .run();
+    return;
+  }
+  await db
+    .prepare('INSERT OR REPLACE INTO cart_items (owner_key, store_slug, product_slug, qty, updated_at) VALUES (?, ?, ?, ?, ?)')
+    .bind(ownerKey, storeSlug, productSlug, qty, now)
+    .run();
+}
+
+/** Sahibin bir mağazadaki tüm sepetini temizler. */
+export async function clearCart(db: D1Like, ownerKey: string, storeSlug: string): Promise<void> {
+  await db
+    .prepare('DELETE FROM cart_items WHERE owner_key = ? AND store_slug = ?')
+    .bind(ownerKey, storeSlug)
+    .run();
+}

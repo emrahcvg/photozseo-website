@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   ownerKeyFromDevice, isValidSlug,
   listFavorites, addFavorite, removeFavorite,
+  getCart, setCartItem, clearCart,
 } from './buyer';
 import { makeFakeD1 } from './fakeD1';
 
@@ -54,5 +55,30 @@ describe('favorites CRUD', () => {
     const owner = 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
     await addFavorite(db, owner, 'magaza-a', 'urun-1', '2026-06-02T00:00:00Z');
     expect(await listFavorites(db, owner, 'magaza-b')).toEqual([]);
+  });
+});
+
+describe('cart CRUD', () => {
+  it('ekler, adet günceller, qty<=0 siler, listeler, temizler', async () => {
+    const { db } = makeFakeD1();
+    const owner = 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+
+    expect(await getCart(db, owner, 'magaza-a')).toEqual([]);
+
+    await setCartItem(db, owner, 'magaza-a', 'urun-1', 2, '2026-06-02T00:00:00Z');
+    await setCartItem(db, owner, 'magaza-a', 'urun-2', 1, '2026-06-02T00:00:01Z');
+    await setCartItem(db, owner, 'magaza-a', 'urun-1', 5, '2026-06-02T00:00:02Z'); // güncelle
+
+    const cart = await getCart(db, owner, 'magaza-a');
+    expect(cart.sort((a, b) => a.productSlug.localeCompare(b.productSlug))).toEqual([
+      { productSlug: 'urun-1', qty: 5 },
+      { productSlug: 'urun-2', qty: 1 },
+    ]);
+
+    await setCartItem(db, owner, 'magaza-a', 'urun-2', 0, '2026-06-02T00:00:03Z'); // qty 0 → sil
+    expect(await getCart(db, owner, 'magaza-a')).toEqual([{ productSlug: 'urun-1', qty: 5 }]);
+
+    await clearCart(db, owner, 'magaza-a');
+    expect(await getCart(db, owner, 'magaza-a')).toEqual([]);
   });
 });
