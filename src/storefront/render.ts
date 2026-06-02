@@ -232,9 +232,11 @@ function renderProductCard(
   const sc = stockClass(product);
   const haystack = [title, description, ...(product.tags ?? [])].join(' ').toLowerCase();
 
+  const favLabel = mt(locale, 'favorite');
   let html = `<a class="sf-card-link" href="${escapeAttr(href)}" data-sf-search="${escapeHtml(haystack)}">\n`;
   html += '  <article class="sf-card">\n';
   html += renderCardMedia(image, title, soldOut, locale);
+  html += `    <button type="button" class="sf-fav" data-sf-fav="${escapeAttr(pSlug)}" aria-label="${escapeHtml(favLabel)}" title="${escapeHtml(favLabel)}">♥</button>\n`;
   html += '    <div class="sf-card__body">\n';
   html += `      <h3 class="sf-card__title">${escapeHtml(title)}</h3>\n`;
   // Açıklama grid kartında gösterilmez (Apple-style sade kart); `description` yalnız aramada kullanılır.
@@ -465,6 +467,7 @@ export function renderStoreBody(
 
   html += '</div>\n';
   html += controlsScript(locale);
+  html += '  <script src="/storefront-buyer.js" defer></script>\n';
   return html;
 }
 
@@ -774,6 +777,7 @@ export function renderProductBody(
   html += '        </div>\n';
   html += '      </div>\n';
   html += '      <script src="/marketplace-cart.js" defer></script>\n';
+  html += '      <script src="/storefront-buyer.js" defer></script>\n';
 
   // AI chat bar (placeholder)
   html += '      <div class="sf-ai-chat">\n';
