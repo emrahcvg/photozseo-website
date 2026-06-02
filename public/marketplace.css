@@ -392,6 +392,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   --mk-shadow-h: 0 18px 50px -22px rgba(28, 34, 68, 0.35);
 }
 @media (prefers-color-scheme: light) { :root { --mk-bg: #eef1f7; } }
+
+/* ── Market HEP açık tema: store hep açık olduğu için tutarlılık + sistem dark'ta
+   saf-siyah (#000) "siyah duruyor" sorununu kapatır. html:root → @media :root'tan
+   yüksek özgüllük, sistem dark olsa bile açık palet kazanır. ── */
+html:root {
+  --mk-bg:    #E8E8EC;
+  --mk-fg:    #1D1D1F;
+  --mk-muted: #6E6E73;
+  --mk-line:  #E5E5EA;
+  --mk-card:  #FFFFFF;
+  --mk-input: #F2F2F7;
+  color-scheme: light;
+}
+.mk-tab-bar { background: rgba(255,255,255,.92); }
 /* ════════════════ AURA '27 ÇATI SONU ════════════════ */
 
 /* ── Sidebar + 2-column layout ── */
