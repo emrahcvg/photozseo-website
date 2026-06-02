@@ -1,25 +1,22 @@
 /**
- * /api/store/<slug>/favorites — anonim alıcı favori ucu (P1).
- * Sahip kimliği x-device-id header'ından gelen cihaz UUID'sidir (owner_key = "d:<uuid>").
- * Public uç (write-key yok); sahip yalnız kendi cihaz anahtarını okur/yazar.
+ * /api/store/<slug>/favorites — alıcı favori ucu (P1+).
+ * Sahip kimliği: önce Google oturumu (b:<sub>), yoksa cihaz UUID (d:<uuid>).
+ * Public uç; sahip yalnız kendi anahtarını okur/yazar.
  */
 import {
-  ownerKeyFromDevice, isValidSlug, listFavorites, addFavorite, removeFavorite, type D1Like,
+  isValidSlug, listFavorites, addFavorite, removeFavorite, type D1Like,
 } from '../../../_lib/buyer';
+import { resolveOwnerKey } from '../../../_lib/buyer-owner';
 
-interface Env { MARKET_DB: D1Like; }
+interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; }
 type Ctx = { request: Request; env: Env; params: { slug: string } };
 
 function json(obj: unknown, status = 200): Response {
   return new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
 }
 
-function resolveOwner(request: Request): string | null {
-  return ownerKeyFromDevice(request.headers.get('x-device-id') ?? '');
-}
-
 export async function onRequestGet(ctx: Ctx): Promise<Response> {
-  const owner = resolveOwner(ctx.request);
+  const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'device id required' }, 400);
   if (!isValidSlug(ctx.params.slug)) return json({ error: 'bad slug' }, 400);
   const favorites = await listFavorites(ctx.env.MARKET_DB, owner, ctx.params.slug);
@@ -27,7 +24,7 @@ export async function onRequestGet(ctx: Ctx): Promise<Response> {
 }
 
 export async function onRequestPost(ctx: Ctx): Promise<Response> {
-  const owner = resolveOwner(ctx.request);
+  const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'device id required' }, 400);
   if (!isValidSlug(ctx.params.slug)) return json({ error: 'bad slug' }, 400);
   const body = (await ctx.request.json().catch(() => null)) as { productSlug?: string } | null;
@@ -39,7 +36,7 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
 }
 
 export async function onRequestDelete(ctx: Ctx): Promise<Response> {
-  const owner = resolveOwner(ctx.request);
+  const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'device id required' }, 400);
   if (!isValidSlug(ctx.params.slug)) return json({ error: 'bad slug' }, 400);
   const body = (await ctx.request.json().catch(() => null)) as { productSlug?: string } | null;

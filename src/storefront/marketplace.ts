@@ -12,6 +12,7 @@
 import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 import type { BreadcrumbSegment } from './taxonomy/category-resolve';
+import { GOOGLE_CLIENT_ID } from './auth/config';
 
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
 export type LabelOf = (id: string, locale: string) => string;
@@ -300,10 +301,9 @@ export function renderMarketHome(args: {
   html += '    <span class="mk-top-icon__glyph">🤖</span>\n';
   html += '    <span><strong>My AI Assistant</strong><span class="mk-top-icon__sub">My AI Assistant</span></span>\n';
   html += '  </a>\n';
-  html += '  <a class="mk-top-icon" href="/market">\n';
-  html += '    <span class="mk-top-icon__glyph">👤</span>\n';
-  html += '    <span><strong>Profile</strong></span>\n';
-  html += '  </a>\n';
+  // Google giriş butonu + kullanıcı chip (auth.js tarafından doldurulur)
+  html += `  <div id="pz-signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}"></div>\n`;
+  html += '  <div id="pz-user"></div>\n';
   html += '</header>\n';
 
   // Sidebar varsa: .mk-layout açılır; yoksa içerik doğrudan devam eder (geri uyumlu)

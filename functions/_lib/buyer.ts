@@ -25,6 +25,12 @@ export function ownerKeyFromDevice(deviceId: string): string | null {
   return 'd:' + deviceId.toLowerCase();
 }
 
+/** Giriş yapmış alıcı için owner_key. */
+export function ownerKeyFromBuyer(buyerId: string): string | null {
+  if (!buyerId || !/^[A-Za-z0-9_-]{1,128}$/.test(buyerId)) return null;
+  return 'b:' + buyerId;
+}
+
 /** slug/product_slug için makul format kontrolü (path traversal + aşırı uzunluk engeli). */
 export function isValidSlug(slug: string): boolean {
   if (!slug || slug.length > 120) return false;

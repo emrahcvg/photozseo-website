@@ -129,7 +129,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market'),
       jsonLd: buildItemListJsonLd(newP.items, origin),
       stylesheets: ['/marketplace.css?v=5'],
-      bodyScripts: ['/marketplace-enhance.js'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
 
@@ -160,7 +160,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market/search'),
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css?v=5'],
-      bodyScripts: ['/marketplace-enhance.js'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
     }));
@@ -178,7 +178,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market/stores'),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
       stylesheets: ['/marketplace.css?v=5'],
-      bodyScripts: ['/marketplace-enhance.js'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
 
@@ -201,7 +201,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
       jsonLd,
       stylesheets: ['/marketplace.css?v=5'],
-      bodyScripts: ['/marketplace-enhance.js'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
 

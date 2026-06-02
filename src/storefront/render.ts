@@ -7,6 +7,7 @@
 import type { Manifest, Product } from './types';
 import { mt } from './marketplace-i18n';
 import type { TaxonomyService } from './taxonomy/service';
+import { GOOGLE_CLIENT_ID } from './auth/config';
 import { categoryBreadcrumb, resolveCategoryName } from './taxonomy/category-resolve';
 import {
   resolveLocalized,
@@ -445,6 +446,9 @@ export function renderStoreBody(
 
   html += '<div class="sf-topbar">\n';
   html += renderControls(locale, store.currency, store.languages ?? [], (l) => storeUrl(store.slug, l, defaultLang));
+  // Google giriş butonu + kullanıcı chip (auth.js tarafından doldurulur)
+  html += `  <div id="pz-signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}"></div>\n`;
+  html += '  <div id="pz-user"></div>\n';
   html += '</div>\n';
   html += renderStoreHeader(manifest, locale, defaultLang);
   html += renderToolbar(groups, locale);
@@ -472,6 +476,8 @@ export function renderStoreBody(
   html += '</div>\n';
   html += controlsScript(locale);
   html += '  <script src="/storefront-buyer.js" defer></script>\n';
+  html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
+  html += '  <script src="/auth.js" defer></script>\n';
   return html;
 }
 
@@ -641,6 +647,9 @@ export function renderProductBody(
   html += '  <div class="sf-detail-top">\n';
   html += `    <a class="sf-back" href="${escapeAttr(backHref)}">← ${escapeHtml(backLabel)}</a>\n`;
   html += renderControls(locale, store.currency, store.languages ?? [], (l) => productUrl(store.slug, pSlug, l, defaultLang));
+  // Google giriş butonu + kullanıcı chip (auth.js tarafından doldurulur)
+  html += `    <div id="pz-signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}"></div>\n`;
+  html += '    <div id="pz-user"></div>\n';
   html += '  </div>\n';
   html += '  <div class="sf-detail">\n';
 
@@ -797,6 +806,8 @@ export function renderProductBody(
   html += '      </div>\n';
   html += '      <script src="/marketplace-cart.js" defer></script>\n';
   html += '      <script src="/storefront-buyer.js" defer></script>\n';
+  html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
+  html += '      <script src="/auth.js" defer></script>\n';
 
   // AI chat bar (placeholder)
   html += '      <div class="sf-ai-chat">\n';
