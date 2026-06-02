@@ -553,3 +553,53 @@ html { scroll-behavior: smooth; }
   font-size: 1rem; flex-shrink: 0;
 }
 .sf-ai-chat__btn:hover { background: #3451D1; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   AURA '27 TEMA DENEMESİ (POC) — market-next tasarım dili storefront'a.
+   Geri almak için bu bloğu komple sil. Sadece /store sayfasını etkiler.
+   ═══════════════════════════════════════════════════════════════════ */
+.sf-store {
+  --aura-accent: #6d5cff;
+  --aura-accent-2: #9a8cff;
+  --aura-bg: #eef1f7;
+  --aura-ink: #14171e;
+  --aura-shadow: 0 18px 50px -22px rgba(28, 34, 68, 0.35);
+  --aura-shadow-sm: 0 6px 22px -12px rgba(28, 34, 68, 0.30);
+  background: var(--aura-bg);
+  color: var(--aura-ink);
+}
+/* Yumuşak kartlar + nazik kalkış (Aura hissi) */
+.sf-store .sf-card {
+  border-radius: 22px;
+  box-shadow: var(--aura-shadow-sm);
+}
+.sf-store .sf-card-link:hover .sf-card {
+  box-shadow: var(--aura-shadow);
+  transform: translateY(-4px);
+}
+.sf-store .sf-card__amount { color: var(--aura-accent); font-weight: 800; }
+/* Mor gradient aksiyon butonları (WhatsApp yeşili korunur) */
+.sf-store .sf-btn:not(.sf-btn--wa):not(.sf-btn--ghost) {
+  background: linear-gradient(140deg, var(--aura-accent), var(--aura-accent-2));
+  border-radius: 999px; box-shadow: var(--aura-shadow-sm); border-color: transparent;
+}
+.sf-store .sf-btn:not(.sf-btn--wa):not(.sf-btn--ghost):hover { filter: brightness(1.06); background: linear-gradient(140deg, var(--aura-accent), var(--aura-accent-2)); }
+/* Glassmorphic sticky toolbar */
+.sf-store .sf-toolbar {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-radius: 0 0 20px 20px;
+}
+/* Aktif kategori + arama odağı: mor accent */
+.sf-store .sf-catnav__link--active,
+.sf-store .sf-catnav__link--active:hover { background: var(--aura-accent); }
+.sf-store .sf-search:focus {
+  border-color: var(--aura-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--aura-accent) 20%, transparent);
+}
+/* Başlık tipografisi biraz daha sıkı (Aura display ruhu) */
+.sf-store .sf-header__name { letter-spacing: -0.03em; }
+/* Favori kalbi accent moruyla uyumlu hover */
+.sf-store .sf-fav:hover { color: var(--aura-accent); }
+/* ════════════════ AURA '27 DENEME SONU ════════════════ */
