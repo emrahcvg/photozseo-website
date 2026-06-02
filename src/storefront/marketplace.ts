@@ -392,7 +392,7 @@ function renderFacets(facets: Facets, q: SearchQuery, locale: string): string {
     h += `  <fieldset class="mk-facet"><legend>${escapeHtml(mt(locale, 'categories'))}</legend>\n`;
     for (const c of facets.categories) {
       const checked = q.categoryId === c.id ? ' checked' : '';
-      h += `    <label class="mk-facet__opt"><input type="radio" name="categoryId" value="${escapeAttr(c.id)}"${checked} /> ${escapeHtml(c.id)} <span class="mk-facet__count">${c.count}</span></label>\n`;
+      h += `    <label class="mk-facet__opt"><input type="radio" name="categoryId" value="${escapeAttr(c.id)}"${checked} /> ${escapeHtml(categoryName(c.id, locale))} <span class="mk-facet__count">${c.count}</span></label>\n`;
     }
     h += '  </fieldset>\n';
   }
