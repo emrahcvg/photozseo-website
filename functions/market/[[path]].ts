@@ -32,6 +32,7 @@ import {
   type Facets,
   type SearchQuery,
   type LabelOf,
+  type CategoryTreeNode,
 } from '../../src/storefront/marketplace';
 import { mt } from '../../src/storefront/marketplace-i18n';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
@@ -107,7 +108,19 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const cats = roots.length
       ? roots.map((n) => ({ id: n.id, count: l1.get(n.id) ?? 0 }))
       : [...l1.entries()].map(([id, count]) => ({ id, count }));
-    const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf });
+    // L1+L2 kategori ağacı → sol sidebar
+    const categoryTree: CategoryTreeNode[] = svc
+      ? svc.children(null).map((root) => ({
+          id: root.id,
+          label: svc!.label(root.id, locale),
+          children: svc!.children(root.id).map((c) => ({
+            id: c.id,
+            label: svc!.label(c.id, locale),
+            children: [],
+          })),
+        }))
+      : [];
+    const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf, categoryTree });
     const canonical = `${origin}/market`;
     return htmlResponse(renderDocument({
       title: mt(locale, 'marketTitle') + ' — photoZseo',
