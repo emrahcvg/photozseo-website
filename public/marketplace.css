@@ -236,8 +236,8 @@ img{display:block;}
 .mk-discovery-grid{
   display:grid;grid-template-columns:1fr;gap:24px;margin:0 0 32px;}
 @media(min-width:800px){
-  .mk-discovery-grid{grid-template-columns:1fr 1fr;}}
-.mk-discovery-col{}
+  .mk-discovery-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}}
+.mk-discovery-col{min-width:0;}
 
 /* Discovery section label + title */
 .mk-discovery{margin:0 0 24px;}
@@ -431,6 +431,23 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   color: var(--mk-accent);
   margin: 0 0 8px;
   padding: 0 16px;
+}
+
+/* Dış "Kategoriler" toggle — mobilde kapalı (tek düğme), masaüstünde açık */
+.mk-sidebar__all { border: 0; }
+.mk-sidebar__all > .mk-sidebar__heading {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; list-style: none; user-select: none; padding: 6px 16px;
+}
+.mk-sidebar__all > .mk-sidebar__heading::-webkit-details-marker { display: none; }
+.mk-sidebar__all-chevron { transition: transform .2s; font-size: .8rem; }
+.mk-sidebar__all[open] > .mk-sidebar__heading .mk-sidebar__all-chevron { transform: rotate(180deg); }
+@media (min-width: 769px) {
+  /* Masaüstü: menü her zaman açık; toggle pasif */
+  .mk-sidebar__all > .mk-sidebar__nav { display: flex !important; }
+  .mk-sidebar__all::details-content { content-visibility: visible; }
+  .mk-sidebar__all > .mk-sidebar__heading { cursor: default; pointer-events: none; }
+  .mk-sidebar__all-chevron { display: none; }
 }
 
 .mk-sidebar__nav {

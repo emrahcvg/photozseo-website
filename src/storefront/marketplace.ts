@@ -244,7 +244,9 @@ export interface CategoryTreeNode {
 export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string): string {
   const heading = escapeHtml(mt(locale, 'categories'));
   let html = `<aside class="mk-sidebar" aria-label="${heading}">\n`;
-  html += `  <h3 class="mk-sidebar__heading">${heading}</h3>\n`;
+  // Dış details: mobilde tüm menü tek "Kategoriler" düğmesi altında; masaüstünde CSS açık tutar.
+  html += '  <details class="mk-sidebar__all">\n';
+  html += `    <summary class="mk-sidebar__heading">${heading}<span class="mk-sidebar__all-chevron" aria-hidden="true">▾</span></summary>\n`;
   html += '  <nav class="mk-sidebar__nav">\n';
 
   for (const node of tree) {
@@ -270,6 +272,7 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
   }
 
   html += '  </nav>\n';
+  html += '  </details>\n';
   html += '</aside>\n';
   return html;
 }
