@@ -38,6 +38,7 @@ import { renderDocument, type AlternateLink } from '../../src/storefront/documen
 import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { categoryBreadcrumb } from '../../src/storefront/taxonomy/category-resolve';
+import { UNCATEGORIZED } from '../../src/storefront/taxonomy/legacy-map';
 
 const DEFAULT_LANG = 'en';
 
@@ -59,7 +60,9 @@ export interface MarketDeps {
 function adaptFacets(f: LibFacets | Facets): Facets {
   if (Array.isArray((f as Facets).categories)) return f as Facets;
   const lib = f as LibFacets;
-  const categories = Object.entries(lib.categories ?? {}).map(([id, count]) => ({ id, count }));
+  const categories = Object.entries(lib.categories ?? {})
+    .filter(([id]) => id !== UNCATEGORIZED) // sentinel'i facet listesinde gösterme
+    .map(([id, count]) => ({ id, count }));
   const cities = Object.entries(lib.cities ?? {}).map(([value, count]) => ({ value, count }));
   return {
     categories,
@@ -95,7 +98,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     // L1 ata rollup: her ürünün category_id'sini kök L1'e indirge, sayısını topla
     const l1 = new Map<string, number>();
     for (const p of newP.items) {
-      if (!p.category_id) continue;
+      if (!p.category_id || p.category_id === UNCATEGORIZED) continue; // sentinel'i chip'te gösterme
       const root = svc ? (svc.ancestors(p.category_id)[0]?.id ?? p.category_id) : p.category_id;
       l1.set(root, (l1.get(root) ?? 0) + 1);
     }
