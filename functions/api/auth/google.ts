@@ -70,6 +70,7 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
     sub: claims.sub,
     email: claims.email,
     name: claims.name,
+    picture: claims.picture, // Google profil fotoğrafı
     exp: nowSec + sessionTtl,
   };
 

@@ -553,3 +553,56 @@ html { scroll-behavior: smooth; }
   font-size: 1rem; flex-shrink: 0;
 }
 .sf-ai-chat__btn:hover { background: #3451D1; }
+
+/* ── Hesap alanı (store topbar) — giriş butonu + avatar menü ── */
+.sf-topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+  flex-wrap: wrap;
+}
+.sf-topbar .sf-controls { margin-top: 0; }
+.sf-acct {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.sf-acct__signin {
+  display: flex;
+  align-items: center;
+}
+/* "Giriş yap" özel butonu — pill, ince border, Google G logosu */
+.sf-acct__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px 6px 9px;
+  border: 1.5px solid #D8DCE3;
+  border-radius: 999px;
+  background: #fff;
+  color: #1D1D1F;
+  font: inherit;
+  font-size: .83rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.sf-acct__btn:hover {
+  border-color: #4361EE;
+  box-shadow: 0 0 0 3px rgba(67,97,238,.10);
+}
+.sf-acct__btn:focus-visible {
+  outline: 3px solid #4361EE;
+  outline-offset: 2px;
+}
+.sf-acct__glogo { flex-shrink: 0; display: block; }
+.sf-acct__btn-label { line-height: 1; }
+.sf-acct__user {
+  display: flex;
+  align-items: center;
+}
+/* Avatar + dropdown — aynı .pz-* sınıflarını kullanıyor (auth.js ortak) */

@@ -31,5 +31,5 @@ export async function onRequestGet(ctx: Ctx): Promise<Response> {
   const payload = await verifySession(token, writeKey, nowSec);
   if (!payload) return json({ loggedIn: false });
 
-  return json({ loggedIn: true, sub: payload.sub, email: payload.email, name: payload.name });
+  return json({ loggedIn: true, sub: payload.sub, email: payload.email, name: payload.name, picture: payload.picture });
 }
