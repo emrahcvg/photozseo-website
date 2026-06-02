@@ -45,18 +45,23 @@
   function wireFavorites() {
     var buttons = document.querySelectorAll('[data-sf-fav]');
     if (!buttons.length || !s) return;
+    // 1) Click handler'larını HEMEN bağla — listFavorites fetch'ini BEKLEME.
+    //    Aksi halde fetch dönene dek kalp tıklaması <a> kart linkini gezerdi (bug).
+    buttons.forEach(function (btn) {
+      var p = btn.getAttribute('data-sf-fav');
+      btn.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation(); // kalp kart linkinin (<a>) içinde — gezinmeyi engelle
+        var active = btn.classList.toggle('is-fav');
+        (active ? addFavorite(p) : removeFavorite(p)).catch(function () { btn.classList.toggle('is-fav'); });
+      });
+    });
+    // 2) Mevcut favori durumunu async boya (geldiğinde işaretle).
     listFavorites().then(function (res) {
       var set = {};
       (res.favorites || []).forEach(function (p) { set[p] = true; });
       buttons.forEach(function (btn) {
-        var p = btn.getAttribute('data-sf-fav');
-        if (set[p]) btn.classList.add('is-fav');
-        btn.addEventListener('click', function (ev) {
-          ev.preventDefault();
-          ev.stopPropagation(); // kalp kart linkinin (<a>) içinde — gezinmeyi engelle
-          var active = btn.classList.toggle('is-fav');
-          (active ? addFavorite(p) : removeFavorite(p)).catch(function () { btn.classList.toggle('is-fav'); });
-        });
+        if (set[btn.getAttribute('data-sf-fav')]) btn.classList.add('is-fav');
       });
     }).catch(function () {/* offline: butonlar yine toggle eder ama backend'e yazmaz */});
   }
