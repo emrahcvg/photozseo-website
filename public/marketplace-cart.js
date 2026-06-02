@@ -123,6 +123,22 @@
         if (payBox) payBox.hidden = false;
         var descOut = root.querySelector('[data-mk-paydesc]');
         if (descOut) descOut.textContent = ref;
+        // Sipariş D1'e kalıcı olarak kaydedilir; başarısız olsa bile WhatsApp açılır.
+        var deviceId = (window.__sfBuyer && window.__sfBuyer.deviceId) ? window.__sfBuyer.deviceId() : '';
+        fetch('/api/store/' + slug + '/order', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
+          body: JSON.stringify({ store_name: root.getAttribute('data-mk-store-name') || undefined }),
+        }).then(function (r) {
+          return r.ok ? r.json() : null;
+        }).then(function (res) {
+          // Sunucudan gelen referansı kullan (ikisi de SP-* formatında; satıcı+alıcı aynı ref'i görür)
+          if (res && res.order_ref) {
+            ref = res.order_ref;
+            if (refOut) refOut.textContent = ref;
+            if (descOut) descOut.textContent = ref;
+          }
+        }).catch(function () { /* sessiz hata — WhatsApp akışını bloklama */ });
         var waWin = window.open(buildWhatsappUrl(whatsapp, slug, data, ref), '_blank');
         if (waWin) waWin.opener = null;
       });

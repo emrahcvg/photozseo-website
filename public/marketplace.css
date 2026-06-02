@@ -732,3 +732,43 @@ details.mk-sidebar__group[open] .mk-sidebar__chevron {
     min-width: 180px;
   }
 }
+
+/* ── Siparişlerim (/market/orders) ─────────────────────────────────────────── */
+.mk-orders { padding: 8px 0 24px; }
+.mk-orders__title { font-size: 1.4rem; font-weight: 700; margin: 0 0 20px; }
+.mk-orders__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.mk-orders__card {
+  background: var(--mk-card);
+  border-radius: var(--mk-radius);
+  box-shadow: var(--mk-shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mk-orders__card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.mk-orders__store { font-weight: 600; font-size: 1rem; }
+.mk-orders__badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+  background: var(--mk-input);
+  color: var(--mk-muted);
+}
+.mk-orders__badge--sent { background: #e3f0ff; color: #1a56db; }
+.mk-orders__card-body { display: flex; flex-direction: column; gap: 4px; font-size: .9rem; color: var(--mk-muted); }
+.mk-orders__ref strong { color: var(--mk-fg); font-weight: 600; }
+.mk-orders__items-count, .mk-orders__total { color: var(--mk-fg); }
+.mk-orders__items-summary { font-size: .82rem; color: var(--mk-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mk-orders__store-link { align-self: flex-start; font-size: .85rem; color: var(--mk-accent); font-weight: 500; }
+.mk-orders__store-link:hover { color: var(--mk-accent-h); text-decoration: underline; }
+.mk-orders__empty { text-align: center; padding: 40px 16px; color: var(--mk-muted); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+@media (min-width: 640px) {
+  .mk-orders__list { gap: 16px; }
+  .mk-orders__card { flex-direction: row; align-items: flex-start; flex-wrap: wrap; }
+  .mk-orders__card-head { flex: 1 1 100%; }
+  .mk-orders__card-body { flex: 1; }
+  .mk-orders__store-link { align-self: center; margin-left: auto; }
+}

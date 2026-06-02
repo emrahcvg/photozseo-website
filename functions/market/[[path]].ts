@@ -26,6 +26,7 @@ import {
   renderSearchPage,
   renderStoresPage,
   renderCategoryPage,
+  renderOrdersPage,
   buildItemListJsonLd,
   buildBreadcrumbJsonLd,
   buildStoreDirectoryJsonLd,
@@ -34,6 +35,8 @@ import {
   type LabelOf,
   type CategoryTreeNode,
 } from '../../src/storefront/marketplace';
+import { resolveOwnerKey } from '../_lib/buyer-owner';
+import { listOrders } from '../_lib/orders';
 import { mt } from '../../src/storefront/marketplace-i18n';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
@@ -51,6 +54,8 @@ export interface MarketDeps {
   searchProducts: typeof realSearch;
   listNewProducts: typeof realListNew;
   listStores: typeof realListStores;
+  request?: Request;
+  storeWriteKey?: string;
 }
 
 /**
@@ -205,6 +210,25 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     }));
   }
 
+  // /market/orders — alıcı sipariş geçmişi (hesaba bağlı, özel sayfa)
+  if (parts[0] === 'orders' && parts.length === 1) {
+    const now = Math.floor(Date.now() / 1000);
+    const owner = deps.request
+      ? await resolveOwnerKey(deps.request, deps.storeWriteKey, now)
+      : null;
+    const orders = owner ? await listOrders(deps.db as unknown as Parameters<typeof listOrders>[0], owner) : [];
+    const body = renderOrdersPage({ orders, locale, loggedIn: owner !== null });
+    return htmlResponse(renderDocument({
+      title: mt(locale, 'myOrders') + ' — photoZseo',
+      description: '',
+      lang: locale,
+      body,
+      robots: 'noindex',
+      stylesheets: ['/marketplace.css?v=6'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
+    }));
+  }
+
   return htmlResponse(renderDocument({
     title: 'Not found — photoZseo', description: '', lang: locale,
     body: '<div class="mk"><p style="padding:2rem;text-align:center">Not found</p></div>',
@@ -215,6 +239,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
 interface Env {
   MARKET_DB: D1Database;
   AI?: AiBinding;
+  STORE_WRITE_KEY?: string;
 }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
@@ -226,5 +251,6 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   return handleMarket(parts, {
     url: ctx.request.url, lang, db: ctx.env.MARKET_DB, ai: ctx.env.AI,
     searchProducts: realSearch, listNewProducts: realListNew, listStores: realListStores,
+    request: ctx.request, storeWriteKey: ctx.env.STORE_WRITE_KEY,
   });
 };

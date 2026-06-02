@@ -664,3 +664,113 @@ export function buildStoreDirectoryJsonLd(stores: StoreRow[], origin: string): s
 
 // Keep renderTrustBadge referenced (used by older surfaces / future slots).
 export { renderTrustBadge };
+
+// ── Sipariş geçmişi sayfası (/market/orders) ──────────────────────────────────
+
+/** Sipariş kaydı (functions/_lib/orders.ts'ten mirror — döngüsel import önlemek için yerel tanım). */
+export interface OrderRow {
+  id: string;
+  owner_key: string;
+  store_slug: string;
+  store_name?: string;
+  items: { productSlug: string; qty: number; title?: string; price?: number; currency?: string }[];
+  item_count: number;
+  total?: number;
+  currency?: string;
+  status: string;
+  created_at: string;
+}
+
+/** Sipariş durumu rozeti: "sent" → gönderildi vb. */
+function renderStatusBadge(status: string, locale: string): string {
+  // Basit eşleme; ileride genişletilir.
+  void locale;
+  const label = status === 'sent' ? mt('en', 'submitOrder').replace('Send order via WhatsApp', 'Sent') : escapeHtml(status);
+  return `<span class="mk-orders__badge mk-orders__badge--${escapeAttr(status)}">${escapeHtml(label)}</span>`;
+}
+
+/**
+ * /market/orders sayfasını render eder.
+ * Giriş yapmış kullanıcı: sipariş listesi. Giriş yapılmamış: "Henüz siparişin yok / Giriş yap" mesajı.
+ */
+export function renderOrdersPage(args: {
+  orders: OrderRow[];
+  locale: string;
+  loggedIn: boolean;
+}): string {
+  const { orders, locale, loggedIn } = args;
+
+  let html = '<div class="mk">\n';
+
+  // Üst bar — market ana sayfasıyla aynı .mk-top header (hesap menüsü auth.js'in göstermesi için)
+  html += '<header class="mk-top">\n';
+  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
+  html += '  <div class="mk-top-right">\n';
+  html += renderLangSwitcher(locale);
+  html += `  <div class="mk-acct" id="pz-acct-root">\n`;
+  html += `    <div id="pz-signin" class="mk-acct__signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}">\n`;
+  html += `      <button type="button" class="mk-acct__btn" id="pz-signin-btn" aria-label="${escapeHtml(mt(locale, 'signIn'))}">\n`;
+  html += `        <span class="mk-acct__btn-label">${escapeHtml(mt(locale, 'signIn'))}</span>\n`;
+  html += '      </button>\n';
+  html += '    </div>\n';
+  html += '    <div id="pz-user" class="mk-acct__user" hidden></div>\n';
+  html += '  </div>\n';
+  html += '  </div>\n';
+  html += '</header>\n';
+
+  // Sayfa başlığı
+  html += '<main class="mk-orders">\n';
+  html += `  <h1 class="mk-orders__title">${escapeHtml(mt(locale, 'myOrders'))}</h1>\n`;
+
+  if (!loggedIn && orders.length === 0) {
+    // Giriş yapılmamış ve sipariş yok → davet mesajı
+    html += `  <div class="mk-orders__empty">\n`;
+    html += `    <p>${escapeHtml(mt(locale, 'noOrders'))}</p>\n`;
+    html += `    <button type="button" class="mk-acct__btn" id="pz-signin-btn-orders" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
+    html += `  </div>\n`;
+  } else if (orders.length === 0) {
+    // Giriş yapılmış ama sipariş yok
+    html += `  <div class="mk-orders__empty">\n`;
+    html += `    <p>${escapeHtml(mt(locale, 'noOrders'))}</p>\n`;
+    html += `    <a class="mk-btn" href="/market">${escapeHtml(mt(locale, 'backToMarket'))}</a>\n`;
+    html += `  </div>\n`;
+  } else {
+    html += '  <ul class="mk-orders__list" role="list">\n';
+    for (const order of orders) {
+      const storeName = escapeHtml(order.store_name ?? order.store_slug.replace(/-/g, ' '));
+      const date = escapeHtml(new Date(order.created_at).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' }));
+      const itemsSummary = order.items
+        .slice(0, 3)
+        .map((it) => escapeHtml((it.title ?? it.productSlug) + ' ×' + it.qty))
+        .join(', ');
+      const moreItems = order.items.length > 3 ? ` +${order.items.length - 3}` : '';
+
+      html += '    <li class="mk-orders__card" role="listitem">\n';
+      html += '      <div class="mk-orders__card-head">\n';
+      html += `        <span class="mk-orders__store">${storeName}</span>\n`;
+      html += renderStatusBadge(order.status, locale);
+      html += '      </div>\n';
+      html += '      <div class="mk-orders__card-body">\n';
+      html += `        <p class="mk-orders__ref">${escapeHtml(mt(locale, 'orderRef'))}: <strong>${escapeHtml(order.id)}</strong></p>\n`;
+      html += `        <p class="mk-orders__date">${date}</p>\n`;
+      html += `        <p class="mk-orders__items-count">${escapeHtml(mt(locale, 'orderItems'))}: ${order.item_count}</p>\n`;
+      if (itemsSummary) {
+        html += `        <p class="mk-orders__items-summary">${itemsSummary}${moreItems}</p>\n`;
+      }
+      if (order.total != null && order.currency) {
+        const totalFormatted = mkFormatPrice(order.total, order.currency, locale);
+        html += `        <p class="mk-orders__total">${escapeHtml(mt(locale, 'total'))}: ${escapeHtml(totalFormatted)}</p>\n`;
+      }
+      html += '      </div>\n';
+      html += `      <a class="mk-orders__store-link" href="/store/${escapeAttr(encodeURIComponent(order.store_slug))}">${escapeHtml(mt(locale, 'visitStore'))}</a>\n`;
+      html += '    </li>\n';
+    }
+    html += '  </ul>\n';
+  }
+
+  html += '</main>\n';
+  html += renderMarketFooter(locale);
+  html += '</div>\n';
+  html += renderBottomTabBar(locale);
+  return html;
+}

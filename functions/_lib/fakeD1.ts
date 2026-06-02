@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -28,6 +28,7 @@ export function makeFakeD1(): FakeD1 {
     products: [] as Row[],
     favorites: [] as Row[],
     cart_items: [] as Row[],
+    orders: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -128,6 +129,20 @@ export function makeFakeD1(): FakeD1 {
       const rows = tables.cart_items
         .filter((r) => r.owner_key === args[0] && r.store_slug === args[1])
         .map((r) => ({ product_slug: r.product_slug, qty: r.qty }));
+      return { kind: 'all' as const, rows };
+    }
+    // orders: INSERT INTO orders
+    if (/INSERT INTO orders/i.test(s)) {
+      const [id, owner_key, store_slug, store_name, items_json, item_count, total, currency, status, created_at] = args;
+      tables.orders.push({ id, owner_key, store_slug, store_name, items_json, item_count, total, currency, status, created_at });
+      return { kind: 'run' as const };
+    }
+    // orders: SELECT * WHERE owner_key ORDER BY created_at DESC
+    if (/SELECT \* FROM orders WHERE owner_key = \? ORDER BY created_at DESC/i.test(s)) {
+      const rows = tables.orders
+        .filter((r) => r.owner_key === args[0])
+        .slice()
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
       return { kind: 'all' as const, rows };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
