@@ -68,6 +68,15 @@ describe('renderStoreBody', () => {
     expect(html).toContain('/store/ahmet-oto-yedek/product/tesla-model-y-paspas-seti');
   });
 
+  it('ürün kartlarında favori (kalp) butonu ürün slug ile var', () => {
+    expect(html).toContain('class="sf-fav"');
+    expect(html).toContain('data-sf-fav="tesla-model-y-paspas-seti"');
+  });
+
+  it('storefront-buyer.js script etiketi enjekte edilir', () => {
+    expect(html).toContain('/storefront-buyer.js');
+  });
+
   it('XSS: escapes malicious displayName', () => {
     const malicious: Manifest = {
       ...manifest,

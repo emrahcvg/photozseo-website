@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -26,6 +26,8 @@ export function makeFakeD1(): FakeD1 {
     meta: [{ key: 'index_version', value: 0 }] as Row[],
     stores: [] as Row[],
     products: [] as Row[],
+    favorites: [] as Row[],
+    cart_items: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -73,6 +75,60 @@ export function makeFakeD1(): FakeD1 {
     // stores select all
     if (/SELECT .* FROM stores/i.test(s)) {
       return { kind: 'all' as const, rows: tables.stores.filter((r) => (r.listed as number) === 1) };
+    }
+    // favorites: INSERT OR IGNORE
+    if (/INSERT OR IGNORE INTO favorites/i.test(s)) {
+      const [owner_key, store_slug, product_slug, created_at] = args;
+      const exists = tables.favorites.some(
+        (r) => r.owner_key === owner_key && r.store_slug === store_slug && r.product_slug === product_slug,
+      );
+      if (!exists) tables.favorites.push({ owner_key, store_slug, product_slug, created_at });
+      return { kind: 'run' as const };
+    }
+    // favorites: DELETE one
+    if (/DELETE FROM favorites WHERE owner_key = \? AND store_slug = \? AND product_slug = \?/i.test(s)) {
+      tables.favorites = tables.favorites.filter(
+        (r) => !(r.owner_key === args[0] && r.store_slug === args[1] && r.product_slug === args[2]),
+      );
+      return { kind: 'run' as const };
+    }
+    // favorites: SELECT product_slug WHERE owner_key + store_slug
+    if (/SELECT product_slug FROM favorites WHERE owner_key = \? AND store_slug = \?/i.test(s)) {
+      const rows = tables.favorites
+        .filter((r) => r.owner_key === args[0] && r.store_slug === args[1])
+        .map((r) => ({ product_slug: r.product_slug }));
+      return { kind: 'all' as const, rows };
+    }
+    // cart_items: upsert (INSERT OR REPLACE)
+    if (/INSERT OR REPLACE INTO cart_items/i.test(s)) {
+      const [owner_key, store_slug, product_slug, qty, updated_at] = args;
+      const i = tables.cart_items.findIndex(
+        (r) => r.owner_key === owner_key && r.store_slug === store_slug && r.product_slug === product_slug,
+      );
+      const row = { owner_key, store_slug, product_slug, qty, updated_at };
+      if (i >= 0) tables.cart_items[i] = row; else tables.cart_items.push(row);
+      return { kind: 'run' as const };
+    }
+    // cart_items: DELETE one
+    if (/DELETE FROM cart_items WHERE owner_key = \? AND store_slug = \? AND product_slug = \?/i.test(s)) {
+      tables.cart_items = tables.cart_items.filter(
+        (r) => !(r.owner_key === args[0] && r.store_slug === args[1] && r.product_slug === args[2]),
+      );
+      return { kind: 'run' as const };
+    }
+    // cart_items: DELETE all for owner+store (clear)
+    if (/DELETE FROM cart_items WHERE owner_key = \? AND store_slug = \?$/i.test(s)) {
+      tables.cart_items = tables.cart_items.filter(
+        (r) => !(r.owner_key === args[0] && r.store_slug === args[1]),
+      );
+      return { kind: 'run' as const };
+    }
+    // cart_items: SELECT WHERE owner_key + store_slug
+    if (/SELECT product_slug, qty FROM cart_items WHERE owner_key = \? AND store_slug = \?/i.test(s)) {
+      const rows = tables.cart_items
+        .filter((r) => r.owner_key === args[0] && r.store_slug === args[1])
+        .map((r) => ({ product_slug: r.product_slug, qty: r.qty }));
+      return { kind: 'all' as const, rows };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
   }
