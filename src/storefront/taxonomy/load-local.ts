@@ -10,10 +10,27 @@ import meta from './meta.json';
 
 const labelCache = new Map<string, Record<string, string>>();
 
+const LABEL_LOADERS: Record<string, () => Promise<{ default: Record<string, string> }>> = {
+  en: () => import('./labels.en.json'),
+  tr: () => import('./labels.tr.json'),
+  de: () => import('./labels.de.json'),
+  es: () => import('./labels.es.json'),
+  pt: () => import('./labels.pt.json'),
+  ja: () => import('./labels.ja.json'),
+  ko: () => import('./labels.ko.json'),
+  zh: () => import('./labels.zh.json'),
+  ar: () => import('./labels.ar.json'),
+  fa: () => import('./labels.fa.json'),
+  hi: () => import('./labels.hi.json'),
+  ur: () => import('./labels.ur.json'),
+};
+
 async function loadLabels(lang: string): Promise<Record<string, string>> {
   if (labelCache.has(lang)) return labelCache.get(lang)!;
+  const loader = LABEL_LOADERS[lang];
+  if (!loader) return {};
   try {
-    const mod = await import(`./labels.${lang}.json`);
+    const mod = await loader();
     const table = (mod.default ?? mod) as Record<string, string>;
     labelCache.set(lang, table);
     return table;
