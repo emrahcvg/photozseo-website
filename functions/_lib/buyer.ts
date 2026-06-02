@@ -30,3 +30,32 @@ export function isValidSlug(slug: string): boolean {
   if (!slug || slug.length > 120) return false;
   return SLUG_RE.test(slug);
 }
+
+/** Sahibin bir mağazadaki favori ürün slug'larını döner. */
+export async function listFavorites(db: D1Like, ownerKey: string, storeSlug: string): Promise<string[]> {
+  const { results } = await db
+    .prepare('SELECT product_slug FROM favorites WHERE owner_key = ? AND store_slug = ?')
+    .bind(ownerKey, storeSlug)
+    .all<{ product_slug: string }>();
+  return results.map((r) => r.product_slug);
+}
+
+/** Favori ekler (idempotent — varsa yok sayar). */
+export async function addFavorite(
+  db: D1Like, ownerKey: string, storeSlug: string, productSlug: string, now: string,
+): Promise<void> {
+  await db
+    .prepare('INSERT OR IGNORE INTO favorites (owner_key, store_slug, product_slug, created_at) VALUES (?, ?, ?, ?)')
+    .bind(ownerKey, storeSlug, productSlug, now)
+    .run();
+}
+
+/** Favori siler. */
+export async function removeFavorite(
+  db: D1Like, ownerKey: string, storeSlug: string, productSlug: string,
+): Promise<void> {
+  await db
+    .prepare('DELETE FROM favorites WHERE owner_key = ? AND store_slug = ? AND product_slug = ?')
+    .bind(ownerKey, storeSlug, productSlug)
+    .run();
+}
