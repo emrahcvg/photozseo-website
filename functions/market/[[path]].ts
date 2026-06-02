@@ -32,6 +32,7 @@ import {
   type SearchQuery,
 } from '../../src/storefront/marketplace';
 import { mt } from '../../src/storefront/marketplace-i18n';
+import { topCategories } from '../../src/storefront/taxonomy';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
 
@@ -83,11 +84,13 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       deps.listNewProducts(deps.db, { limit: 20 }),
       deps.listStores(deps.db, { limit: 12 }),
     ]);
-    const cats: { id: string; count: number }[] = [];
-    const seen = new Set<string>();
+    // Kategoriler taksonomi'den gelir → ürün olmasa da her zaman görünür.
+    // Mevcut ürünlerin kategori sayıları rozet olarak bindirilir.
+    const counts = new Map<string, number>();
     for (const p of newP.items) {
-      if (p.category_id && !seen.has(p.category_id)) { seen.add(p.category_id); cats.push({ id: p.category_id, count: 0 }); }
+      if (p.category_id) counts.set(p.category_id, (counts.get(p.category_id) ?? 0) + 1);
     }
+    const cats = topCategories(locale).map((c) => ({ ...c, count: counts.get(c.id) ?? 0 }));
     const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale });
     const canonical = `${origin}/market`;
     return htmlResponse(renderDocument({

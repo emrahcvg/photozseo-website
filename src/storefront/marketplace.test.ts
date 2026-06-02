@@ -213,8 +213,8 @@ describe('renderStoresPage', () => {
 
 describe('renderCategoryPage', () => {
   const html = renderCategoryPage({ categoryId: 'electronics.phones', items: [sampleProduct], total: 1, locale: 'en' });
-  it('shows the category id and a product card', () => {
-    expect(html).toContain('electronics.phones');
+  it('shows the localized category name and a product card', () => {
+    expect(html).toContain('Phones &amp; Accessories');
     expect(html).toContain('Tesla Model Y Floor Mats');
   });
 });
