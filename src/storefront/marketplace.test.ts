@@ -252,6 +252,79 @@ describe('renderMarketHome includes footer', () => {
   });
 });
 
+import {
+  renderCategoryChips as rcc2,
+  renderCategoryPage as rcp2,
+  buildBreadcrumbJsonLd,
+  type LabelOf,
+} from './marketplace';
+
+const labelOf: LabelOf = (id, locale) => {
+  const table: Record<string, Record<string, string>> = {
+    en: { '267': 'Mobile Phones', '222': 'Electronics' },
+    tr: { '267': 'Cep Telefonları', '222': 'Elektronik' },
+  };
+  return table[locale]?.[id] ?? table.en?.[id] ?? id;
+};
+
+describe('renderCategoryChips — label çözümü (BUG FIX)', () => {
+  it('ham id yerine localized label basar', () => {
+    const html = rcc2([{ id: '267', count: 3 }], 'tr', labelOf);
+    expect(html).toContain('Cep Telefonları');
+    expect(html).not.toContain('>267 <');
+  });
+  it('çözülemeyen id ham kalır (regresyon yok)', () => {
+    const html = rcc2([{ id: 'c1', count: 1 }], 'en', labelOf);
+    expect(html).toContain('c1');
+  });
+  it('href hâlâ numeric/ham id ile (kararlı URL)', () => {
+    const html = rcc2([{ id: '267', count: 3 }], 'en', labelOf);
+    expect(html).toContain('/market/c/267');
+  });
+});
+
+describe('renderCategoryPage — breadcrumb + h1 label', () => {
+  it('h1 leaf label, breadcrumb ara segmentler linkli', () => {
+    const html = rcp2({
+      categoryId: '267', items: [], total: 0, locale: 'en',
+      breadcrumb: [{ id: '222', label: 'Electronics' }, { id: '267', label: 'Mobile Phones' }],
+    });
+    expect(html).toContain('<h1 class="mk-section__title">Mobile Phones</h1>');
+    expect(html).toContain('href="/market/c/222"');
+    expect(html).toContain('Electronics');
+  });
+  it('breadcrumb null ise ham id h1\'de (kırılmaz)', () => {
+    const html = rcp2({ categoryId: 'electronics.phones', items: [], total: 0, locale: 'en', breadcrumb: null });
+    expect(html).toContain('electronics.phones');
+  });
+});
+
+describe('renderSearchPage — facet labelOf forwarding (BUG FIX)', () => {
+  it('renderSearchPage facet kategori label\'ı lokalize eder, value ham id kalır', () => {
+    const facets: Facets = { categories: [{ id: '267', count: 5 }], priceRange: { min: 0, max: 100 }, cities: [], inStockCount: 5 };
+    const html = renderSearchPage({
+      items: [], facets, total: 0, locale: 'tr',
+      query: { q: undefined, sort: 'new', categoryId: undefined, city: undefined, minPrice: undefined, maxPrice: undefined, inStock: false },
+      labelOf,
+    });
+    expect(html).toContain('Cep Telefonları');      // localized display
+    expect(html).toContain('value="267"');           // raw id preserved
+  });
+});
+
+describe('buildBreadcrumbJsonLd', () => {
+  it('BreadcrumbList üretir', () => {
+    const json = buildBreadcrumbJsonLd(
+      [{ id: '222', label: 'Electronics' }, { id: '267', label: 'Mobile Phones' }],
+      'https://photozseo.com',
+    );
+    const obj = JSON.parse(json);
+    expect(obj['@type']).toBe('BreadcrumbList');
+    expect(obj.itemListElement).toHaveLength(2);
+    expect(obj.itemListElement[0]).toMatchObject({ position: 1, name: 'Electronics', item: 'https://photozseo.com/market/c/222' });
+  });
+});
+
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 

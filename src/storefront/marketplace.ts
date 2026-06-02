@@ -11,6 +11,13 @@
 
 import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
+import type { BreadcrumbSegment } from './taxonomy/category-resolve';
+
+/** Router'dan inject edilen label çözücü (svc.label sarmalı). */
+export type LabelOf = (id: string, locale: string) => string;
+
+/** Varsayılan: kimlik (label yoksa ham id) — geri uyumlu test/edge. */
+const identityLabel: LabelOf = (id) => id;
 
 // ── P1 contract mirror (render-layer view) ────────────────────────────────────
 export interface ProductRow {
@@ -129,12 +136,14 @@ export function renderProductCard(p: ProductRow, locale: string): string {
 export function renderCategoryChips(
   categories: { id: string; count: number }[],
   locale: string,
+  labelOf: LabelOf = identityLabel,
 ): string {
   let html = `<nav class="mk-chips" aria-label="${escapeHtml(mt(locale, 'categories'))}">\n`;
   html += `  <a class="mk-chip mk-chip--all" href="/market/search">${escapeHtml(mt(locale, 'allCategories'))}</a>\n`;
   for (const c of categories) {
     const href = `/market/c/${encodeURIComponent(c.id)}`;
-    html += `  <a class="mk-chip" href="${escapeAttr(href)}">${escapeHtml(c.id)} <span class="mk-chip__count">${c.count}</span></a>\n`;
+    const name = escapeHtml(labelOf(c.id, locale));
+    html += `  <a class="mk-chip" href="${escapeAttr(href)}">${name} <span class="mk-chip__count">${c.count}</span></a>\n`;
   }
   html += '</nav>\n';
   return html;
@@ -224,6 +233,7 @@ export function renderMarketHome(args: {
   stores: StoreRow[];
   categories: { id: string; count: number }[];
   locale: string;
+  labelOf?: LabelOf;
 }): string {
   const { products, stores, categories, locale } = args;
   const recommended = products.slice(0, 8);
@@ -302,13 +312,14 @@ export function renderMarketHome(args: {
       const catProduct = products.find((p) => p.category_id === c.id);
       const href = `/market/c/${encodeURIComponent(c.id)}`;
       html += `      <a class="mk-collection-card" href="${escapeAttr(href)}">\n`;
+      const cLabel = escapeHtml((args.labelOf ?? identityLabel)(c.id, locale));
       if (catProduct?.image_url) {
-        html += `        <img src="${escapeAttr(catProduct.image_url)}" alt="${escapeHtml(c.id)}" loading="lazy" />\n`;
+        html += `        <img src="${escapeAttr(catProduct.image_url)}" alt="${cLabel}" loading="lazy" />\n`;
       } else {
         html += '        <div class="mk-collection-card__empty"></div>\n';
       }
       html += '        <div class="mk-collection-card__overlay">\n';
-      html += `          <span class="mk-collection-card__name">${escapeHtml(c.id)}</span>\n`;
+      html += `          <span class="mk-collection-card__name">${cLabel}</span>\n`;
       html += '        </div>\n      </a>\n';
     }
     html += '      </div>\n    </section>\n  </div>\n';
@@ -370,7 +381,7 @@ function renderSortChips(current: string | undefined, locale: string): string {
   return html;
 }
 
-function renderFacets(facets: Facets, q: SearchQuery, locale: string): string {
+function renderFacets(facets: Facets, q: SearchQuery, locale: string, labelOf: LabelOf = identityLabel): string {
   let h = '<aside class="mk-facets" data-mk-facets>\n';
   h += '  <div class="mk-facets-handle" aria-hidden="true"></div>\n';
 
@@ -379,7 +390,7 @@ function renderFacets(facets: Facets, q: SearchQuery, locale: string): string {
     h += `  <fieldset class="mk-facet"><legend>${escapeHtml(mt(locale, 'categories'))}</legend>\n`;
     for (const c of facets.categories) {
       const checked = q.categoryId === c.id ? ' checked' : '';
-      h += `    <label class="mk-facet__opt"><input type="radio" name="categoryId" value="${escapeAttr(c.id)}"${checked} /> ${escapeHtml(c.id)} <span class="mk-facet__count">${c.count}</span></label>\n`;
+      h += `    <label class="mk-facet__opt"><input type="radio" name="categoryId" value="${escapeAttr(c.id)}"${checked} /> ${escapeHtml(labelOf(c.id, locale))} <span class="mk-facet__count">${c.count}</span></label>\n`;
     }
     h += '  </fieldset>\n';
   }
@@ -420,8 +431,9 @@ export function renderSearchPage(args: {
   total: number;
   locale: string;
   query: SearchQuery;
+  labelOf?: LabelOf;
 }): string {
-  const { items, facets, total, locale, query } = args;
+  const { items, facets, total, locale, query, labelOf } = args;
   const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
 
   let html = '<div class="mk mk--search">\n';
@@ -443,7 +455,7 @@ export function renderSearchPage(args: {
 
   // Body: facets + results
   html += '  <div class="mk-search-body">\n';
-  html += renderFacets(facets, query, locale);
+  html += renderFacets(facets, query, locale, labelOf);
 
   html += '    <section class="mk-results">\n';
   if (items.length === 0) {
@@ -479,17 +491,41 @@ export function renderStoresPage(args: { stores: StoreRow[]; total: number; loca
   return html;
 }
 
-export function renderCategoryPage(args: { categoryId: string; items: ProductRow[]; total: number; locale: string }): string {
-  const { categoryId, items, locale } = args;
+export function renderCategoryPage(args: {
+  categoryId: string;
+  items: ProductRow[];
+  total: number;
+  locale: string;
+  breadcrumb?: BreadcrumbSegment[] | null;
+}): string {
+  const { categoryId, items, locale, breadcrumb } = args;
+  const segments = breadcrumb ?? null;
+  const h1 = segments && segments.length ? segments[segments.length - 1].label : categoryId;
+
   let html = '<div class="mk">\n';
   html += '<header class="mk-top">\n';
   html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
   html += renderSearchBar(locale);
   html += renderLangSwitcher(locale);
   html += '</header>\n';
-  html += `<nav class="mk-breadcrumb" aria-label="breadcrumb"><a href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a> › <span>${escapeHtml(categoryId)}</span></nav>\n`;
+
+  html += `<nav class="mk-breadcrumb" aria-label="breadcrumb"><a href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>`;
+  if (segments && segments.length) {
+    segments.forEach((seg, i) => {
+      const last = i === segments.length - 1;
+      if (last) {
+        html += ` › <span>${escapeHtml(seg.label)}</span>`;
+      } else {
+        html += ` › <a href="/market/c/${encodeURIComponent(seg.id)}">${escapeHtml(seg.label)}</a>`;
+      }
+    });
+  } else {
+    html += ` › <span>${escapeHtml(categoryId)}</span>`;
+  }
+  html += '</nav>\n';
+
   html += '<section class="mk-section">\n';
-  html += `  <h1 class="mk-section__title">${escapeHtml(categoryId)}</h1>\n`;
+  html += `  <h1 class="mk-section__title">${escapeHtml(h1)}</h1>\n`;
   if (items.length === 0) {
     html += `  <p class="mk-no-results">${escapeHtml(mt(locale, 'noResults'))}</p>\n`;
   } else {
@@ -513,6 +549,20 @@ export function buildItemListJsonLd(items: ProductRow[], origin: string): string
       position: i + 1,
       url: origin + p.product_path,
       name: p.title,
+    })),
+  });
+}
+
+/** BreadcrumbList JSON-LD — /market/c/<id> segmentlerinden. JSON string (escape edilmemiş). */
+export function buildBreadcrumbJsonLd(segments: BreadcrumbSegment[], origin: string): string {
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: segments.map((s, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: s.label,
+      item: `${origin}/market/c/${encodeURIComponent(s.id)}`,
     })),
   });
 }
