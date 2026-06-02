@@ -1,0 +1,9 @@
+[
+  { "id": "222", "parentId": null, "depth": 0 },
+  { "id": "1604", "parentId": null, "depth": 0 },
+  { "id": "267", "parentId": "5181", "depth": 3 },
+  { "id": "5181", "parentId": "262", "depth": 2 },
+  { "id": "262", "parentId": "222", "depth": 1 },
+  { "id": "187", "parentId": "166", "depth": 1 },
+  { "id": "166", "parentId": null, "depth": 0 }
+]
