@@ -228,68 +228,20 @@ function renderDiscCard(p: ProductRow, locale: string): string {
   return html;
 }
 
-/** Amazon tarzı sol menü ağacı düğümü — 2 seviye (L1 + L2). */
-export interface CategoryTreeNode {
-  id: string;
-  label: string;
-  children: CategoryTreeNode[];
-}
-
-/**
- * Amazon tarzı sol kategori menüsü.
- * - Alt kategorisi olan L1 → <details> accordion (ilk link = "All <label>")
- * - Alt kategorisi olmayan L1 → düz <a>
- * Tüm etiketler escapeHtml'd, href'ler encodeURIComponent + escapeAttr ile güvenli.
- */
-export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string): string {
-  const heading = escapeHtml(mt(locale, 'categories'));
-  let html = `<aside class="mk-sidebar" aria-label="${heading}">\n`;
-  html += `  <h3 class="mk-sidebar__heading">${heading}</h3>\n`;
-  html += '  <nav class="mk-sidebar__nav">\n';
-
-  for (const node of tree) {
-    const safeLabel = escapeHtml(node.label);
-    if (node.children.length > 0) {
-      const topHref = escapeAttr(`/market/c/${encodeURIComponent(node.id)}`);
-      html += '    <details class="mk-sidebar__group">\n';
-      html += `      <summary class="mk-sidebar__summary">${safeLabel}<span class="mk-sidebar__chevron" aria-hidden="true">▸</span></summary>\n`;
-      html += '      <ul class="mk-sidebar__list">\n';
-      // "All <label>" bağlantısı — L1 kategorisinin kendisi
-      const allLabel = escapeHtml(mt(locale, 'allCategories') + ' ' + node.label);
-      html += `        <li class="mk-sidebar__item mk-sidebar__item--all"><a class="mk-sidebar__link" href="${topHref}">${allLabel}</a></li>\n`;
-      for (const child of node.children) {
-        const childHref = escapeAttr(`/market/c/${encodeURIComponent(child.id)}`);
-        html += `        <li class="mk-sidebar__item"><a class="mk-sidebar__link" href="${childHref}">${escapeHtml(child.label)}</a></li>\n`;
-      }
-      html += '      </ul>\n';
-      html += '    </details>\n';
-    } else {
-      const href = escapeAttr(`/market/c/${encodeURIComponent(node.id)}`);
-      html += `    <a class="mk-sidebar__link mk-sidebar__link--top" href="${href}">${safeLabel}</a>\n`;
-    }
-  }
-
-  html += '  </nav>\n';
-  html += '</aside>\n';
-  return html;
-}
-
 export function renderMarketHome(args: {
   products: ProductRow[];
   stores: StoreRow[];
   categories: { id: string; count: number }[];
   locale: string;
   labelOf?: LabelOf;
-  categoryTree?: CategoryTreeNode[];
 }): string {
   const { products, stores, categories, locale } = args;
   const recommended = products.slice(0, 8);
   const trending = [...products].reverse().slice(0, 6);
-  const hasSidebar = Array.isArray(args.categoryTree) && args.categoryTree.length > 0;
 
   let html = '<div class="mk">\n';
 
-  // Top bar with icon nav — tam genişlik, layout dışında
+  // Top bar with icon nav
   html += '<header class="mk-top">\n';
   html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
   html += renderLangSwitcher(locale);
@@ -302,13 +254,6 @@ export function renderMarketHome(args: {
   html += '    <span><strong>Profile</strong></span>\n';
   html += '  </a>\n';
   html += '</header>\n';
-
-  // Sidebar varsa: .mk-layout açılır; yoksa içerik doğrudan devam eder (geri uyumlu)
-  if (hasSidebar) {
-    html += '<div class="mk-layout">\n';
-    html += renderCategorySidebar(args.categoryTree!, locale);
-    html += '<div class="mk-main">\n';
-  }
 
   // Hero search
   html += '<div class="mk-hero">\n';
@@ -402,12 +347,6 @@ export function renderMarketHome(args: {
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'stores'))}</h2>\n`;
     html += renderStoreStrip(stores, locale);
     html += '</section>\n';
-  }
-
-  // Sidebar layout kapatma
-  if (hasSidebar) {
-    html += '</div>\n'; // .mk-main
-    html += '</div>\n'; // .mk-layout
   }
 
   html += renderMarketFooter(locale);
