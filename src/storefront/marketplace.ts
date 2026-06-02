@@ -266,6 +266,11 @@ export function renderMarketHome(args: {
   html += '  </form>\n';
   html += '</div>\n';
 
+  // Kategori chip satırı — taksonomi üst kategorileri, ürün olmasa da her zaman görünür.
+  if (categories.length) {
+    html += renderCategoryChips(categories, locale, args.labelOf ?? identityLabel);
+  }
+
   // Featured slot — reserved
   html += '<section class="mk-featured" hidden></section>\n';
 

@@ -102,7 +102,11 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       const root = svc ? (svc.ancestors(p.category_id)[0]?.id ?? p.category_id) : p.category_id;
       l1.set(root, (l1.get(root) ?? 0) + 1);
     }
-    const cats = [...l1.entries()].map(([id, count]) => ({ id, count }));
+    // Üst kategorileri taksonomiden çek → boş olsa DA hepsi görünür; ürün sayıları bindirilir.
+    const roots = svc ? svc.children(null) : [];
+    const cats = roots.length
+      ? roots.map((n) => ({ id: n.id, count: l1.get(n.id) ?? 0 }))
+      : [...l1.entries()].map(([id, count]) => ({ id, count }));
     const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf });
     const canonical = `${origin}/market`;
     return htmlResponse(renderDocument({
