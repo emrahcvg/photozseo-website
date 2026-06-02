@@ -6,6 +6,8 @@
 
 import type { Manifest, Product } from './types';
 import { mt } from './marketplace-i18n';
+import type { TaxonomyService } from './taxonomy/service';
+import { categoryBreadcrumb, resolveCategoryName } from './taxonomy/category-resolve';
 import {
   resolveLocalized,
   formatPrice,
@@ -431,6 +433,7 @@ export function renderStoreBody(
   manifest: Manifest,
   locale: string,
   defaultLang: string,
+  svc?: TaxonomyService,
 ): string {
   const { store } = manifest;
   const groups = groupProductsByCategory(manifest);
@@ -445,9 +448,10 @@ export function renderStoreBody(
   html += renderToolbar(groups, locale);
 
   for (const group of groups) {
-    const heading = group.category
-      ? resolveLocalized(group.category.name, locale)
-      : mt(locale, 'other');
+    // svc varsa taxonomy label'ına fallback yapar; yoksa mevcut davranış korunur.
+    const heading = svc
+      ? resolveCategoryName(group.category?.id, group.category?.name, locale, svc)
+      : (group.category ? resolveLocalized(group.category.name, locale) : mt(locale, 'other'));
     const id = group.category ? `cat-${group.category.id}` : 'cat-other';
 
     html += `<section class="sf-section" id="${escapeAttr(id)}" data-sf-cat="${escapeAttr(id)}">\n`;
@@ -607,6 +611,7 @@ export function renderProductBody(
   product: Product,
   locale: string,
   defaultLang: string,
+  svc?: TaxonomyService,
 ): string {
   const { store } = manifest;
   const slugMap = uniqueProductSlugs(manifest.products, defaultLang);
@@ -643,6 +648,20 @@ export function renderProductBody(
 
   // Info panel
   html += '    <div class="sf-detail__info">\n';
+
+  // Breadcrumb (D5=B: #cat-<id> anchor bağlantıları; svc yoksa veya çözülemezse gizlenir)
+  if (svc) {
+    const segs = categoryBreadcrumb(product.categoryId, locale, svc);
+    if (segs && segs.length) {
+      html += '      <nav class="sf-breadcrumb" aria-label="breadcrumb">\n';
+      html += `        <a href="${escapeAttr(storeUrl(store.slug, locale, defaultLang))}">${escapeHtml(store.displayName)}</a>\n`;
+      for (const seg of segs) {
+        const href = `${storeUrl(store.slug, locale, defaultLang)}#cat-${encodeURIComponent(seg.id)}`;
+        html += `        <span class="sf-breadcrumb__sep">›</span><a href="${escapeAttr(href)}">${escapeHtml(seg.label)}</a>\n`;
+      }
+      html += '      </nav>\n';
+    }
+  }
 
   // Seller chip
   const sellerInitial = escapeHtml(store.displayName.charAt(0).toUpperCase());

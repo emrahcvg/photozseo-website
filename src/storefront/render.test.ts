@@ -2,6 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { escapeHtml, renderStoreBody, renderProductBody } from './render';
 import type { Manifest, Product } from './types';
 import rawManifest from './fixtures/ahmet-oto-yedek.json';
+import { createTaxonomyService, type TaxNode } from './taxonomy/service';
+import treeFix from './taxonomy/__fixtures__/tree.fixture.json';
+import labelsEnFix from './taxonomy/__fixtures__/labels.en.fixture.json';
 
 const manifest = rawManifest as unknown as Manifest;
 const p1 = manifest.products[0] as Product; // tesla-model-y-paspas-seti
@@ -130,5 +133,42 @@ describe('renderProductBody — marketplace cart', () => {
     expect(html).toContain('name="name"');
     expect(html).toContain('name="phone"');
     expect(html).toContain('name="address"');
+  });
+});
+
+// ── renderProductBody — store breadcrumb (#cat anchor, D5=B) ─────────────────
+
+const taxSvc = createTaxonomyService({
+  tree: treeFix as TaxNode[],
+  labels: { en: labelsEnFix as Record<string, string> },
+  taxonomyVersion: 1,
+});
+
+function mkProdManifest(catId: string | undefined): Manifest {
+  return {
+    store: { slug: 'shop', displayName: 'Shop', contact: {}, languages: ['en'], currency: 'USD' },
+    categories: [],
+    products: [{ id: 'p1', categoryId: catId, title: { en: 'Item' }, images: [], price: 10 }],
+    meta: { version: 1, updatedAt: '' },
+  } as unknown as Manifest;
+}
+
+describe('renderProductBody — store breadcrumb (#cat anchor, D5=B)', () => {
+  it('çözülen kategori için breadcrumb + #cat-<id> anchor link', () => {
+    const m = mkProdManifest('267');
+    const html = renderProductBody(m, m.products[0], 'en', 'en', taxSvc);
+    expect(html).toContain('sf-breadcrumb');
+    expect(html).toContain('#cat-222');
+    expect(html).toContain('Mobile Phones');
+  });
+  it('çözülemeyen categoryId → breadcrumb satırı YOK (gizli)', () => {
+    const m = mkProdManifest('electronics.phones');
+    const html = renderProductBody(m, m.products[0], 'en', 'en', taxSvc);
+    expect(html).not.toContain('sf-breadcrumb');
+  });
+  it('svc verilmezse breadcrumb yok (geri uyumlu)', () => {
+    const m = mkProdManifest('267');
+    const html = renderProductBody(m, m.products[0], 'en', 'en');
+    expect(html).not.toContain('sf-breadcrumb');
   });
 });
