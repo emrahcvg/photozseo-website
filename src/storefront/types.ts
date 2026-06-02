@@ -79,6 +79,13 @@ export interface ManifestMeta {
   updatedAt: string;
   // iOS publish'te yazılır; web kanonik taxonomy.json'a göre doğrular (opsiyonel/geriye uyumlu).
   taxonomyVersion?: number;
+  // Write-normalize sırasında (#5 dual-write) damgalanır; göç geçmişi takibi için.
+  taxonomyMigration?: {
+    fromVersion?: number;
+    toVersion: number;
+    migratedAt: string;
+    unmapped: string[];
+  };
   seo?: {
     title?: string;
     description?: string;

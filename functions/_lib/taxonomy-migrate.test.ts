@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyLegacyMapToManifest } from './taxonomy-migrate';
+import { applyLegacyMapToManifest, normalizeManifestForWrite } from './taxonomy-migrate';
 import type { Manifest } from '../../src/storefront/types';
 
 const map = { 'electronics.phones': '267', 'clothing.shoes': '187' };
@@ -69,5 +69,26 @@ describe('applyLegacyMapToManifest — invariant korunarak birlikte çevirir', (
     m.products[2].categoryId = undefined;
     const out = applyLegacyMapToManifest(m, map);
     expect(out.products[2].categoryId).toBeUndefined();
+  });
+});
+
+describe('normalizeManifestForWrite — write-normalize + damga', () => {
+  it("eski id'leri çevirir ve taxonomyMigration damgası ekler", () => {
+    const out = normalizeManifestForWrite(mk(), map, 7);
+    expect(out.products[0].categoryId).toBe('267');
+    expect(out.meta.taxonomyVersion).toBe(7);
+    expect(out.meta.taxonomyMigration?.unmapped).toEqual(['c1']);
+    expect(out.meta.taxonomyMigration?.toVersion).toBe(7);
+  });
+  it('zaten normalize manifest tekrar yazılırsa idempotent (unmapped boş, içerik aynı)', () => {
+    const once = normalizeManifestForWrite(mk(), map, 7);
+    const twice = normalizeManifestForWrite(once, map, 7);
+    expect(twice.products).toEqual(once.products);
+    expect(twice.categories).toEqual(once.categories);
+  });
+  it('ikinci normalize unmapped boş üretir (zaten-uncategorized tekrar işaretlenmez)', () => {
+    const once = normalizeManifestForWrite(mk(), map, 7);
+    const twice = normalizeManifestForWrite(once, map, 7);
+    expect(twice.meta.taxonomyMigration?.unmapped).toEqual([]);
   });
 });
