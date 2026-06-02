@@ -24,6 +24,9 @@ import {
   productUrl,
   SUPPORTED_LOCALES,
 } from '../../src/storefront/manifest';
+import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
+import { applyLegacyMapToManifest } from '../_lib/taxonomy-migrate';
+import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
 
 interface Env {
   STORE_KV: KVNamespace;
@@ -93,7 +96,13 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const translated = await getTranslatedManifest(ctx.env.AI, ctx.env.STORE_KV, slug, base, sourceLang, locale);
 
   // Render manifest'i: dil seçici + hreflang 12 dilin tamamını göstersin.
-  const manifest = { ...translated, store: { ...translated.store, languages: SUPPORTED_LOCALES } };
+  const translatedFull = { ...translated, store: { ...translated.store, languages: SUPPORTED_LOCALES } };
+
+  // Legacy kategori id'lerini Google Taxonomy id'lerine normalize et (graceful).
+  const manifest = applyLegacyMapToManifest(translatedFull, legacyMap as Record<string, string>);
+
+  // Taxonomy service: kategori adı çözümleme + breadcrumb için (graceful fallback).
+  let svc; try { svc = await getTaxonomyService(locale); } catch { svc = undefined; }
 
   // Origin for absolute SEO URLs (canonical / hreflang / og), derived from the request.
   const origin = new URL(ctx.request.url).origin;
@@ -117,7 +126,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     }
 
     const pSlug = slugMap.get(product.id) ?? product.id;
-    htmlBody = renderProductBody(manifest, product, locale, DEFAULT_LANG);
+    htmlBody = renderProductBody(manifest, product, locale, DEFAULT_LANG, svc);
     pageTitle = resolveLocalized(product.title, locale) + ' — ' + manifest.store.displayName;
     pageDesc = resolveLocalized(product.description, locale).slice(0, 160);
     canonical = origin + productUrl(slug, pSlug, locale, DEFAULT_LANG);
@@ -126,7 +135,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     ogImage = product.images[0] ?? manifest.store.logo ?? `${origin}/og-image.png`;
     jsonLd = buildProductJsonLd(manifest, product, locale, canonical);
   } else {
-    htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG);
+    htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG, svc);
     pageTitle = manifest.meta.seo?.title ?? manifest.store.displayName;
     pageDesc = manifest.meta.seo?.description ?? resolveLocalized(manifest.store.tagline, locale);
     canonical = origin + storeUrl(slug, locale, DEFAULT_LANG);

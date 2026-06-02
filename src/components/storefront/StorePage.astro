@@ -2,6 +2,7 @@
 import type { Manifest } from '../../storefront/types';
 import { groupProductsByCategory, uniqueProductSlugs } from '../../storefront/manifest';
 import { defaultLang } from '../../i18n/ui';
+import { getTaxonomyService } from '../../storefront/taxonomy/load-local';
 import StoreHeader from './StoreHeader.astro';
 import CategorySection from './CategorySection.astro';
 import StoreFooter from './StoreFooter.astro';
@@ -16,12 +17,13 @@ const { manifest, locale } = Astro.props;
 const groups = groupProductsByCategory(manifest);
 const slug = manifest.store.slug;
 const slugMap = uniqueProductSlugs(manifest.products, defaultLang);
+const svc = await getTaxonomyService(locale).catch(() => undefined);
 ---
 
 <div class="sf-store">
   <StoreHeader store={manifest.store} locale={locale} />
   {groups.map((group) => (
-    <CategorySection group={group} locale={locale} currency={manifest.store.currency} slug={slug} defaultLang={defaultLang} slugMap={slugMap} />
+    <CategorySection group={group} locale={locale} currency={manifest.store.currency} slug={slug} defaultLang={defaultLang} slugMap={slugMap} svc={svc} />
   ))}
   <StoreFooter slug={manifest.store.slug} locale={locale} />
 </div>

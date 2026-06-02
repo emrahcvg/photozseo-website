@@ -8,7 +8,9 @@ import {
   productWhatsappHref,
   specRows,
   shippingText,
+  categoryBreadcrumb,
 } from '../../storefront/manifest';
+import type { TaxonomyService } from '../../storefront/taxonomy/service';
 import { defaultLang } from '../../i18n/ui';
 import ProductGallery from './ProductGallery.astro';
 import '../../styles/storefront.css';
@@ -17,9 +19,12 @@ interface Props {
   manifest: Manifest;
   product: Product;
   locale: string;
+  svc?: TaxonomyService;
 }
 
-const { manifest, product, locale } = Astro.props;
+const { manifest, product, locale, svc } = Astro.props;
+const segs = svc ? categoryBreadcrumb(product.categoryId, locale, svc) : null;
+const storeBase = storeUrl(manifest.store.slug, locale, defaultLang);
 
 const title = resolveLocalized(product.title, locale);
 const description = resolveLocalized(product.description, locale);
@@ -57,6 +62,14 @@ const specsHeading = locale === 'tr' ? 'Ürün Özellikleri' : 'Product details'
     </div>
 
     <div class="sf-detail__info">
+      {segs && segs.length > 0 && (
+        <nav class="sf-breadcrumb">
+          {segs.map((seg) => (
+            <a href={`${storeBase}#cat-${encodeURIComponent(seg.id)}`}>{seg.label}</a>
+          ))}
+        </nav>
+      )}
+
       <h1 class="sf-detail__title">{title}</h1>
 
       <div class="sf-card__price">
