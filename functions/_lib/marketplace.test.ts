@@ -79,7 +79,7 @@ describe('storeRecordToProductRows', () => {
     expect(r.id).toContain('acme:');          // <slug>:<productSlug>
     expect(r.title).toBe('Akilli Telefon');   // kanonik dil tr
     expect(r.description).toBe('Hizli');
-    expect(r.category_id).toBe('electronics.phones');
+    expect(r.category_id).toBe('267'); // 'electronics.phones' → Google id '267' (legacy-map)
     expect(r.tags).toBe('yeni,kampanya');     // CSV
     expect(r.price).toBe(199.9);
     expect(r.currency).toBe('USD');
@@ -193,7 +193,8 @@ describe('listNewProducts', () => {
   it('categoryId filtreler (listed-only)', async () => {
     // beta p3 electronics.phones unlisted → sadece acme p1 kalır.
     const { db } = await seedTwoStores();
-    const res = await listNewProducts(db as any, { categoryId: 'electronics.phones' });
+    // D1'de category_id artık Google id: 'electronics.phones' → '267'
+    const res = await listNewProducts(db as any, { categoryId: '267' });
     expect(res.total).toBe(1);
   });
   it('limit + offset uygular', async () => {
@@ -276,7 +277,7 @@ describe('searchProducts', () => {
     const { ai } = fakeAI();
     const res = await searchProducts(db as any, ai as any, {});
     expect(res.total).toBe(2);
-    expect(res.facets.categories['electronics.phones']).toBe(1);
+    expect(res.facets.categories['267']).toBe(1); // 'electronics.phones' → Google id '267' (legacy-map)
     expect(res.facets.cities['Istanbul']).toBeGreaterThan(0);
   });
 
@@ -292,7 +293,8 @@ describe('searchProducts', () => {
     // Yalnız listed acme görünür: p1 electronics.phones@100, p2 home.kitchen@50.
     const { db } = await seedTwoStores();
     const { ai } = fakeAI();
-    const res = await searchProducts(db as any, ai as any, { categoryId: 'electronics.phones', minPrice: 60 });
+    // D1'de category_id artık Google id: 'electronics.phones' → '267'
+    const res = await searchProducts(db as any, ai as any, { categoryId: '267', minPrice: 60 });
     expect(res.total).toBe(1);
     expect(res.items[0].price).toBe(100);
   });

@@ -4,6 +4,9 @@
  */
 
 import type { Manifest } from '../../src/storefront/types';
+import { normalizeManifestForWrite } from './taxonomy-migrate';
+import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
+import meta from '../../src/storefront/taxonomy/meta.json';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -63,7 +66,14 @@ export async function claimSlug(kv: KVNamespace, desiredBase: string): Promise<s
 }
 
 export async function putStore(kv: KVNamespace, slug: string, record: StoreRecord): Promise<void> {
-  await kv.put(storeKey(slug), JSON.stringify(record));
+  // KV'ye yazmadan önce manifest'teki legacy id'leri google id'ye normalize et (graceful).
+  let toWrite = record;
+  try {
+    const tv = (meta as { taxonomyVersion: number }).taxonomyVersion;
+    const normalized = normalizeManifestForWrite(record.manifest, legacyMap as Record<string, string>, tv);
+    toWrite = { ...record, manifest: normalized };
+  } catch { /* taxonomy yoksa ham yaz (graceful) */ }
+  await kv.put(storeKey(slug), JSON.stringify(toWrite));
 }
 
 export async function getStore(kv: KVNamespace, slug: string): Promise<StoreRecord | null> {

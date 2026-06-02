@@ -15,6 +15,9 @@ import type { Manifest } from '../../src/storefront/types';
 import { resolveLocalized, uniqueProductSlugs, productUrl } from '../../src/storefront/manifest';
 import { create, insertMultiple, search, type Orama } from '@orama/orama';
 import type { AiBinding } from './translate';
+import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
+import { mapLegacyId } from '../../src/storefront/taxonomy/legacy-map';
+import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 
 const DEFAULT_LANG = 'en';
 
@@ -64,10 +67,11 @@ interface OramaDoc {
   title: string;
   description: string;
   tags: string;
+  categoryPath: string;
 }
 
 export interface OramaIndex {
-  db: Orama<{ id: 'string'; title: 'string'; description: 'string'; tags: 'string' }>;
+  db: Orama<{ id: 'string'; title: 'string'; description: 'string'; tags: 'string'; categoryPath: 'string' }>;
   version: number;
 }
 
@@ -113,7 +117,7 @@ export function storeRecordToProductRows(slug: string, record: StoreRecord): Pro
       store_name: manifest.store.displayName,
       title: resolveLocalized(p.title, lang),
       description: resolveLocalized(p.description, lang),
-      category_id: p.categoryId ?? '',
+      category_id: mapLegacyId(p.categoryId, legacyMap as Record<string, string>),
       tags: (p.tags ?? []).join(','),
       price: typeof p.price === 'number' ? p.price : null,
       currency: p.currency ?? manifest.store.currency ?? 'USD',
@@ -287,13 +291,19 @@ let _oramaCache: OramaIndex | null = null;
 async function buildOrama(db: D1Database, version: number): Promise<OramaIndex> {
   const products = await fetchAllProducts(db);
   const oramaDb = create({
-    schema: { id: 'string', title: 'string', description: 'string', tags: 'string' },
+    schema: { id: 'string', title: 'string', description: 'string', tags: 'string', categoryPath: 'string' },
   }) as OramaIndex['db'];
+
+  // Kategori yolu etiketleri için taxonomy servisini başlat (graceful: hata olursa boş string).
+  let svc: Awaited<ReturnType<typeof getTaxonomyService>> | undefined;
+  try { svc = await getTaxonomyService('en'); } catch { svc = undefined; }
+
   const docs: OramaDoc[] = products.map((p) => ({
     id: p.id,
     title: p.title,
     description: p.description,
     tags: p.tags.replace(/,/g, ' '),
+    categoryPath: svc && p.category_id ? svc.path(p.category_id, 'en').join(' ') : '',
   }));
   if (docs.length > 0) await insertMultiple(oramaDb, docs);
   return { db: oramaDb, version };
