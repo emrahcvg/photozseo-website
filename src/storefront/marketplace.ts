@@ -11,7 +11,6 @@
 
 import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
-import { categoryName } from './taxonomy';
 
 // ── P1 contract mirror (render-layer view) ────────────────────────────────────
 export interface ProductRow {
@@ -126,22 +125,16 @@ export function renderProductCard(p: ProductRow, locale: string): string {
   return html;
 }
 
-/**
- * Horizontal, thumb-friendly category chip row. "All" → /market/search.
- * Etiket: lokalize `name` varsa onu, yoksa ham `id`'yi gösterir. `count`
- * yalnızca pozitifse rozet olarak çıkar (boş kategoriler de listelenir).
- */
+/** Horizontal, thumb-friendly category chip row. "All" → /market/search. */
 export function renderCategoryChips(
-  categories: { id: string; count?: number; name?: string }[],
+  categories: { id: string; count: number }[],
   locale: string,
 ): string {
   let html = `<nav class="mk-chips" aria-label="${escapeHtml(mt(locale, 'categories'))}">\n`;
   html += `  <a class="mk-chip mk-chip--all" href="/market/search">${escapeHtml(mt(locale, 'allCategories'))}</a>\n`;
   for (const c of categories) {
     const href = `/market/c/${encodeURIComponent(c.id)}`;
-    const label = escapeHtml(c.name ?? c.id);
-    const badge = c.count && c.count > 0 ? ` <span class="mk-chip__count">${c.count}</span>` : '';
-    html += `  <a class="mk-chip" href="${escapeAttr(href)}">${label}${badge}</a>\n`;
+    html += `  <a class="mk-chip" href="${escapeAttr(href)}">${escapeHtml(c.id)} <span class="mk-chip__count">${c.count}</span></a>\n`;
   }
   html += '</nav>\n';
   return html;
@@ -229,7 +222,7 @@ function renderDiscCard(p: ProductRow, locale: string): string {
 export function renderMarketHome(args: {
   products: ProductRow[];
   stores: StoreRow[];
-  categories: { id: string; count?: number; name?: string }[];
+  categories: { id: string; count: number }[];
   locale: string;
 }): string {
   const { products, stores, categories, locale } = args;
@@ -262,11 +255,6 @@ export function renderMarketHome(args: {
   html += '    </div>\n';
   html += '  </form>\n';
   html += '</div>\n';
-
-  // Kategori chip satırı — taksonomi'den, ürün olmasa da her zaman görünür.
-  if (categories.length) {
-    html += renderCategoryChips(categories, locale);
-  }
 
   // Featured slot — reserved
   html += '<section class="mk-featured" hidden></section>\n';
@@ -313,15 +301,14 @@ export function renderMarketHome(args: {
     for (const c of categories.slice(0, 4)) {
       const catProduct = products.find((p) => p.category_id === c.id);
       const href = `/market/c/${encodeURIComponent(c.id)}`;
-      const label = escapeHtml(c.name ?? c.id);
       html += `      <a class="mk-collection-card" href="${escapeAttr(href)}">\n`;
       if (catProduct?.image_url) {
-        html += `        <img src="${escapeAttr(catProduct.image_url)}" alt="${label}" loading="lazy" />\n`;
+        html += `        <img src="${escapeAttr(catProduct.image_url)}" alt="${escapeHtml(c.id)}" loading="lazy" />\n`;
       } else {
         html += '        <div class="mk-collection-card__empty"></div>\n';
       }
       html += '        <div class="mk-collection-card__overlay">\n';
-      html += `          <span class="mk-collection-card__name">${label}</span>\n`;
+      html += `          <span class="mk-collection-card__name">${escapeHtml(c.id)}</span>\n`;
       html += '        </div>\n      </a>\n';
     }
     html += '      </div>\n    </section>\n  </div>\n';
@@ -494,16 +481,15 @@ export function renderStoresPage(args: { stores: StoreRow[]; total: number; loca
 
 export function renderCategoryPage(args: { categoryId: string; items: ProductRow[]; total: number; locale: string }): string {
   const { categoryId, items, locale } = args;
-  const title = escapeHtml(categoryName(categoryId, locale));
   let html = '<div class="mk">\n';
   html += '<header class="mk-top">\n';
   html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
   html += renderSearchBar(locale);
   html += renderLangSwitcher(locale);
   html += '</header>\n';
-  html += `<nav class="mk-breadcrumb" aria-label="breadcrumb"><a href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a> › <span>${title}</span></nav>\n`;
+  html += `<nav class="mk-breadcrumb" aria-label="breadcrumb"><a href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a> › <span>${escapeHtml(categoryId)}</span></nav>\n`;
   html += '<section class="mk-section">\n';
-  html += `  <h1 class="mk-section__title">${title}</h1>\n`;
+  html += `  <h1 class="mk-section__title">${escapeHtml(categoryId)}</h1>\n`;
   if (items.length === 0) {
     html += `  <p class="mk-no-results">${escapeHtml(mt(locale, 'noResults'))}</p>\n`;
   } else {
