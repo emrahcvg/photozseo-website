@@ -316,3 +316,55 @@ describe('formatWeight', () => {
     expect(formatWeight(1500, 'tr')).toBe('1,5 kg');
   });
 });
+
+// ── groupProductsByCategory invariant kilitleri ──────────────────────────────
+
+function mkManifest(partial: Partial<Manifest>): Manifest {
+  return {
+    store: { slug: 's', displayName: 'S', contact: {}, languages: ['en'], currency: 'USD' },
+    categories: [],
+    products: [],
+    meta: { version: 1, updatedAt: '' },
+    ...partial,
+  } as Manifest;
+}
+
+describe('groupProductsByCategory — invariant korunur', () => {
+  it('categoryId === category.id eşleşen ürünler doğru grupta', () => {
+    const m = mkManifest({
+      categories: [{ id: '267', name: { en: 'Phones' } }],
+      products: [
+        { id: 'p1', categoryId: '267', title: { en: 'A' }, images: [] },
+        { id: 'p2', categoryId: '267', title: { en: 'B' }, images: [] },
+      ],
+    });
+    const groups = groupProductsByCategory(m);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].category?.id).toBe('267');
+    expect(groups[0].products).toHaveLength(2);
+  });
+  it('eşleşmeyen categoryId → null (Other) grubuna düşer', () => {
+    const m = mkManifest({
+      categories: [{ id: '267', name: { en: 'Phones' } }],
+      products: [{ id: 'p1', categoryId: 'c99', title: { en: 'X' }, images: [] }],
+    });
+    const groups = groupProductsByCategory(m);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].category).toBeNull();
+  });
+  it('categoryId yoksa Other grubuna', () => {
+    const m = mkManifest({
+      categories: [],
+      products: [{ id: 'p1', title: { en: 'X' }, images: [] }],
+    });
+    const groups = groupProductsByCategory(m);
+    expect(groups[0].category).toBeNull();
+  });
+  it('boş gruplar elenir', () => {
+    const m = mkManifest({
+      categories: [{ id: '267', name: { en: 'Phones' } }],
+      products: [],
+    });
+    expect(groupProductsByCategory(m)).toEqual([]);
+  });
+});

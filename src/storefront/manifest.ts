@@ -205,3 +205,7 @@ export function productUrl(slug: string, productId: string, locale: string, defa
     ? `/store/${slug}/product/${productId}`
     : `/store/${slug}/${locale}/product/${productId}`;
 }
+
+// ── Taxonomy re-export'ları — tüketici tek import'tan ulaşır ─────────────────
+export { resolveCategoryName, categoryBreadcrumb } from './taxonomy/category-resolve';
+export type { BreadcrumbSegment } from './taxonomy/category-resolve';
