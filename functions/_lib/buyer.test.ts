@@ -3,7 +3,7 @@ import {
   ownerKeyFromDevice, isValidSlug,
   listFavorites, addFavorite, removeFavorite,
   getCart, setCartItem, clearCart,
-  listAllFavorites, listAllCart,
+  listAllFavorites, listAllCart, migrateOwner,
 } from './buyer';
 import { makeFakeD1 } from './fakeD1';
 
@@ -141,5 +141,68 @@ describe('listAllFavorites / listAllCart (çapraz-mağaza, gruplu)', () => {
     const a = groups[0].items.reduce<Record<string, number>>((m, it) => { m[it.productSlug] = it.qty!; return m; }, {});
     expect(a).toEqual({ 'urun-1': 2, 'urun-2': 3 });
     expect(groups[1].items[0]).toMatchObject({ productSlug: 'urun-9', qty: 1, price: 9 });
+  });
+});
+
+describe('migrateOwner (cihaz → hesap taşıma)', () => {
+  const DEV = 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+  const BUYER = 'b:google-sub-123';
+
+  it('favori + sepeti taşır, kaynak satırları siler', async () => {
+    const { db } = makeFakeD1();
+    await addFavorite(db, DEV, 'magaza-a', 'urun-1', '2026-06-02T00:00:00Z');
+    await addFavorite(db, DEV, 'magaza-b', 'urun-9', '2026-06-02T00:00:01Z');
+    await setCartItem(db, DEV, 'magaza-a', 'urun-1', 4, '2026-06-02T00:00:02Z');
+
+    await migrateOwner(db, DEV, BUYER);
+
+    // hedefe taşındı
+    expect((await listFavorites(db, BUYER, 'magaza-a'))).toEqual(['urun-1']);
+    expect((await listFavorites(db, BUYER, 'magaza-b'))).toEqual(['urun-9']);
+    expect(await getCart(db, BUYER, 'magaza-a')).toEqual([{ productSlug: 'urun-1', qty: 4 }]);
+    // kaynak temizlendi
+    expect(await listFavorites(db, DEV, 'magaza-a')).toEqual([]);
+    expect(await getCart(db, DEV, 'magaza-a')).toEqual([]);
+  });
+
+  it('favori çakışmasında hedef korunur (union, idempotent)', async () => {
+    const { db } = makeFakeD1();
+    await addFavorite(db, BUYER, 'magaza-a', 'urun-1', '2026-06-01T00:00:00Z'); // hesapta zaten var
+    await addFavorite(db, DEV, 'magaza-a', 'urun-1', '2026-06-02T00:00:00Z');   // cihazda da var
+    await addFavorite(db, DEV, 'magaza-a', 'urun-2', '2026-06-02T00:00:01Z');   // sadece cihazda
+
+    await migrateOwner(db, DEV, BUYER);
+
+    expect((await listFavorites(db, BUYER, 'magaza-a')).sort()).toEqual(['urun-1', 'urun-2']);
+  });
+
+  it('sepet çakışmasında HESAP adedi korunur (anonim ezmez)', async () => {
+    const { db } = makeFakeD1();
+    await setCartItem(db, BUYER, 'magaza-a', 'urun-1', 2, '2026-06-01T00:00:00Z'); // hesap: 2
+    await setCartItem(db, DEV, 'magaza-a', 'urun-1', 9, '2026-06-02T00:00:00Z');   // cihaz: 9
+    await setCartItem(db, DEV, 'magaza-a', 'urun-2', 5, '2026-06-02T00:00:01Z');   // sadece cihaz
+
+    await migrateOwner(db, DEV, BUYER);
+
+    const cart = (await getCart(db, BUYER, 'magaza-a')).sort((a, b) => a.productSlug.localeCompare(b.productSlug));
+    expect(cart).toEqual([
+      { productSlug: 'urun-1', qty: 2 }, // hesap adedi korundu (9 değil)
+      { productSlug: 'urun-2', qty: 5 }, // cihazdan taşındı
+    ]);
+  });
+
+  it('idempotent: ikinci çağrı no-op (kaynak zaten boş)', async () => {
+    const { db } = makeFakeD1();
+    await addFavorite(db, DEV, 'magaza-a', 'urun-1', '2026-06-02T00:00:00Z');
+    await migrateOwner(db, DEV, BUYER);
+    await migrateOwner(db, DEV, BUYER); // tekrar
+    expect(await listFavorites(db, BUYER, 'magaza-a')).toEqual(['urun-1']);
+  });
+
+  it('fromKey === toKey → no-op (veri kaybı yok)', async () => {
+    const { db } = makeFakeD1();
+    await addFavorite(db, BUYER, 'magaza-a', 'urun-1', '2026-06-02T00:00:00Z');
+    await migrateOwner(db, BUYER, BUYER);
+    expect(await listFavorites(db, BUYER, 'magaza-a')).toEqual(['urun-1']);
   });
 });

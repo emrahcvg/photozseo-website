@@ -492,7 +492,7 @@ export function renderStoreBody(
   html += controlsScript(locale);
   html += '  <script src="/storefront-buyer.js?v=8" defer></script>\n';
   html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
-  html += '  <script src="/auth.js?v=8" defer></script>\n';
+  html += '  <script src="/auth.js?v=9" defer></script>\n';
   return html;
 }
 
@@ -834,7 +834,7 @@ export function renderProductBody(
   html += '      <script src="/marketplace-cart.js" defer></script>\n';
   html += '      <script src="/storefront-buyer.js?v=8" defer></script>\n';
   html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
-  html += '      <script src="/auth.js?v=8" defer></script>\n';
+  html += '      <script src="/auth.js?v=9" defer></script>\n';
 
   // AI chat bar (placeholder)
   html += '      <div class="sf-ai-chat">\n';

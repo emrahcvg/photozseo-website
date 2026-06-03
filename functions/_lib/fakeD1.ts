@@ -131,6 +131,39 @@ export function makeFakeD1(): FakeD1 {
         });
       return { kind: 'all' as const, rows };
     }
+    // migration: favorites owner-only SELECT (store_slug, product_slug, created_at)
+    if (/SELECT store_slug, product_slug, created_at FROM favorites WHERE owner_key = \?/i.test(s)) {
+      const rows = tables.favorites
+        .filter((r) => r.owner_key === args[0])
+        .map((r) => ({ store_slug: r.store_slug, product_slug: r.product_slug, created_at: r.created_at }));
+      return { kind: 'all' as const, rows };
+    }
+    // migration: favorites owner-only DELETE
+    if (/DELETE FROM favorites WHERE owner_key = \?$/i.test(s)) {
+      tables.favorites = tables.favorites.filter((r) => r.owner_key !== args[0]);
+      return { kind: 'run' as const };
+    }
+    // migration: cart owner-only SELECT (store_slug, product_slug, qty, updated_at)
+    if (/SELECT store_slug, product_slug, qty, updated_at FROM cart_items WHERE owner_key = \?/i.test(s)) {
+      const rows = tables.cart_items
+        .filter((r) => r.owner_key === args[0])
+        .map((r) => ({ store_slug: r.store_slug, product_slug: r.product_slug, qty: r.qty, updated_at: r.updated_at }));
+      return { kind: 'all' as const, rows };
+    }
+    // migration: cart INSERT OR IGNORE (çakışmada mevcut hedef korunur)
+    if (/INSERT OR IGNORE INTO cart_items/i.test(s)) {
+      const [owner_key, store_slug, product_slug, qty, updated_at] = args;
+      const exists = tables.cart_items.some(
+        (r) => r.owner_key === owner_key && r.store_slug === store_slug && r.product_slug === product_slug,
+      );
+      if (!exists) tables.cart_items.push({ owner_key, store_slug, product_slug, qty, updated_at });
+      return { kind: 'run' as const };
+    }
+    // migration: cart owner-only DELETE
+    if (/DELETE FROM cart_items WHERE owner_key = \?$/i.test(s)) {
+      tables.cart_items = tables.cart_items.filter((r) => r.owner_key !== args[0]);
+      return { kind: 'run' as const };
+    }
     // cart_items: upsert (INSERT OR REPLACE)
     if (/INSERT OR REPLACE INTO cart_items/i.test(s)) {
       const [owner_key, store_slug, product_slug, qty, updated_at] = args;

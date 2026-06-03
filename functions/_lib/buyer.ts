@@ -199,3 +199,39 @@ export async function listAllCart(db: D1Like, ownerKey: string): Promise<BuyerSt
   const { results } = await db.prepare(CART_SELECT).bind(ownerKey).all<FlatBuyerRow>();
   return groupByStore(results);
 }
+
+// ── Sahip taşıma: anonim cihaz (d:<uuid>) → giriş yapan alıcı (b:<sub>) ────────
+
+/**
+ * `fromKey` sahibinin favori + sepetini `toKey`'e taşır (giriş anında çağrılır).
+ * - Favori/sepet kalemleri INSERT OR IGNORE ile kopyalanır: çakışmada **hedef korunur**
+ *   (giriş öncesi anonim veri, hesapta zaten varsa ezmez). Sonra kaynak satırlar silinir.
+ * - Kaynak satırlar silindiği için tekrar çağrılırsa no-op (idempotent).
+ * - Saf veri katmanı; sahip-anahtarı doğrulamasını çağıran yapar.
+ */
+export async function migrateOwner(db: D1Like, fromKey: string, toKey: string): Promise<void> {
+  if (!fromKey || !toKey || fromKey === toKey) return;
+
+  // Favoriler
+  const favs = await db
+    .prepare('SELECT store_slug, product_slug, created_at FROM favorites WHERE owner_key = ?')
+    .bind(fromKey)
+    .all<{ store_slug: string; product_slug: string; created_at: string }>();
+  for (const f of favs.results) {
+    await addFavorite(db, toKey, f.store_slug, f.product_slug, f.created_at);
+  }
+  await db.prepare('DELETE FROM favorites WHERE owner_key = ?').bind(fromKey).run();
+
+  // Sepet — INSERT OR IGNORE (çakışmada hedefteki adet korunur)
+  const cart = await db
+    .prepare('SELECT store_slug, product_slug, qty, updated_at FROM cart_items WHERE owner_key = ?')
+    .bind(fromKey)
+    .all<{ store_slug: string; product_slug: string; qty: number; updated_at: string }>();
+  for (const c of cart.results) {
+    await db
+      .prepare('INSERT OR IGNORE INTO cart_items (owner_key, store_slug, product_slug, qty, updated_at) VALUES (?, ?, ?, ?, ?)')
+      .bind(toKey, c.store_slug, c.product_slug, c.qty, c.updated_at)
+      .run();
+  }
+  await db.prepare('DELETE FROM cart_items WHERE owner_key = ?').bind(fromKey).run();
+}

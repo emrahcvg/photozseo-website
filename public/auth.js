@@ -44,9 +44,16 @@
 
   /* ── GIS One Tap giriş callback'i ── */
   function onCredential(response) {
+    // Anonim cihaz favori/sepetini hesaba taşımak için mevcut device id'yi yolla
+    // (storefront-buyer.js ile aynı 'sf-device-id' anahtarı; yoksa yollama — taşınacak veri yok).
+    var headers = { 'content-type': 'application/json' };
+    try {
+      var dev = localStorage.getItem('sf-device-id');
+      if (dev) headers['x-device-id'] = dev;
+    } catch (e) {}
     fetch('/api/auth/google', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: headers,
       body: JSON.stringify({ credential: response.credential }),
     }).then(function (r) {
       if (r.ok) location.reload();

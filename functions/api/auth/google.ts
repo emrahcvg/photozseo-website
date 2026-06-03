@@ -9,9 +9,11 @@
  */
 import { signSession } from '../../_lib/session';
 import { GOOGLE_CLIENT_ID, SESSION_COOKIE, SESSION_TTL_DAYS } from '../../../src/storefront/auth/config';
+import { migrateOwner, ownerKeyFromDevice, ownerKeyFromBuyer, type D1Like } from '../../_lib/buyer';
 
 interface Env {
   STORE_WRITE_KEY?: string;
+  MARKET_DB?: D1Like;
 }
 type Ctx = { request: Request; env: Env };
 
@@ -75,6 +77,20 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   };
 
   const signed = await signSession(payload, writeKey);
+
+  // Anonim cihaz favori/sepetini hesaba taşı (best-effort; giriş asla bloklanmaz).
+  // Cihaz kimliği auth.js'in gönderdiği x-device-id header'ından gelir.
+  if (ctx.env.MARKET_DB) {
+    const deviceKey = ownerKeyFromDevice(ctx.request.headers.get('x-device-id') ?? '');
+    const buyerKey = ownerKeyFromBuyer(claims.sub);
+    if (deviceKey && buyerKey) {
+      try {
+        await migrateOwner(ctx.env.MARKET_DB, deviceKey, buyerKey);
+      } catch (e) {
+        console.error('owner migrate failed (non-fatal):', e);
+      }
+    }
+  }
 
   const cookieValue =
     `${SESSION_COOKIE}=${signed}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${sessionTtl}`;
