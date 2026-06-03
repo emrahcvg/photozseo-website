@@ -27,6 +27,8 @@ import {
   renderStoresPage,
   renderCategoryPage,
   renderOrdersPage,
+  renderFavoritesPage,
+  renderCartPage,
   buildItemListJsonLd,
   buildBreadcrumbJsonLd,
   buildStoreDirectoryJsonLd,
@@ -37,6 +39,7 @@ import {
 } from '../../src/storefront/marketplace';
 import { resolveOwnerKey } from '../_lib/buyer-owner';
 import { listOrders } from '../_lib/orders';
+import { listAllFavorites, listAllCart } from '../_lib/buyer';
 import { mt } from '../../src/storefront/marketplace-i18n';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
@@ -133,7 +136,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market'),
       jsonLd: buildItemListJsonLd(newP.items, origin),
-      stylesheets: ['/marketplace.css?v=7'],
+      stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -164,7 +167,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/search'),
       jsonLd: buildItemListJsonLd(result.items, origin),
-      stylesheets: ['/marketplace.css?v=7'],
+      stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
@@ -182,7 +185,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
-      stylesheets: ['/marketplace.css?v=7'],
+      stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -205,7 +208,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
       jsonLd,
-      stylesheets: ['/marketplace.css?v=7'],
+      stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
     }));
   }
@@ -224,15 +227,43 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale,
       body,
       robots: 'noindex',
-      stylesheets: ['/marketplace.css?v=7'],
+      stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js'],
+    }));
+  }
+
+  // /market/favorites — alıcı favorileri (çapraz-mağaza, hesaba/cihaza bağlı)
+  if (parts[0] === 'favorites' && parts.length === 1) {
+    const now = Math.floor(Date.now() / 1000);
+    const owner = deps.request ? await resolveOwnerKey(deps.request, deps.storeWriteKey, now) : null;
+    const groups = owner ? await listAllFavorites(deps.db as unknown as Parameters<typeof listAllFavorites>[0], owner) : [];
+    const body = renderFavoritesPage({ groups, locale, loggedIn: owner !== null });
+    return htmlResponse(renderDocument({
+      title: mt(locale, 'myFavorites') + ' — photoZseo',
+      description: '', lang: locale, body, robots: 'noindex',
+      stylesheets: ['/marketplace.css?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js', '/market-account.js'],
+    }));
+  }
+
+  // /market/cart — alıcı sepeti (çapraz-mağaza, hesaba/cihaza bağlı)
+  if (parts[0] === 'cart' && parts.length === 1) {
+    const now = Math.floor(Date.now() / 1000);
+    const owner = deps.request ? await resolveOwnerKey(deps.request, deps.storeWriteKey, now) : null;
+    const groups = owner ? await listAllCart(deps.db as unknown as Parameters<typeof listAllCart>[0], owner) : [];
+    const body = renderCartPage({ groups, locale, loggedIn: owner !== null });
+    return htmlResponse(renderDocument({
+      title: mt(locale, 'myCart') + ' — photoZseo',
+      description: '', lang: locale, body, robots: 'noindex',
+      stylesheets: ['/marketplace.css?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js', '/marketplace-enhance.js', '/market-account.js'],
     }));
   }
 
   return htmlResponse(renderDocument({
     title: 'Not found — photoZseo', description: '', lang: locale,
     body: '<div class="mk"><p style="padding:2rem;text-align:center">Not found</p></div>',
-    stylesheets: ['/marketplace.css?v=7'],
+    stylesheets: ['/marketplace.css?v=8'],
   }), 404);
 }
 

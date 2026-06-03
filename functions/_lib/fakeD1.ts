@@ -100,6 +100,37 @@ export function makeFakeD1(): FakeD1 {
         .map((r) => ({ product_slug: r.product_slug }));
       return { kind: 'all' as const, rows };
     }
+    // favorites/cart: çapraz-mağaza JOIN (market favori/sepet sayfası)
+    if (/FROM (favorites|cart_items) \w+ LEFT JOIN products/i.test(s)) {
+      const isCart = /FROM cart_items/i.test(s);
+      const src = isCart ? tables.cart_items : tables.favorites;
+      const rows = src
+        .filter((r) => r.owner_key === args[0])
+        .slice()
+        .sort((a, b) => {
+          const bySlug = String(a.store_slug).localeCompare(String(b.store_slug));
+          if (bySlug !== 0) return bySlug;
+          const ka = isCart ? 'updated_at' : 'created_at';
+          return String(b[ka]).localeCompare(String(a[ka]));
+        })
+        .map((r) => {
+          const p = tables.products.find((x) => x.id === `${r.store_slug}:${r.product_slug}`);
+          const store = tables.stores.find((x) => x.slug === r.store_slug);
+          return {
+            store_slug: r.store_slug,
+            product_slug: r.product_slug,
+            ...(isCart ? { qty: r.qty } : {}),
+            title: p?.title ?? null,
+            price: p?.price ?? null,
+            currency: p?.currency ?? null,
+            stock: p?.stock ?? null,
+            image_url: p?.image_url ?? null,
+            product_path: p?.product_path ?? null,
+            store_name: store?.name ?? null,
+          };
+        });
+      return { kind: 'all' as const, rows };
+    }
     // cart_items: upsert (INSERT OR REPLACE)
     if (/INSERT OR REPLACE INTO cart_items/i.test(s)) {
       const [owner_key, store_slug, product_slug, qty, updated_at] = args;

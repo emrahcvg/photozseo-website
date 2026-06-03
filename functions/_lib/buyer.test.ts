@@ -3,6 +3,7 @@ import {
   ownerKeyFromDevice, isValidSlug,
   listFavorites, addFavorite, removeFavorite,
   getCart, setCartItem, clearCart,
+  listAllFavorites, listAllCart,
 } from './buyer';
 import { makeFakeD1 } from './fakeD1';
 
@@ -80,5 +81,65 @@ describe('cart CRUD', () => {
 
     await clearCart(db, owner, 'magaza-a');
     expect(await getCart(db, owner, 'magaza-a')).toEqual([]);
+  });
+});
+
+describe('listAllFavorites / listAllCart (çapraz-mağaza, gruplu)', () => {
+  function seed(tables: ReturnType<typeof makeFakeD1>['tables']) {
+    tables.stores.push(
+      { slug: 'magaza-a', name: 'Mağaza A', listed: 1 },
+      { slug: 'magaza-b', name: 'Mağaza B', listed: 1 },
+    );
+    tables.products.push(
+      { id: 'magaza-a:urun-1', store_slug: 'magaza-a', title: 'Ürün 1', price: 100, currency: 'TRY', stock: 7, image_url: 'a1.jpg', product_path: '/store/magaza-a/p/urun-1' },
+      { id: 'magaza-a:urun-2', store_slug: 'magaza-a', title: 'Ürün 2', price: 50, currency: 'TRY', stock: 0, image_url: 'a2.jpg', product_path: '/store/magaza-a/p/urun-2' },
+      { id: 'magaza-b:urun-9', store_slug: 'magaza-b', title: 'Ürün 9', price: 9, currency: 'USD', stock: 3, image_url: 'b9.jpg', product_path: '/store/magaza-b/p/urun-9' },
+    );
+  }
+
+  it('favorileri mağazaya göre gruplar + ürün verisiyle zenginleştirir', async () => {
+    const { db, tables } = makeFakeD1();
+    seed(tables);
+    const owner = 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+    await addFavorite(db, owner, 'magaza-a', 'urun-1', '2026-06-02T00:00:00Z');
+    await addFavorite(db, owner, 'magaza-b', 'urun-9', '2026-06-02T00:00:01Z');
+
+    const groups = await listAllFavorites(db, owner);
+    expect(groups.map((g) => g.storeSlug)).toEqual(['magaza-a', 'magaza-b']);
+    expect(groups[0]).toMatchObject({ storeName: 'Mağaza A' });
+    expect(groups[0].items[0]).toMatchObject({
+      productSlug: 'urun-1', title: 'Ürün 1', price: 100, currency: 'TRY', stock: 7,
+      imageUrl: 'a1.jpg', productPath: '/store/magaza-a/p/urun-1',
+    });
+    expect(groups[1].items[0].title).toBe('Ürün 9');
+  });
+
+  it('boş favori → boş dizi', async () => {
+    const { db } = makeFakeD1();
+    expect(await listAllFavorites(db, 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed')).toEqual([]);
+  });
+
+  it('silinmiş ürün (indekste yok) → kalem yine listelenir, alanlar null', async () => {
+    const { db, tables } = makeFakeD1();
+    seed(tables);
+    const owner = 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+    await addFavorite(db, owner, 'magaza-a', 'silinmis-urun', '2026-06-02T00:00:00Z');
+    const groups = await listAllFavorites(db, owner);
+    expect(groups[0].items[0]).toMatchObject({ productSlug: 'silinmis-urun', title: null, price: null });
+  });
+
+  it('sepeti mağazaya göre gruplar + qty taşır', async () => {
+    const { db, tables } = makeFakeD1();
+    seed(tables);
+    const owner = 'd:1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed';
+    await setCartItem(db, owner, 'magaza-a', 'urun-1', 2, '2026-06-02T00:00:00Z');
+    await setCartItem(db, owner, 'magaza-a', 'urun-2', 3, '2026-06-02T00:00:01Z');
+    await setCartItem(db, owner, 'magaza-b', 'urun-9', 1, '2026-06-02T00:00:02Z');
+
+    const groups = await listAllCart(db, owner);
+    expect(groups.map((g) => g.storeSlug)).toEqual(['magaza-a', 'magaza-b']);
+    const a = groups[0].items.reduce<Record<string, number>>((m, it) => { m[it.productSlug] = it.qty!; return m; }, {});
+    expect(a).toEqual({ 'urun-1': 2, 'urun-2': 3 });
+    expect(groups[1].items[0]).toMatchObject({ productSlug: 'urun-9', qty: 1, price: 9 });
   });
 });

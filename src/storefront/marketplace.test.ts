@@ -430,6 +430,76 @@ describe('renderMarketHome — categoryTree integration', () => {
   });
 });
 
+import { renderFavoritesPage, renderCartPage } from './marketplace';
+import type { BuyerGroup } from './marketplace';
+
+const FAV_GROUPS: BuyerGroup[] = [
+  {
+    storeSlug: 'magaza-a', storeName: 'Mağaza A',
+    items: [
+      { storeSlug: 'magaza-a', productSlug: 'urun-1', title: 'Fren Balatası', price: 100, currency: 'TRY', stock: 7, imageUrl: 'a1.jpg', productPath: '/store/magaza-a/p/urun-1' },
+    ],
+  },
+  {
+    storeSlug: 'magaza-b', storeName: 'Mağaza B',
+    items: [
+      { storeSlug: 'magaza-b', productSlug: 'urun-9', title: 'Yağ Filtresi', price: 9, currency: 'USD', stock: 0, imageUrl: 'b9.jpg', productPath: '/store/magaza-b/p/urun-9' },
+    ],
+  },
+];
+
+describe('renderFavoritesPage', () => {
+  it('mağazaya göre gruplar + favori kaldır butonu + ürün linki', () => {
+    const html = renderFavoritesPage({ groups: FAV_GROUPS, locale: 'tr', loggedIn: true });
+    expect(html).toContain('Favorilerim');
+    expect(html).toContain('Mağaza A');
+    expect(html).toContain('Mağaza B');
+    expect(html).toContain('Fren Balatası');
+    expect(html).toContain('data-mk-fav-remove');
+    expect(html).toContain('href="/store/magaza-a/p/urun-1"');
+    expect(html).toContain('Tükendi'); // stock 0 → soldOut
+  });
+
+  it('boş + giriş yok → boş mesaj + Giriş yap butonu', () => {
+    const html = renderFavoritesPage({ groups: [], locale: 'tr', loggedIn: false });
+    expect(html).toContain('Henüz favorin yok');
+    expect(html).toContain('pz-signin-btn-acct');
+  });
+
+  it('boş + giriş var → Giriş yap butonu YOK', () => {
+    const html = renderFavoritesPage({ groups: [], locale: 'tr', loggedIn: true });
+    expect(html).not.toContain('pz-signin-btn-acct');
+  });
+});
+
+describe('renderCartPage', () => {
+  const CART_GROUPS: BuyerGroup[] = [
+    {
+      storeSlug: 'magaza-a', storeName: 'Mağaza A',
+      items: [
+        { storeSlug: 'magaza-a', productSlug: 'urun-1', title: 'Fren Balatası', price: 100, currency: 'TRY', stock: 7, imageUrl: 'a1.jpg', productPath: '/store/magaza-a/p/urun-1', qty: 2 },
+        { storeSlug: 'magaza-a', productSlug: 'urun-2', title: 'Conta', price: 50, currency: 'TRY', stock: 3, imageUrl: 'a2.jpg', productPath: '/store/magaza-a/p/urun-2', qty: 1 },
+      ],
+    },
+  ];
+
+  it('adet kontrolleri + grup toplamı (2×100 + 1×50 = 250) + sipariş linki', () => {
+    const html = renderCartPage({ groups: CART_GROUPS, locale: 'tr', loggedIn: true });
+    expect(html).toContain('Sepetim');
+    expect(html).toContain('data-mk-cart-inc');
+    expect(html).toContain('data-mk-cart-dec');
+    expect(html).toContain('data-mk-cart-remove');
+    expect(html).toContain('data-price="100"');
+    expect(html).toMatch(/Toplam:[^<]*250/);
+    expect(html).toContain('/store/magaza-a#cart');
+  });
+
+  it('boş sepet → emptyCart mesajı', () => {
+    const html = renderCartPage({ groups: [], locale: 'tr', loggedIn: true });
+    expect(html).toContain('Sepetiniz boş');
+  });
+});
+
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 

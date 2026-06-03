@@ -104,3 +104,98 @@ export async function clearCart(db: D1Like, ownerKey: string, storeSlug: string)
     .bind(ownerKey, storeSlug)
     .run();
 }
+
+// ── Market seviyesi: çapraz-mağaza favori/sepet (mağazaya göre gruplu) ─────────
+
+/** Ürün indeksinden zenginleştirilmiş favori/sepet kalemi. */
+export interface BuyerItem {
+  storeSlug: string;
+  productSlug: string;
+  title: string | null;
+  price: number | null;
+  currency: string | null;
+  stock: number | null;
+  imageUrl: string | null;
+  productPath: string | null;
+  qty?: number; // yalnız sepet kalemlerinde
+}
+
+/** Tek mağazaya ait kalem grubu. */
+export interface BuyerStoreGroup {
+  storeSlug: string;
+  storeName: string;
+  items: BuyerItem[];
+}
+
+interface FlatBuyerRow {
+  store_slug: string;
+  product_slug: string;
+  store_name: string | null;
+  title: string | null;
+  price: number | null;
+  currency: string | null;
+  stock: number | null;
+  image_url: string | null;
+  product_path: string | null;
+  qty?: number;
+}
+
+/** Düz JOIN satırlarını mağaza-ilk-görüldü sırasını koruyarak gruplar. */
+function groupByStore(rows: FlatBuyerRow[]): BuyerStoreGroup[] {
+  const order: string[] = [];
+  const byStore = new Map<string, BuyerStoreGroup>();
+  for (const r of rows) {
+    let g = byStore.get(r.store_slug);
+    if (!g) {
+      g = {
+        storeSlug: r.store_slug,
+        storeName: r.store_name ?? r.store_slug.replace(/-/g, ' '),
+        items: [],
+      };
+      byStore.set(r.store_slug, g);
+      order.push(r.store_slug);
+    }
+    g.items.push({
+      storeSlug: r.store_slug,
+      productSlug: r.product_slug,
+      title: r.title ?? null,
+      price: r.price ?? null,
+      currency: r.currency ?? null,
+      stock: r.stock ?? null,
+      imageUrl: r.image_url ?? null,
+      productPath: r.product_path ?? null,
+      ...(typeof r.qty === 'number' ? { qty: r.qty } : {}),
+    });
+  }
+  return order.map((slug) => byStore.get(slug)!);
+}
+
+const FAV_SELECT =
+  'SELECT f.store_slug AS store_slug, f.product_slug AS product_slug, ' +
+  'p.title AS title, p.price AS price, p.currency AS currency, p.stock AS stock, ' +
+  "p.image_url AS image_url, p.product_path AS product_path, s.name AS store_name " +
+  'FROM favorites f ' +
+  "LEFT JOIN products p ON p.id = f.store_slug || ':' || f.product_slug " +
+  'LEFT JOIN stores s ON s.slug = f.store_slug ' +
+  'WHERE f.owner_key = ? ORDER BY f.store_slug ASC, f.created_at DESC';
+
+/** Sahibin tüm mağazalardaki favorilerini, ürün verisiyle zenginleştirip mağazaya göre gruplar. */
+export async function listAllFavorites(db: D1Like, ownerKey: string): Promise<BuyerStoreGroup[]> {
+  const { results } = await db.prepare(FAV_SELECT).bind(ownerKey).all<FlatBuyerRow>();
+  return groupByStore(results);
+}
+
+const CART_SELECT =
+  'SELECT c.store_slug AS store_slug, c.product_slug AS product_slug, c.qty AS qty, ' +
+  'p.title AS title, p.price AS price, p.currency AS currency, p.stock AS stock, ' +
+  "p.image_url AS image_url, p.product_path AS product_path, s.name AS store_name " +
+  'FROM cart_items c ' +
+  "LEFT JOIN products p ON p.id = c.store_slug || ':' || c.product_slug " +
+  'LEFT JOIN stores s ON s.slug = c.store_slug ' +
+  'WHERE c.owner_key = ? ORDER BY c.store_slug ASC, c.updated_at DESC';
+
+/** Sahibin tüm mağazalardaki sepetini, ürün verisiyle zenginleştirip mağazaya göre gruplar. */
+export async function listAllCart(db: D1Like, ownerKey: string): Promise<BuyerStoreGroup[]> {
+  const { results } = await db.prepare(CART_SELECT).bind(ownerKey).all<FlatBuyerRow>();
+  return groupByStore(results);
+}

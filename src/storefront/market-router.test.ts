@@ -53,6 +53,24 @@ describe('handleMarket', () => {
     expect(html).toContain('Mat');
   });
 
+  it('renders /market/favorites (owner yok → boş durum)', async () => {
+    const res = await handleMarket(['favorites'], { url: 'https://photozseo.com/market/favorites', lang: 'en', db: {} as any, ai: undefined, ...deps });
+    const html = await res.text();
+    expect(res.status).toBe(200);
+    expect(html).toContain('My Favorites');
+    expect(html).toContain('No favorites yet');
+    expect(html).toContain('noindex');
+  });
+
+  it('renders /market/cart (owner yok → boş durum)', async () => {
+    const res = await handleMarket(['cart'], { url: 'https://photozseo.com/market/cart', lang: 'en', db: {} as any, ai: undefined, ...deps });
+    const html = await res.text();
+    expect(res.status).toBe(200);
+    expect(html).toContain('My Cart');
+    expect(html).toContain('cart is empty');
+    expect(html).toContain('/market-account.js');
+  });
+
   it('404s an unknown subpath', async () => {
     const res = await handleMarket(['nope'], { url: 'https://photozseo.com/market/nope', lang: 'en', db: {} as any, ai: undefined, ...deps });
     expect(res.status).toBe(404);

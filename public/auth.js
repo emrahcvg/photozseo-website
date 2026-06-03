@@ -109,7 +109,8 @@
         '<div class="pz-dropdown" id="pz-dropdown" hidden role="menu">' +
           '<p class="pz-dropdown__email">' + escapeHtml(email) + '</p>' +
           '<hr class="pz-dropdown__sep" />' +
-          '<a class="pz-dropdown__item" role="menuitem" href="/market?tab=favorites">Favorilerim</a>' +
+          '<a class="pz-dropdown__item" role="menuitem" href="/market/favorites">Favorilerim</a>' +
+          '<a class="pz-dropdown__item" role="menuitem" href="/market/cart">Sepetim</a>' +
           '<a class="pz-dropdown__item" role="menuitem" href="/market/orders">Siparişlerim</a>' +
           '<hr class="pz-dropdown__sep" />' +
           '<button type="button" class="pz-dropdown__item pz-dropdown__signout" role="menuitem" id="pz-logout">Çıkış yap</button>' +

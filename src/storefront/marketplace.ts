@@ -774,3 +774,184 @@ export function renderOrdersPage(args: {
   html += renderBottomTabBar(locale);
   return html;
 }
+
+// ── Favori / Sepet kullanıcı sayfaları (/market/favorites, /market/cart) ──────
+
+/** functions/_lib/buyer.ts BuyerItem mirror — döngüsel import önlemek için yerel tanım. */
+export interface BuyerCardItem {
+  storeSlug: string;
+  productSlug: string;
+  title: string | null;
+  price: number | null;
+  currency: string | null;
+  stock: number | null;
+  imageUrl: string | null;
+  productPath: string | null;
+  qty?: number;
+}
+
+/** functions/_lib/buyer.ts BuyerStoreGroup mirror. */
+export interface BuyerGroup {
+  storeSlug: string;
+  storeName: string;
+  items: BuyerCardItem[];
+}
+
+/** Market hesap sayfalarının üst barı (orders sayfasıyla aynı .mk-top yapısı). */
+function renderAccountHeader(locale: string): string {
+  let html = '<header class="mk-top">\n';
+  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
+  html += '  <div class="mk-top-right">\n';
+  html += renderLangSwitcher(locale);
+  html += `  <div class="mk-acct" id="pz-acct-root">\n`;
+  html += `    <div id="pz-signin" class="mk-acct__signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}">\n`;
+  html += `      <button type="button" class="mk-acct__btn" id="pz-signin-btn" aria-label="${escapeHtml(mt(locale, 'signIn'))}">\n`;
+  html += `        <span class="mk-acct__btn-label">${escapeHtml(mt(locale, 'signIn'))}</span>\n`;
+  html += '      </button>\n';
+  html += '    </div>\n';
+  html += '    <div id="pz-user" class="mk-acct__user" hidden></div>\n';
+  html += '  </div>\n';
+  html += '  </div>\n';
+  html += '</header>\n';
+  return html;
+}
+
+/** Tek favori/sepet kartı; ürün sayfasına link + (sepet) adet kontrolü / (favori) kaldır. */
+function renderBuyerCard(item: BuyerCardItem, locale: string, mode: 'favorites' | 'cart'): string {
+  const title = escapeHtml(item.title ?? item.productSlug);
+  const price = mkFormatPrice(item.price, item.currency ?? 'USD', locale);
+  const href = item.productPath ? escapeAttr(item.productPath) : `/store/${escapeAttr(encodeURIComponent(item.storeSlug))}`;
+  const ds = escapeAttr(item.storeSlug);
+  const dp = escapeAttr(item.productSlug);
+
+  const priceAttr = item.price != null ? ` data-price="${item.price}" data-currency="${escapeAttr(item.currency ?? 'USD')}"` : '';
+  let html = `  <li class="mk-acct-card" data-store="${ds}" data-product="${dp}"${priceAttr}>\n`;
+  html += `    <a class="mk-acct-card__link" href="${href}">\n`;
+  if (item.imageUrl) {
+    html += `      <img class="mk-acct-card__img" src="${escapeAttr(item.imageUrl)}" alt="${title}" loading="lazy" decoding="async" width="120" height="120" />\n`;
+  } else {
+    html += '      <span class="mk-acct-card__img mk-acct-card__img--empty" aria-hidden="true">📷</span>\n';
+  }
+  html += '      <span class="mk-acct-card__info">\n';
+  html += `        <span class="mk-acct-card__title">${title}</span>\n`;
+  if (price) {
+    html += `        <span class="mk-acct-card__price">${escapeHtml(price)}</span>\n`;
+  } else {
+    html += `        <span class="mk-acct-card__price mk-acct-card__price--contact">${escapeHtml(mt(locale, 'contactForPrice'))}</span>\n`;
+  }
+  if (item.stock === 0) {
+    html += `        <span class="mk-acct-card__stock mk-acct-card__stock--out">${escapeHtml(mt(locale, 'soldOut'))}</span>\n`;
+  }
+  html += '      </span>\n';
+  html += '    </a>\n';
+
+  if (mode === 'cart') {
+    const qty = item.qty ?? 1;
+    html += '    <div class="mk-acct-card__controls">\n';
+    html += '      <div class="mk-acct-card__qty" role="group">\n';
+    html += `        <button type="button" class="mk-acct-card__qty-btn" data-mk-cart-dec aria-label="−">−</button>\n`;
+    html += `        <span class="mk-acct-card__qty-val" data-mk-cart-qty>${qty}</span>\n`;
+    html += `        <button type="button" class="mk-acct-card__qty-btn" data-mk-cart-inc aria-label="+">+</button>\n`;
+    html += '      </div>\n';
+    html += `      <button type="button" class="mk-acct-card__remove" data-mk-cart-remove>${escapeHtml(mt(locale, 'remove'))}</button>\n`;
+    html += '    </div>\n';
+  } else {
+    html += `    <button type="button" class="mk-acct-card__remove" data-mk-fav-remove aria-label="${escapeHtml(mt(locale, 'remove'))}">${escapeHtml(mt(locale, 'remove'))}</button>\n`;
+  }
+  html += '  </li>\n';
+  return html;
+}
+
+/** Bir mağaza grubunun toplamı; tüm kalemlerde fiyat+aynı para birimi varsa döner, yoksa null. */
+function groupTotal(items: BuyerCardItem[]): { total: number; currency: string } | null {
+  let currency: string | null = null;
+  let total = 0;
+  for (const it of items) {
+    if (it.price == null || it.currency == null) return null;
+    if (currency == null) currency = it.currency;
+    else if (currency !== it.currency) return null;
+    total += it.price * (it.qty ?? 1);
+  }
+  return currency == null ? null : { total, currency };
+}
+
+/**
+ * /market/favorites — tüm mağazalardaki favoriler, mağazaya göre gruplu.
+ * Giriş yoksa cihaz UUID'sine bağlı; backend boşsa "Henüz favorin yok" + Giriş yap.
+ */
+export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string; loggedIn: boolean }): string {
+  const { groups, locale, loggedIn } = args;
+  let html = '<div class="mk">\n';
+  html += renderAccountHeader(locale);
+  html += '<main class="mk-acct-page">\n';
+  html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myFavorites'))}</h1>\n`;
+
+  if (groups.length === 0) {
+    html += '  <div class="mk-acct-page__empty">\n';
+    html += `    <p>${escapeHtml(mt(locale, 'emptyFavorites'))}</p>\n`;
+    if (!loggedIn) {
+      html += `    <button type="button" class="mk-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
+    }
+    html += `    <a class="mk-btn" href="/market">${escapeHtml(mt(locale, 'browseAll'))}</a>\n`;
+    html += '  </div>\n';
+  } else {
+    for (const g of groups) {
+      html += '  <section class="mk-acct-group">\n';
+      html += `    <h2 class="mk-acct-group__store"><a href="/store/${escapeAttr(encodeURIComponent(g.storeSlug))}">${escapeHtml(g.storeName)}</a></h2>\n`;
+      html += '    <ul class="mk-acct-list" role="list">\n';
+      for (const it of g.items) html += renderBuyerCard(it, locale, 'favorites');
+      html += '    </ul>\n';
+      html += '  </section>\n';
+    }
+  }
+
+  html += '</main>\n';
+  html += renderMarketFooter(locale);
+  html += '</div>\n';
+  html += renderBottomTabBar(locale);
+  return html;
+}
+
+/**
+ * /market/cart — tüm mağazalardaki sepet, mağazaya göre gruplu.
+ * Her grubun altında toplam + "WhatsApp ile sipariş" (mevcut /store/<slug> sipariş akışına yönlendirir).
+ */
+export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; loggedIn: boolean }): string {
+  const { groups, locale, loggedIn } = args;
+  let html = '<div class="mk">\n';
+  html += renderAccountHeader(locale);
+  html += '<main class="mk-acct-page">\n';
+  html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myCart'))}</h1>\n`;
+
+  if (groups.length === 0) {
+    html += '  <div class="mk-acct-page__empty">\n';
+    html += `    <p>${escapeHtml(mt(locale, 'emptyCart'))}</p>\n`;
+    if (!loggedIn) {
+      html += `    <button type="button" class="mk-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
+    }
+    html += `    <a class="mk-btn" href="/market">${escapeHtml(mt(locale, 'browseAll'))}</a>\n`;
+    html += '  </div>\n';
+  } else {
+    for (const g of groups) {
+      const sum = groupTotal(g.items);
+      html += `  <section class="mk-acct-group" data-store="${escapeAttr(g.storeSlug)}">\n`;
+      html += `    <h2 class="mk-acct-group__store"><a href="/store/${escapeAttr(encodeURIComponent(g.storeSlug))}">${escapeHtml(g.storeName)}</a></h2>\n`;
+      html += '    <ul class="mk-acct-list" role="list">\n';
+      for (const it of g.items) html += renderBuyerCard(it, locale, 'cart');
+      html += '    </ul>\n';
+      html += '    <div class="mk-acct-group__foot">\n';
+      if (sum) {
+        html += `      <span class="mk-acct-group__total">${escapeHtml(mt(locale, 'total'))}: ${escapeHtml(mkFormatPrice(sum.total, sum.currency, locale))}</span>\n`;
+      }
+      html += `      <a class="mk-btn mk-acct-group__order" href="/store/${escapeAttr(encodeURIComponent(g.storeSlug))}#cart">${escapeHtml(mt(locale, 'submitOrder'))}</a>\n`;
+      html += '    </div>\n';
+      html += '  </section>\n';
+    }
+  }
+
+  html += '</main>\n';
+  html += renderMarketFooter(locale);
+  html += '</div>\n';
+  html += renderBottomTabBar(locale);
+  return html;
+}
