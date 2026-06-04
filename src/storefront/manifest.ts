@@ -161,6 +161,13 @@ export function socialHref(type: string, value: string): string {
       return `https://t.me/${handle}`;
     case 'whatsapp':
       return whatsappHref(value);
+    case 'wechat':
+      return `https://u.wechat.com/${handle}`;
+    case 'line':
+      return `https://line.me/ti/p/${handle}`;
+    case 'viber':
+      // viber:// scheme http değil — sameAs filtresi dışarıda tutar
+      return '';
     default:
       // Unknown type: only allow safe protocols to prevent javascript: XSS
       if (/^(https?:|tel:|mailto:)/.test(value)) return value;

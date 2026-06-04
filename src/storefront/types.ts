@@ -34,6 +34,9 @@ export interface StoreInfo {
   payment?: {
     iban?: string;
     ibanName?: string;
+    swift?: string;
+    bankName?: string;
+    currencyCode?: string;
   };
 }
 

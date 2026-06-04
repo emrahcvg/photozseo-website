@@ -360,3 +360,113 @@ describe('renderDocument — SEO', () => {
     expect(noImg).not.toContain('summary_large_image');
   });
 });
+
+// ── GÖREV 1 — SWIFT / bankName / currencyCode ödeme alanları ─────────────────────
+
+describe('sf-cart__payment — SWIFT / bankName / currencyCode alanları', () => {
+  // Sentetik manifest: ödeme bloğunu test etmek için gerçek store üzerine payment ekliyoruz
+  const paymentManifest: Manifest = {
+    ...manifest,
+    store: {
+      ...manifest.store,
+      payment: {
+        iban: 'TR12 0001 0099 9999 0000 0001 01',
+        ibanName: 'Test Mağaza A.Ş.',
+        swift: 'TCZBTR2A',
+        bankName: 'T.C. Ziraat Bankası',
+        currencyCode: 'TRY',
+      },
+    },
+  };
+
+  const html = renderProductBody(paymentManifest, manifest.products[0], 'en', 'en');
+
+  it('SWIFT/BIC kodunu gösterir', () => {
+    expect(html).toContain('TCZBTR2A');
+  });
+
+  it('Banka adını gösterir', () => {
+    expect(html).toContain('T.C. Ziraat Bankası');
+  });
+
+  it('currencyCode\'u gösterir', () => {
+    expect(html).toContain('TRY');
+  });
+
+  it('IBAN hâlâ gösterilir (geriye uyumluluk)', () => {
+    expect(html).toContain('TR12 0001 0099 9999 0000 0001 01');
+  });
+
+  it('payment alanı olmayan manifest için SWIFT satırı yok', () => {
+    const noPayManifest: Manifest = {
+      ...manifest,
+      store: { ...manifest.store, payment: undefined },
+    };
+    const noPayHtml = renderProductBody(noPayManifest, manifest.products[0], 'en', 'en');
+    expect(noPayHtml).not.toContain('SWIFT');
+  });
+});
+
+// ── GÖREV 2 — sameAs wechat / line platformlarını içerir ──────────────────────────
+
+describe('buildOrganizationJsonLd — sameAs wechat ve line platformlarını içerir', () => {
+  const socialManifest: Manifest = {
+    ...manifest,
+    store: {
+      ...manifest.store,
+      contact: {
+        ...manifest.store.contact,
+        social: [
+          { type: 'instagram', value: '@mystore' },
+          { type: 'wechat', value: 'mystore_wechat' },
+          { type: 'line', value: 'mystore_line' },
+          { type: 'viber', value: '+905001234567' },
+        ],
+      },
+    },
+  };
+
+  const ld = JSON.parse(buildOrganizationJsonLd(socialManifest, 'https://photozseo.com/store/x'));
+
+  it('instagram sameAs içerir', () => {
+    expect(ld.sameAs).toContain('https://instagram.com/mystore');
+  });
+
+  it('wechat sameAs içerir (https URL)', () => {
+    expect(ld.sameAs).toContain('https://u.wechat.com/mystore_wechat');
+  });
+
+  it('line sameAs içerir (https URL)', () => {
+    expect(ld.sameAs).toContain('https://line.me/ti/p/mystore_line');
+  });
+
+  it('viber sameAs içermez (http değil)', () => {
+    expect(ld.sameAs ?? []).not.toContain(expect.stringMatching(/viber/));
+  });
+});
+
+describe('buildStoreJsonLd — sameAs wechat ve line platformlarını içerir', () => {
+  const socialManifest: Manifest = {
+    ...manifest,
+    store: {
+      ...manifest.store,
+      contact: {
+        ...manifest.store.contact,
+        social: [
+          { type: 'wechat', value: 'shop_wechat' },
+          { type: 'line', value: 'shop_line' },
+        ],
+      },
+    },
+  };
+
+  const ld = JSON.parse(buildStoreJsonLd(socialManifest, 'en', 'https://photozseo.com/store/x'));
+
+  it('wechat sameAs içerir', () => {
+    expect(ld.sameAs).toContain('https://u.wechat.com/shop_wechat');
+  });
+
+  it('line sameAs içerir', () => {
+    expect(ld.sameAs).toContain('https://line.me/ti/p/shop_line');
+  });
+});

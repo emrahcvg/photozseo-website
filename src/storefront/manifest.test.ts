@@ -107,6 +107,18 @@ describe('socialHref', () => {
   it('javascript: protokolünü engeller (XSS koruması)', () => {
     expect(socialHref('other', 'javascript:alert(1)')).toBe('');
   });
+
+  // GÖREV 2 — Yeni platform case'leri
+  it('wechat kullanıcı adından https URL üretir', () => {
+    expect(socialHref('wechat', 'myshop_wechat')).toBe('https://u.wechat.com/myshop_wechat');
+  });
+  it('line kullanıcı adından https URL üretir', () => {
+    expect(socialHref('line', 'myshop_line')).toBe('https://line.me/ti/p/myshop_line');
+  });
+  it('viber için boş string döner (tel-tabanlı, sameAs için http üretilemez)', () => {
+    // viber:// scheme → sameAs filtresi dışarıda tutacak, burada boş dönmeli
+    expect(socialHref('viber', '+905001234567')).toBe('');
+  });
 });
 
 describe('stockLabel', () => {

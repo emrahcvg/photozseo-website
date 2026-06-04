@@ -795,7 +795,7 @@ export function renderProductBody(
 
   // Marketplace cart (store-scoped)
   const wa = store.contact.whatsapp ?? store.contact.phone ?? '';
-  const pay = (store as unknown as { payment?: { iban?: string; ibanName?: string } }).payment;
+  const pay = store.payment;
   const sendLabel = mt(locale, 'sendCart');
   const nameL = mt(locale, 'name');
   const phoneL = mt(locale, 'phone');
@@ -818,11 +818,20 @@ export function renderProductBody(
   html += '        <div class="sf-cart__payment" data-mk-payment hidden>\n';
   html += `          <p>${escapeHtml(refL)}: <strong data-mk-ref></strong></p>\n`;
   html += `          <p>${escapeHtml(payL)}</p>\n`;
+  if (pay?.bankName) {
+    html += `          <p>${escapeHtml(mt(locale, 'bankName'))}: <strong>${escapeHtml(pay.bankName)}</strong></p>\n`;
+  }
   if (pay?.iban) {
     html += `          <p>IBAN: <strong>${escapeHtml(pay.iban)}</strong></p>\n`;
   }
   if (pay?.ibanName) {
     html += `          <p>${escapeHtml(mt(locale, 'ibanName'))}: <strong>${escapeHtml(pay.ibanName)}</strong></p>\n`;
+  }
+  if (pay?.swift) {
+    html += `          <p>SWIFT/BIC: <strong>${escapeHtml(pay.swift)}</strong></p>\n`;
+  }
+  if (pay?.currencyCode) {
+    html += `          <p>${escapeHtml(mt(locale, 'currency'))}: <strong>${escapeHtml(pay.currencyCode)}</strong></p>\n`;
   }
   html += `          <p>${escapeHtml(mt(locale, 'paymentDesc'))}: <strong data-mk-paydesc></strong></p>\n`;
   html += '        </div>\n';
