@@ -97,11 +97,28 @@ describe('empty media placeholder', () => {
 // ── JSON-LD ──────────────────────────────────────────────────────────────────────
 
 describe('buildStoreJsonLd', () => {
+  const ld = JSON.parse(buildStoreJsonLd(manifest, 'tr', 'https://photozseo.com/store/x'));
+
   it('produces a Store entity with name and url', () => {
-    const ld = JSON.parse(buildStoreJsonLd(manifest, 'tr', 'https://photozseo.com/store/x'));
     expect(ld['@type']).toBe('Store');
     expect(ld.name).toBe(manifest.store.displayName);
     expect(ld.url).toBe('https://photozseo.com/store/x');
+  });
+
+  it('includes GeoCoordinates when lat/lng exist', () => {
+    expect(ld.geo?.['@type']).toBe('GeoCoordinates');
+    expect(ld.geo.latitude).toBe(41.0);
+    expect(ld.geo.longitude).toBe(29.0);
+  });
+
+  it('exposes areaServed from the store country', () => {
+    expect(ld.areaServed).toBe('TR');
+  });
+
+  it('links social profiles via sameAs', () => {
+    expect(Array.isArray(ld.sameAs)).toBe(true);
+    expect(ld.sameAs).toContain('https://instagram.com/ahmetoto');
+    expect(ld.sameAs).toContain('https://t.me/ahmetoto');
   });
 });
 

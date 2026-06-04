@@ -830,6 +830,19 @@ function compact<T extends Record<string, unknown>>(obj: T): T {
 
 export function buildStoreJsonLd(manifest: Manifest, locale: string, canonical: string): string {
   const store = manifest.store;
+  const loc = store.location;
+
+  // Yerel SEO: lat/lng varsa GeoCoordinates (Store, schema.org'da LocalBusiness alt-tipi).
+  const geo =
+    loc && typeof loc.lat === 'number' && typeof loc.lng === 'number'
+      ? { '@type': 'GeoCoordinates', latitude: loc.lat, longitude: loc.lng }
+      : undefined;
+
+  // Doğrulanmış sosyal profiller → marka entity birleştirme (sameAs).
+  const sameAs = (store.contact.social ?? [])
+    .map((s) => socialHref(s.type, s.value))
+    .filter((u) => /^https?:\/\//.test(u));
+
   const ld = compact({
     '@context': 'https://schema.org',
     '@type': 'Store',
@@ -837,14 +850,18 @@ export function buildStoreJsonLd(manifest: Manifest, locale: string, canonical: 
     description: resolveLocalized(store.tagline, locale),
     url: canonical,
     image: store.logo,
-    address: store.location
+    address: loc
       ? compact({
           '@type': 'PostalAddress',
-          addressLocality: store.location.city,
-          addressCountry: store.location.country,
+          addressLocality: loc.city,
+          addressCountry: loc.country,
         })
       : undefined,
+    geo,
+    areaServed: loc?.country,
     telephone: store.contact.phone,
+    email: store.contact.email,
+    sameAs,
   });
   return JSON.stringify(ld);
 }
