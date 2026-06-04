@@ -18,6 +18,7 @@ import {
   buildBreadcrumbJsonLd,
   buildOrganizationJsonLd,
   buildWebSiteJsonLd,
+  buildFaqJsonLd,
 } from '../../src/storefront/render';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import {
@@ -140,7 +141,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
       buildProductJsonLd(manifest, product, locale, canonical),
       buildBreadcrumbJsonLd(manifest, product, locale, origin, svc, DEFAULT_LANG),
       buildOrganizationJsonLd(manifest, origin, DEFAULT_LANG),
-    ];
+      buildFaqJsonLd(manifest.store, locale),
+    ].filter(Boolean);
   } else {
     htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG, svc);
     pageTitle = manifest.meta.seo?.title ?? manifest.store.displayName;

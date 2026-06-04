@@ -4,11 +4,12 @@
  * All user-provided strings are HTML-escaped to prevent XSS.
  */
 
-import type { Manifest, Product } from './types';
+import type { Manifest, Product, StoreInfo } from './types';
 import { mt } from './marketplace-i18n';
 import type { TaxonomyService } from './taxonomy/service';
 import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
 import { categoryBreadcrumb, resolveCategoryName } from './taxonomy/category-resolve';
+import { buildFaqEntries, faqHeading } from './storefront-faq';
 import {
   resolveLocalized,
   formatPrice,
@@ -759,6 +760,21 @@ export function renderProductBody(
   html += '        </div>\n';
   html += '      </div>\n';
 
+  // Platform-mechanism FAQ — visible content backing the FAQPage JSON-LD.
+  // Conditional on real store data (order/payment/contact); never invented.
+  const faqEntries = buildFaqEntries(store, locale);
+  if (faqEntries.length > 0) {
+    html += '      <section class="sf-faq">\n';
+    html += `        <h2 class="sf-faq__heading">${escapeHtml(faqHeading(locale))}</h2>\n`;
+    for (const e of faqEntries) {
+      html += '        <details class="sf-faq__item">\n';
+      html += `          <summary class="sf-faq__q">${escapeHtml(e.question)}</summary>\n`;
+      html += `          <p class="sf-faq__a">${escapeHtml(e.answer)}</p>\n`;
+      html += '        </details>\n';
+    }
+    html += '      </section>\n';
+  }
+
   // Marketplace cart (store-scoped)
   const wa = store.contact.whatsapp ?? store.contact.phone ?? '';
   const pay = (store as unknown as { payment?: { iban?: string; ibanName?: string } }).payment;
@@ -1008,6 +1024,24 @@ export function buildOrganizationJsonLd(
     sameAs,
   });
   return JSON.stringify(ld);
+}
+
+/**
+ * FAQPage JSON-LD from the conditional platform-mechanism FAQ. Returns '' when
+ * there are no entries so the caller can skip emitting an empty block.
+ */
+export function buildFaqJsonLd(store: StoreInfo, locale: string): string {
+  const entries = buildFaqEntries(store, locale);
+  if (entries.length === 0) return '';
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: entries.map((e) => ({
+      '@type': 'Question',
+      name: e.question,
+      acceptedAnswer: { '@type': 'Answer', text: e.answer },
+    })),
+  });
 }
 
 /**
