@@ -30,6 +30,8 @@ import {
 } from '../../src/storefront/manifest';
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { applyLegacyMapToManifest } from '../_lib/taxonomy-migrate';
+import { parseImageFilename, toProxyImages } from '../../src/storefront/image-proxy';
+import type { Manifest } from '../../src/storefront/types';
 import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
 
 interface Env {
@@ -46,6 +48,48 @@ function notFoundHtml(message: string): string {
     lang: DEFAULT_LANG,
     body: `<div class="sf-store"><p style="padding:2rem;text-align:center">${message}</p></div>`,
   });
+}
+
+/**
+ * Serve a product image by its SEO path `/store/<slug>/img/<pslug>-<n>`.
+ * Resolves the original (Drive) URL from the manifest, proxies the bytes, and
+ * caches them at the edge for a year (Drive file-IDs are immutable).
+ */
+async function serveImage(
+  ctx: Parameters<PagesFunction<Env>>[0],
+  base: Manifest,
+  filename: string,
+): Promise<Response> {
+  const parsed = parseImageFilename(filename);
+  if (!parsed) return new Response('Not found', { status: 404 });
+
+  const slugMap = uniqueProductSlugs(base.products, DEFAULT_LANG);
+  const product = base.products.find((p) => (slugMap.get(p.id) ?? p.id) === parsed.pslug);
+  const original = product?.images?.[parsed.index];
+  if (!original || !/^https?:\/\//i.test(original)) {
+    return new Response('Not found', { status: 404 });
+  }
+
+  // caches.default is a Cloudflare Workers extension not in the DOM lib types.
+  const cache = (caches as unknown as { default: Cache }).default;
+  const cacheKey = new Request(new URL(ctx.request.url).toString());
+  const hit = await cache.match(cacheKey);
+  if (hit) return hit;
+
+  let upstream: Response;
+  try {
+    upstream = await fetch(original);
+  } catch {
+    return new Response('Upstream fetch failed', { status: 502 });
+  }
+  if (!upstream.ok) return new Response('Upstream error', { status: 502 });
+
+  const headers = new Headers();
+  headers.set('Content-Type', upstream.headers.get('Content-Type') ?? 'image/jpeg');
+  headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+  const resp = new Response(upstream.body, { status: 200, headers });
+  ctx.waitUntil(cache.put(cacheKey, resp.clone()));
+  return resp;
 }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
@@ -92,6 +136,12 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   const base = record.manifest;
 
+  // SEO görsel proxy: /store/<slug>/img/<pslug>-<n> → orijinal Drive URL'i sun.
+  // Çeviriden ÖNCE; orijinal (proxy'lenmemiş) manifest görsellerini kullanır.
+  if (segments[1] === 'img' && segments[2]) {
+    return serveImage(ctx, base, segments.slice(2).join('/'));
+  }
+
   // Kaynak dil = app'in yazdığı dil. İstenen dil 12-set içindeyse onu, yoksa varsayılanı kullan.
   const sourceLang = base.store.languages?.[0] ?? DEFAULT_LANG;
   const locale = (lang && SUPPORTED_LOCALES.includes(lang)) ? lang : DEFAULT_LANG;
@@ -111,6 +161,14 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   // Origin for absolute SEO URLs (canonical / hreflang / og), derived from the request.
   const origin = new URL(ctx.request.url).origin;
   const languages = SUPPORTED_LOCALES;
+
+  // Görsel URL'lerini SEO proxy yollarına çevir (gallery + card + schema + og).
+  // Yeni ürün nesneleri üretir; KV cache'indeki orijinal görseller değişmez.
+  const imgSlugMap = uniqueProductSlugs(manifest.products, DEFAULT_LANG);
+  manifest.products = manifest.products.map((p) => ({
+    ...p,
+    images: toProxyImages(origin, slug, imgSlugMap.get(p.id) ?? p.id, p.images),
+  }));
 
   let htmlBody: string;
   let pageTitle: string;
