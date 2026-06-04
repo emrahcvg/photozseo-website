@@ -224,12 +224,23 @@ img { max-width: 100%; }
 .app-acct__btn-label { line-height: 1; }
 .app-acct__user { display: flex; align-items: center; }
 
+/* Header içindeki store kontrolleri (para birimi + dil) — sade, etiketsiz.
+   Select'in içeriği (English / USD) zaten açıklayıcı; aria-label erişilebilirliği
+   korur. Kur notu header'ı sarmasın diye gizli (fiyattaki ≈ dönüşümü belirtir). */
+.app-header .sf-controls { margin: 0; gap: var(--sp-2); align-items: center; flex-wrap: nowrap; }
+.app-header .sf-control { flex-direction: row; gap: 0; }
+.app-header .sf-control__label { display: none; }
+.app-header .sf-rate-note { display: none; }
+
 /* Dar ekran: marka adı gizlenir (logo kalır), etiketler daralır */
 @media (max-width: 520px) {
   .app-brand__name { display: none; }
   .app-acct__btn-label { display: none; }
   .app-acct__btn { padding: 8px; }
   .app-header__inner { gap: var(--sp-2); padding: 0 var(--sp-3); }
+  .app-header__actions { gap: 6px; }
+  .app-header .sf-select { padding: 6px 22px 6px 9px; font-size: 0.8rem; }
+  .app-cart { width: 36px; height: 36px; }
 }
 
 /* Ortak footer */
