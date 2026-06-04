@@ -1,0 +1,124 @@
+/**
+ * theme.css — photoZseo storefront ortak tasarım sistemi (P-design-unify Faz 0).
+ *
+ * Tek kaynak: store (/store/*) ve market (/market/*) sayfalarının paylaştığı
+ * renk paleti, tipografi ve spacing token'ları. renderDocument her iki sistemde
+ * de bu dosyayı İLK stylesheet olarak yükler; storefront.css ve marketplace.css
+ * yalnızca bu token'lara referans verir.
+ *
+ * Faz 1'de iki sayfa CSS'i hardcoded hex'leri token'larla değiştirir; o noktada
+ * dark mode store'da da tam çalışır.
+ */
+
+:root {
+  /* ── Renk — açık tema ─────────────────────────────────────────────── */
+  --bg:          #E8E8EC;   /* sayfa zemini */
+  --bg-page:     #F5F5F7;   /* store gibi daha yumuşak zemin gerektiğinde */
+  --fg:          #1D1D1F;   /* ana metin */
+  --muted:       #6E6E73;   /* ikincil metin */
+  --dim:         #86868B;   /* üçüncül / ipucu metin */
+  --line:        #E5E5EA;   /* kenarlık / ayraç */
+  --line-strong: #D2D2D7;   /* belirgin kenarlık */
+  --card:        #FFFFFF;   /* kart zemini */
+  --input:       #F2F2F7;   /* form alanı zemini */
+
+  /* Accent — storefront standardı (mavi). Onaylı karar: #4361EE. */
+  --accent:      #4361EE;
+  --accent-hover:#3451D1;
+  --on-accent:   #FFFFFF;
+
+  /* WhatsApp eylem rengi (storefront butonları) */
+  --wa:          #25D366;
+  --wa-hover:    #1DA851;
+
+  /* Durum rozetleri / stok p+ sipariş durumları */
+  --badge-low:   #FF6B35;
+  --badge-in:    #34C759;
+  --badge-out:   #8E8E93;
+  --ok-bg:       #D1FAE5;  --ok-fg:   #065F46;
+  --warn-bg:     #FEF3C7;  --warn-fg: #92400E;
+  --err-bg:      #FEE2E2;  --err-fg:  #991B1B;
+
+  /* ── Tipografi ────────────────────────────────────────────────────── */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  --fs-xs:   0.78rem;
+  --fs-sm:   0.85rem;
+  --fs-base: 0.95rem;
+  --fs-md:   1.05rem;
+  --fs-lg:   1.25rem;
+  --fs-xl:   1.7rem;
+  --fs-2xl:  2.4rem;
+
+  --lh-tight: 1.12;
+  --lh-base:  1.5;
+
+  /* ── Spacing (4px tabanlı ölçek) ──────────────────────────────────── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 72px;
+
+  /* ── Şekil ────────────────────────────────────────────────────────── */
+  --radius:      16px;
+  --radius-sm:   10px;
+  --radius-pill: 999px;
+
+  --shadow:    0 2px 12px rgba(0, 0, 0, 0.07);
+  --shadow-h:  0 8px 28px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  --maxw:     1160px;
+  --header-h: 56px;   /* sticky üst header sabit yüksekliği (zıplama önleme) */
+  --tab-h:    60px;   /* mobil alt tab bar yüksekliği (market) */
+}
+
+/* ── Dark mode — store + market ortak ───────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:          #000000;
+    --bg-page:     #0A0A0A;
+    --fg:          #F5F5F7;
+    --muted:       #98989F;
+    --dim:         #8E8E93;
+    --line:        #2C2C2E;
+    --line-strong: #3A3A3C;
+    --card:        #1C1C1E;
+    --input:       #2C2C2E;
+
+    --ok-bg:   rgba(52, 199, 89, 0.16);  --ok-fg:   #34C759;
+    --warn-bg: rgba(255, 159, 10, 0.16); --warn-fg: #FF9F0A;
+    --err-bg:  rgba(255, 69, 58, 0.16);  --err-fg:  #FF453A;
+
+    --shadow:    0 2px 12px rgba(0, 0, 0, 0.45);
+    --shadow-h:  0 8px 28px rgba(0, 0, 0, 0.55);
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* ── Temel reset — body zemini/tipografisi her iki storefront için ──── */
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Sayfa geçişlerinde scrollbar var/yok zıplamasını önler. */
+  scrollbar-gutter: stable;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+img { max-width: 100%; }

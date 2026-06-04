@@ -79,7 +79,10 @@ export function renderDocument(opts: DocumentOptions): string {
 
   head += `
 <meta name="robots" content="${esc(opts.robots ?? 'index, follow')}" />`;
-  const sheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura27'];
+  // Ortak tasarım sistemi (token'lar) her sayfada İLK yüklenir; ardından
+  // sayfaya özel CSS (store → storefront.css, market → marketplace.css) gelir.
+  const pageSheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura27'];
+  const sheets = ['/theme.css?v=1', ...pageSheets];
   for (const href of sheets) {
     head += `\n<link rel="stylesheet" href="${esc(href)}" />`;
   }
