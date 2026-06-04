@@ -1,38 +1,27 @@
-/* marketplace.css — Apple-style design system for /market */
+/* marketplace.css — /market sayfaları. Renk/tipografi/spacing public/theme.css
+ * ortak token'larına bağlıdır (P-design-unify Faz 1). --mk-* değişkenleri artık
+ * yalnızca shared token'lara alias'tır; tek kaynak theme.css'tir. Dark mode ve
+ * body reset de theme.css'ten gelir. */
 :root {
-  --mk-bg:       #E8E8EC;
-  --mk-fg:       #1D1D1F;
-  --mk-muted:    #6E6E73;
-  --mk-line:     #E5E5EA;
-  --mk-card:     #FFFFFF;
-  --mk-input:    #F2F2F7;
-  --mk-accent:   #4361EE;
-  --mk-accent-h: #3451D1;
-  --mk-badge-low:#FF6B35;
-  --mk-badge-in: #34C759;
-  --mk-badge-out:#8E8E93;
-  --mk-radius:   16px;
-  --mk-radius-sm:10px;
-  --mk-gap:      12px;
-  --mk-maxw:     1160px;
-  --mk-tab-h:    60px;
-  --mk-shadow:   0 2px 12px rgba(0,0,0,.07);
-  --mk-shadow-h: 0 8px 28px rgba(0,0,0,.12);
+  --mk-bg:       var(--bg);
+  --mk-fg:       var(--fg);
+  --mk-muted:    var(--muted);
+  --mk-line:     var(--line);
+  --mk-card:     var(--card);
+  --mk-input:    var(--input);
+  --mk-accent:   var(--accent);
+  --mk-accent-h: var(--accent-hover);
+  --mk-badge-low:var(--badge-low);
+  --mk-badge-in: var(--badge-in);
+  --mk-badge-out:var(--badge-out);
+  --mk-radius:   var(--radius);
+  --mk-radius-sm:var(--radius-sm);
+  --mk-gap:      var(--sp-3);
+  --mk-maxw:     var(--maxw);
+  --mk-tab-h:    var(--tab-h);
+  --mk-shadow:   var(--shadow);
+  --mk-shadow-h: var(--shadow-h);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --mk-bg:    #000000;
-    --mk-fg:    #F5F5F7;
-    --mk-muted: #98989F;
-    --mk-line:  #2C2C2E;
-    --mk-card:  #1C1C1E;
-    --mk-input: #2C2C2E;
-  }
-}
-*{box-sizing:border-box;}
-body{margin:0;background:var(--mk-bg);color:var(--mk-fg);
-  font:-apple-system-body -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
-  -webkit-font-smoothing:antialiased;}
 a{color:inherit;text-decoration:none;}
 img{display:block;}
 
@@ -378,34 +367,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   outline:3px solid var(--mk-accent);outline-offset:2px;}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;}}
 
-/* ═══════════════════════════════════════════════════════════════════
-   AURA '27 ÇATI — /market, /store ile AYNI tasarım dili (geri-alınabilir).
-   Token-tabanlı: tek :root override tüm market'i Aura'ya çevirir.
-   Geri almak için bu bloğu sil.
-   ═══════════════════════════════════════════════════════════════════ */
-:root {
-  --mk-accent:   #6d5cff;
-  --mk-accent-h: #5a4bd6;
-  --mk-radius:   22px;
-  --mk-radius-sm:14px;
-  --mk-shadow:   0 6px 22px -12px rgba(28, 34, 68, 0.30);
-  --mk-shadow-h: 0 18px 50px -22px rgba(28, 34, 68, 0.35);
-}
-@media (prefers-color-scheme: light) { :root { --mk-bg: #eef1f7; } }
-
-/* ── Market HEP açık tema: store hep açık olduğu için tutarlılık + sistem dark'ta
-   saf-siyah (#000) "siyah duruyor" sorununu kapatır. html:root → @media :root'tan
-   yüksek özgüllük, sistem dark olsa bile açık palet kazanır. ── */
-html:root {
-  --mk-bg:    #E8E8EC;
-  --mk-fg:    #1D1D1F;
-  --mk-muted: #6E6E73;
-  --mk-line:  #E5E5EA;
-  --mk-card:  #FFFFFF;
-  --mk-input: #F2F2F7;
-  color-scheme: light;
-}
-.mk-tab-bar { background: rgba(255,255,255,.92); }
+/* P-design-unify Faz 1: AURA '27 mor accent (#6d5cff) + 22px radius override'ı
+   kaldırıldı. Onaylı karar: ortak accent mavi #4361EE, ortak radius theme.css'ten.
+   Market artık store ile birebir aynı paleti (theme.css) kullanır. */
+/* P-design-unify Faz 1: Önceki "market hep açık" zorlaması kaldırıldı. Store da
+   ortak token sistemiyle dark mode kazandığı için artık ikisi de theme.css'in
+   açık/dark paletini birlikte takip eder (tam tutarlılık). */
+.mk-tab-bar { background: color-mix(in srgb, var(--mk-card) 92%, transparent); }
 /* ════════════════ AURA '27 ÇATI SONU ════════════════ */
 
 /* ── Sidebar + 2-column layout ── */

@@ -509,8 +509,15 @@ describe('marketplace.css', () => {
   it.each(required)('defines %s', (sel) => {
     expect(css).toContain(sel);
   });
-  it('has a prefers-color-scheme dark block', () => {
-    expect(css).toContain('prefers-color-scheme: dark');
+  it('dark mode ortak theme.css tokenlarına bağlı (kendi dark bloğu yerine)', () => {
+    // P-design-unify Faz 1: dark mode public/theme.css'e taşındı; marketplace.css
+    // --mk-* değişkenlerini shared token'lara alias'lar.
+    expect(css).toContain('--mk-bg:       var(--bg)');
+    expect(css).toContain('--mk-accent:   var(--accent)');
+  });
+  it('theme.css ortak dark mode bloğunu içerir', () => {
+    const theme = readFileSync(fileURLToPath(new URL('../../public/theme.css', import.meta.url)), 'utf8');
+    expect(theme).toContain('prefers-color-scheme: dark');
   });
   it('uses a responsive grid (2 cols mobile baseline)', () => {
     expect(css).toContain('grid-template-columns');

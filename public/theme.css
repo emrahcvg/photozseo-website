@@ -83,8 +83,8 @@
 /* ── Dark mode — store + market ortak ───────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:          #000000;
-    --bg-page:     #0A0A0A;
+    --bg:          #0B0B0D;   /* saf siyah yerine yumuşak near-black (OLED'de daha az sert) */
+    --bg-page:     #141416;
     --fg:          #F5F5F7;
     --muted:       #98989F;
     --dim:         #8E8E93;
