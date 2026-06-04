@@ -7,6 +7,26 @@ import { escapeHtml } from './render';
 
 const RTL_LANGS = ['ar', 'ur', 'fa'];
 
+// Open Graph locale formatı (language_TERRITORY). Bilinmeyen dil → lang_LANG fallback.
+const OG_LOCALE: Record<string, string> = {
+  en: 'en_US',
+  tr: 'tr_TR',
+  de: 'de_DE',
+  es: 'es_ES',
+  pt: 'pt_BR',
+  ja: 'ja_JP',
+  ko: 'ko_KR',
+  zh: 'zh_CN',
+  ar: 'ar_AR',
+  fa: 'fa_IR',
+  ur: 'ur_PK',
+  hi: 'hi_IN',
+};
+
+function ogLocale(lang: string): string {
+  return OG_LOCALE[lang] ?? `${lang}_${lang.toUpperCase()}`;
+}
+
 export interface AlternateLink {
   lang: string;
   href: string;
@@ -69,6 +89,16 @@ export function renderDocument(opts: DocumentOptions): string {
 <meta property="og:site_name" content="photoZseo" />`;
   if (canonical) head += `\n<meta property="og:url" content="${esc(canonical)}" />`;
   if (ogImage) head += `\n<meta property="og:image" content="${esc(ogImage)}" />`;
+  head += `\n<meta property="og:locale" content="${esc(ogLocale(lang))}" />`;
+  // Alternatif diller (mevcut dil ve x-default hariç) → og:locale:alternate.
+  const seenOg = new Set<string>([ogLocale(lang)]);
+  for (const alt of alternates ?? []) {
+    if (alt.lang === 'x-default') continue;
+    const ol = ogLocale(alt.lang);
+    if (seenOg.has(ol)) continue;
+    seenOg.add(ol);
+    head += `\n<meta property="og:locale:alternate" content="${esc(ol)}" />`;
+  }
 
   // Twitter
   head += `

@@ -247,6 +247,13 @@ describe('renderDocument — SEO', () => {
     expect(html).toContain('hreflang="en"');
   });
 
+  it('emits og:locale for the page and og:locale:alternate for other langs', () => {
+    expect(html).toContain('<meta property="og:locale" content="tr_TR" />');
+    expect(html).toContain('<meta property="og:locale:alternate" content="en_US" />');
+    // current locale should NOT also appear as an alternate
+    expect(html).not.toContain('<meta property="og:locale:alternate" content="tr_TR" />');
+  });
+
   it('includes og:image and a large twitter card', () => {
     expect(html).toContain('<meta property="og:image" content="https://img/x.webp" />');
     expect(html).toContain('content="summary_large_image"');

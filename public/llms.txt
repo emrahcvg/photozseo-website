@@ -1,0 +1,23 @@
+# photoZseo
+
+> photoZseo is a mobile app (iOS & Android) that turns product photos into marketplace-ready images. Sellers shoot, resize, compress, SEO-rename, and publish product photos — replacing 5–6 separate tools with one app. It also hosts lightweight online stores at photozseo.com/<store-slug>.
+
+photoZseo optimizes images for 60+ export targets including Amazon, eBay, Etsy, Shopify, WooCommerce, Walmart, Trendyol, Hepsiburada, AliExpress, and social/ad platforms (Instagram, TikTok, Pinterest, Google Shopping, Meta Catalog). Features include SEO filenames, AI alt-text, AI background removal, B2B quote builder, Avery labels, and iCloud sync. Available in 12 languages.
+
+## Core pages
+- [Home](https://photozseo.com/): App overview, features, and download links.
+- [Support](https://photozseo.com/support): Help and contact for users and sellers.
+- [Accessibility](https://photozseo.com/accessibility): Accessibility commitments and features.
+
+## Legal
+- [Privacy Policy](https://photozseo.com/privacy): What data the app collects and how it is used.
+- [Terms of Service](https://photozseo.com/terms): Terms governing use of the app and stores.
+- [Delete Account](https://photozseo.com/delete-account): How to request account and data deletion.
+
+## Online stores
+- Seller storefronts live at `https://photozseo.com/store/<slug>` and a marketplace index at `https://photozseo.com/market`.
+- Store and product pages expose schema.org structured data (Product, Store, Organization, BreadcrumbList) for accurate citation.
+
+## Sitemaps
+- [Sitemap](https://photozseo.com/sitemap.xml)
+- [Marketplace sitemap](https://photozseo.com/marketplace-sitemap)

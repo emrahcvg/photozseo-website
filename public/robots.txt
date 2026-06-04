@@ -1,5 +1,29 @@
 User-agent: *
 Allow: /
 
+# AI / LLM crawlers — explicitly welcomed (content is public product listings).
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# AI guidance file: /llms.txt
+
 Sitemap: https://photozseo.com/sitemap.xml
 Sitemap: https://photozseo.com/marketplace-sitemap
