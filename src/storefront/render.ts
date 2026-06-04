@@ -34,6 +34,24 @@ function mkFormatDetailPrice(price: number, currency: string, locale: string): s
   }
 }
 
+/**
+ * Round a price to its currency's minor units for clean JSON-LD output
+ * (USD/EUR → 2 decimals, JPY/KRW → 0). Currency conversion can leave long
+ * floats (181.35373…) that look unprofessional and break Merchant feeds.
+ */
+function roundPrice(price: number, currency: string): number {
+  let digits = 2;
+  try {
+    digits =
+      new Intl.NumberFormat('en', { style: 'currency', currency }).resolvedOptions()
+        .maximumFractionDigits ?? 2;
+  } catch {
+    /* unknown currency → keep 2 */
+  }
+  const f = 10 ** digits;
+  return Math.round(price * f) / f;
+}
+
 // ── XSS protection ────────────────────────────────────────────────────────────
 
 export function escapeHtml(s: string): string {
@@ -898,7 +916,7 @@ export function buildProductJsonLd(
     product.price != null
       ? compact({
           '@type': 'Offer',
-          price: product.price,
+          price: roundPrice(product.price, currency),
           priceCurrency: currency,
           availability,
           itemCondition: 'https://schema.org/NewCondition',

@@ -143,6 +143,18 @@ describe('buildProductJsonLd', () => {
     expect(ld.offers.itemCondition).toBe('https://schema.org/NewCondition');
   });
 
+  it('rounds the offer price to the currency minor units (USD → 2 decimals)', () => {
+    const floaty: Product = { ...p1, price: 181.35373414936598, currency: 'USD' };
+    const r = JSON.parse(buildProductJsonLd(manifest, floaty, 'tr', 'https://x/p'));
+    expect(r.offers.price).toBe(181.35);
+  });
+
+  it('rounds to whole units for zero-decimal currencies (JPY)', () => {
+    const yen: Product = { ...p1, price: 1810.7, currency: 'JPY' };
+    const r = JSON.parse(buildProductJsonLd(manifest, yen, 'tr', 'https://x/p'));
+    expect(r.offers.price).toBe(1811);
+  });
+
   it('embeds real attributes (color, material) when present', () => {
     // p1 fixture has color/material in tr+en
     expect(ld.color).toBe('Siyah');
