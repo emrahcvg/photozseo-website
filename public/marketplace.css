@@ -29,9 +29,6 @@ img{display:block;}
 .mk{max-width:var(--mk-maxw);margin:0 auto;padding:16px 16px calc(var(--mk-tab-h) + 16px);}
 @media(min-width:700px){.mk{padding-bottom:32px;}}
 
-/* ── Top bar ── */
-.mk-top{display:flex;align-items:center;gap:10px;padding:12px 0 16px;flex-wrap:wrap;}
-.mk-logo{font-weight:700;font-size:1.05rem;flex-shrink:0;}
 .mk-searchbar,.mk-searchwrap{display:flex;gap:8px;flex:1;min-width:200px;}
 .mk-searchwrap{flex-direction:column;gap:0;}
 /* Arama/kategori sayfası içi arama satırı (marka artık ortak app-header'da) */
@@ -214,16 +211,6 @@ img{display:block;}
 .mk-hero__input{
   width:100%;border:0;background:transparent;font:inherit;
   font-size:.9rem;color:var(--mk-muted);padding:0;outline:none;}
-
-/* ── Top bar icons ── */
-.mk-top-icon{
-  display:flex;align-items:center;gap:5px;
-  padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.6);
-  border:1px solid rgba(255,255,255,.8);font-size:.78rem;font-weight:500;
-  color:var(--mk-fg);flex-shrink:0;cursor:pointer;transition:background .15s;}
-.mk-top-icon:hover{background:rgba(255,255,255,.9);}
-.mk-top-icon__glyph{font-size:1rem;}
-.mk-top-icon__sub{display:block;font-size:.65rem;color:var(--mk-muted);line-height:1;}
 
 /* ── Discovery 2-column grid (desktop) ── */
 .mk-discovery-grid{
@@ -532,70 +519,10 @@ details.mk-sidebar__group[open] .mk-sidebar__chevron {
   }
 }
 
-/* ── Üst bar düzeni: logo sol, sağ grup (dil + hesap) ── */
-.mk-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px 0 16px;
-}
-.mk-top-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
+/* P-design-unify: ölü .mk-top / .mk-top-right / .mk-acct widget kuralları
+   kaldırıldı (ortak header → .app-header / .app-acct, theme.css). */
 
-/* ── Hesap alanı (market) — giriş butonu + avatar menü ── */
-.mk-acct {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-.mk-acct__signin {
-  display: flex;
-  align-items: center;
-}
-/* "Giriş yap" özel butonu — pill, ince border, Google G logosu */
-.mk-acct__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 14px 7px 10px;
-  border: 1.5px solid var(--mk-line);
-  border-radius: 999px;
-  background: var(--mk-card);
-  color: var(--mk-fg);
-  font: inherit;
-  font-size: .85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color .15s, box-shadow .15s;
-  white-space: nowrap;
-}
-.mk-acct__btn:hover {
-  border-color: var(--mk-accent);
-  box-shadow: 0 0 0 3px rgba(109,92,255,.10);
-}
-.mk-acct__btn:focus-visible {
-  outline: 3px solid var(--mk-accent);
-  outline-offset: 2px;
-}
-.mk-acct__glogo {
-  flex-shrink: 0;
-  display: block;
-}
-.mk-acct__btn-label {
-  line-height: 1;
-}
-/* Kullanıcı alanı (auth.js doldurur) */
-.mk-acct__user {
-  display: flex;
-  align-items: center;
-}
-
-/* ── Avatar dairesi ── */
+/* ── Avatar dairesi (auth.js avatar/dropdown — pz-* ID'leri) ── */
 .pz-acct-wrap {
   position: relative;
 }
@@ -748,7 +675,6 @@ details.mk-sidebar__group[open] .mk-sidebar__chevron {
 /* ── Favori / Sepet kullanıcı sayfaları (/market/favorites, /market/cart) ───── */
 .mk-acct-page { padding: 8px 0 24px; }
 .mk-acct-page__title { font-size: 1.4rem; font-weight: 700; margin: 0 0 20px; }
-.mk-acct-page__empty { text-align: center; padding: 40px 16px; color: var(--mk-muted); display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .mk-acct-group { margin: 0 0 24px; }
 .mk-acct-group__store { font-size: 1rem; font-weight: 700; margin: 0 0 10px; }
 .mk-acct-group__store a { color: var(--mk-fg); }
