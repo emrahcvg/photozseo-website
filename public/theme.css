@@ -251,3 +251,55 @@ img { max-width: 100%; }
 
 /* Sticky üst header varken sayfa-içi sticky araç çubuğu header altına yapışır */
 .app-has-header .sf-toolbar { top: var(--header-h); }
+
+/* ── Ortak boş durum (Sonuç Bulunamadı / Sepetiniz Boş) ─────────────── */
+.app-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--sp-3);
+  max-width: 360px;
+  margin: var(--sp-7) auto;
+  padding: var(--sp-6) var(--sp-4);
+}
+.app-empty__icon {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--input);
+  color: var(--dim);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.app-empty__title {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+}
+.app-empty__subtitle {
+  margin: 0;
+  font-size: var(--fs-base);
+  color: var(--muted);
+  line-height: 1.5;
+}
+.app-empty__cta {
+  margin-top: var(--sp-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  font-size: var(--fs-base);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.app-empty__cta:hover { background: var(--accent-hover); }

@@ -71,6 +71,34 @@ export function renderAppHeader(opts: AppHeaderOptions): string {
   return html;
 }
 
+export interface EmptyStateOptions {
+  /** Büyük dekoratif ikon (emoji veya inline SVG metni). */
+  icon: string;
+  /** Ana başlık (mevcut i18n anahtarından çözülmüş metin). */
+  title: string;
+  /** İsteğe bağlı alt açıklama. */
+  subtitle?: string;
+  /** İsteğe bağlı birincil eylem. */
+  ctaHref?: string;
+  ctaLabel?: string;
+  /** Eylemden önce eklenecek ekstra HTML (ör. giriş butonu). */
+  extraHtml?: string;
+}
+
+/** Ortak "boş durum" bileşeni — çirkin boşluk yerine ikon + başlık + CTA. */
+export function renderEmptyState(opts: EmptyStateOptions): string {
+  let html = '<div class="app-empty">\n';
+  html += `  <div class="app-empty__icon" aria-hidden="true">${opts.icon}</div>\n`;
+  html += `  <p class="app-empty__title">${escapeHtml(opts.title)}</p>\n`;
+  if (opts.subtitle) html += `  <p class="app-empty__subtitle">${escapeHtml(opts.subtitle)}</p>\n`;
+  if (opts.extraHtml) html += opts.extraHtml;
+  if (opts.ctaHref && opts.ctaLabel) {
+    html += `  <a class="app-empty__cta" href="${escapeAttr(opts.ctaHref)}">${escapeHtml(opts.ctaLabel)}</a>\n`;
+  }
+  html += '</div>\n';
+  return html;
+}
+
 export interface AppFooterOptions {
   locale: string;
   /** Kötüye kullanım/şikâyet bağlantısı (store ve market farklı mailto kullanır). */

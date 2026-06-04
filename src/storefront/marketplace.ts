@@ -12,7 +12,7 @@
 import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 import type { BreadcrumbSegment } from './taxonomy/category-resolve';
-import { renderAppHeader, renderAppFooter } from './app-shell';
+import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
 
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
 export type LabelOf = (id: string, locale: string) => string;
@@ -310,6 +310,11 @@ export function renderMarketHome(args: {
     html += renderCategoryChips(categories, locale, args.labelOf ?? identityLabel);
   }
 
+  // Hiç ürün yoksa: çirkin boşluk yerine şık boş durum + mağazalara yönlendir.
+  if (products.length === 0) {
+    html += renderEmptyState({ icon: '🛍️', title: mt(locale, 'noResults'), ctaHref: '/market/stores', ctaLabel: mt(locale, 'stores') });
+  }
+
   // Featured slot — reserved
   html += '<section class="mk-featured" hidden></section>\n';
 
@@ -509,7 +514,7 @@ export function renderSearchPage(args: {
 
   html += '    <section class="mk-results">\n';
   if (items.length === 0) {
-    html += `      <p class="mk-no-results">${escapeHtml(mt(locale, 'noResults'))}</p>\n`;
+    html += renderEmptyState({ icon: '🔍', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '      <div class="mk-grid">\n';
     for (const p of items) html += renderProductCard(p, locale);
@@ -571,7 +576,7 @@ export function renderCategoryPage(args: {
   html += '<section class="mk-section">\n';
   html += `  <h1 class="mk-section__title">${escapeHtml(h1)}</h1>\n`;
   if (items.length === 0) {
-    html += `  <p class="mk-no-results">${escapeHtml(mt(locale, 'noResults'))}</p>\n`;
+    html += renderEmptyState({ icon: '🔍', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '  <div class="mk-grid">\n';
     for (const p of items) html += renderProductCard(p, locale);
@@ -672,17 +677,12 @@ export function renderOrdersPage(args: {
   html += `  <h1 class="mk-orders__title">${escapeHtml(mt(locale, 'myOrders'))}</h1>\n`;
 
   if (!loggedIn && orders.length === 0) {
-    // Giriş yapılmamış ve sipariş yok → davet mesajı
-    html += `  <div class="mk-orders__empty">\n`;
-    html += `    <p>${escapeHtml(mt(locale, 'noOrders'))}</p>\n`;
-    html += `    <button type="button" class="mk-acct__btn" id="pz-signin-btn-orders" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
-    html += `  </div>\n`;
+    // Giriş yapılmamış ve sipariş yok → giriş daveti
+    const signin = `  <button type="button" class="app-acct__btn" id="pz-signin-btn-orders" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
+    html += renderEmptyState({ icon: '🧾', title: mt(locale, 'noOrders'), extraHtml: signin });
   } else if (orders.length === 0) {
     // Giriş yapılmış ama sipariş yok
-    html += `  <div class="mk-orders__empty">\n`;
-    html += `    <p>${escapeHtml(mt(locale, 'noOrders'))}</p>\n`;
-    html += `    <a class="mk-btn" href="/market">${escapeHtml(mt(locale, 'backToMarket'))}</a>\n`;
-    html += `  </div>\n`;
+    html += renderEmptyState({ icon: '🧾', title: mt(locale, 'noOrders'), ctaHref: '/market', ctaLabel: mt(locale, 'backToMarket') });
   } else {
     html += '  <ul class="mk-orders__list" role="list">\n';
     for (const order of orders) {
@@ -822,13 +822,8 @@ export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string
   html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myFavorites'))}</h1>\n`;
 
   if (groups.length === 0) {
-    html += '  <div class="mk-acct-page__empty">\n';
-    html += `    <p>${escapeHtml(mt(locale, 'emptyFavorites'))}</p>\n`;
-    if (!loggedIn) {
-      html += `    <button type="button" class="mk-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
-    }
-    html += `    <a class="mk-btn" href="/market">${escapeHtml(mt(locale, 'browseAll'))}</a>\n`;
-    html += '  </div>\n';
+    const signin = loggedIn ? '' : `  <button type="button" class="app-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
+    html += renderEmptyState({ icon: '🤍', title: mt(locale, 'emptyFavorites'), extraHtml: signin, ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     for (const g of groups) {
       html += '  <section class="mk-acct-group">\n';
@@ -859,13 +854,8 @@ export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; log
   html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myCart'))}</h1>\n`;
 
   if (groups.length === 0) {
-    html += '  <div class="mk-acct-page__empty">\n';
-    html += `    <p>${escapeHtml(mt(locale, 'emptyCart'))}</p>\n`;
-    if (!loggedIn) {
-      html += `    <button type="button" class="mk-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
-    }
-    html += `    <a class="mk-btn" href="/market">${escapeHtml(mt(locale, 'browseAll'))}</a>\n`;
-    html += '  </div>\n';
+    const signin = loggedIn ? '' : `  <button type="button" class="app-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
+    html += renderEmptyState({ icon: '🛒', title: mt(locale, 'emptyCart'), extraHtml: signin, ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     for (const g of groups) {
       const sum = groupTotal(g.items);

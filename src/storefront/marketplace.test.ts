@@ -448,6 +448,24 @@ const FAV_GROUPS: BuyerGroup[] = [
   },
 ];
 
+describe('boş durum (app-empty)', () => {
+  it('boş sepet şık empty-state + CTA gösterir (mk-acct-page__empty değil)', () => {
+    const html = renderCartPage({ groups: [], locale: 'tr', loggedIn: true });
+    expect(html).toContain('app-empty');
+    expect(html).toContain('app-empty__cta');
+    expect(html).not.toContain('mk-acct-page__empty');
+  });
+  it('boş favoriler app-empty + giriş yapılmamışsa signin butonu', () => {
+    const html = renderFavoritesPage({ groups: [], locale: 'tr', loggedIn: false });
+    expect(html).toContain('app-empty');
+    expect(html).toContain('pz-signin-btn-acct');
+  });
+  it('boş arama sonucu app-empty (düz mk-no-results değil)', () => {
+    const html = renderSearchPage({ items: [], facets: { categories: [], priceRange: { min: 0, max: 0 }, cities: [], inStockCount: 0 }, total: 0, locale: 'tr', query: { q: 'xyz' } });
+    expect(html).toContain('app-empty');
+  });
+});
+
 describe('renderFavoritesPage', () => {
   it('mağazaya göre gruplar + favori kaldır butonu + ürün linki', () => {
     const html = renderFavoritesPage({ groups: FAV_GROUPS, locale: 'tr', loggedIn: true });

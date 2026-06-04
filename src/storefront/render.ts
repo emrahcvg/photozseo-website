@@ -7,7 +7,7 @@
 import type { Manifest, Product } from './types';
 import { mt } from './marketplace-i18n';
 import type { TaxonomyService } from './taxonomy/service';
-import { renderAppHeader, renderAppFooter } from './app-shell';
+import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
 import { categoryBreadcrumb, resolveCategoryName } from './taxonomy/category-resolve';
 import {
   resolveLocalized,
@@ -450,6 +450,11 @@ export function renderStoreBody(
     }
     html += '  </div>\n';
     html += '</section>\n';
+  }
+
+  // Mağazada hiç ürün yoksa: boş bölüm yerine şık boş durum.
+  if (groups.length === 0) {
+    html += renderEmptyState({ icon: '🛍️', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'backToMarket') });
   }
 
   html += renderAppFooter({
