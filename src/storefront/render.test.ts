@@ -60,8 +60,16 @@ describe('renderStoreBody', () => {
     expect(html).toContain('wa.me/');
   });
 
-  it('contains footer powered-by text', () => {
-    expect(html).toContain('Bu mağaza photoZseo ile oluşturuldu');
+  it('ortak app-footer (photoZseo marka + şikâyet) içerir', () => {
+    expect(html).toContain('app-footer');
+    expect(html).toContain('https://photozseo.com');
+    expect(html).toContain('mailto:abuse@photozseo.com');
+  });
+
+  it('ortak app-header (marka + sepet) içerir', () => {
+    expect(html).toContain('app-header');
+    expect(html).toContain('app-brand');
+    expect(html).toContain('/market/cart');
   });
 
   it('contains productUrl for p1', () => {

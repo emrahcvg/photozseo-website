@@ -122,3 +122,132 @@ body {
 *, *::before, *::after { box-sizing: border-box; }
 
 img { max-width: 100%; }
+
+/* ════════════════════════════════════════════════════════════════════
+   ORTAK KABUK — store + market sticky üst header, hesap, sepet, footer
+   (app-shell.ts tarafından üretilir). Tüm storefront sayfalarında birebir.
+   ════════════════════════════════════════════════════════════════════ */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+.app-header__inner {
+  width: 100%;
+  max-width: var(--maxw);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  color: var(--fg);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.app-brand__mark { width: 26px; height: 26px; border-radius: 7px; display: block; }
+.app-brand__name { letter-spacing: -0.01em; }
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-inline-start: auto;
+  min-width: 0;
+}
+.app-cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--fg);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.app-cart:hover { background: var(--input); }
+.app-cart__badge {
+  position: absolute;
+  top: 2px;
+  inset-inline-end: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.62rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Hesap widget (auth.js pz-* ID'lerine bağlı; class'lar ortak) */
+.app-acct { position: relative; display: flex; align-items: center; flex-shrink: 0; }
+.app-acct__signin { display: flex; align-items: center; }
+.app-acct__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px 6px 9px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.app-acct__btn:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.10); }
+.app-acct__btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.app-acct__glogo { flex-shrink: 0; display: block; }
+.app-acct__btn-label { line-height: 1; }
+.app-acct__user { display: flex; align-items: center; }
+
+/* Dar ekran: marka adı gizlenir (logo kalır), etiketler daralır */
+@media (max-width: 520px) {
+  .app-brand__name { display: none; }
+  .app-acct__btn-label { display: none; }
+  .app-acct__btn { padding: 8px; }
+  .app-header__inner { gap: var(--sp-2); padding: 0 var(--sp-3); }
+}
+
+/* Ortak footer */
+.app-footer {
+  max-width: var(--maxw);
+  margin: var(--sp-7) auto 0;
+  padding: var(--sp-5) var(--sp-4) var(--sp-6);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.app-footer__trust { margin: 0 0 var(--sp-2); color: var(--dim); }
+.app-footer__links { display: flex; flex-wrap: wrap; gap: var(--sp-1); align-items: center; justify-content: center; }
+.app-footer a { color: var(--muted); text-decoration: none; }
+.app-footer a:hover { color: var(--fg); text-decoration: underline; }
+.app-footer__brand { font-weight: 600; }
+.app-footer__sep { margin: 0 var(--sp-2); color: var(--line-strong); }
+
+/* Sticky üst header varken sayfa-içi sticky araç çubuğu header altına yapışır */
+.app-has-header .sf-toolbar { top: var(--header-h); }

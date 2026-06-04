@@ -12,7 +12,7 @@
 import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 import type { BreadcrumbSegment } from './taxonomy/category-resolve';
-import { GOOGLE_CLIENT_ID } from './auth/config';
+import { renderAppHeader, renderAppFooter } from './app-shell';
 
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
 export type LabelOf = (id: string, locale: string) => string;
@@ -178,18 +178,10 @@ function renderTrustBadge(locale: string): string {
   return `<p class="mk-trust">${escapeHtml(mt(locale, 'trustBadge'))}</p>\n`;
 }
 
-/** Footer: trust badge + brand link + report link. */
+/** Footer: ortak app-shell footer'ı (güven rozeti + marka + şikâyet). */
 export function renderMarketFooter(locale: string): string {
   const reportHref = `mailto:support@photozseo.com?subject=${encodeURIComponent('Report marketplace listing')}`;
-  let html = '<footer class="mk-footer">\n';
-  html += `  <p class="mk-footer__trust">${escapeHtml(mt(locale, 'trustBadge'))}</p>\n`;
-  html += '  <div class="mk-footer__links">\n';
-  html += '    <a class="mk-footer__brand" href="https://photozseo.com" target="_blank" rel="noopener noreferrer">photoZseo</a>\n';
-  html += '    <span class="mk-footer__sep">·</span>\n';
-  html += `    <a class="mk-footer__report" href="${escapeAttr(reportHref)}">${escapeHtml(mt(locale, 'report'))}</a>\n`;
-  html += '  </div>\n';
-  html += '</footer>\n';
-  return html;
+  return renderAppFooter({ locale, reportHref, reportLabelKey: 'report' });
 }
 
 function renderBottomTabBar(locale: string): string {
@@ -291,32 +283,9 @@ export function renderMarketHome(args: {
   const trending = [...products].reverse().slice(0, 6);
   const hasSidebar = Array.isArray(args.categoryTree) && args.categoryTree.length > 0;
 
-  let html = '<div class="mk">\n';
-
-  // Üst bar — sol: logo, sağ: dil seçici + hesap alanı (emoji yok, temiz Apple stili)
-  html += '<header class="mk-top">\n';
-  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
-  html += '  <div class="mk-top-right">\n';
-  html += renderLangSwitcher(locale);
-  // Hesap alanı: auth.js tarafından doldurulur; JS yoksa "Giriş yap" butonu görünür
-  html += `  <div class="mk-acct" id="pz-acct-root">\n`;
-  html += `    <div id="pz-signin" class="mk-acct__signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}">\n`;
-  html += `      <button type="button" class="mk-acct__btn" id="pz-signin-btn" aria-label="${escapeHtml(mt(locale, 'signIn'))}">\n`;
-  // Google "G" logosu — inline SVG, çok renkli orijinal renk şeması
-  html += '        <svg class="mk-acct__glogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">\n';
-  html += '          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>\n';
-  html += '          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>\n';
-  html += '          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>\n';
-  html += '          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>\n';
-  html += '        </svg>\n';
-  html += `        <span class="mk-acct__btn-label">${escapeHtml(mt(locale, 'signIn'))}</span>\n`;
-  html += '      </button>\n';
-  html += '    </div>\n';
-  // Kullanıcı avatar + açılır menü (auth.js doldurur; başlangıçta gizli)
-  html += '    <div id="pz-user" class="mk-acct__user" hidden></div>\n';
-  html += '  </div>\n'; // mk-acct
-  html += '  </div>\n'; // mk-top-right
-  html += '</header>\n';
+  // Ortak sticky üst header (app-shell) — store ile birebir aynı kabuk.
+  let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
+  html += '<div class="mk">\n';
 
   // Sidebar varsa: .mk-layout açılır; yoksa içerik doğrudan devam eder (geri uyumlu)
   if (hasSidebar) {
@@ -517,20 +486,20 @@ export function renderSearchPage(args: {
   const { items, facets, total, locale, query, labelOf } = args;
   const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
 
-  let html = '<div class="mk mk--search">\n';
+  // Ortak sticky üst header (arama formunun dışında, full-bleed)
+  let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
+  html += '<div class="mk mk--search">\n';
   html += '<form class="mk-searchwrap" action="/market/search" method="get" role="search">\n';
 
-  // Top search bar
-  html += '  <div class="mk-top">\n';
-  html += `    <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
+  // Arama satırı (marka artık ortak app-header'da)
+  html += '  <div class="mk-searchrow">\n';
   html += `    <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" value="${escapeAttr(query.q ?? '')}" />\n`;
   html += `    <button type="button" class="mk-filter-toggle" data-mk-filter-toggle aria-expanded="false">${escapeHtml(mt(locale, 'filters'))}</button>\n`;
   html += '  </div>\n';
 
-  // Sort chips + result count
+  // Sıralama + sonuç sayısı
   html += '  <div class="mk-resultbar">\n';
   html += `    <span class="mk-resultbar__count">${total} ${escapeHtml(mt(locale, 'results'))}</span>\n`;
-  html += renderLangSwitcher(locale);
   html += '  </div>\n';
   html += renderSortChips(query.sort, locale);
 
@@ -558,11 +527,8 @@ export function renderSearchPage(args: {
 
 export function renderStoresPage(args: { stores: StoreRow[]; total: number; locale: string }): string {
   const { stores, locale } = args;
-  let html = '<div class="mk">\n';
-  html += '<header class="mk-top">\n';
-  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
-  html += renderLangSwitcher(locale);
-  html += '</header>\n';
+  let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
+  html += '<div class="mk">\n';
   html += '<section class="mk-section">\n';
   html += `  <h1 class="mk-section__title">${escapeHtml(mt(locale, 'stores'))}</h1>\n`;
   html += renderStoreStrip(stores, locale);
@@ -583,12 +549,9 @@ export function renderCategoryPage(args: {
   const segments = breadcrumb ?? null;
   const h1 = segments && segments.length ? segments[segments.length - 1].label : categoryId;
 
-  let html = '<div class="mk">\n';
-  html += '<header class="mk-top">\n';
-  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
-  html += renderSearchBar(locale);
-  html += renderLangSwitcher(locale);
-  html += '</header>\n';
+  let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
+  html += '<div class="mk">\n';
+  html += `<div class="mk-searchrow mk-searchrow--cat">${renderSearchBar(locale)}</div>\n`;
 
   html += `<nav class="mk-breadcrumb" aria-label="breadcrumb"><a href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>`;
   if (segments && segments.length) {
@@ -700,23 +663,9 @@ export function renderOrdersPage(args: {
 }): string {
   const { orders, locale, loggedIn } = args;
 
-  let html = '<div class="mk">\n';
-
-  // Üst bar — market ana sayfasıyla aynı .mk-top header (hesap menüsü auth.js'in göstermesi için)
-  html += '<header class="mk-top">\n';
-  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
-  html += '  <div class="mk-top-right">\n';
-  html += renderLangSwitcher(locale);
-  html += `  <div class="mk-acct" id="pz-acct-root">\n`;
-  html += `    <div id="pz-signin" class="mk-acct__signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}">\n`;
-  html += `      <button type="button" class="mk-acct__btn" id="pz-signin-btn" aria-label="${escapeHtml(mt(locale, 'signIn'))}">\n`;
-  html += `        <span class="mk-acct__btn-label">${escapeHtml(mt(locale, 'signIn'))}</span>\n`;
-  html += '      </button>\n';
-  html += '    </div>\n';
-  html += '    <div id="pz-user" class="mk-acct__user" hidden></div>\n';
-  html += '  </div>\n';
-  html += '  </div>\n';
-  html += '</header>\n';
+  // Ortak sticky üst header (hesap menüsünü auth.js doldurur)
+  let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
+  html += '<div class="mk">\n';
 
   // Sayfa başlığı
   html += '<main class="mk-orders">\n';
@@ -797,23 +746,9 @@ export interface BuyerGroup {
   items: BuyerCardItem[];
 }
 
-/** Market hesap sayfalarının üst barı (orders sayfasıyla aynı .mk-top yapısı). */
+/** Market hesap sayfalarının üst barı — ortak app-shell header'ı. */
 function renderAccountHeader(locale: string): string {
-  let html = '<header class="mk-top">\n';
-  html += `  <a class="mk-logo" href="/market">${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
-  html += '  <div class="mk-top-right">\n';
-  html += renderLangSwitcher(locale);
-  html += `  <div class="mk-acct" id="pz-acct-root">\n`;
-  html += `    <div id="pz-signin" class="mk-acct__signin" data-client-id="${escapeAttr(GOOGLE_CLIENT_ID)}">\n`;
-  html += `      <button type="button" class="mk-acct__btn" id="pz-signin-btn" aria-label="${escapeHtml(mt(locale, 'signIn'))}">\n`;
-  html += `        <span class="mk-acct__btn-label">${escapeHtml(mt(locale, 'signIn'))}</span>\n`;
-  html += '      </button>\n';
-  html += '    </div>\n';
-  html += '    <div id="pz-user" class="mk-acct__user" hidden></div>\n';
-  html += '  </div>\n';
-  html += '  </div>\n';
-  html += '</header>\n';
-  return html;
+  return renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
 }
 
 /** Tek favori/sepet kartı; ürün sayfasına link + (sepet) adet kontrolü / (favori) kaldır. */
@@ -881,8 +816,8 @@ function groupTotal(items: BuyerCardItem[]): { total: number; currency: string }
  */
 export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string; loggedIn: boolean }): string {
   const { groups, locale, loggedIn } = args;
-  let html = '<div class="mk">\n';
-  html += renderAccountHeader(locale);
+  let html = renderAccountHeader(locale);
+  html += '<div class="mk">\n';
   html += '<main class="mk-acct-page">\n';
   html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myFavorites'))}</h1>\n`;
 
@@ -918,8 +853,8 @@ export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string
  */
 export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; loggedIn: boolean }): string {
   const { groups, locale, loggedIn } = args;
-  let html = '<div class="mk">\n';
-  html += renderAccountHeader(locale);
+  let html = renderAccountHeader(locale);
+  html += '<div class="mk">\n';
   html += '<main class="mk-acct-page">\n';
   html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myCart'))}</h1>\n`;
 

@@ -34,6 +34,10 @@ img{display:block;}
 .mk-logo{font-weight:700;font-size:1.05rem;flex-shrink:0;}
 .mk-searchbar,.mk-searchwrap{display:flex;gap:8px;flex:1;min-width:200px;}
 .mk-searchwrap{flex-direction:column;gap:0;}
+/* Arama/kategori sayfası içi arama satırı (marka artık ortak app-header'da) */
+.mk-searchrow{display:flex;align-items:center;gap:8px;padding:16px 0 4px;}
+.mk-searchrow .mk-searchbar__input{flex:1;}
+.mk-searchrow--cat{display:block;padding-bottom:8px;}
 .mk-searchbar__input{
   flex:1;padding:11px 16px;border:1.5px solid var(--mk-line);
   border-radius:var(--mk-radius-sm);background:var(--mk-input);

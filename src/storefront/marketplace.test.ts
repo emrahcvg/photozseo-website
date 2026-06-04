@@ -416,10 +416,10 @@ describe('renderMarketHome — categoryTree integration', () => {
     expect(html).not.toContain('mk-layout');
   });
 
-  it('header (.mk-top) is still rendered when sidebar present', () => {
+  it('ortak app-header sidebar varken de render edilir', () => {
     const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
-    expect(html).toContain('mk-top');
-    expect(html).toContain('mk-logo');
+    expect(html).toContain('app-header');
+    expect(html).toContain('app-brand');
   });
 
   it('existing content (hero, chips, products) preserved inside mk-main', () => {
