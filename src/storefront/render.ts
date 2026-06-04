@@ -868,8 +868,29 @@ export function buildProductJsonLd(
           price: product.price,
           priceCurrency: currency,
           availability,
+          itemCondition: 'https://schema.org/NewCondition',
           url: canonical,
         })
+      : undefined;
+
+  const attr = product.attributes;
+  const color = attr?.color ? resolveLocalized(attr.color, locale) : undefined;
+  const material = attr?.material ? resolveLocalized(attr.material, locale) : undefined;
+  const size = attr?.size ? resolveLocalized(attr.size, locale) : undefined;
+
+  // gender/ageGroup → schema.org/PeopleAudience (yalnızca veri varsa).
+  const gender = attr?.gender ? resolveLocalized(attr.gender, locale) : undefined;
+  const ageGroup = attr?.ageGroup ? resolveLocalized(attr.ageGroup, locale) : undefined;
+  const audience =
+    gender || ageGroup
+      ? compact({ '@type': 'PeopleAudience', suggestedGender: gender, suggestedAge: ageGroup })
+      : undefined;
+
+  // weightGrams → kilogram QuantitativeValue (UN/CEFACT KGM).
+  const grams = product.shipping?.weightGrams;
+  const weight =
+    typeof grams === 'number' && grams > 0
+      ? { '@type': 'QuantitativeValue', value: grams / 1000, unitCode: 'KGM' }
       : undefined;
 
   const ld = compact({
@@ -880,10 +901,111 @@ export function buildProductJsonLd(
     image: product.images,
     sku: product.sku,
     gtin: product.attributes?.barcode,
+    color,
+    material,
+    size,
+    audience,
+    weight,
+    countryOfOrigin: attr?.countryOfOrigin,
     brand: manifest.store.displayName
       ? { '@type': 'Brand', name: manifest.store.displayName }
       : undefined,
     offers,
   });
   return JSON.stringify(ld);
+}
+
+/**
+ * BreadcrumbList JSON-LD for a product page: Store home → (category trail) → product.
+ * `svc` is optional — without it the trail gracefully degrades to Home → Product.
+ */
+export function buildBreadcrumbJsonLd(
+  manifest: Manifest,
+  product: Product,
+  locale: string,
+  origin: string,
+  svc: TaxonomyService | undefined,
+  defaultLang = 'en',
+): string {
+  const store = manifest.store;
+  const slugMap = uniqueProductSlugs(manifest.products, defaultLang);
+  const pSlug = slugMap.get(product.id) ?? product.id;
+
+  const items: Array<Record<string, unknown>> = [];
+  items.push({
+    '@type': 'ListItem',
+    position: 1,
+    name: store.displayName,
+    item: origin + storeUrl(store.slug, locale, defaultLang),
+  });
+
+  if (svc) {
+    const segs = categoryBreadcrumb(product.categoryId, locale, svc);
+    if (segs) {
+      for (const seg of segs) {
+        // Kategori derin-link'i yok; anchor'lı mağaza URL'i kullan (görünür breadcrumb ile aynı).
+        items.push({
+          '@type': 'ListItem',
+          position: items.length + 1,
+          name: seg.label,
+          item: `${origin}${storeUrl(store.slug, locale, defaultLang)}#cat-${encodeURIComponent(seg.id)}`,
+        });
+      }
+    }
+  }
+
+  items.push({
+    '@type': 'ListItem',
+    position: items.length + 1,
+    name: resolveLocalized(product.title, locale),
+    item: origin + productUrl(store.slug, pSlug, locale, defaultLang),
+  });
+
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items,
+  });
+}
+
+/**
+ * Organization entity for the store — builds brand identity for AI/LLM search (GEO)
+ * and links verified social profiles via sameAs.
+ */
+export function buildOrganizationJsonLd(
+  manifest: Manifest,
+  origin: string,
+  defaultLang = 'en',
+): string {
+  const store = manifest.store;
+  const sameAs = (store.contact.social ?? [])
+    .map((s) => socialHref(s.type, s.value))
+    .filter((u) => /^https?:\/\//.test(u));
+
+  const ld = compact({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: store.displayName,
+    url: origin + storeUrl(store.slug, defaultLang, defaultLang),
+    logo: store.logo,
+    sameAs,
+  });
+  return JSON.stringify(ld);
+}
+
+/**
+ * WebSite entity — gives AI engines a canonical site reference for the store.
+ */
+export function buildWebSiteJsonLd(
+  manifest: Manifest,
+  origin: string,
+  defaultLang = 'en',
+): string {
+  const store = manifest.store;
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: store.displayName,
+    url: origin + storeUrl(store.slug, defaultLang, defaultLang),
+  });
 }

@@ -4,6 +4,9 @@ import {
   renderProductBody,
   buildStoreJsonLd,
   buildProductJsonLd,
+  buildBreadcrumbJsonLd,
+  buildOrganizationJsonLd,
+  buildWebSiteJsonLd,
 } from './render';
 import { renderDocument } from './document';
 import type { Manifest, Product } from './types';
@@ -114,6 +117,90 @@ describe('buildProductJsonLd', () => {
 
   it('sets availability based on stock', () => {
     expect(ld.offers.availability).toMatch(/schema\.org\/(InStock|OutOfStock)/);
+  });
+
+  it('marks the offer as a new-condition item', () => {
+    expect(ld.offers.itemCondition).toBe('https://schema.org/NewCondition');
+  });
+
+  it('embeds real attributes (color, material) when present', () => {
+    // p1 fixture has color/material in tr+en
+    expect(ld.color).toBe('Siyah');
+    expect(ld.material).toBe('TPE Kauçuk');
+  });
+
+  it('exposes countryOfOrigin and shipping weight when present', () => {
+    expect(ld.countryOfOrigin).toBe('TR');
+    // weightGrams 3200 → 3.2 kg QuantitativeValue
+    expect(ld.weight?.['@type']).toBe('QuantitativeValue');
+    expect(ld.weight?.unitCode).toBe('KGM');
+    expect(ld.weight?.value).toBeCloseTo(3.2, 3);
+  });
+
+  it('keeps barcode as gtin', () => {
+    expect(ld.gtin).toBe('8690000000001');
+  });
+});
+
+// ── BreadcrumbList JSON-LD ─────────────────────────────────────────────────────
+
+describe('buildBreadcrumbJsonLd', () => {
+  const origin = 'https://photozseo.com';
+  // svc undefined → graceful: still produces Home → Product trail
+  const ld = JSON.parse(
+    buildBreadcrumbJsonLd(manifest, p1, 'tr', origin, undefined),
+  );
+
+  it('produces a BreadcrumbList', () => {
+    expect(ld['@type']).toBe('BreadcrumbList');
+    expect(Array.isArray(ld.itemListElement)).toBe(true);
+  });
+
+  it('starts at the store home and ends at the product, with sequential positions', () => {
+    const items = ld.itemListElement;
+    expect(items[0]['@type']).toBe('ListItem');
+    expect(items[0].position).toBe(1);
+    expect(items[0].name).toBe(manifest.store.displayName);
+    const last = items[items.length - 1];
+    expect(last.position).toBe(items.length);
+    expect(last.name).toBe('Tesla Model Y Paspas Seti');
+    // positions are 1..n contiguous
+    expect(items.map((i: { position: number }) => i.position)).toEqual(
+      items.map((_: unknown, idx: number) => idx + 1),
+    );
+  });
+
+  it('uses absolute item URLs', () => {
+    expect(ld.itemListElement[0].item).toMatch(/^https:\/\//);
+  });
+});
+
+// ── Organization & WebSite entity JSON-LD ──────────────────────────────────────
+
+describe('buildOrganizationJsonLd', () => {
+  const ld = JSON.parse(buildOrganizationJsonLd(manifest, 'https://photozseo.com'));
+
+  it('produces an Organization entity with name and url', () => {
+    expect(ld['@type']).toBe('Organization');
+    expect(ld.name).toBe(manifest.store.displayName);
+    expect(ld.url).toMatch(/^https:\/\//);
+  });
+
+  it('includes sameAs when social links exist', () => {
+    if (manifest.store.contact.social?.length) {
+      expect(Array.isArray(ld.sameAs)).toBe(true);
+      expect(ld.sameAs.every((u: string) => /^https?:\/\//.test(u))).toBe(true);
+    }
+  });
+});
+
+describe('buildWebSiteJsonLd', () => {
+  const ld = JSON.parse(buildWebSiteJsonLd(manifest, 'https://photozseo.com'));
+
+  it('produces a WebSite entity', () => {
+    expect(ld['@type']).toBe('WebSite');
+    expect(ld.name).toBe(manifest.store.displayName);
+    expect(ld.url).toMatch(/^https:\/\//);
   });
 });
 

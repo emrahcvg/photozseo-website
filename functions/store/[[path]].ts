@@ -15,6 +15,9 @@ import {
   renderProductBody,
   buildStoreJsonLd,
   buildProductJsonLd,
+  buildBreadcrumbJsonLd,
+  buildOrganizationJsonLd,
+  buildWebSiteJsonLd,
 } from '../../src/storefront/render';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
 import {
@@ -114,7 +117,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   let canonical: string;
   let alternates: AlternateLink[];
   let ogImage: string | undefined;
-  let jsonLd: string;
+  let jsonLd: string[];
 
   if (productSlugReq) {
     // Find product by slug
@@ -133,7 +136,11 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     alternates = languages.map((l) => ({ lang: l, href: origin + productUrl(slug, pSlug, l, DEFAULT_LANG) }));
     alternates.push({ lang: 'x-default', href: origin + productUrl(slug, pSlug, DEFAULT_LANG, DEFAULT_LANG) });
     ogImage = product.images[0] ?? manifest.store.logo ?? `${origin}/og-image.png`;
-    jsonLd = buildProductJsonLd(manifest, product, locale, canonical);
+    jsonLd = [
+      buildProductJsonLd(manifest, product, locale, canonical),
+      buildBreadcrumbJsonLd(manifest, product, locale, origin, svc, DEFAULT_LANG),
+      buildOrganizationJsonLd(manifest, origin, DEFAULT_LANG),
+    ];
   } else {
     htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG, svc);
     pageTitle = manifest.meta.seo?.title ?? manifest.store.displayName;
@@ -142,7 +149,11 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     alternates = languages.map((l) => ({ lang: l, href: origin + storeUrl(slug, l, DEFAULT_LANG) }));
     alternates.push({ lang: 'x-default', href: origin + storeUrl(slug, DEFAULT_LANG, DEFAULT_LANG) });
     ogImage = manifest.store.logo ?? manifest.products[0]?.images[0] ?? `${origin}/og-image.png`;
-    jsonLd = buildStoreJsonLd(manifest, locale, canonical);
+    jsonLd = [
+      buildStoreJsonLd(manifest, locale, canonical),
+      buildOrganizationJsonLd(manifest, origin, DEFAULT_LANG),
+      buildWebSiteJsonLd(manifest, origin, DEFAULT_LANG),
+    ];
   }
 
   const html = renderDocument({
