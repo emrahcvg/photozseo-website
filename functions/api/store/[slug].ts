@@ -4,7 +4,7 @@
  * GET — retrieve the stored manifest JSON; 404 if missing
  */
 
-import { getStore, putStore, deleteStore } from '../../_lib/registry';
+import { getStore, putStore, deleteStore, isBlocked } from '../../_lib/registry';
 import { requireWriteKey } from '../../_lib/auth';
 import { syncStoreToMarketplace, removeStoreFromD1, bumpIndexVersion } from '../../_lib/marketplace';
 import type { Manifest } from '../../../src/storefront/types';
@@ -31,6 +31,14 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
 
   const slug = ctx.params.slug as string;
   if (!VALID_SLUG.test(slug)) return json400('Invalid slug');
+
+  // Takedown sonrası blok: banlı mağaza yeniden yayınlanamaz/güncellenemez.
+  if (await isBlocked(ctx.env.STORE_KV, slug)) {
+    return new Response(
+      JSON.stringify({ error: 'This store has been removed for policy violation and cannot be republished.' }),
+      { status: 403, headers: { 'content-type': 'application/json' } },
+    );
+  }
 
   const contentLength = Number(ctx.request.headers.get('content-length') ?? 0);
   if (contentLength > MAX_MANIFEST_BYTES) {

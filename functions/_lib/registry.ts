@@ -28,6 +28,10 @@ export function metaKey(slug: string): string {
   return `meta:${slug}`;
 }
 
+export function blockKey(slug: string): string {
+  return `blocked:${slug}`;
+}
+
 // ── Minimal slugify (mirrors src/storefront/manifest.ts) ──────────────────────
 
 const TR_MAP: Record<string, string> = {
@@ -60,7 +64,10 @@ export async function claimSlug(kv: KVNamespace, desiredBase: string): Promise<s
   let n = 2;
   while (true) {
     const existing = await kv.get(storeKey(candidate));
-    if (existing === null) return candidate;
+    // Bloklanmış slug "boş" olsa bile (store silinmiş) yeniden alınamaz —
+    // banlı satıcı aynı adı tekrar claim edemesin (takedown'dan sonra).
+    const blocked = await kv.get(blockKey(candidate));
+    if (existing === null && blocked === null) return candidate;
     candidate = `${base}-${n++}`;
   }
 }
@@ -88,4 +95,33 @@ export async function getStore(kv: KVNamespace, slug: string): Promise<StoreReco
 
 export async function deleteStore(kv: KVNamespace, slug: string): Promise<void> {
   await kv.delete(storeKey(slug));
+}
+
+// ── Blocklist / takedown (dolandırıcılık karşıtı) ─────────────────────────────
+
+export interface BlockRecord {
+  reason?: string;
+  blockedAt: string;
+}
+
+export async function isBlocked(kv: KVNamespace, slug: string): Promise<boolean> {
+  return (await kv.get(blockKey(slug))) !== null;
+}
+
+export async function blockStore(kv: KVNamespace, slug: string, reason?: string): Promise<void> {
+  const record: BlockRecord = { reason, blockedAt: new Date().toISOString() };
+  await kv.put(blockKey(slug), JSON.stringify(record));
+}
+
+export async function unblockStore(kv: KVNamespace, slug: string): Promise<void> {
+  await kv.delete(blockKey(slug));
+}
+
+/**
+ * Takedown: mağazayı yayından kaldır VE slug'ı blokla. Tek atomik niyet —
+ * banlı satıcı aynı adı tekrar claim/PUT edemez. unblockStore ile geri alınır.
+ */
+export async function takedownStore(kv: KVNamespace, slug: string, reason?: string): Promise<void> {
+  await deleteStore(kv, slug);
+  await blockStore(kv, slug, reason);
 }
