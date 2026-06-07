@@ -1,4 +1,4 @@
-import type { Localized, Manifest, Category, Product, StoreLocation } from './types';
+import type { Localized, Manifest, Category, Product, ProductFitment, StoreLocation } from './types';
 
 // ── Slug helpers ────────────────────────────────────────────────────────────
 
@@ -138,6 +138,73 @@ export function groupProductsByCategory(manifest: Manifest): CategoryGroup[] {
   const uncategorized = manifest.products.filter((p) => !p.categoryId || !known.has(p.categoryId));
   if (uncategorized.length) groups.push({ category: null, products: uncategorized });
   return groups.filter((g) => g.products.length > 0);
+}
+
+export interface PartTypeGroup {
+  partTypeKey: string | null;
+  label: Localized | null;
+  products: Product[];
+}
+
+/**
+ * Otomotiv ürünlerini part-type'a (katman 2) göre gruplar. İlk görülme sırasını
+ * korur; partTypeKey'siz ürünler sona tek bir `null` grupta toplanır. Etiket,
+ * grubun ilk ürününün gömülü `partTypeLabel`'ından alınır (A2 sözleşmesi).
+ */
+export function groupProductsByPartType(products: Product[]): PartTypeGroup[] {
+  const order: (string | null)[] = [];
+  const byKey = new Map<string | null, PartTypeGroup>();
+  for (const product of products) {
+    const key = product.partTypeKey ?? null;
+    let group = byKey.get(key);
+    if (!group) {
+      group = { partTypeKey: key, label: product.partTypeLabel ?? null, products: [] };
+      byKey.set(key, group);
+      order.push(key);
+    }
+    group.products.push(product);
+  }
+  // null grubu daima en sona
+  order.sort((a, b) => (a === null ? 1 : 0) - (b === null ? 1 : 0));
+  return order.map((k) => byKey.get(k)!);
+}
+
+/**
+ * Fitment listesini karta gömülecek kompakt JSON dizisine çevirir:
+ * `[[make, model, yearFrom|null, yearTo|null], ...]`. Client filtre bunu parse eder.
+ * Boş/eksik → '' (attribute eklenmez).
+ */
+export function encodeFitment(fitment: ProductFitment[] | undefined): string {
+  if (!fitment || fitment.length === 0) return '';
+  return JSON.stringify(
+    fitment.map((f) => [f.make, f.model, f.yearFrom ?? null, f.yearTo ?? null]),
+  );
+}
+
+export interface FitmentOptions {
+  makes: string[];
+  modelsByMake: Record<string, string[]>;
+}
+
+/**
+ * Ürün kümesinden benzersiz make listesi ve make başına model listesi çıkarır
+ * (ilk görülme sırasıyla). Filtre dropdown'ını sunucuda pre-render etmek için.
+ */
+export function fitmentFilterOptions(products: Product[]): FitmentOptions {
+  const makes: string[] = [];
+  const modelsByMake: Record<string, string[]> = {};
+  for (const product of products) {
+    for (const f of product.fitment ?? []) {
+      if (!modelsByMake[f.make]) {
+        modelsByMake[f.make] = [];
+        makes.push(f.make);
+      }
+      if (!modelsByMake[f.make].includes(f.model)) {
+        modelsByMake[f.make].push(f.model);
+      }
+    }
+  }
+  return { makes, modelsByMake };
 }
 
 export function resolveStoreLocale(manifest: Manifest, requested?: string): string {

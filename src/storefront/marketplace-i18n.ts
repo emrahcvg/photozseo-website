@@ -26,7 +26,11 @@ type Key =
   // Favori/Sepet kullanıcı sayfaları
   | 'myCart' | 'emptyFavorites'
   // Uluslararası transfer alanları
-  | 'bankName' | 'swift';
+  | 'bankName' | 'swift'
+  // Otomotiv araç-uyumu filtresi (katman 3)
+  | 'fitsVehicle' | 'allMakes' | 'allModels'
+  // Alıcı ödeme güvenliği (dolandırıcılık önleme)
+  | 'paySafetyTitle' | 'paySafetyTip';
 
 const STRINGS: Record<string, Partial<Record<Key, string>>> = {
   en: {
@@ -59,6 +63,9 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     noOrders: 'No orders yet', orderStatus: 'Status', orderItems: 'Items',
     myCart: 'My Cart', emptyFavorites: 'No favorites yet',
     bankName: 'Bank', swift: 'SWIFT/BIC',
+    fitsVehicle: 'Filter by vehicle', allMakes: 'All makes', allModels: 'All models',
+    paySafetyTitle: 'Before you pay',
+    paySafetyTip: "Bank transfers can't be reversed. Make sure you trust this seller, never pay extra “fees”, and prefer a payment method with buyer protection when possible. photoZseo only publishes this store — it does not process payments or guarantee orders.",
   },
   tr: {
     marketTitle: 'Pazar Yeri', searchPlaceholder: 'Ürün ara…',
@@ -90,6 +97,9 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     noOrders: 'Henüz siparişin yok', orderStatus: 'Durum', orderItems: 'Ürünler',
     myCart: 'Sepetim', emptyFavorites: 'Henüz favorin yok',
     bankName: 'Banka', swift: 'SWIFT/BIC',
+    fitsVehicle: 'Araca göre filtrele', allMakes: 'Tüm markalar', allModels: 'Tüm modeller',
+    paySafetyTitle: 'Ödemeden önce',
+    paySafetyTip: 'Banka havalesi geri alınamaz. Bu satıcıya güvendiğinizden emin olun, asla ekstra “ücret” ödemeyin ve mümkünse alıcı korumalı bir ödeme yöntemi tercih edin. photoZseo yalnızca bu mağazayı yayınlar — ödemeleri işlemez ve siparişleri garanti etmez.',
   },
   de: { marketTitle: 'Marktplatz', searchPlaceholder: 'Produkte suchen…', newProducts: 'Neue Produkte', stores: 'Shops', featured: 'Empfohlen', categories: 'Kategorien', allCategories: 'Alle', noResults: 'Keine Ergebnisse', filters: 'Filter', apply: 'Anwenden', clear: 'Zurücksetzen', price: 'Preis', city: 'Stadt', inStock: 'Nur auf Lager', sortNew: 'Neueste', sortPriceAsc: 'Preis: aufsteigend', sortPriceDesc: 'Preis: absteigend', sortLabel: 'Sortieren', min: 'Min', max: 'Max', results: 'Ergebnisse', visitStore: 'Shop besuchen', trustBadge: 'Unabhängige Verkäufer · Überweisung · keine gefälschten Bewertungen', report: 'Melden', addToCart: 'In den Warenkorb', cart: 'Warenkorb', sendCart: 'Warenkorb senden', emptyCart: 'Ihr Warenkorb ist leer', name: 'Vollständiger Name', phone: 'Telefon', address: 'Adresse', note: 'Notiz', required: 'Dieses Feld ist erforderlich', submitOrder: 'Bestellung per WhatsApp senden', orderRef: 'Bestellreferenz', payByTransfer: 'Zahlung per Überweisung', iban: 'IBAN', ibanName: 'Kontoinhaber', paymentDesc: 'Verwendungszweck', openWhatsapp: 'WhatsApp öffnen', qty: 'Anz.', remove: 'Entfernen', total: 'Gesamt', browseAll: 'Alle ansehen', soldOut: 'Ausverkauft', contactForPrice: 'Preis auf Anfrage', backToStore: 'Zurück zum Shop', backToMarket: '← Marktplatz', currency: 'Währung', language: 'Sprache', rateNote: '≈ ca. · Kurse täglich aktualisiert', contact: 'Kontakt', call: 'Anrufen', other: 'Sonstige', poweredBy: 'Dieser Shop wurde mit photoZseo erstellt', reportStore: 'Diesen Shop melden', productDetails: 'Produktdetails', orderViaWhatsApp: 'Per WhatsApp bestellen' },
   es: { marketTitle: 'Mercado', searchPlaceholder: 'Buscar productos…', newProducts: 'Nuevos productos', stores: 'Tiendas', featured: 'Destacados', categories: 'Categorías', allCategories: 'Todas', noResults: 'No se encontraron resultados', filters: 'Filtros', apply: 'Aplicar', clear: 'Limpiar', price: 'Precio', city: 'Ciudad', inStock: 'Solo en stock', sortNew: 'Más nuevos', sortPriceAsc: 'Precio: de menor a mayor', sortPriceDesc: 'Precio: de mayor a menor', sortLabel: 'Ordenar', min: 'Mín', max: 'Máx', results: 'resultados', visitStore: 'Visitar tienda', trustBadge: 'Vendedores independientes · transferencia · sin reseñas falsas', report: 'Reportar', addToCart: 'Añadir al carrito', cart: 'Carrito', sendCart: 'Enviar carrito', emptyCart: 'Tu carrito está vacío', name: 'Nombre completo', phone: 'Teléfono', address: 'Dirección', note: 'Nota', required: 'Este campo es obligatorio', submitOrder: 'Enviar pedido por WhatsApp', orderRef: 'Referencia del pedido', payByTransfer: 'Pago por transferencia', iban: 'IBAN', ibanName: 'Titular de la cuenta', paymentDesc: 'Concepto de pago', openWhatsapp: 'Abrir WhatsApp', qty: 'Cant.', remove: 'Quitar', total: 'Total', browseAll: 'Ver todo', soldOut: 'Agotado', contactForPrice: 'Consultar precio', backToStore: 'Volver a la tienda', backToMarket: '← Mercado', currency: 'Moneda', language: 'Idioma', rateNote: '≈ aprox. · tasas actualizadas diariamente', contact: 'Contacto', call: 'Llamar', other: 'Otros', poweredBy: 'Esta tienda fue creada con photoZseo', reportStore: 'Reportar esta tienda', productDetails: 'Detalles del producto', orderViaWhatsApp: 'Pedir por WhatsApp' },

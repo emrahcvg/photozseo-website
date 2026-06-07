@@ -116,6 +116,33 @@ html { scroll-behavior: smooth; }
 }
 .sf-section__count { color: var(--dim); font-weight: 400; font-size: 0.85em; }
 
+/* OTOMOTİV — part-type alt başlık (katman 2) + araç-uyumu filtresi (katman 3) */
+.sf-subsection__title {
+  font-size: var(--fs-md); letter-spacing: -0.01em; font-weight: 600; color: var(--fg);
+  margin: 22px 0 12px;
+}
+.sf-subsection__count { color: var(--dim); font-weight: 400; font-size: 0.85em; }
+.sf-fitment-filter {
+  display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
+  margin: 0 0 18px; padding: 12px 14px;
+  background: var(--card, #f6f6f7); border-radius: 12px;
+}
+.sf-fitment-filter__label { font-weight: 600; font-size: var(--fs-sm); color: var(--fg); }
+.sf-fitment-filter__sel {
+  font-size: var(--fs-sm); padding: 8px 12px; border-radius: 9px;
+  border: 1px solid var(--border, #d8d8dc); background: var(--bg, #fff); color: var(--fg);
+}
+.sf-fitment-filter__sel:disabled { opacity: 0.5; }
+
+/* ALICI ÖDEME GÜVENLİĞİ — havale anında dolandırıcılık uyarısı (kapatılamaz) */
+.sf-pay-safety {
+  display: flex; flex-direction: column; gap: 4px;
+  margin: 0 0 14px; padding: 12px 14px;
+  background: #fff8e1; border: 1px solid #f0c36d; border-radius: 10px;
+  color: #6b4e00; font-size: var(--fs-sm); line-height: 1.45;
+}
+.sf-pay-safety strong { font-weight: 700; }
+
 /* GRID */
 /* Yatay kaydırmalı şerit (Apple raf): ürün çoksa alta değil yana doğru büyür. */
 .sf-grid {
