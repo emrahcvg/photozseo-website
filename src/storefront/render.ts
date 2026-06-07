@@ -6,7 +6,7 @@
 
 import type { Manifest, Product, StoreInfo } from './types';
 import type { FitmentOptions } from './manifest';
-import { mt } from './marketplace-i18n';
+import { mt, sellerTypeLabel } from './marketplace-i18n';
 import type { TaxonomyService } from './taxonomy/service';
 import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
 import { categoryBreadcrumb, resolveCategoryName } from './taxonomy/category-resolve';
@@ -211,6 +211,12 @@ function renderStoreHeader(manifest: Manifest, locale: string, defaultLang: stri
   }
 
   html += `  <h1 class="sf-header__name">${escapeHtml(store.displayName)}</h1>\n`;
+
+  // Şeffaflık rozeti: satıcının kim olduğunu (şahıs/üretici vb.) alıcıya göster.
+  const sellerType = sellerTypeLabel(store.businessType, locale);
+  if (sellerType) {
+    html += `  <span class="sf-seller-type">${escapeHtml(sellerType)}</span>\n`;
+  }
 
   if (tagline) {
     html += `  <p class="sf-header__tagline">${escapeHtml(tagline)}</p>\n`;
