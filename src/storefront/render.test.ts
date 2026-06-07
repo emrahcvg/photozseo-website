@@ -131,6 +131,21 @@ describe('renderProductBody', () => {
   });
 });
 
+describe('renderProductBody — buyer payment safety', () => {
+  it('injects an irreversible-transfer safety notice into the payment panel', () => {
+    const html = renderProductBody(manifest, p1, 'tr', 'tr');
+    expect(html).toContain('sf-pay-safety');
+    expect(html).toContain('geri alınamaz');
+  });
+  it('places the safety notice before the bank details (IBAN), if any', () => {
+    const html = renderProductBody(manifest, p1, 'tr', 'tr');
+    const safetyIdx = html.indexOf('sf-pay-safety');
+    expect(safetyIdx).toBeGreaterThan(-1);
+    const ibanIdx = html.indexOf('IBAN');
+    if (ibanIdx > -1) expect(safetyIdx).toBeLessThan(ibanIdx);
+  });
+});
+
 describe('renderProductBody — marketplace cart', () => {
   const html = renderProductBody(manifest, p1, 'tr', 'tr');
   it('renders a cart-add button with product data attributes', () => {

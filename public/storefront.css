@@ -134,6 +134,15 @@ html { scroll-behavior: smooth; }
 }
 .sf-fitment-filter__sel:disabled { opacity: 0.5; }
 
+/* ALICI ÖDEME GÜVENLİĞİ — havale anında dolandırıcılık uyarısı (kapatılamaz) */
+.sf-pay-safety {
+  display: flex; flex-direction: column; gap: 4px;
+  margin: 0 0 14px; padding: 12px 14px;
+  background: #fff8e1; border: 1px solid #f0c36d; border-radius: 10px;
+  color: #6b4e00; font-size: var(--fs-sm); line-height: 1.45;
+}
+.sf-pay-safety strong { font-weight: 700; }
+
 /* GRID */
 /* Yatay kaydırmalı şerit (Apple raf): ürün çoksa alta değil yana doğru büyür. */
 .sf-grid {

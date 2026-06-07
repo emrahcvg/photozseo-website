@@ -926,6 +926,12 @@ export function renderProductBody(
   html += `          <button type="submit" class="sf-btn sf-btn--order">${escapeHtml(sendLabel)}</button>\n`;
   html += '        </form>\n';
   html += '        <div class="sf-cart__payment" data-mk-payment hidden>\n';
+  // Alıcı güvenliği: para gönderme anında, banka detaylarından ÖNCE. Havale geri
+  // alınamaz → dolandırıcılığın asıl vektörü. Kapatılamaz, göz hizasında uyarı.
+  html += '          <div class="sf-pay-safety" role="note">\n';
+  html += `            <strong>⚠️ ${escapeHtml(mt(locale, 'paySafetyTitle'))}</strong>\n`;
+  html += `            <span>${escapeHtml(mt(locale, 'paySafetyTip'))}</span>\n`;
+  html += '          </div>\n';
   html += `          <p>${escapeHtml(refL)}: <strong data-mk-ref></strong></p>\n`;
   html += `          <p>${escapeHtml(payL)}</p>\n`;
   if (pay?.bankName) {
