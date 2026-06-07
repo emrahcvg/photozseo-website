@@ -143,6 +143,14 @@ html { scroll-behavior: smooth; }
 }
 .sf-pay-safety strong { font-weight: 700; }
 
+/* SATICI TÜRÜ ROZETİ — şeffaflık (şahıs/üretici vb.), mağaza adının altında */
+.sf-seller-type {
+  display: inline-block; margin: 0 auto var(--sp-3); padding: 3px 12px;
+  background: var(--input); color: var(--muted); border: 1px solid var(--line);
+  border-radius: var(--radius-pill); font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
 /* GRID */
 /* Yatay kaydırmalı şerit (Apple raf): ürün çoksa alta değil yana doğru büyür. */
 .sf-grid {

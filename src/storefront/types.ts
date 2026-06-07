@@ -38,6 +38,9 @@ export interface StoreInfo {
     bankName?: string;
     currencyCode?: string;
   };
+  /** Satıcı işletme türü (BusinessType rawValue: individual/manufacturer/...).
+   *  Storefront şeffaflık rozeti; etiket buyer-dilinde sellerTypeLabel ile üretilir. */
+  businessType?: string;
 }
 
 export interface Category {
