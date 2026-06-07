@@ -75,6 +75,21 @@ export interface Product {
     widthCM?: number;
     heightCM?: number;
   };
+  // ── Otomotiv (3-katman taksonomi, katman 2+3) ──────────────────────────────
+  // photoZseo app publish ederken yazar; web salt-render (A2: etiket gömülü).
+  /** automotivePartTypes.json key'i (örn. "headlight_front"). Katman 2 = part-type. */
+  partTypeKey?: string;
+  /** Part-type'ın çok-dilli görünen adı; senkron derdi olmasın diye manifest'e gömülür. */
+  partTypeLabel?: Localized;
+  /** Katman 3 = araç uyumu (make/model/yıl aralığı). Bir ürün birden çok araca uyabilir. */
+  fitment?: ProductFitment[];
+}
+
+export interface ProductFitment {
+  make: string;
+  model: string;
+  yearFrom?: number;
+  yearTo?: number;
 }
 
 export interface ManifestMeta {

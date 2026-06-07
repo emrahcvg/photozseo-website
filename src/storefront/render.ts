@@ -5,6 +5,7 @@
  */
 
 import type { Manifest, Product, StoreInfo } from './types';
+import type { FitmentOptions } from './manifest';
 import { mt } from './marketplace-i18n';
 import type { TaxonomyService } from './taxonomy/service';
 import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
@@ -14,6 +15,9 @@ import {
   resolveLocalized,
   formatPrice,
   groupProductsByCategory,
+  groupProductsByPartType,
+  encodeFitment,
+  fitmentFilterOptions,
   uniqueProductSlugs,
   stockLabel,
   whatsappHref,
@@ -255,7 +259,9 @@ function renderProductCard(
   const haystack = [title, description, ...(product.tags ?? [])].join(' ').toLowerCase();
 
   const favLabel = mt(locale, 'favorite');
-  let html = `<a class="sf-card-link" href="${escapeAttr(href)}" data-sf-search="${escapeHtml(haystack)}">\n`;
+  const fitmentEncoded = encodeFitment(product.fitment);
+  const fitmentAttr = fitmentEncoded ? ` data-sf-fitment="${escapeAttr(fitmentEncoded)}"` : '';
+  let html = `<a class="sf-card-link" href="${escapeAttr(href)}" data-sf-search="${escapeHtml(haystack)}"${fitmentAttr}>\n`;
   html += '  <article class="sf-card">\n';
   html += renderCardMedia(image, title, soldOut, locale);
   html += `    <button type="button" class="sf-fav" data-sf-fav="${escapeAttr(pSlug)}" aria-label="${escapeHtml(favLabel)}" title="${escapeHtml(favLabel)}">♥</button>\n`;
@@ -435,6 +441,114 @@ function controlsScript(locale: string): string {
  * Renders the full store page body as an HTML string.
  * Mirrors StorePage.astro → StoreHeader + Toolbar + CategorySection(s) + StoreFooter.
  */
+/**
+ * Araç-uyumu filtresinin client davranışı (vanilla JS, no-build). Make seçilince
+ * model dropdown'ı `data-sf-models`'ten dolar; her ikisi de `data-sf-fitment`'lı
+ * kartları o bölümde gösterir/gizler ve boşalan part-type alt başlıklarını saklar.
+ * No-JS fallback = tüm ürünler görünür (kartlar varsayılan display).
+ */
+function fitmentFilterScript(): string {
+  return `  <script>
+(function(){
+  document.querySelectorAll('[data-sf-fitment-filter]').forEach(function(ctrl){
+    var section = ctrl.closest('.sf-section'); if(!section) return;
+    var models = {}; try { models = JSON.parse(ctrl.getAttribute('data-sf-models')||'{}'); } catch(e){}
+    var makeSel = ctrl.querySelector('[data-sf-fitment-make]');
+    var modelSel = ctrl.querySelector('[data-sf-fitment-model]');
+    var allModels = modelSel.options[0] ? modelSel.options[0].textContent : '';
+    function rebuild(){
+      var make = makeSel.value; modelSel.innerHTML='';
+      var first=document.createElement('option'); first.value=''; first.textContent=allModels; modelSel.appendChild(first);
+      (models[make]||[]).forEach(function(m){ var o=document.createElement('option'); o.value=m; o.textContent=m; modelSel.appendChild(o); });
+      modelSel.disabled = !make;
+    }
+    function apply(){
+      var make=makeSel.value, model=modelSel.value;
+      section.querySelectorAll('[data-sf-fitment]').forEach(function(card){
+        var ok=true;
+        if(make){ var fits=[]; try{ fits=JSON.parse(card.getAttribute('data-sf-fitment')||'[]'); }catch(e){}
+          ok = fits.some(function(f){ return f[0]===make && (!model || f[1]===model); }); }
+        card.style.display = ok ? '' : 'none';
+      });
+      section.querySelectorAll('.sf-subsection__title').forEach(function(h){
+        var grid=h.nextElementSibling; if(!grid) return;
+        var any=Array.prototype.some.call(grid.querySelectorAll('.sf-card-link'),function(c){return c.style.display!=='none';});
+        h.style.display = any ? '' : 'none';
+      });
+    }
+    makeSel.addEventListener('change', function(){ rebuild(); apply(); });
+    modelSel.addEventListener('change', apply);
+    rebuild();
+  });
+})();
+  </script>\n`;
+}
+
+function renderProductGrid(
+  products: Product[],
+  locale: string,
+  currency: string,
+  storeSlug: string,
+  defaultLang: string,
+  slugMap: Map<string, string>,
+): string {
+  let html = '  <div class="sf-grid">\n';
+  for (const product of products) {
+    const pSlug = slugMap.get(product.id) ?? product.id;
+    html += renderProductCard(product, locale, currency, storeSlug, defaultLang, pSlug);
+  }
+  html += '  </div>\n';
+  return html;
+}
+
+/**
+ * Araç-uyumu (katman 3) filtre kontrolü: make→model daraltan iki dropdown.
+ * Make seçenekleri sunucuda pre-render; model'ler `data-sf-models` JSON'ından
+ * client tarafında doldurulur. Hiç fitment yoksa boş döner.
+ */
+function renderFitmentFilter(options: FitmentOptions, locale: string): string {
+  if (!options.makes.length) return '';
+  const label = mt(locale, 'fitsVehicle');
+  const allMakes = mt(locale, 'allMakes');
+  const allModels = mt(locale, 'allModels');
+  const makeOpts = options.makes
+    .map((m) => `<option value="${escapeAttr(m)}">${escapeHtml(m)}</option>`)
+    .join('');
+  const modelsJson = escapeAttr(JSON.stringify(options.modelsByMake));
+  let html = `  <div class="sf-fitment-filter" data-sf-fitment-filter data-sf-models="${modelsJson}">\n`;
+  html += `    <span class="sf-fitment-filter__label">${escapeHtml(label)}</span>\n`;
+  html += `    <select class="sf-fitment-filter__sel" data-sf-fitment-make aria-label="${escapeAttr(label)}"><option value="">${escapeHtml(allMakes)}</option>${makeOpts}</select>\n`;
+  html += `    <select class="sf-fitment-filter__sel" data-sf-fitment-model aria-label="${escapeAttr(allModels)}" disabled><option value="">${escapeHtml(allModels)}</option></select>\n`;
+  html += '  </div>\n';
+  return html;
+}
+
+/**
+ * Bir kategorinin ürünlerini render eder. Üründe part-type varsa (otomotiv,
+ * katman 2) part-type'a göre alt-başlıklı gruplar; yoksa mevcut düz grid korunur.
+ * Üründe araç-uyumu varsa (katman 3) en üste make/model filtresi eklenir.
+ */
+function renderCategoryProducts(
+  products: Product[],
+  locale: string,
+  currency: string,
+  storeSlug: string,
+  defaultLang: string,
+  slugMap: Map<string, string>,
+): string {
+  const hasPartTypes = products.some((p) => p.partTypeKey);
+  let html = renderFitmentFilter(fitmentFilterOptions(products), locale);
+  if (!hasPartTypes) {
+    return html + renderProductGrid(products, locale, currency, storeSlug, defaultLang, slugMap);
+  }
+  for (const ptGroup of groupProductsByPartType(products)) {
+    const heading = ptGroup.label ? resolveLocalized(ptGroup.label, locale) : mt(locale, 'other');
+    html += `  <h3 class="sf-subsection__title">${escapeHtml(heading)} <span class="sf-subsection__count">${ptGroup.products.length}</span></h3>\n`;
+    html += renderProductGrid(ptGroup.products, locale, currency, storeSlug, defaultLang, slugMap);
+  }
+  return html;
+}
+
 export function renderStoreBody(
   manifest: Manifest,
   locale: string,
@@ -462,12 +576,7 @@ export function renderStoreBody(
 
     html += `<section class="sf-section" id="${escapeAttr(id)}" data-sf-cat="${escapeAttr(id)}">\n`;
     html += `  <h2 class="sf-section__title">${escapeHtml(heading)} <span class="sf-section__count">${group.products.length}</span></h2>\n`;
-    html += '  <div class="sf-grid">\n';
-    for (const product of group.products) {
-      const pSlug = slugMap.get(product.id) ?? product.id;
-      html += renderProductCard(product, locale, store.currency, store.slug, defaultLang, pSlug);
-    }
-    html += '  </div>\n';
+    html += renderCategoryProducts(group.products, locale, store.currency, store.slug, defaultLang, slugMap);
     html += '</section>\n';
   }
 
@@ -483,6 +592,7 @@ export function renderStoreBody(
   });
 
   html += '</div>\n';
+  if (manifest.products.some((p) => p.fitment?.length)) html += fitmentFilterScript();
   html += controlsScript(locale);
   html += '  <script src="/storefront-buyer.js?v=8" defer></script>\n';
   html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
