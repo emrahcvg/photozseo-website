@@ -80,8 +80,12 @@ export async function upsertMembership(
   db: D1Like,
   m: { companyId: string; userSub: string; email: string; name: string | null; role: Role; now: string },
 ): Promise<void> {
+  // Gerçek upsert: aynı (company_id, user_sub) tekrar gelirse UNIQUE hatası yerine güncelle.
   await db
-    .prepare('INSERT INTO memberships (company_id, user_sub, email, name, role, joined_at) VALUES (?, ?, ?, ?, ?, ?)')
+    .prepare(
+      'INSERT INTO memberships (company_id, user_sub, email, name, role, joined_at) VALUES (?, ?, ?, ?, ?, ?) ' +
+      'ON CONFLICT(company_id, user_sub) DO UPDATE SET email = excluded.email, name = excluded.name, role = excluded.role, joined_at = excluded.joined_at',
+    )
     .bind(m.companyId, m.userSub, m.email, m.name, m.role, m.now)
     .run();
 }
