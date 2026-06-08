@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -29,6 +29,9 @@ export function makeFakeD1(): FakeD1 {
     favorites: [] as Row[],
     cart_items: [] as Row[],
     orders: [] as Row[],
+    companies: [] as Row[],
+    memberships: [] as Row[],
+    invites: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -208,6 +211,52 @@ export function makeFakeD1(): FakeD1 {
         .slice()
         .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
       return { kind: 'all' as const, rows };
+    }
+    // companies: INSERT
+    if (/INSERT INTO companies/i.test(s)) {
+      const [id, name, owner_sub, created_at] = args;
+      tables.companies.push({ id, name, owner_sub, created_at });
+      return { kind: 'run' as const };
+    }
+    // companies: SELECT by id
+    if (/SELECT .* FROM companies WHERE id = \?/i.test(s)) {
+      const r = tables.companies.find((x) => x.id === args[0]) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // memberships: INSERT
+    if (/INSERT INTO memberships/i.test(s)) {
+      const [company_id, user_sub, email, name, role, joined_at] = args;
+      const i = tables.memberships.findIndex((r) => r.company_id === company_id && r.user_sub === user_sub);
+      const row = { company_id, user_sub, email, name, role, joined_at };
+      if (i >= 0) tables.memberships[i] = row; else tables.memberships.push(row);
+      return { kind: 'run' as const };
+    }
+    // memberships: SELECT one by company + user
+    if (/SELECT .* FROM memberships WHERE company_id = \? AND user_sub = \?/i.test(s)) {
+      const r = tables.memberships.find((x) => x.company_id === args[0] && x.user_sub === args[1]) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // memberships: SELECT all by user (me)
+    if (/SELECT .* FROM memberships WHERE user_sub = \?/i.test(s)) {
+      const rows = tables.memberships.filter((r) => r.user_sub === args[0]);
+      return { kind: 'all' as const, rows };
+    }
+    // invites: INSERT
+    if (/INSERT INTO invites/i.test(s)) {
+      const [code, company_id, role, created_by, created_at, expires_at] = args;
+      tables.invites.push({ code, company_id, role, created_by, created_at, expires_at, redeemed_by: null, redeemed_at: null });
+      return { kind: 'run' as const };
+    }
+    // invites: SELECT by code
+    if (/SELECT .* FROM invites WHERE code = \?/i.test(s)) {
+      const r = tables.invites.find((x) => x.code === args[0]) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // invites: mark redeemed (single-use guard: yalnızca redeemed_by IS NULL iken)
+    if (/UPDATE invites SET redeemed_by = \?, redeemed_at = \? WHERE code = \? AND redeemed_by IS NULL/i.test(s)) {
+      const inv = tables.invites.find((x) => x.code === args[2] && x.redeemed_by == null);
+      if (inv) { inv.redeemed_by = args[0]; inv.redeemed_at = args[1]; }
+      return { kind: 'run' as const };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
   }
