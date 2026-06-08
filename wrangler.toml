@@ -22,3 +22,11 @@ binding = "MARKET_DB"
 database_name = "photozseo-marketplace"
 database_id = "277c0a85-476e-4b03-a3eb-bf3d60d8f239"
 migrations_dir = "migrations"
+
+# R2 — Takım/Ortak Havuz fotoğraf depolama (Faz 2A).
+# Local dev: `wrangler pages dev` --r2 POOL_R2 ile emüle eder (account gerekmez).
+# Production bucket manuel oluşturulur (Task 11 önkoşulları).
+[[r2_buckets]]
+binding = "POOL_R2"
+bucket_name = "photozseo-team-pool"
+preview_bucket_name = "photozseo-team-pool-preview"
