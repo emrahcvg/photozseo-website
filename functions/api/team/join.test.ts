@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { onRequestPost as join } from './join';
 import { onRequestPost as invite } from './invite';
 import { onRequestPost as create } from './create';
+import { onRequestGet as me } from './me';
 import { makeFakeD1 } from '../../_lib/fakeD1';
 import { signSession } from '../../_lib/session';
 import { SESSION_COOKIE } from '../../../src/storefront/auth/config';
@@ -60,5 +61,26 @@ describe('team join akışı', () => {
     await join({ request: await authed('sub-1', '1@x.com', '1', 'https://x/api/team/join', { code }), env });
     const second = await join({ request: await authed('sub-2', '2@x.com', '2', 'https://x/api/team/join', { code }), env });
     expect(second.status).toBe(409);
+  });
+
+  it('me, kullanıcının üyeliklerini döner', async () => {
+    const { db } = makeFakeD1();
+    const env = { STORE_WRITE_KEY: SECRET, MARKET_DB: db };
+    await create({ request: await authed('sub-owner', 'o@x.com', 'O', 'https://x/api/team/create', { name: 'A' }), env });
+
+    const token = await signSession({ sub: 'sub-owner', email: 'o@x.com', name: 'O', exp: 9999999999 }, SECRET);
+    const req = new Request('https://x/api/team/me', { headers: { cookie: `${SESSION_COOKIE}=${token}` } });
+    const res = await me({ request: req, env });
+    const body = await res.json() as { loggedIn: boolean; memberships: { role: string }[] };
+    expect(body.loggedIn).toBe(true);
+    expect(body.memberships).toHaveLength(1);
+    expect(body.memberships[0].role).toBe('owner');
+  });
+
+  it('me, oturum yoksa loggedIn:false', async () => {
+    const { db } = makeFakeD1();
+    const req = new Request('https://x/api/team/me');
+    const res = await me({ request: req, env: { STORE_WRITE_KEY: SECRET, MARKET_DB: db } });
+    expect(await res.json()).toEqual({ loggedIn: false });
   });
 });
