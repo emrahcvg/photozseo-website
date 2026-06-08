@@ -19,6 +19,10 @@ function companyIdOf(request: Request): string | null {
   return new URL(request.url).searchParams.get('companyId');
 }
 
+function safeParse(s: string): unknown {
+  try { return JSON.parse(s); } catch { return null; }
+}
+
 export async function onRequestGet(ctx: Ctx): Promise<Response> {
   const companyId = companyIdOf(ctx.request);
   if (!companyId) return json({ error: 'companyId required' }, 400);
@@ -30,8 +34,8 @@ export async function onRequestGet(ctx: Ctx): Promise<Response> {
   if (!row) return json({ error: 'Not found' }, 404);
   const assets = await listAssets(ctx.env.MARKET_DB!, companyId, ctx.params.id);
   return json({
-    project: { projectId: row.project_id, createdBy: row.created_by, modifiedAt: row.modified_at, deletedAt: row.deleted_at, snapshot: JSON.parse(row.snapshot) },
-    assets: assets.map((a) => ({ assetId: a.asset_id, r2Key: a.r2_key, modifiedAt: a.modified_at, deletedAt: a.deleted_at, snapshot: JSON.parse(a.snapshot) })),
+    project: { projectId: row.project_id, createdBy: row.created_by, modifiedAt: row.modified_at, deletedAt: row.deleted_at, snapshot: safeParse(row.snapshot) },
+    assets: assets.map((a) => ({ assetId: a.asset_id, r2Key: a.r2_key, modifiedAt: a.modified_at, deletedAt: a.deleted_at, snapshot: safeParse(a.snapshot) })),
   });
 }
 

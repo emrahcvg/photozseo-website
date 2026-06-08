@@ -32,7 +32,7 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   const auth = await requireMembership(ctx.request, ctx.env, body.companyId, nowSec);
   if (auth instanceof Response) return auth;
 
-  if (!isSafeKeySegment(body.projectId) || !isSafeKeySegment(body.assetId) || !isSafeKeySegment(body.ext)) {
+  if (!isSafeKeySegment(body.companyId) || !isSafeKeySegment(body.projectId) || !isSafeKeySegment(body.assetId) || !isSafeKeySegment(body.ext)) {
     return json({ error: 'unsafe id/ext' }, 400);
   }
   if (!ctx.env.R2_ACCOUNT_ID || !ctx.env.R2_ACCESS_KEY_ID || !ctx.env.R2_SECRET_ACCESS_KEY) {
