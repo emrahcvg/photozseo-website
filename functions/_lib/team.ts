@@ -118,3 +118,61 @@ export async function listMemberships(db: D1Like, userSub: string): Promise<Memb
     companyId: r.company_id, role: r.role, email: r.email, name: r.name, joinedAt: r.joined_at,
   }));
 }
+
+export interface InviteRow {
+  code: string;
+  company_id: string;
+  role: Role;
+  created_by: string;
+  created_at: string;
+  expires_at: string;
+  redeemed_by: string | null;
+  redeemed_at: string | null;
+}
+
+/** Davet kaydı oluşturur. Kod ve süre endpoint'te üretilir, buraya parametre gelir. */
+export async function createInvite(
+  db: D1Like,
+  inv: { code: string; companyId: string; role: Role; createdBy: string; now: string; expiresAt: string },
+): Promise<void> {
+  await db
+    .prepare('INSERT INTO invites (code, company_id, role, created_by, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)')
+    .bind(inv.code, inv.companyId, inv.role, inv.createdBy, inv.now, inv.expiresAt)
+    .run();
+}
+
+export type RedeemResult =
+  | { ok: true; companyId: string; role: Role }
+  | { ok: false; reason: 'not_found' | 'expired' | 'used' | 'already_member' };
+
+/**
+ * Daveti kullanır: doğrulama (var/süre/kullanılmamış/zaten-üye) → üyelik oluştur → daveti işaretle.
+ * `now` ve karşılaştırmalar ISO string (sözlüksel sıralama UTC ISO'da kronolojiktir).
+ */
+export async function redeemInvite(
+  db: D1Like,
+  req: { code: string; userSub: string; email: string; name: string | null; now: string },
+): Promise<RedeemResult> {
+  const normalized = req.code.toUpperCase();
+  const inv = await db
+    .prepare('SELECT code, company_id, role, created_by, created_at, expires_at, redeemed_by, redeemed_at FROM invites WHERE code = ?')
+    .bind(normalized)
+    .first<InviteRow>();
+
+  if (!inv) return { ok: false, reason: 'not_found' };
+  if (inv.redeemed_by) return { ok: false, reason: 'used' };
+  if (inv.expires_at < req.now) return { ok: false, reason: 'expired' };
+
+  const existing = await getMembership(db, inv.company_id, req.userSub);
+  if (existing) return { ok: false, reason: 'already_member' };
+
+  await upsertMembership(db, {
+    companyId: inv.company_id, userSub: req.userSub, email: req.email, name: req.name, role: inv.role, now: req.now,
+  });
+  await db
+    .prepare('UPDATE invites SET redeemed_by = ?, redeemed_at = ? WHERE code = ? AND redeemed_by IS NULL')
+    .bind(req.userSub, req.now, normalized)
+    .run();
+
+  return { ok: true, companyId: inv.company_id, role: inv.role };
+}

@@ -84,3 +84,61 @@ describe('createCompany + üyelik', () => {
     expect(await listMemberships(db, 'sub-yok')).toEqual([]);
   });
 });
+
+import { createInvite, redeemInvite } from './team';
+
+describe('davet oluştur + kullan', () => {
+  async function seedCompany(db: any) {
+    await createCompany(db, { companyId: 'c:co-1', name: 'A', ownerSub: 'sub-owner', email: 'o@x.com', ownerName: 'O', now: '2026-06-08T00:00:00Z' });
+  }
+
+  it('createInvite kaydı yazar; redeemInvite üyelik oluşturur', async () => {
+    const { db } = makeFakeD1();
+    await seedCompany(db);
+    await createInvite(db, { code: 'ABCD2345', companyId: 'c:co-1', role: 'employee', createdBy: 'sub-owner', now: '2026-06-08T00:00:00Z', expiresAt: '2026-06-15T00:00:00Z' });
+
+    const res = await redeemInvite(db, {
+      code: 'ABCD2345', userSub: 'sub-emp', email: 'e@x.com', name: 'Emre',
+      now: '2026-06-09T00:00:00Z',
+    });
+    expect(res).toEqual({ ok: true, companyId: 'c:co-1', role: 'employee' });
+
+    const m = await getMembership(db, 'c:co-1', 'sub-emp');
+    expect(m).toMatchObject({ role: 'employee', email: 'e@x.com' });
+  });
+
+  it('süresi geçmiş davet reddedilir (expired)', async () => {
+    const { db } = makeFakeD1();
+    await seedCompany(db);
+    await createInvite(db, { code: 'ABCD2345', companyId: 'c:co-1', role: 'employee', createdBy: 'sub-owner', now: '2026-06-08T00:00:00Z', expiresAt: '2026-06-08T01:00:00Z' });
+
+    const res = await redeemInvite(db, { code: 'ABCD2345', userSub: 'sub-emp', email: 'e@x.com', name: 'E', now: '2026-06-09T00:00:00Z' });
+    expect(res).toEqual({ ok: false, reason: 'expired' });
+    expect(await getMembership(db, 'c:co-1', 'sub-emp')).toBeNull();
+  });
+
+  it('tek kullanımlık — ikinci kullanım reddedilir (used)', async () => {
+    const { db } = makeFakeD1();
+    await seedCompany(db);
+    await createInvite(db, { code: 'ABCD2345', companyId: 'c:co-1', role: 'employee', createdBy: 'sub-owner', now: '2026-06-08T00:00:00Z', expiresAt: '2026-06-15T00:00:00Z' });
+
+    await redeemInvite(db, { code: 'ABCD2345', userSub: 'sub-1', email: '1@x.com', name: '1', now: '2026-06-09T00:00:00Z' });
+    const res = await redeemInvite(db, { code: 'ABCD2345', userSub: 'sub-2', email: '2@x.com', name: '2', now: '2026-06-09T00:00:01Z' });
+    expect(res).toEqual({ ok: false, reason: 'used' });
+  });
+
+  it('bilinmeyen kod reddedilir (not_found)', async () => {
+    const { db } = makeFakeD1();
+    const res = await redeemInvite(db, { code: 'ZZZZ9999', userSub: 'sub-x', email: 'x@x.com', name: 'X', now: '2026-06-09T00:00:00Z' });
+    expect(res).toEqual({ ok: false, reason: 'not_found' });
+  });
+
+  it('zaten üye olan kullanıcı için already_member', async () => {
+    const { db } = makeFakeD1();
+    await seedCompany(db);
+    await createInvite(db, { code: 'ABCD2345', companyId: 'c:co-1', role: 'employee', createdBy: 'sub-owner', now: '2026-06-08T00:00:00Z', expiresAt: '2026-06-15T00:00:00Z' });
+
+    const res = await redeemInvite(db, { code: 'ABCD2345', userSub: 'sub-owner', email: 'o@x.com', name: 'O', now: '2026-06-09T00:00:00Z' });
+    expect(res).toEqual({ ok: false, reason: 'already_member' });
+  });
+});
