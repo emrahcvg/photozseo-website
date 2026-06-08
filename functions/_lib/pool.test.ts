@@ -54,3 +54,30 @@ describe('pool projeler', () => {
     expect(await projectsSince(db, C, '2026-06-08T00:00:00Z')).toEqual([]);
   });
 });
+
+import { upsertAsset, getAsset, listAssets, tombstoneAsset } from './pool';
+
+describe('pool asset', () => {
+  it('upsert + get + list', async () => {
+    const { db } = makeFakeD1();
+    await upsertAsset(db, { companyId: C, projectId: 'p1', assetId: 'a1', r2Key: 'companies/c:co-1/projects/p1/original/a1.jpg', createdBy: 'sub-a', modifiedAt: '2026-06-08T10:00:00Z', snapshot: '{"order":0}' });
+    const got = await getAsset(db, C, 'p1', 'a1');
+    expect(got).toMatchObject({ asset_id: 'a1', r2_key: 'companies/c:co-1/projects/p1/original/a1.jpg', deleted_at: null });
+    const list = await listAssets(db, C, 'p1');
+    expect(list).toHaveLength(1);
+  });
+
+  it('LWW eski yazmaz', async () => {
+    const { db } = makeFakeD1();
+    await upsertAsset(db, { companyId: C, projectId: 'p1', assetId: 'a1', r2Key: 'k', createdBy: 'a', modifiedAt: '2026-06-08T10:00:00Z', snapshot: '{"v":2}' });
+    await upsertAsset(db, { companyId: C, projectId: 'p1', assetId: 'a1', r2Key: 'k', createdBy: 'a', modifiedAt: '2026-06-08T09:00:00Z', snapshot: '{"v":1}' });
+    expect((await getAsset(db, C, 'p1', 'a1'))!.snapshot).toBe('{"v":2}');
+  });
+
+  it('tombstone', async () => {
+    const { db } = makeFakeD1();
+    await upsertAsset(db, { companyId: C, projectId: 'p1', assetId: 'a1', r2Key: 'k', createdBy: 'a', modifiedAt: '2026-06-08T10:00:00Z', snapshot: '{}' });
+    await tombstoneAsset(db, { companyId: C, projectId: 'p1', assetId: 'a1', deletedAt: '2026-06-08T12:00:00Z', modifiedAt: '2026-06-08T12:00:00Z' });
+    expect((await getAsset(db, C, 'p1', 'a1'))!.deleted_at).toBe('2026-06-08T12:00:00Z');
+  });
+});

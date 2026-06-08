@@ -66,3 +66,58 @@ export async function tombstoneProject(
     .bind(t.deletedAt, t.modifiedAt, t.companyId, t.projectId)
     .run();
 }
+
+export interface AssetRow {
+  company_id: string;
+  project_id: string;
+  asset_id: string;
+  r2_key: string;
+  created_by: string;
+  modified_at: string;
+  deleted_at: string | null;
+  snapshot: string;
+}
+
+/** Asset'i upsert eder (LWW; created_by korunur). */
+export async function upsertAsset(
+  db: D1Like,
+  a: { companyId: string; projectId: string; assetId: string; r2Key: string; createdBy: string; modifiedAt: string; snapshot: string; deletedAt?: string | null },
+): Promise<void> {
+  await db
+    .prepare(
+      'INSERT INTO pool_assets (company_id, project_id, asset_id, r2_key, created_by, modified_at, deleted_at, snapshot) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ' +
+      'ON CONFLICT(company_id, project_id, asset_id) DO UPDATE SET ' +
+      'r2_key = excluded.r2_key, modified_at = excluded.modified_at, deleted_at = excluded.deleted_at, snapshot = excluded.snapshot ' +
+      'WHERE excluded.modified_at >= pool_assets.modified_at',
+    )
+    .bind(a.companyId, a.projectId, a.assetId, a.r2Key, a.createdBy, a.modifiedAt, a.deletedAt ?? null, a.snapshot)
+    .run();
+}
+
+/** Tek asset; yoksa null. */
+export async function getAsset(db: D1Like, companyId: string, projectId: string, assetId: string): Promise<AssetRow | null> {
+  return db
+    .prepare('SELECT company_id, project_id, asset_id, r2_key, created_by, modified_at, deleted_at, snapshot FROM pool_assets WHERE company_id = ? AND project_id = ? AND asset_id = ?')
+    .bind(companyId, projectId, assetId)
+    .first<AssetRow>();
+}
+
+/** Projedeki tüm asset'ler (tombstone dahil). */
+export async function listAssets(db: D1Like, companyId: string, projectId: string): Promise<AssetRow[]> {
+  const { results } = await db
+    .prepare('SELECT company_id, project_id, asset_id, r2_key, created_by, modified_at, deleted_at, snapshot FROM pool_assets WHERE company_id = ? AND project_id = ?')
+    .bind(companyId, projectId)
+    .all<AssetRow>();
+  return results;
+}
+
+/** Asset'i tombstone'lar. */
+export async function tombstoneAsset(
+  db: D1Like,
+  t: { companyId: string; projectId: string; assetId: string; deletedAt: string; modifiedAt: string },
+): Promise<void> {
+  await db
+    .prepare('UPDATE pool_assets SET deleted_at = ?, modified_at = ? WHERE company_id = ? AND project_id = ? AND asset_id = ?')
+    .bind(t.deletedAt, t.modifiedAt, t.companyId, t.projectId, t.assetId)
+    .run();
+}
