@@ -33,3 +33,27 @@ const MATRIX: Record<Role, ReadonlySet<Capability>> = {
 export function can(role: Role, cap: Capability): boolean {
   return MATRIX[role]?.has(cap) ?? false;
 }
+
+// Karışık-olmayan alfabe: I, O, 0, 1 çıkarıldı (okuma hatasını önler).
+const INVITE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const INVITE_LEN = 8;
+const INVITE_RE = /^[A-HJ-NP-Z2-9]{8}$/;
+
+/** Rastgele bayt sağlayıcı (test edilebilirlik için enjekte edilir). */
+export type RandomBytes = (n: number) => Uint8Array;
+
+/** 8 karakterlik davet kodu üretir. rand: endpoint'te crypto.getRandomValues sarmalayıcısı. */
+export function randomInviteCode(rand: RandomBytes): string {
+  const bytes = rand(INVITE_LEN);
+  let out = '';
+  for (let i = 0; i < INVITE_LEN; i++) {
+    out += INVITE_ALPHABET[bytes[i] % INVITE_ALPHABET.length];
+  }
+  return out;
+}
+
+/** Davet kodu biçim kontrolü (büyük harfe normalize ederek). */
+export function isValidInviteCode(code: string): boolean {
+  if (!code) return false;
+  return INVITE_RE.test(code.toUpperCase());
+}

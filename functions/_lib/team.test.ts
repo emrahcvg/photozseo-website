@@ -28,3 +28,27 @@ describe('can(role, capability)', () => {
     }
   });
 });
+
+import { randomInviteCode, isValidInviteCode } from './team';
+
+describe('davet kodu', () => {
+  it('randomInviteCode 8 karakter karışık-olmayan alfabe üretir', () => {
+    const code = randomInviteCode((n) => new Uint8Array(n).fill(0));
+    expect(code).toHaveLength(8);
+    expect(/^[A-HJ-NP-Z2-9]{8}$/.test(code)).toBe(true); // I,O,0,1 yok
+  });
+
+  it('farklı rastgele baytlar farklı kod üretir', () => {
+    const a = randomInviteCode((n) => { const u = new Uint8Array(n); u.forEach((_,i)=>u[i]=i); return u; });
+    const b = randomInviteCode((n) => { const u = new Uint8Array(n); u.forEach((_,i)=>u[i]=i+5); return u; });
+    expect(a).not.toBe(b);
+  });
+
+  it('isValidInviteCode biçim kontrolü', () => {
+    expect(isValidInviteCode('ABCD2345')).toBe(true);
+    expect(isValidInviteCode('abcd2345')).toBe(true);   // küçük harf normalize edilir
+    expect(isValidInviteCode('ABC')).toBe(false);        // kısa
+    expect(isValidInviteCode('ABCD23I5')).toBe(false);   // I yasak
+    expect(isValidInviteCode('ABCD 234')).toBe(false);   // boşluk
+  });
+});
