@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -32,6 +32,8 @@ export function makeFakeD1(): FakeD1 {
     companies: [] as Row[],
     memberships: [] as Row[],
     invites: [] as Row[],
+    pool_projects: [] as Row[],
+    pool_assets: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -256,6 +258,66 @@ export function makeFakeD1(): FakeD1 {
     if (/UPDATE invites SET redeemed_by = \?, redeemed_at = \? WHERE code = \? AND redeemed_by IS NULL/i.test(s)) {
       const inv = tables.invites.find((x) => x.code === args[2] && x.redeemed_by == null);
       if (inv) { inv.redeemed_by = args[0]; inv.redeemed_at = args[1]; }
+      return { kind: 'run' as const };
+    }
+    // pool_projects: LWW upsert (ON CONFLICT ... WHERE excluded.modified_at >= mevcut)
+    if (/INSERT INTO pool_projects/i.test(s)) {
+      const [company_id, project_id, created_by, modified_at, deleted_at, snapshot] = args;
+      const i = tables.pool_projects.findIndex((r) => r.company_id === company_id && r.project_id === project_id);
+      if (i < 0) {
+        tables.pool_projects.push({ company_id, project_id, created_by, modified_at, deleted_at, snapshot });
+      } else if (String(modified_at) >= String(tables.pool_projects[i].modified_at)) {
+        // created_by ilk yazanı korur (excluded.created_by ile değişmez)
+        const keepCreatedBy = tables.pool_projects[i].created_by;
+        tables.pool_projects[i] = { company_id, project_id, created_by: keepCreatedBy, modified_at, deleted_at, snapshot };
+      }
+      return { kind: 'run' as const };
+    }
+    // pool_projects: SELECT one
+    if (/SELECT .* FROM pool_projects WHERE company_id = \? AND project_id = \?/i.test(s)) {
+      const r = tables.pool_projects.find((x) => x.company_id === args[0] && x.project_id === args[1]) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // pool_projects: delta SELECT (modified_at > since)
+    if (/SELECT project_id, modified_at, deleted_at FROM pool_projects WHERE company_id = \? AND modified_at > \?/i.test(s)) {
+      const rows = tables.pool_projects
+        .filter((r) => r.company_id === args[0] && String(r.modified_at) > String(args[1]))
+        .map((r) => ({ project_id: r.project_id, modified_at: r.modified_at, deleted_at: r.deleted_at }))
+        .sort((a, b) => String(a.modified_at).localeCompare(String(b.modified_at)));
+      return { kind: 'all' as const, rows };
+    }
+    // pool_projects: tombstone UPDATE
+    if (/UPDATE pool_projects SET deleted_at = \?, modified_at = \? WHERE company_id = \? AND project_id = \?/i.test(s)) {
+      const r = tables.pool_projects.find((x) => x.company_id === args[2] && x.project_id === args[3]);
+      if (r) { r.deleted_at = args[0]; r.modified_at = args[1]; }
+      return { kind: 'run' as const };
+    }
+    // pool_assets: LWW upsert
+    if (/INSERT INTO pool_assets/i.test(s)) {
+      const [company_id, project_id, asset_id, r2_key, created_by, modified_at, deleted_at, snapshot] = args;
+      const i = tables.pool_assets.findIndex((r) => r.company_id === company_id && r.project_id === project_id && r.asset_id === asset_id);
+      if (i < 0) {
+        tables.pool_assets.push({ company_id, project_id, asset_id, r2_key, created_by, modified_at, deleted_at, snapshot });
+      } else if (String(modified_at) >= String(tables.pool_assets[i].modified_at)) {
+        const keepCreatedBy = tables.pool_assets[i].created_by;
+        tables.pool_assets[i] = { company_id, project_id, asset_id, r2_key, created_by: keepCreatedBy, modified_at, deleted_at, snapshot };
+      }
+      return { kind: 'run' as const };
+    }
+    // pool_assets: SELECT one
+    if (/SELECT .* FROM pool_assets WHERE company_id = \? AND project_id = \? AND asset_id = \?/i.test(s)) {
+      const r = tables.pool_assets.find((x) => x.company_id === args[0] && x.project_id === args[1] && x.asset_id === args[2]) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // pool_assets: list by project
+    if (/SELECT .* FROM pool_assets WHERE company_id = \? AND project_id = \?$/i.test(s)) {
+      const rows = tables.pool_assets.filter((r) => r.company_id === args[0] && r.project_id === args[1]);
+      return { kind: 'all' as const, rows };
+    }
+    // pool_assets: tombstone UPDATE
+    if (/UPDATE pool_assets SET deleted_at = \?, modified_at = \? WHERE company_id = \? AND project_id = \? AND asset_id = \?/i.test(s)) {
+      const r = tables.pool_assets.find((x) => x.company_id === args[2] && x.project_id === args[3] && x.asset_id === args[4]);
+      if (r) { r.deleted_at = args[0]; r.modified_at = args[1]; }
       return { kind: 'run' as const };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
