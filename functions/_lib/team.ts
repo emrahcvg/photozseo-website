@@ -57,3 +57,64 @@ export function isValidInviteCode(code: string): boolean {
   if (!code) return false;
   return INVITE_RE.test(code.toUpperCase());
 }
+
+export interface MembershipRow {
+  company_id: string;
+  user_sub: string;
+  email: string;
+  name: string | null;
+  role: Role;
+  joined_at: string;
+}
+
+export interface MembershipView {
+  companyId: string;
+  role: Role;
+  email: string;
+  name: string | null;
+  joinedAt: string;
+}
+
+/** Üyeliği üye olarak ekler/günceller (upsert). Saf veri katmanı. */
+export async function upsertMembership(
+  db: D1Like,
+  m: { companyId: string; userSub: string; email: string; name: string | null; role: Role; now: string },
+): Promise<void> {
+  await db
+    .prepare('INSERT INTO memberships (company_id, user_sub, email, name, role, joined_at) VALUES (?, ?, ?, ?, ?, ?)')
+    .bind(m.companyId, m.userSub, m.email, m.name, m.role, m.now)
+    .run();
+}
+
+/** Şirket oluşturur ve kurucuyu owner üye yapar. */
+export async function createCompany(
+  db: D1Like,
+  c: { companyId: string; name: string; ownerSub: string; email: string; ownerName: string | null; now: string },
+): Promise<void> {
+  await db
+    .prepare('INSERT INTO companies (id, name, owner_sub, created_at) VALUES (?, ?, ?, ?)')
+    .bind(c.companyId, c.name, c.ownerSub, c.now)
+    .run();
+  await upsertMembership(db, {
+    companyId: c.companyId, userSub: c.ownerSub, email: c.email, name: c.ownerName, role: 'owner', now: c.now,
+  });
+}
+
+/** Tek üyelik kaydını döner; yoksa null. */
+export async function getMembership(db: D1Like, companyId: string, userSub: string): Promise<MembershipRow | null> {
+  return db
+    .prepare('SELECT company_id, user_sub, email, name, role, joined_at FROM memberships WHERE company_id = ? AND user_sub = ?')
+    .bind(companyId, userSub)
+    .first<MembershipRow>();
+}
+
+/** Kullanıcının tüm üyeliklerini görünüm olarak döner. */
+export async function listMemberships(db: D1Like, userSub: string): Promise<MembershipView[]> {
+  const { results } = await db
+    .prepare('SELECT company_id, user_sub, email, name, role, joined_at FROM memberships WHERE user_sub = ?')
+    .bind(userSub)
+    .all<MembershipRow>();
+  return results.map((r) => ({
+    companyId: r.company_id, role: r.role, email: r.email, name: r.name, joinedAt: r.joined_at,
+  }));
+}

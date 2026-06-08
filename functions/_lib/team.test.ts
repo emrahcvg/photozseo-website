@@ -52,3 +52,35 @@ describe('davet kodu', () => {
     expect(isValidInviteCode('ABCD 234')).toBe(false);   // boşluk
   });
 });
+
+import { makeFakeD1 } from './fakeD1';
+import { createCompany, getMembership, listMemberships } from './team';
+
+describe('createCompany + üyelik', () => {
+  it('şirket oluşturur ve kurucuyu owner yapar', async () => {
+    const { db } = makeFakeD1();
+    await createCompany(db, {
+      companyId: 'c:co-1', name: 'Ahmet Oto', ownerSub: 'sub-ahmet',
+      email: 'ahmet@x.com', ownerName: 'Ahmet', now: '2026-06-08T00:00:00Z',
+    });
+
+    const m = await getMembership(db, 'c:co-1', 'sub-ahmet');
+    expect(m).toMatchObject({ company_id: 'c:co-1', role: 'owner', email: 'ahmet@x.com' });
+  });
+
+  it('listMemberships kullanıcının tüm üyeliklerini döner', async () => {
+    const { db } = makeFakeD1();
+    await createCompany(db, { companyId: 'c:co-1', name: 'A', ownerSub: 'sub-1', email: 'a@x.com', ownerName: 'A', now: '2026-06-08T00:00:00Z' });
+    await createCompany(db, { companyId: 'c:co-2', name: 'B', ownerSub: 'sub-1', email: 'a@x.com', ownerName: 'A', now: '2026-06-08T00:00:01Z' });
+
+    const list = await listMemberships(db, 'sub-1');
+    expect(list.map((m) => m.companyId).sort()).toEqual(['c:co-1', 'c:co-2']);
+    expect(list.every((m) => m.role === 'owner')).toBe(true);
+  });
+
+  it('üyeliği olmayan kullanıcı için null/boş döner', async () => {
+    const { db } = makeFakeD1();
+    expect(await getMembership(db, 'c:yok', 'sub-yok')).toBeNull();
+    expect(await listMemberships(db, 'sub-yok')).toEqual([]);
+  });
+});
