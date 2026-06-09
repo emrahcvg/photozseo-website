@@ -143,6 +143,23 @@ export async function listCompanyMembers(db: D1Like, companyId: string): Promise
   }));
 }
 
+/** Bir üyeliği siler. Çağıran tarafça yetki + rol kuralları doğrulanmalı. */
+export async function removeMembership(db: D1Like, companyId: string, userSub: string): Promise<void> {
+  await db
+    .prepare('DELETE FROM memberships WHERE company_id = ? AND user_sub = ?')
+    .bind(companyId, userSub)
+    .run();
+}
+
+/** Şirketteki owner sayısı — son-owner ayrılma/çıkarılma korumasında kullanılır. */
+export async function countOwners(db: D1Like, companyId: string): Promise<number> {
+  const row = await db
+    .prepare("SELECT COUNT(*) AS n FROM memberships WHERE company_id = ? AND role = 'owner'")
+    .bind(companyId)
+    .first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
 export interface InviteRow {
   code: string;
   company_id: string;
