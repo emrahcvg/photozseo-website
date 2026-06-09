@@ -243,6 +243,25 @@ export function makeFakeD1(): FakeD1 {
       const rows = tables.memberships.filter((r) => r.user_sub === args[0]);
       return { kind: 'all' as const, rows };
     }
+    // memberships: COUNT owners by company (roster SELECT'ten ÖNCE — regex anchor'sız)
+    if (/SELECT COUNT\(\*\) AS n FROM memberships WHERE company_id = \? AND role = 'owner'/i.test(s)) {
+      const n = tables.memberships.filter((r) => r.company_id === args[0] && r.role === 'owner').length;
+      return { kind: 'first' as const, row: { n } };
+    }
+    // memberships: DELETE one by company + user
+    if (/DELETE FROM memberships WHERE company_id = \? AND user_sub = \?/i.test(s)) {
+      for (let i = tables.memberships.length - 1; i >= 0; i--) {
+        if (tables.memberships[i].company_id === args[0] && tables.memberships[i].user_sub === args[1]) {
+          tables.memberships.splice(i, 1);
+        }
+      }
+      return { kind: 'run' as const };
+    }
+    // memberships: SELECT all by company (roster)
+    if (/SELECT .* FROM memberships WHERE company_id = \?/i.test(s)) {
+      const rows = tables.memberships.filter((r) => r.company_id === args[0]);
+      return { kind: 'all' as const, rows };
+    }
     // invites: INSERT
     if (/INSERT INTO invites/i.test(s)) {
       const [code, company_id, role, created_by, created_at, expires_at] = args;

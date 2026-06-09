@@ -123,6 +123,43 @@ export async function listMemberships(db: D1Like, userSub: string): Promise<Memb
   }));
 }
 
+/** Bir şirketin tek bir üyesinin görünümü (roster için; sub ile kimliklenir). */
+export interface CompanyMemberView {
+  sub: string;
+  email: string;
+  name: string | null;
+  role: Role;
+  joinedAt: string;
+}
+
+/** Bir şirketin tüm üyelerini döner. Çağıran tarafça üyelik yetkisi doğrulanmalı. */
+export async function listCompanyMembers(db: D1Like, companyId: string): Promise<CompanyMemberView[]> {
+  const { results } = await db
+    .prepare('SELECT company_id, user_sub, email, name, role, joined_at FROM memberships WHERE company_id = ?')
+    .bind(companyId)
+    .all<MembershipRow>();
+  return results.map((r) => ({
+    sub: r.user_sub, email: r.email, name: r.name, role: r.role, joinedAt: r.joined_at,
+  }));
+}
+
+/** Bir üyeliği siler. Çağıran tarafça yetki + rol kuralları doğrulanmalı. */
+export async function removeMembership(db: D1Like, companyId: string, userSub: string): Promise<void> {
+  await db
+    .prepare('DELETE FROM memberships WHERE company_id = ? AND user_sub = ?')
+    .bind(companyId, userSub)
+    .run();
+}
+
+/** Şirketteki owner sayısı — son-owner ayrılma/çıkarılma korumasında kullanılır. */
+export async function countOwners(db: D1Like, companyId: string): Promise<number> {
+  const row = await db
+    .prepare("SELECT COUNT(*) AS n FROM memberships WHERE company_id = ? AND role = 'owner'")
+    .bind(companyId)
+    .first<{ n: number }>();
+  return row?.n ?? 0;
+}
+
 export interface InviteRow {
   code: string;
   company_id: string;
