@@ -8,7 +8,7 @@
  * Hata:     400 (credential yok) | 401 (geçersiz token/claim) | 503 (write key yok)
  */
 import { signSession } from '../../_lib/session';
-import { GOOGLE_CLIENT_ID, SESSION_COOKIE, SESSION_TTL_DAYS } from '../../../src/storefront/auth/config';
+import { GOOGLE_ALLOWED_AUDS, SESSION_COOKIE, SESSION_TTL_DAYS } from '../../../src/storefront/auth/config';
 import { migrateOwner, ownerKeyFromDevice, ownerKeyFromBuyer, type D1Like } from '../../_lib/buyer';
 
 interface Env {
@@ -49,8 +49,8 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
 
   const claims = await res.json() as Record<string, string>;
 
-  // Kitleye (aud) göre doğrulama
-  if (claims.aud !== GOOGLE_CLIENT_ID) return json({ error: 'Token aud mismatch' }, 401);
+  // Kitleye (aud) göre doğrulama — web storefront veya iOS native client'ı (aynı proje).
+  if (!GOOGLE_ALLOWED_AUDS.includes(claims.aud)) return json({ error: 'Token aud mismatch' }, 401);
 
   // Yayıncı (iss) doğrulaması
   const validIssuers = ['accounts.google.com', 'https://accounts.google.com'];
