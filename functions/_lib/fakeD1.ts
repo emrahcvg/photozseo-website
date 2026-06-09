@@ -243,6 +243,11 @@ export function makeFakeD1(): FakeD1 {
       const rows = tables.memberships.filter((r) => r.user_sub === args[0]);
       return { kind: 'all' as const, rows };
     }
+    // memberships: SELECT all by company (roster)
+    if (/SELECT .* FROM memberships WHERE company_id = \?/i.test(s)) {
+      const rows = tables.memberships.filter((r) => r.company_id === args[0]);
+      return { kind: 'all' as const, rows };
+    }
     // invites: INSERT
     if (/INSERT INTO invites/i.test(s)) {
       const [code, company_id, role, created_by, created_at, expires_at] = args;

@@ -85,6 +85,37 @@ describe('createCompany + üyelik', () => {
   });
 });
 
+import { upsertMembership, listCompanyMembers } from './team';
+
+describe('listCompanyMembers — şirket üye listesi', () => {
+  it('şirketin tüm üyelerini rol+sub ile döner', async () => {
+    const { db } = makeFakeD1();
+    await createCompany(db, { companyId: 'c:co-1', name: 'A', ownerSub: 'sub-owner', email: 'o@x.com', ownerName: 'Owner', now: '2026-06-08T00:00:00Z' });
+    await upsertMembership(db, { companyId: 'c:co-1', userSub: 'sub-emp', email: 'e@x.com', name: 'Emp', role: 'employee', now: '2026-06-08T00:01:00Z' });
+
+    const members = await listCompanyMembers(db, 'c:co-1');
+    expect(members.map((m) => m.sub).sort()).toEqual(['sub-emp', 'sub-owner']);
+    const owner = members.find((m) => m.sub === 'sub-owner');
+    expect(owner).toMatchObject({ role: 'owner', email: 'o@x.com', name: 'Owner' });
+    expect(members.find((m) => m.sub === 'sub-emp')?.role).toBe('employee');
+  });
+
+  it('başka şirketin üyelerini sızdırmaz', async () => {
+    const { db } = makeFakeD1();
+    await createCompany(db, { companyId: 'c:co-1', name: 'A', ownerSub: 'sub-1', email: 'a@x.com', ownerName: 'A', now: '2026-06-08T00:00:00Z' });
+    await createCompany(db, { companyId: 'c:co-2', name: 'B', ownerSub: 'sub-2', email: 'b@x.com', ownerName: 'B', now: '2026-06-08T00:00:01Z' });
+
+    const members = await listCompanyMembers(db, 'c:co-1');
+    expect(members).toHaveLength(1);
+    expect(members[0].sub).toBe('sub-1');
+  });
+
+  it('üyesi olmayan şirket için boş döner', async () => {
+    const { db } = makeFakeD1();
+    expect(await listCompanyMembers(db, 'c:yok')).toEqual([]);
+  });
+});
+
 import { createInvite, redeemInvite } from './team';
 
 describe('davet oluştur + kullan', () => {
