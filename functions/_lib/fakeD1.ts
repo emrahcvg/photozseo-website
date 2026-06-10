@@ -254,6 +254,35 @@ export function makeFakeD1(): FakeD1 {
       if (r) r.role = args[0];
       return { kind: 'run' as const };
     }
+    // memberships: UPDATE role literal (transfer-ownership: 'owner'/'admin')
+    {
+      const m = s.match(/UPDATE memberships SET role = '(owner|admin|employee)' WHERE company_id = \? AND user_sub = \?/i);
+      if (m) {
+        const r = tables.memberships.find((x) => x.company_id === args[0] && x.user_sub === args[1]);
+        if (r) r.role = m[1];
+        return { kind: 'run' as const };
+      }
+    }
+    // companies: UPDATE owner_sub (transfer-ownership)
+    if (/UPDATE companies SET owner_sub = \? WHERE id = \?/i.test(s)) {
+      const c = tables.companies.find((x) => x.id === args[1]);
+      if (c) c.owner_sub = args[0];
+      return { kind: 'run' as const };
+    }
+    // cascade DELETE by company_id (delete-company): tek-kolon, anchor'lı
+    {
+      const m = s.match(/DELETE FROM (pool_assets|pool_projects|invites|memberships) WHERE company_id = \?\s*$/i);
+      if (m) {
+        const t = m[1] as 'pool_assets' | 'pool_projects' | 'invites' | 'memberships';
+        tables[t] = (tables[t] as Row[]).filter((r) => r.company_id !== args[0]);
+        return { kind: 'run' as const };
+      }
+    }
+    // companies: DELETE by id (delete-company)
+    if (/DELETE FROM companies WHERE id = \?/i.test(s)) {
+      tables.companies = tables.companies.filter((r) => r.id !== args[0]);
+      return { kind: 'run' as const };
+    }
     // memberships: DELETE one by company + user
     if (/DELETE FROM memberships WHERE company_id = \? AND user_sub = \?/i.test(s)) {
       for (let i = tables.memberships.length - 1; i >= 0; i--) {

@@ -104,6 +104,14 @@ export async function createCompany(
   });
 }
 
+/** Tek şirket kaydını döner; yoksa null. */
+export async function getCompany(db: D1Like, companyId: string): Promise<{ id: string; name: string; owner_sub: string; created_at: string } | null> {
+  return db
+    .prepare('SELECT id, name, owner_sub, created_at FROM companies WHERE id = ?')
+    .bind(companyId)
+    .first();
+}
+
 /** Tek üyelik kaydını döner; yoksa null. */
 export async function getMembership(db: D1Like, companyId: string, userSub: string): Promise<MembershipRow | null> {
   return db
@@ -157,6 +165,33 @@ export async function updateMembershipRole(db: D1Like, companyId: string, userSu
     .prepare('UPDATE memberships SET role = ? WHERE company_id = ? AND user_sub = ?')
     .bind(role, companyId, userSub)
     .run();
+}
+
+/**
+ * Sahipliği devreder (tek-owner modeli): hedef owner olur, eski owner admin'e iner,
+ * companies.owner_sub güncellenir. Çağıran tarafça yetki + kurallar doğrulanmalı.
+ */
+export async function transferOwnership(
+  db: D1Like,
+  companyId: string,
+  fromSub: string,
+  toSub: string,
+): Promise<void> {
+  await db.prepare("UPDATE memberships SET role = 'owner' WHERE company_id = ? AND user_sub = ?").bind(companyId, toSub).run();
+  await db.prepare("UPDATE memberships SET role = 'admin' WHERE company_id = ? AND user_sub = ?").bind(companyId, fromSub).run();
+  await db.prepare('UPDATE companies SET owner_sub = ? WHERE id = ?').bind(toSub, companyId).run();
+}
+
+/**
+ * Şirketi ve tüm bağlı kayıtlarını siler (memberships/invites/pool_projects/pool_assets/companies).
+ * R2 foto byte'ları TEMİZLENMEZ (ileride toplu job). Çağıran tarafça owner yetkisi doğrulanmalı.
+ */
+export async function deleteCompany(db: D1Like, companyId: string): Promise<void> {
+  await db.prepare('DELETE FROM pool_assets WHERE company_id = ?').bind(companyId).run();
+  await db.prepare('DELETE FROM pool_projects WHERE company_id = ?').bind(companyId).run();
+  await db.prepare('DELETE FROM invites WHERE company_id = ?').bind(companyId).run();
+  await db.prepare('DELETE FROM memberships WHERE company_id = ?').bind(companyId).run();
+  await db.prepare('DELETE FROM companies WHERE id = ?').bind(companyId).run();
 }
 
 /** Şirketteki owner sayısı — son-owner ayrılma/çıkarılma korumasında kullanılır. */
