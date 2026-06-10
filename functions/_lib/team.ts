@@ -151,6 +151,14 @@ export async function removeMembership(db: D1Like, companyId: string, userSub: s
     .run();
 }
 
+/** Bir üyenin rolünü günceller. Çağıran tarafça yetki + rol kuralları doğrulanmalı. */
+export async function updateMembershipRole(db: D1Like, companyId: string, userSub: string, role: Role): Promise<void> {
+  await db
+    .prepare('UPDATE memberships SET role = ? WHERE company_id = ? AND user_sub = ?')
+    .bind(role, companyId, userSub)
+    .run();
+}
+
 /** Şirketteki owner sayısı — son-owner ayrılma/çıkarılma korumasında kullanılır. */
 export async function countOwners(db: D1Like, companyId: string): Promise<number> {
   const row = await db

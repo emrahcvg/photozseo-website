@@ -248,6 +248,12 @@ export function makeFakeD1(): FakeD1 {
       const n = tables.memberships.filter((r) => r.company_id === args[0] && r.role === 'owner').length;
       return { kind: 'first' as const, row: { n } };
     }
+    // memberships: UPDATE role by company + user
+    if (/UPDATE memberships SET role = \? WHERE company_id = \? AND user_sub = \?/i.test(s)) {
+      const r = tables.memberships.find((x) => x.company_id === args[1] && x.user_sub === args[2]);
+      if (r) r.role = args[0];
+      return { kind: 'run' as const };
+    }
     // memberships: DELETE one by company + user
     if (/DELETE FROM memberships WHERE company_id = \? AND user_sub = \?/i.test(s)) {
       for (let i = tables.memberships.length - 1; i >= 0; i--) {
