@@ -60,6 +60,30 @@
     }).catch(function () { /* sessiz hata */ });
   }
 
+  /* ── One Tap gösterilemeyince resmi Google butonu render et ── */
+  function showFallbackButton() {
+    var g = window.google;
+    if (!g || !g.accounts || !g.accounts.id) return;
+    var container = document.getElementById('pz-signin');
+    if (!container) return;
+    // Özel buton gizle; Google'ın resmi popup butonunu ekle
+    var btn = document.getElementById('pz-signin-btn');
+    if (btn) btn.style.display = 'none';
+    var fbDiv = document.getElementById('pz-signin-fb');
+    if (!fbDiv) {
+      fbDiv = document.createElement('div');
+      fbDiv.id = 'pz-signin-fb';
+      container.appendChild(fbDiv);
+    }
+    g.accounts.id.renderButton(fbDiv, {
+      type: 'standard',
+      size: 'large',
+      text: 'signin_with',
+      shape: 'pill',
+      logo_alignment: 'left',
+    });
+  }
+
   /* ── One Tap başlat (sadece giriş yapılmamışsa çağrılır) ── */
   function initOneTap() {
     var g = window.google;
@@ -68,20 +92,28 @@
     g.accounts.id.initialize({
       client_id: clientId,
       callback: onCredential,
-      auto_select: true,            // geri dönen kullanıcılar otomatik devam eder
+      auto_select: true,
       cancel_on_tap_outside: false,
       context: 'signin',
-      itp_support: true,            // Intelligent Tracking Prevention desteği
+      itp_support: true,
     });
 
-    // Pinterest tarzı: sayfa yüklenince One Tap göster
-    g.accounts.id.prompt();
+    // Sayfa yüklenince One Tap dene; gösterilemezse fallback butonu render et
+    g.accounts.id.prompt(function (notification) {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        showFallbackButton();
+      }
+    });
 
-    // Manuel fallback: giriş butonuna tıklayınca One Tap'ı yeniden tetikle
+    // Butona tıklanınca: One Tap'ı yeniden dene, yine olmazsa fallback
     var signinBtn = document.getElementById('pz-signin-btn');
     if (signinBtn) {
       signinBtn.addEventListener('click', function () {
-        g.accounts.id.prompt();
+        g.accounts.id.prompt(function (notification) {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            showFallbackButton();
+          }
+        });
       });
     }
   }
