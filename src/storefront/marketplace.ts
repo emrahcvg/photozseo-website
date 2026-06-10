@@ -79,6 +79,41 @@ export function mkFormatPrice(price: number | null, currency: string, locale: st
 
 export { escapeAttr };
 
+// ── Inline SVG icon set (currentColor stroke, app-header dili) ────────────────
+// Static markup only — no dynamic values inside.
+
+type MkIconName = 'search' | 'sliders' | 'store' | 'heart' | 'cart' | 'photo';
+
+const MK_ICON_PATHS: Record<MkIconName, string> = {
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/>',
+  sliders:
+    '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>' +
+    '<line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>' +
+    '<line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>' +
+    '<line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+  store:
+    '<path d="m3 9 1.7-5.1A1.3 1.3 0 0 1 5.9 3h12.2a1.3 1.3 0 0 1 1.2.9L21 9"/>' +
+    '<path d="M4 9v10.7c0 .7.6 1.3 1.3 1.3h13.4c.7 0 1.3-.6 1.3-1.3V9"/>' +
+    '<path d="M3 9h18"/><path d="M9 21v-6h6v6"/>',
+  heart:
+    '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+  cart:
+    '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>' +
+    '<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+  photo:
+    '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/>',
+};
+
+function mkIcon(name: MkIconName, small = false): string {
+  const cls = small ? 'mk-icon mk-icon--sm' : 'mk-icon';
+  return (
+    `<svg class="${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" ` +
+    'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    MK_ICON_PATHS[name] +
+    '</svg>'
+  );
+}
+
 function renderLangSwitcher(locale: string): string {
   const label = escapeHtml(mt(locale, 'language'));
   let html = `<label class="mk-lang-label" aria-label="${label}">\n`;
@@ -96,10 +131,7 @@ function renderLangSwitcher(locale: string): string {
 export function renderProductCard(p: ProductRow, locale: string): string {
   const title = escapeHtml(p.title);
   const price = mkFormatPrice(p.price, p.currency, locale);
-  const stock = p.stock;
-  const soldOut = stock === 0;
-  const lowStock = stock != null && stock > 0 && stock <= 5;
-  const inStock = stock != null && stock > 5;
+  const soldOut = p.stock === 0;
   const href = escapeAttr(p.product_path);
   const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
 
@@ -109,14 +141,10 @@ export function renderProductCard(p: ProductRow, locale: string): string {
   if (p.image_url) {
     html += `      <img src="${escapeAttr(p.image_url)}" alt="${title}" loading="lazy" decoding="async" width="600" height="600" />\n`;
   } else {
-    html += '      <div class="mk-card__media-empty" aria-hidden="true">📷</div>\n';
+    html += `      <div class="mk-card__media-empty" aria-hidden="true">${mkIcon('photo')}</div>\n`;
   }
   if (soldOut) {
     html += `      <span class="mk-card__badge mk-card__badge--out">${escapeHtml(mt(locale, 'soldOut'))}</span>\n`;
-  } else if (lowStock) {
-    html += `      <span class="mk-card__badge mk-card__badge--low">Only ${stock} left!</span>\n`;
-  } else if (inStock) {
-    html += `      <span class="mk-card__badge mk-card__badge--in">In Stock</span>\n`;
   }
   html += '    </div>\n';
   html += '    <div class="mk-card__body">\n';
@@ -150,16 +178,30 @@ export function renderCategoryChips(
   return html;
 }
 
+/** Tek mağaza kartı — harf avatar + ad + konum (emoji yok). */
+function renderStoreItem(s: StoreRow): string {
+  const loc = [s.city, s.country].filter(Boolean).join(', ');
+  const initial = (s.name.trim().charAt(0) || '?').toLocaleUpperCase();
+  let html = `  <a class="mk-store" role="listitem" href="/store/${escapeAttr(encodeURIComponent(s.slug))}">\n`;
+  html += `    <span class="mk-store__avatar" aria-hidden="true">${escapeHtml(initial)}</span>\n`;
+  html += `    <span class="mk-store__name">${escapeHtml(s.name)}</span>\n`;
+  if (loc) html += `    <span class="mk-store__loc">${escapeHtml(loc)}</span>\n`;
+  html += '  </a>\n';
+  return html;
+}
+
 /** Horizontal store directory strip. Each item → existing /store/<slug>. */
 export function renderStoreStrip(stores: StoreRow[], locale: string): string {
   let html = `<div class="mk-stores" role="list" aria-label="${escapeHtml(mt(locale, 'stores'))}">\n`;
-  for (const s of stores) {
-    const loc = [s.city, s.country].filter(Boolean).join(', ');
-    html += `  <a class="mk-store" role="listitem" href="/store/${escapeAttr(encodeURIComponent(s.slug))}">\n`;
-    html += `    <span class="mk-store__name">${escapeHtml(s.name)}</span>\n`;
-    if (loc) html += `    <span class="mk-store__loc">📍 ${escapeHtml(loc)}</span>\n`;
-    html += '  </a>\n';
-  }
+  for (const s of stores) html += renderStoreItem(s);
+  html += '</div>\n';
+  return html;
+}
+
+/** Stores sayfası grid varyantı (1→3 kolon dikey liste kartları). */
+function renderStoreGrid(stores: StoreRow[], locale: string): string {
+  let html = `<div class="mk-stores mk-stores--grid" role="list" aria-label="${escapeHtml(mt(locale, 'stores'))}">\n`;
+  for (const s of stores) html += renderStoreItem(s);
   html += '</div>\n';
   return html;
 }
@@ -169,7 +211,7 @@ function renderSearchBar(locale: string): string {
   return (
     '<form class="mk-searchbar" action="/market/search" method="get" role="search">\n' +
     `  <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" />\n` +
-    `  <button type="submit" class="mk-searchbar__btn" aria-label="${ph}">&#x1F50D;</button>\n` +
+    `  <button type="submit" class="mk-searchbar__btn" aria-label="${ph}">${mkIcon('search', true)}</button>\n` +
     '</form>\n'
   );
 }
@@ -184,40 +226,25 @@ export function renderMarketFooter(locale: string): string {
   return renderAppFooter({ locale, reportHref, reportLabelKey: 'report' });
 }
 
-function renderBottomTabBar(locale: string): string {
-  return (
-    '<nav class="mk-tab-bar" aria-label="Navigation">\n' +
-    `  <a class="mk-tab-bar__item mk-tab-bar__item--active" href="/market">\n` +
-    '    <span class="mk-tab-bar__icon">🔍</span>\n' +
-    `    <span class="mk-tab-bar__label">${escapeHtml(mt(locale, 'discover') || 'Discover')}</span>\n` +
-    '  </a>\n' +
-    '  <a class="mk-tab-bar__item" href="/market/stores">\n' +
-    '    <span class="mk-tab-bar__icon">🏪</span>\n' +
-    `    <span class="mk-tab-bar__label">${escapeHtml(mt(locale, 'stores'))}</span>\n` +
-    '  </a>\n' +
-    '  <a class="mk-tab-bar__item" href="/market/search">\n' +
-    '    <span class="mk-tab-bar__icon">📦</span>\n' +
-    `    <span class="mk-tab-bar__label">${escapeHtml(mt(locale, 'allCategories'))}</span>\n` +
-    '  </a>\n' +
-    '</nav>\n'
-  );
-}
+type MkTabId = 'discover' | 'stores' | 'favorites' | 'cart' | 'none';
 
-function renderDiscCard(p: ProductRow, locale: string): string {
-  const title = escapeHtml(p.title);
-  const price = mkFormatPrice(p.price, p.currency, locale);
-  let html = `<a class="mk-disc-card" href="${escapeAttr(p.product_path)}">\n`;
-  if (p.image_url) {
-    html += `  <img class="mk-disc-card__img" src="${escapeAttr(p.image_url)}" alt="${title}" loading="lazy" />\n`;
-  } else {
-    html += '  <div class="mk-disc-card__img-empty" aria-hidden="true">📷</div>\n';
+function renderBottomTabBar(locale: string, active: MkTabId = 'discover'): string {
+  const tabs: { id: MkTabId; href: string; icon: MkIconName; label: string }[] = [
+    { id: 'discover', href: '/market', icon: 'search', label: mt(locale, 'discover') },
+    { id: 'stores', href: '/market/stores', icon: 'store', label: mt(locale, 'stores') },
+    { id: 'favorites', href: '/market/favorites', icon: 'heart', label: mt(locale, 'myFavorites') },
+    { id: 'cart', href: '/market/cart', icon: 'cart', label: mt(locale, 'myCart') },
+  ];
+  let html = `<nav class="mk-tab-bar" aria-label="${escapeHtml(mt(locale, 'marketTitle'))}">\n`;
+  for (const t of tabs) {
+    const cls = t.id === active ? 'mk-tab-bar__item mk-tab-bar__item--active' : 'mk-tab-bar__item';
+    const current = t.id === active ? ' aria-current="page"' : '';
+    html += `  <a class="${cls}" href="${escapeAttr(t.href)}"${current}>\n`;
+    html += `    <span class="mk-tab-bar__icon">${mkIcon(t.icon)}</span>\n`;
+    html += `    <span class="mk-tab-bar__label">${escapeHtml(t.label)}</span>\n`;
+    html += '  </a>\n';
   }
-  html += '  <div class="mk-disc-card__body">\n';
-  html += `    <p class="mk-disc-card__title">${title}</p>\n`;
-  if (price) html += `    <p class="mk-disc-card__price">${escapeHtml(price)}</p>\n`;
-  html += '  </div>\n';
-  html += '  <span class="mk-disc-card__btn">View Details</span>\n';
-  html += '</a>\n';
+  html += '</nav>\n';
   return html;
 }
 
@@ -270,6 +297,34 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
   return html;
 }
 
+/** Kategori görsel kartı rayı — kare foto + altında ad (overlay yok). */
+function renderCategoryRail(
+  categories: { id: string; count: number }[],
+  products: ProductRow[],
+  locale: string,
+  labelOf: LabelOf,
+): string {
+  let html = '<section class="mk-section">\n';
+  html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'categories'))}</h2>\n`;
+  html += '  <div class="mk-rail">\n';
+  for (const c of categories.slice(0, 6)) {
+    const catProduct = products.find((p) => p.category_id === c.id);
+    const href = escapeAttr(`/market/c/${encodeURIComponent(c.id)}`);
+    const cLabel = escapeHtml(labelOf(c.id, locale));
+    html += `    <a class="mk-cat-card" href="${href}">\n`;
+    if (catProduct?.image_url) {
+      html += `      <img class="mk-cat-card__img" src="${escapeAttr(catProduct.image_url)}" alt="${cLabel}" loading="lazy" decoding="async" />\n`;
+    } else {
+      html += `      <div class="mk-cat-card__empty" aria-hidden="true">${mkIcon('photo')}</div>\n`;
+    }
+    html += `      <span class="mk-cat-card__name">${cLabel}</span>\n`;
+    html += '    </a>\n';
+  }
+  html += '  </div>\n';
+  html += '</section>\n';
+  return html;
+}
+
 export function renderMarketHome(args: {
   products: ProductRow[];
   stores: StoreRow[];
@@ -279,8 +334,8 @@ export function renderMarketHome(args: {
   categoryTree?: CategoryTreeNode[];
 }): string {
   const { products, stores, categories, locale } = args;
-  const recommended = products.slice(0, 8);
-  const trending = [...products].reverse().slice(0, 6);
+  const labelOf = args.labelOf ?? identityLabel;
+  const featured = products.slice(0, 8);
   const hasSidebar = Array.isArray(args.categoryTree) && args.categoryTree.length > 0;
 
   // Ortak sticky üst header (app-shell) — store ile birebir aynı kabuk.
@@ -294,20 +349,19 @@ export function renderMarketHome(args: {
     html += '<div class="mk-main">\n';
   }
 
-  // Hero search
+  // Hero: büyük başlık + tek geniş arama alanı (gömülü SVG buton)
+  const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
   html += '<div class="mk-hero">\n';
+  html += `  <h1 class="mk-hero__title">${escapeHtml(mt(locale, 'marketTitle'))}</h1>\n`;
   html += '  <form class="mk-hero__form" action="/market/search" method="get" role="search">\n';
-  html += '    <div class="mk-hero__mic" aria-hidden="true">🎙️</div>\n';
-  html += '    <div class="mk-hero__right">\n';
-  html += `      <p class="mk-hero__title">What are you looking for?</p>\n`;
-  html += `      <input class="mk-hero__input" name="q" type="search" placeholder="Type or speak your request (e.g., 'Find eco-friendly running shoes for hiking')" aria-label="${escapeHtml(mt(locale, 'searchPlaceholder'))}" />\n`;
-  html += '    </div>\n';
+  html += `    <input class="mk-hero__input" name="q" type="search" placeholder="${ph}" aria-label="${ph}" />\n`;
+  html += `    <button type="submit" class="mk-hero__btn" aria-label="${ph}">${mkIcon('search')}</button>\n`;
   html += '  </form>\n';
   html += '</div>\n';
 
   // Kategori chip satırı — taksonomi üst kategorileri, ürün olmasa da her zaman görünür.
   if (categories.length) {
-    html += renderCategoryChips(categories, locale, args.labelOf ?? identityLabel);
+    html += renderCategoryChips(categories, locale, labelOf);
   }
 
   // Hiç ürün yoksa: çirkin boşluk yerine şık boş durum + mağazalara yönlendir.
@@ -315,71 +369,25 @@ export function renderMarketHome(args: {
     html += renderEmptyState({ icon: '🛍️', title: mt(locale, 'noResults'), ctaHref: '/market/stores', ctaLabel: mt(locale, 'stores') });
   }
 
-  // Featured slot — reserved
-  html += '<section class="mk-featured" hidden></section>\n';
-
-  // 2-col Discovery grid
-  html += '<div class="mk-discovery-grid">\n';
-
-  // LEFT: Recommended for You + Trending in Your Area
-  html += '  <div class="mk-discovery-col">\n';
-
-  if (recommended.length) {
-    html += '    <section class="mk-discovery">\n';
-    html += '      <p class="mk-section__label">Discovery Flow</p>\n';
-    html += '      <h2 class="mk-section__title">Recommended for You</h2>\n';
-    html += '      <div class="mk-discovery-scroll">\n';
-    for (const p of recommended) html += renderDiscCard(p, locale);
-    html += '      </div>\n    </section>\n';
+  // Featured rayı — standart ürün kartı, yatay snap scroll
+  if (featured.length) {
+    html += '<section class="mk-section">\n';
+    html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'featured'))}</h2>\n`;
+    html += '  <div class="mk-rail">\n';
+    for (const p of featured) html += renderProductCard(p, locale);
+    html += '  </div>\n';
+    html += '</section>\n';
   }
 
-  if (trending.length) {
-    html += '    <section class="mk-discovery">\n';
-    html += '      <p class="mk-section__label">Discovery Flow</p>\n';
-    html += '      <h2 class="mk-section__title">Trending in Your Area</h2>\n';
-    html += '      <div class="mk-trending-scroll">\n';
-    for (const p of trending) {
-      if (p.image_url) {
-        html += `        <a class="mk-trending-item" href="${escapeAttr(p.product_path)}">\n`;
-        html += `          <img src="${escapeAttr(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy" />\n`;
-        html += '        </a>\n';
-      }
-    }
-    html += '      </div>\n    </section>\n';
-  }
-
-  html += '  </div>\n'; // discovery-col left
-
-  // RIGHT: Curated Collections (tall portrait cards)
+  // Kategori rayı — kare foto kartlar
   if (categories.length) {
-    html += '  <div class="mk-discovery-col">\n';
-    html += '    <section class="mk-discovery">\n';
-    html += '      <p class="mk-section__label">Discovery Flow</p>\n';
-    html += '      <h2 class="mk-section__title">Curated Collections</h2>\n';
-    html += '      <div class="mk-collection-scroll">\n';
-    for (const c of categories.slice(0, 4)) {
-      const catProduct = products.find((p) => p.category_id === c.id);
-      const href = `/market/c/${encodeURIComponent(c.id)}`;
-      html += `      <a class="mk-collection-card" href="${escapeAttr(href)}">\n`;
-      const cLabel = escapeHtml((args.labelOf ?? identityLabel)(c.id, locale));
-      if (catProduct?.image_url) {
-        html += `        <img src="${escapeAttr(catProduct.image_url)}" alt="${cLabel}" loading="lazy" />\n`;
-      } else {
-        html += '        <div class="mk-collection-card__empty"></div>\n';
-      }
-      html += '        <div class="mk-collection-card__overlay">\n';
-      html += `          <span class="mk-collection-card__name">${cLabel}</span>\n`;
-      html += '        </div>\n      </a>\n';
-    }
-    html += '      </div>\n    </section>\n  </div>\n';
+    html += renderCategoryRail(categories, products, locale, labelOf);
   }
-
-  html += '</div>\n'; // discovery-grid
 
   // All products grid
   if (products.length) {
     html += '<section class="mk-section">\n';
-    html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'allCategories'))}</h2>\n`;
+    html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'newProducts'))}</h2>\n`;
     html += '  <div class="mk-grid">\n';
     for (const p of products) html += renderProductCard(p, locale);
     html += '  </div>\n</section>\n';
@@ -401,7 +409,7 @@ export function renderMarketHome(args: {
 
   html += renderMarketFooter(locale);
   html += '</div>\n';
-  html += renderBottomTabBar(locale);
+  html += renderBottomTabBar(locale, 'discover');
   return html;
 }
 
@@ -415,11 +423,6 @@ export interface SearchQuery {
   inStock?: boolean;
 }
 
-function sortOption(value: string, label: string, current: string | undefined): string {
-  const sel = value === (current ?? 'new') ? ' selected' : '';
-  return `<option value="${escapeAttr(value)}"${sel}>${escapeHtml(label)}</option>`;
-}
-
 function renderSortChips(current: string | undefined, locale: string): string {
   const active = current ?? 'new';
   const options = [
@@ -427,7 +430,7 @@ function renderSortChips(current: string | undefined, locale: string): string {
     { value: 'price_asc', label: mt(locale, 'sortPriceAsc') },
     { value: 'price_desc', label: mt(locale, 'sortPriceDesc') },
   ];
-  let html = '<div class="mk-sort-chips" role="group">\n';
+  let html = `<div class="mk-sort-chips" role="group" aria-label="${escapeHtml(mt(locale, 'sortLabel'))}">\n`;
   for (const o of options) {
     const cls = o.value === active ? ' mk-sort-chip--active' : '';
     html += `  <button type="submit" name="sort" value="${escapeAttr(o.value)}" class="mk-sort-chip${cls}">${escapeHtml(o.label)}</button>\n`;
@@ -437,7 +440,7 @@ function renderSortChips(current: string | undefined, locale: string): string {
 }
 
 function renderFacets(facets: Facets, q: SearchQuery, locale: string, labelOf: LabelOf = identityLabel): string {
-  let h = '<aside class="mk-facets" data-mk-facets>\n';
+  let h = `<aside class="mk-facets" id="mk-facets-panel" data-mk-facets aria-label="${escapeHtml(mt(locale, 'filters'))}">\n`;
   h += '  <div class="mk-facets-handle" aria-hidden="true"></div>\n';
 
   // Categories
@@ -451,10 +454,12 @@ function renderFacets(facets: Facets, q: SearchQuery, locale: string, labelOf: L
   }
 
   // Price range — styled dual inputs
+  const minLabel = escapeHtml(mt(locale, 'min'));
+  const maxLabel = escapeHtml(mt(locale, 'max'));
   h += `  <fieldset class="mk-facet"><legend>${escapeHtml(mt(locale, 'price'))}</legend>\n`;
   h += '    <div class="mk-price-range">\n';
-  h += `      <input class="mk-price-input" type="number" name="minPrice" inputmode="decimal" placeholder="${escapeHtml(mt(locale, 'min'))} $0" value="${q.minPrice != null ? q.minPrice : ''}" />\n`;
-  h += `      <input class="mk-price-input" type="number" name="maxPrice" inputmode="decimal" placeholder="${escapeHtml(mt(locale, 'max'))} $${facets.priceRange.max || 1000}" value="${q.maxPrice != null ? q.maxPrice : ''}" />\n`;
+  h += `      <input class="mk-price-input" type="number" name="minPrice" inputmode="decimal" placeholder="${minLabel}" aria-label="${minLabel}" value="${q.minPrice != null ? q.minPrice : ''}" />\n`;
+  h += `      <input class="mk-price-input" type="number" name="maxPrice" inputmode="decimal" placeholder="${maxLabel}" aria-label="${maxLabel}" value="${q.maxPrice != null ? q.maxPrice : ''}" />\n`;
   h += '    </div>\n';
   h += '  </fieldset>\n';
 
@@ -472,10 +477,10 @@ function renderFacets(facets: Facets, q: SearchQuery, locale: string, labelOf: L
   const inStockChecked = q.inStock ? ' checked' : '';
   h += '  <div class="mk-toggle-row">\n';
   h += `    <span class="mk-toggle-label">${escapeHtml(mt(locale, 'inStock'))} <span class="mk-facet__count">(${facets.inStockCount})</span></span>\n`;
-  h += `    <label class="mk-toggle"><input type="checkbox" name="inStock" value="1"${inStockChecked} /><span class="mk-toggle__track"></span><span class="mk-toggle__thumb"></span></label>\n`;
+  h += `    <label class="mk-toggle"><input type="checkbox" name="inStock" value="1"${inStockChecked} aria-label="${escapeHtml(mt(locale, 'inStock'))}" /><span class="mk-toggle__track"></span><span class="mk-toggle__thumb"></span></label>\n`;
   h += '  </div>\n';
 
-  h += `  <div class="mk-facet__actions"><button type="submit" class="mk-btn-apply">${escapeHtml(mt(locale, 'apply'))}</button> <a class="mk-btn mk-btn--ghost" href="/market/search">${escapeHtml(mt(locale, 'clear'))}</a></div>\n`;
+  h += `  <div class="mk-facet__actions"><button type="submit" class="mk-btn mk-btn--apply">${escapeHtml(mt(locale, 'apply'))}</button> <a class="mk-btn mk-btn--ghost" href="/market/search">${escapeHtml(mt(locale, 'clear'))}</a></div>\n`;
   h += '</aside>\n';
   return h;
 }
@@ -494,12 +499,14 @@ export function renderSearchPage(args: {
   // Ortak sticky üst header (arama formunun dışında, full-bleed)
   let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
   html += '<div class="mk mk--search">\n';
+  // A11y: sayfanın görünür başlığı yok — ekran okuyucular için sr-only H1 (tek h1).
+  html += `<h1 class="mk-sr-only">${escapeHtml(mt(locale, 'marketTitle'))}</h1>\n`;
   html += '<form class="mk-searchwrap" action="/market/search" method="get" role="search">\n';
 
   // Arama satırı (marka artık ortak app-header'da)
   html += '  <div class="mk-searchrow">\n';
   html += `    <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" value="${escapeAttr(query.q ?? '')}" />\n`;
-  html += `    <button type="button" class="mk-filter-toggle" data-mk-filter-toggle aria-expanded="false">${escapeHtml(mt(locale, 'filters'))}</button>\n`;
+  html += `    <button type="button" class="mk-filter-toggle" data-mk-filter-toggle aria-expanded="false" aria-controls="mk-facets-panel">${mkIcon('sliders', true)}<span>${escapeHtml(mt(locale, 'filters'))}</span></button>\n`;
   html += '  </div>\n';
 
   // Sıralama + sonuç sayısı
@@ -508,8 +515,9 @@ export function renderSearchPage(args: {
   html += '  </div>\n';
   html += renderSortChips(query.sort, locale);
 
-  // Body: facets + results
+  // Body: backdrop + facets + results
   html += '  <div class="mk-search-body">\n';
+  html += '  <div class="mk-sheet-backdrop" data-mk-backdrop aria-hidden="true"></div>\n';
   html += renderFacets(facets, query, locale, labelOf);
 
   html += '    <section class="mk-results">\n';
@@ -526,7 +534,7 @@ export function renderSearchPage(args: {
   html += '</form>\n';
   html += renderMarketFooter(locale);
   html += '</div>\n';
-  html += renderBottomTabBar(locale);
+  html += renderBottomTabBar(locale, 'discover');
   return html;
 }
 
@@ -535,11 +543,12 @@ export function renderStoresPage(args: { stores: StoreRow[]; total: number; loca
   let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
   html += '<div class="mk">\n';
   html += '<section class="mk-section">\n';
-  html += `  <h1 class="mk-section__title">${escapeHtml(mt(locale, 'stores'))}</h1>\n`;
-  html += renderStoreStrip(stores, locale);
+  html += `  <h1 class="mk-page-title">${escapeHtml(mt(locale, 'stores'))}</h1>\n`;
+  html += renderStoreGrid(stores, locale);
   html += '</section>\n';
   html += renderMarketFooter(locale);
   html += '</div>\n';
+  html += renderBottomTabBar(locale, 'stores');
   return html;
 }
 
@@ -553,6 +562,7 @@ export function renderCategoryPage(args: {
   const { categoryId, items, locale, breadcrumb } = args;
   const segments = breadcrumb ?? null;
   const h1 = segments && segments.length ? segments[segments.length - 1].label : categoryId;
+  const sep = ' <span class="mk-breadcrumb__sep" aria-hidden="true">›</span> ';
 
   let html = renderAppHeader({ locale, controlsHtml: renderLangSwitcher(locale) });
   html += '<div class="mk">\n';
@@ -563,18 +573,18 @@ export function renderCategoryPage(args: {
     segments.forEach((seg, i) => {
       const last = i === segments.length - 1;
       if (last) {
-        html += ` › <span>${escapeHtml(seg.label)}</span>`;
+        html += `${sep}<span>${escapeHtml(seg.label)}</span>`;
       } else {
-        html += ` › <a href="/market/c/${encodeURIComponent(seg.id)}">${escapeHtml(seg.label)}</a>`;
+        html += `${sep}<a href="/market/c/${encodeURIComponent(seg.id)}">${escapeHtml(seg.label)}</a>`;
       }
     });
   } else {
-    html += ` › <span>${escapeHtml(categoryId)}</span>`;
+    html += `${sep}<span>${escapeHtml(categoryId)}</span>`;
   }
   html += '</nav>\n';
 
   html += '<section class="mk-section">\n';
-  html += `  <h1 class="mk-section__title">${escapeHtml(h1)}</h1>\n`;
+  html += `  <h1 class="mk-page-title">${escapeHtml(h1)}</h1>\n`;
   if (items.length === 0) {
     html += renderEmptyState({ icon: '🔍', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
@@ -585,6 +595,7 @@ export function renderCategoryPage(args: {
   html += '</section>\n';
   html += renderMarketFooter(locale);
   html += '</div>\n';
+  html += renderBottomTabBar(locale, 'discover');
   return html;
 }
 
@@ -651,9 +662,9 @@ export interface OrderRow {
 
 /** Sipariş durumu rozeti: "sent" → gönderildi vb. */
 function renderStatusBadge(status: string, locale: string): string {
-  // Basit eşleme; ileride genişletilir.
+  // Basit eşleme; ileride genişletilir (i18n key seti sabit olduğundan ham status gösterilir).
   void locale;
-  const label = status === 'sent' ? mt('en', 'submitOrder').replace('Send order via WhatsApp', 'Sent') : escapeHtml(status);
+  const label = status === 'sent' ? 'Sent' : status;
   return `<span class="mk-orders__badge mk-orders__badge--${escapeAttr(status)}">${escapeHtml(label)}</span>`;
 }
 
@@ -674,7 +685,7 @@ export function renderOrdersPage(args: {
 
   // Sayfa başlığı
   html += '<main class="mk-orders">\n';
-  html += `  <h1 class="mk-orders__title">${escapeHtml(mt(locale, 'myOrders'))}</h1>\n`;
+  html += `  <h1 class="mk-orders__title mk-page-title">${escapeHtml(mt(locale, 'myOrders'))}</h1>\n`;
 
   if (!loggedIn && orders.length === 0) {
     // Giriş yapılmamış ve sipariş yok → giriş daveti
@@ -720,7 +731,7 @@ export function renderOrdersPage(args: {
   html += '</main>\n';
   html += renderMarketFooter(locale);
   html += '</div>\n';
-  html += renderBottomTabBar(locale);
+  html += renderBottomTabBar(locale, 'none');
   return html;
 }
 
@@ -765,7 +776,7 @@ function renderBuyerCard(item: BuyerCardItem, locale: string, mode: 'favorites' 
   if (item.imageUrl) {
     html += `      <img class="mk-acct-card__img" src="${escapeAttr(item.imageUrl)}" alt="${title}" loading="lazy" decoding="async" width="120" height="120" />\n`;
   } else {
-    html += '      <span class="mk-acct-card__img mk-acct-card__img--empty" aria-hidden="true">📷</span>\n';
+    html += `      <span class="mk-acct-card__img mk-acct-card__img--empty" aria-hidden="true">${mkIcon('photo', true)}</span>\n`;
   }
   html += '      <span class="mk-acct-card__info">\n';
   html += `        <span class="mk-acct-card__title">${title}</span>\n`;
@@ -782,11 +793,12 @@ function renderBuyerCard(item: BuyerCardItem, locale: string, mode: 'favorites' 
 
   if (mode === 'cart') {
     const qty = item.qty ?? 1;
+    const qtyLabel = escapeHtml(mt(locale, 'qty'));
     html += '    <div class="mk-acct-card__controls">\n';
-    html += '      <div class="mk-acct-card__qty" role="group">\n';
-    html += `        <button type="button" class="mk-acct-card__qty-btn" data-mk-cart-dec aria-label="−">−</button>\n`;
+    html += `      <div class="mk-acct-card__qty" role="group" aria-label="${qtyLabel}">\n`;
+    html += `        <button type="button" class="mk-acct-card__qty-btn" data-mk-cart-dec aria-label="− ${qtyLabel}">−</button>\n`;
     html += `        <span class="mk-acct-card__qty-val" data-mk-cart-qty>${qty}</span>\n`;
-    html += `        <button type="button" class="mk-acct-card__qty-btn" data-mk-cart-inc aria-label="+">+</button>\n`;
+    html += `        <button type="button" class="mk-acct-card__qty-btn" data-mk-cart-inc aria-label="+ ${qtyLabel}">+</button>\n`;
     html += '      </div>\n';
     html += `      <button type="button" class="mk-acct-card__remove" data-mk-cart-remove>${escapeHtml(mt(locale, 'remove'))}</button>\n`;
     html += '    </div>\n';
@@ -819,7 +831,7 @@ export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string
   let html = renderAccountHeader(locale);
   html += '<div class="mk">\n';
   html += '<main class="mk-acct-page">\n';
-  html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myFavorites'))}</h1>\n`;
+  html += `  <h1 class="mk-acct-page__title mk-page-title">${escapeHtml(mt(locale, 'myFavorites'))}</h1>\n`;
 
   if (groups.length === 0) {
     const signin = loggedIn ? '' : `  <button type="button" class="app-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
@@ -838,7 +850,7 @@ export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string
   html += '</main>\n';
   html += renderMarketFooter(locale);
   html += '</div>\n';
-  html += renderBottomTabBar(locale);
+  html += renderBottomTabBar(locale, 'favorites');
   return html;
 }
 
@@ -851,7 +863,7 @@ export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; log
   let html = renderAccountHeader(locale);
   html += '<div class="mk">\n';
   html += '<main class="mk-acct-page">\n';
-  html += `  <h1 class="mk-acct-page__title">${escapeHtml(mt(locale, 'myCart'))}</h1>\n`;
+  html += `  <h1 class="mk-acct-page__title mk-page-title">${escapeHtml(mt(locale, 'myCart'))}</h1>\n`;
 
   if (groups.length === 0) {
     const signin = loggedIn ? '' : `  <button type="button" class="app-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
@@ -877,6 +889,6 @@ export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; log
   html += '</main>\n';
   html += renderMarketFooter(locale);
   html += '</div>\n';
-  html += renderBottomTabBar(locale);
+  html += renderBottomTabBar(locale, 'cart');
   return html;
 }

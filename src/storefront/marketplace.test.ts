@@ -74,6 +74,21 @@ describe('renderProductCard', () => {
   it('renders a placeholder when out of stock (stock 0)', () => {
     const out = renderProductCard({ ...sampleProduct, stock: 0 }, 'tr');
     expect(out).toContain('Tükendi');
+    expect(out).toContain('mk-card__badge--out');
+  });
+  it('no stock badges other than soldOut (in-stock/low-stock removed)', () => {
+    const inStock = renderProductCard(sampleProduct, 'en'); // stock 12
+    expect(inStock).not.toContain('mk-card__badge');
+    expect(inStock).not.toContain('In Stock');
+    const low = renderProductCard({ ...sampleProduct, stock: 2 }, 'en');
+    expect(low).not.toContain('mk-card__badge');
+    expect(low).not.toContain('Only');
+  });
+  it('empty media uses an SVG placeholder (no emoji)', () => {
+    const out = renderProductCard({ ...sampleProduct, image_url: '' }, 'en');
+    expect(out).toContain('mk-card__media-empty');
+    expect(out).toContain('<svg class="mk-icon"');
+    expect(out).not.toContain('📷');
   });
   it('XSS: escapes a malicious title', () => {
     const out = renderProductCard({ ...sampleProduct, title: '<img src=x onerror=alert(1)>' }, 'en');
@@ -119,6 +134,11 @@ describe('renderStoreStrip', () => {
     expect(html).toContain('Ahmet Oto');
     expect(html).toContain('Istanbul');
   });
+  it('renders a letter avatar per store (no pin emoji)', () => {
+    expect(html).toContain('mk-store__avatar');
+    expect(html).toContain('>A</span>');
+    expect(html).not.toContain('📍');
+  });
 });
 
 import { renderMarketHome } from './marketplace';
@@ -133,8 +153,9 @@ describe('renderMarketHome', () => {
     expect(html).toContain('action="/market/search"');
     expect(html).toContain('name="q"');
   });
-  it('renders the New products section heading', () => {
-    expect(html).toContain('Recommended for You');
+  it('renders the Featured and New products section headings', () => {
+    expect(html).toContain(mt('en', 'featured'));
+    expect(html).toContain(mt('en', 'newProducts'));
   });
   it('renders category chips and a store strip', () => {
     expect(html).toContain('/market/c/electronics.phones');
@@ -143,8 +164,35 @@ describe('renderMarketHome', () => {
   it('renders the trust badge', () => {
     expect(html).toContain('Independent sellers · bank transfer · no fake reviews');
   });
-  it('renders a Featured slot placeholder (empty, no products)', () => {
-    expect(html).toContain('mk-featured');
+  it('renders horizontal rails (featured products + category cards)', () => {
+    expect(html).toContain('mk-rail');
+    expect(html).toContain('mk-cat-card');
+    expect(html).not.toContain('mk-featured');
+    expect(html).not.toContain('mk-disc-card');
+    expect(html).not.toContain('mk-collection-card');
+    expect(html).not.toContain('mk-trending-item');
+    expect(html).not.toContain('mk-section__label');
+  });
+  it('hero: i18n title + embedded SVG search button, no mic / hardcoded copy', () => {
+    expect(html).toContain('mk-hero__title');
+    expect(html).toContain('mk-hero__btn');
+    expect(html).toContain('mk-icon');
+    expect(html).not.toContain('mk-hero__mic');
+    expect(html).not.toContain('What are you looking for?');
+    expect(html).not.toContain('Discovery Flow');
+    expect(html).not.toContain('Recommended for You');
+    expect(html).not.toContain('Trending in Your Area');
+    expect(html).not.toContain('Curated Collections');
+    expect(html).not.toContain('View Details');
+  });
+  it('bottom tab bar: 4 tabs with SVG icons, discover active', () => {
+    expect(html).toContain('mk-tab-bar');
+    expect(html).toContain('href="/market/stores"');
+    expect(html).toContain('href="/market/favorites"');
+    expect(html).toContain('href="/market/cart"');
+    expect(html).toContain('mk-tab-bar__item--active');
+    expect(html.match(/mk-tab-bar__icon/g)?.length).toBe(4);
+    expect(html).toContain('<svg class="mk-icon"');
   });
   it('renders both product cards', () => {
     expect(html).toContain('Tesla Model Y Floor Mats');
@@ -194,6 +242,16 @@ describe('renderSearchPage', () => {
   it('renders an inStock checkbox', () => {
     expect(html).toContain('name="inStock"');
   });
+  it('renders the sheet backdrop + .mk-btn--apply (mk-btn-apply fixed)', () => {
+    expect(html).toContain('mk-sheet-backdrop');
+    expect(html).toContain('data-mk-backdrop');
+    expect(html).toContain('mk-btn mk-btn--apply');
+    expect(html).not.toContain('"mk-btn-apply"');
+  });
+  it('filter toggle carries an SVG icon + bottom tab bar present', () => {
+    expect(html).toMatch(/mk-filter-toggle[^>]*>.*<svg class="mk-icon mk-icon--sm"/s);
+    expect(html).toContain('mk-tab-bar');
+  });
   it('shows no-results message when items empty', () => {
     const empty = renderSearchPage({ items: [], facets, total: 0, locale: 'en', query: { q: 'zzz', sort: 'new' } });
     expect(empty).toContain('No results found');
@@ -209,6 +267,13 @@ describe('renderStoresPage', () => {
     expect(html).toContain('Stores');
     expect(html).toContain('/store/ahmet-oto');
   });
+  it('uses .mk-page-title + grid variant + tab bar (stores active)', () => {
+    expect(html).toContain('mk-page-title');
+    expect(html).toContain('mk-stores--grid');
+    expect(html).toContain('mk-store__avatar');
+    expect(html).toContain('mk-tab-bar');
+    expect(html).toMatch(/mk-tab-bar__item--active" href="\/market\/stores"/);
+  });
 });
 
 describe('renderCategoryPage', () => {
@@ -216,6 +281,10 @@ describe('renderCategoryPage', () => {
   it('shows the category id and a product card', () => {
     expect(html).toContain('electronics.phones');
     expect(html).toContain('Tesla Model Y Floor Mats');
+  });
+  it('has a tab bar and a breadcrumb with separated › spans', () => {
+    expect(html).toContain('mk-tab-bar');
+    expect(html).toContain('mk-breadcrumb__sep');
   });
 });
 
@@ -289,7 +358,7 @@ describe('renderCategoryPage — breadcrumb + h1 label', () => {
       categoryId: '267', items: [], total: 0, locale: 'en',
       breadcrumb: [{ id: '222', label: 'Electronics' }, { id: '267', label: 'Mobile Phones' }],
     });
-    expect(html).toContain('<h1 class="mk-section__title">Mobile Phones</h1>');
+    expect(html).toContain('<h1 class="mk-page-title">Mobile Phones</h1>');
     expect(html).toContain('href="/market/c/222"');
     expect(html).toContain('Electronics');
   });

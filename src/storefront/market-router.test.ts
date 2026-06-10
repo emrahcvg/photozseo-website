@@ -23,7 +23,7 @@ describe('handleMarket', () => {
     const res = await handleMarket([], { url: 'https://photozseo.com/market', lang: 'en', db: {} as any, ai: undefined, ...deps });
     const html = await res.text();
     expect(res.status).toBe(200);
-    expect(html).toContain('Recommended for You');
+    expect(html).toContain('New products');
     expect(html).toContain('Mat');
     expect(html).toContain('/store/s');
     expect(html).toContain('rel="canonical" href="https://photozseo.com/market"');

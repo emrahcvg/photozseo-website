@@ -1,5 +1,6 @@
 /* marketplace-enhance.js — progressive enhancement for /market.
- * Hover/touch prefetch, View Transitions (if supported), mobile filter-sheet toggle.
+ * Hover/touch prefetch, View Transitions (if supported), mobile filter-sheet
+ * (backdrop + Escape + scroll lock + focus return), lang switcher, currency.
  * Everything degrades to plain navigation when JS/APIs are absent. */
 (function () {
   'use strict';
@@ -15,7 +16,7 @@
     document.head.appendChild(link);
   }
   function bindPrefetch() {
-    document.querySelectorAll('a.mk-card-link, a.mk-store, a.mk-chip').forEach(function (a) {
+    document.querySelectorAll('a.mk-card-link, a.mk-store, a.mk-chip, a.mk-cat-card').forEach(function (a) {
       var run = function () { prefetch(a.getAttribute('href')); };
       a.addEventListener('mouseenter', run);
       a.addEventListener('touchstart', run, { passive: true });
@@ -26,10 +27,12 @@
   function bindViewTransitions() {
     if (!document.startViewTransition) return;
     document.addEventListener('click', function (e) {
+      // Yeni sekme/varsayılan davranış niyetini ezme (a11y/UX): modifier, orta tık, download
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       var a = e.target && e.target.closest ? e.target.closest('a') : null;
       if (!a) return;
       var href = a.getAttribute('href') || '';
-      if (!href || href.charAt(0) === '#' || a.target === '_blank') return;
+      if (!href || href.charAt(0) === '#' || a.target === '_blank' || a.hasAttribute('download')) return;
       var url;
       try { url = new URL(href, location.href); } catch (_) { return; }
       if (url.origin !== location.origin) return;
@@ -38,15 +41,39 @@
     });
   }
 
-  // ── Mobile filter sheet toggle ──────────────────────────────────────────────────
+  // ── Mobile filter sheet (toggle + backdrop + Escape + scroll lock) ─────────────
   function bindFilterSheet() {
     var btn = document.querySelector('[data-mk-filter-toggle]');
     var sheet = document.querySelector('[data-mk-facets]');
     if (!btn || !sheet) return;
+    var backdrop = document.querySelector('[data-mk-backdrop]');
+    var prevOverflow = '';
+
+    function isOpen() { return sheet.hasAttribute('data-mk-open'); }
+    function openSheet() {
+      sheet.setAttribute('data-mk-open', '');
+      if (backdrop) backdrop.setAttribute('data-mk-open', '');
+      btn.setAttribute('aria-expanded', 'true');
+      prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      // Klavye/ekran okuyucu odağını sheet'e taşı (mobil klavye açtırmadan)
+      if (!sheet.hasAttribute('tabindex')) sheet.setAttribute('tabindex', '-1');
+      sheet.focus();
+    }
+    function closeSheet(returnFocus) {
+      sheet.removeAttribute('data-mk-open');
+      if (backdrop) backdrop.removeAttribute('data-mk-open');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = prevOverflow;
+      if (returnFocus) btn.focus();
+    }
+
     btn.addEventListener('click', function () {
-      var open = sheet.hasAttribute('data-mk-open');
-      if (open) { sheet.removeAttribute('data-mk-open'); btn.setAttribute('aria-expanded', 'false'); }
-      else { sheet.setAttribute('data-mk-open', ''); btn.setAttribute('aria-expanded', 'true'); }
+      if (isOpen()) closeSheet(false); else openSheet();
+    });
+    if (backdrop) backdrop.addEventListener('click', function () { closeSheet(true); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen()) closeSheet(true);
     });
   }
 
