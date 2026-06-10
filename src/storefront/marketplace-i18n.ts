@@ -19,6 +19,7 @@ type Key =
   | 'backToStore' | 'backToMarket' | 'currency' | 'language' | 'rateNote'
   | 'contact' | 'call' | 'other' | 'poweredBy' | 'reportStore'
   | 'productDetails' | 'orderViaWhatsApp' | 'favorite'
+  | 'deliveryInfo' | 'addNote'
   // Hesap/giriş UI metinleri (üst bar)
   | 'signIn' | 'signOut' | 'myFavorites' | 'myOrders' | 'discover'
   // Sipariş sayfası
@@ -59,6 +60,7 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     poweredBy: 'This store was created with photoZseo',
     reportStore: 'Report this store',
     productDetails: 'Product details', orderViaWhatsApp: 'Order via WhatsApp',
+    deliveryInfo: 'Delivery details', addNote: 'Add a note (optional)',
     favorite: 'Add to favorites',
     signIn: 'Sign in', signOut: 'Sign out',
     myFavorites: 'My Favorites', myOrders: 'My Orders',
@@ -99,6 +101,7 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     poweredBy: 'Bu mağaza photoZseo ile oluşturuldu',
     reportStore: 'Bu mağazayı şikayet et',
     productDetails: 'Ürün Özellikleri', orderViaWhatsApp: 'WhatsApp ile sipariş ver',
+    deliveryInfo: 'Teslimat bilgileri', addNote: 'Not ekle (isteğe bağlı)',
     favorite: 'Favorilere ekle',
     signIn: 'Giriş yap', signOut: 'Çıkış yap',
     myFavorites: 'Favorilerim', myOrders: 'Siparişlerim',

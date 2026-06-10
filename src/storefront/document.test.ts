@@ -15,7 +15,7 @@ describe('renderDocument', () => {
 
   it('includes the css link', () => {
     const html = renderDocument({ title: 'T', lang: 'en', body: '' });
-    expect(html).toContain('<link rel="stylesheet" href="/storefront.css?v=aura27" />');
+    expect(html).toContain('<link rel="stylesheet" href="/storefront.css?v=aura37" />');
   });
 
   it('sets lang="tr" and dir="ltr" for Turkish', () => {

@@ -76,22 +76,43 @@ html { scroll-behavior: smooth; }
 .sf-detail-top .sf-controls { margin-top: 0; justify-content: flex-end; }
 .sf-detail-top .sf-back { margin-block-end: 0; }
 
-/* HEADER */
-.sf-header { text-align: center; padding: var(--sp-3) 0 var(--sp-6); border-bottom: 1px solid var(--line); margin-bottom: var(--sp-2); }
-.sf-header__logo { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; margin: 0 auto var(--sp-4); box-shadow: var(--shadow); }
-.sf-header__name { font-size: var(--fs-2xl); line-height: var(--lh-tight); letter-spacing: -0.025em; margin: 0 0 var(--sp-2); color: var(--fg); font-weight: 700; }
-.sf-header__tagline { color: var(--muted); font-size: var(--fs-md); margin: 0 0 var(--sp-3); }
-.sf-header__location { color: var(--dim); font-size: 0.9rem; margin: 0 0 18px; }
-.sf-header__location--link { color: var(--dim); text-decoration: none; }
-.sf-header__location--link:hover { color: var(--fg); }
-.sf-header__contact { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+/* HEADER — Google Maps kartvizit stili: sol logo, sağ bilgi + chip satırı */
+.sf-header { padding: var(--sp-3) 0 var(--sp-4); border-bottom: 1px solid var(--line); margin-bottom: var(--sp-2); }
+.sf-header__inner { display: flex; align-items: flex-start; gap: var(--sp-3); }
+.sf-header__logo-wrap { flex-shrink: 0; }
+.sf-header__logo { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; display: block; box-shadow: var(--shadow); }
+.sf-header__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; justify-content: center; min-height: 72px; }
+.sf-header__title-row { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; min-width: 0; }
+.sf-header__name { font-size: var(--fs-lg); line-height: var(--lh-tight); letter-spacing: -0.02em; margin: 0; color: var(--fg); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-seller-type { font-size: var(--fs-xs); font-weight: 500; color: var(--muted); background: var(--input); border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 1px 8px; flex-shrink: 0; }
+.sf-header__tagline { color: var(--muted); font-size: var(--fs-xs); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* MOBİL responsive — dar ekranda başlık taşmasın */
+/* Chip satırı — konum + iletişim + sosyal medya hepsi flex-wrap */
+.sf-header__chips { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.sf-chip { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; background: var(--input); border-radius: var(--radius-pill); font-size: 0.78rem; color: var(--muted); white-space: nowrap; line-height: 1.4; }
+.sf-chip--link { text-decoration: none; cursor: pointer; transition: background 0.15s, color 0.15s; }
+.sf-chip--link:hover { background: var(--line-strong); color: var(--fg); }
+.sf-chip--loc { background: transparent; padding-inline-start: 0; color: var(--dim); font-size: 0.76rem; }
+.sf-chip--wa { background: #dcfce7; color: #065f46; font-weight: 500; }
+.sf-chip--wa:hover { background: #bbf7d0; color: #047857; }
+.sf-chip--social { background: var(--card); border: 1px solid var(--line); font-weight: 500; }
+.sf-chip--social:hover { background: var(--input); border-color: var(--line-strong); color: var(--fg); }
+
+/* Eski sf-hcard — geriye dönük uyumluluk */
+.sf-hcard { display: flex; align-items: center; gap: 5px; font-size: var(--fs-sm); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-hcard--link { text-decoration: none; }
+.sf-hcard--link:hover { color: var(--fg); text-decoration: underline; }
+.sf-hcard--wa { color: #065f46; font-weight: 500; }
+.sf-hcard--loc { color: var(--dim); font-size: var(--fs-xs); }
+
+/* MOBİL responsive */
 @media (max-width: 480px) {
   .sf-store { padding: var(--sp-4) var(--sp-4) 56px; }
-  .sf-header { padding: var(--sp-2) 0 var(--sp-5); }
-  .sf-header__name { font-size: var(--fs-xl); }
-  .sf-header__tagline { font-size: var(--fs-base); }
+  .sf-header { padding: var(--sp-2) 0 var(--sp-3); }
+  .sf-header__inner { gap: var(--sp-2); }
+  .sf-header__logo { width: 60px; height: 60px; border-radius: 12px; }
+  .sf-header__name { font-size: var(--fs-md); }
+  .sf-header__tagline { font-size: var(--fs-xs); }
   .sf-section__title { font-size: var(--fs-lg); }
   .sf-topbar { flex-wrap: wrap; }
 }
@@ -215,7 +236,7 @@ html { scroll-behavior: smooth; }
   font-weight: 600;
 }
 .sf-card__body { padding: var(--sp-3) 6px 6px; }
-.sf-card__title { font-size: var(--fs-md); line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 6px; color: var(--fg); font-weight: 600; }
+.sf-card__title { font-size: var(--fs-md); line-height: 1.3; letter-spacing: -0.01em; margin: 0 0 6px; color: var(--fg); font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .sf-card__price { margin-bottom: 6px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
 .sf-card__amount { font-weight: 700; color: var(--fg); }
 .sf-card__compare { text-decoration: line-through; color: var(--dim); margin-inline-start: 6px; font-size: var(--fs-sm); }
@@ -473,7 +494,10 @@ html { scroll-behavior: smooth; }
   padding: 6px 12px 6px 6px; margin-bottom: var(--sp-4);
   background: var(--input); border-radius: var(--radius-pill);
   border: 1px solid var(--line);
+  text-decoration: none; align-self: flex-start;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
+.sf-seller-chip:hover { background: var(--line); }
 .sf-seller-chip__avatar {
   width: 28px; height: 28px; border-radius: 50%;
   background: var(--accent); color: var(--on-accent);
@@ -643,3 +667,39 @@ html { scroll-behavior: smooth; }
   align-items: center;
 }
 /* Avatar + dropdown — aynı .pz-* sınıflarını kullanıyor (auth.js ortak) */
+
+/* ===== CART ===== */
+.sf-cart { margin-block-start: var(--sp-4); padding-block-start: var(--sp-4); border-block-start: 1px solid var(--line); display: flex; flex-direction: column; gap: var(--sp-3); }
+.sf-cart[data-mk-empty] .sf-cart__list,
+.sf-cart[data-mk-empty] [data-mk-total-row],
+.sf-cart[data-mk-empty] [data-mk-order-form] { display: none; }
+.sf-cart__empty { text-align: center; padding: 28px 16px; color: var(--dim); }
+.sf-cart__empty-icon { font-size: 2.2rem; display: block; margin-block-end: var(--sp-2); }
+.sf-cart__empty-text { font-size: var(--fs-sm); margin: 0; }
+.sf-cart__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.sf-cart__item { display: flex; align-items: center; gap: 10px; background: var(--input); border-radius: var(--radius-md); padding: 10px 12px; font-size: var(--fs-sm); color: var(--fg); }
+.sf-cart__item-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sf-cart__item-qty { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+.sf-cart__remove { appearance: none; background: none; border: none; padding: 0; cursor: pointer; color: var(--dim); font-size: 1rem; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; flex-shrink: 0; transition: color .15s, background .15s; }
+.sf-cart__remove:hover { color: #c0392b; background: #fee2e2; }
+.sf-cart__total { font-size: var(--fs-base); font-weight: 600; color: var(--fg); margin: 0; text-align: end; }
+.sf-cart__form { display: flex; flex-direction: column; gap: 16px; background: var(--bg, #f5f5f7); border: 1px solid var(--line, #e2e5ea); border-radius: var(--radius-lg, 14px); padding: 18px 18px 16px; }
+.sf-cart__form-heading { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0; }
+.sf-cart__fields { display: flex; flex-direction: column; gap: 14px; }
+.sf-cart__note { margin: 0; }
+.sf-cart__note > summary { list-style: none; cursor: pointer; user-select: none; font-size: var(--fs-sm); font-weight: 500; color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
+.sf-cart__note > summary::-webkit-details-marker { display: none; }
+.sf-cart__note > summary::before { content: '+'; font-size: 1rem; line-height: 1; }
+.sf-cart__note[open] > summary::before { content: '−'; }
+.sf-cart__note-label { display: block; margin-block-start: 10px; }
+.sf-cart__form label { display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-sm); font-weight: 500; color: var(--muted); }
+.sf-cart__form input, .sf-cart__form textarea { padding: 10px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); font-family: inherit; font-size: var(--fs-base); color: var(--fg); background: var(--card); resize: vertical; transition: border-color .15s, box-shadow .15s; }
+.sf-cart__form input:focus, .sf-cart__form textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(67,97,238,.12); }
+.sf-cart__err { font-size: var(--fs-xs); color: #c0392b; margin-block-start: -6px; }
+/* Specs accordion */
+.sf-specs-section { border: none; padding: 0; margin: 0; }
+.sf-specs-section summary.sf-specs-heading { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: var(--sp-3) 0; border-bottom: 1px solid var(--line); user-select: none; }
+.sf-specs-section summary.sf-specs-heading::after { content: "›"; font-size: 1.1rem; color: var(--dim); transition: transform .2s; display: inline-block; transform: rotate(90deg); }
+.sf-specs-section[open] summary.sf-specs-heading::after { transform: rotate(270deg); }
+.sf-specs-section summary.sf-specs-heading::-webkit-details-marker { display: none; }
+.sf-specs-section[open] .sf-specs { margin-block-start: var(--sp-2); }
