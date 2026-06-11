@@ -6,6 +6,11 @@
   --mk-bg:       var(--bg);
   --mk-fg:       var(--fg);
   --mk-muted:    var(--muted);
+  /* WCAG AA: light mode'da --muted/--dim açık zeminler üstünde 4.5:1 altı kalıyor;
+   * küçük metinler bu koyulaştırılmış türevi kullanır (--bg üstünde 4.97:1,
+   * --input üstünde 5.44:1). Dark mode'da --fg açık olduğundan karışım
+   * kontrastı sadece artırır, mevcut geçen oranları bozmaz. */
+  --mk-muted-strong: color-mix(in srgb, var(--mk-muted), var(--mk-fg) 15%);
   --mk-line:     var(--line);
   --mk-card:     var(--card);
   --mk-input:    var(--input);
@@ -109,7 +114,7 @@ img{display:block;}
 .mk-chip:hover{color:var(--mk-accent);}
 .mk-chip--all{background:var(--mk-fg);color:var(--mk-card);}
 .mk-chip--all:hover{color:var(--mk-card);}
-.mk-chip__count{color:var(--dim);font-size:var(--fs-xs);margin-inline-start:4px;}
+.mk-chip__count{color:var(--mk-muted-strong);font-size:var(--fs-xs);margin-inline-start:4px;}
 .mk-chip--all .mk-chip__count{color:inherit;opacity:.7;}
 
 /* ── Bölümler ── */
@@ -152,7 +157,7 @@ img{display:block;}
 /* soldOut — tam kaplama overlay (tek kalan rozet) */
 .mk-card__badge--out{
   position:absolute;inset:0;display:grid;place-items:center;
-  background:color-mix(in srgb, var(--mk-fg) 55%, transparent);
+  background:color-mix(in srgb, var(--mk-fg) 70%, transparent);
   color:var(--mk-card);font-size:var(--fs-xs);font-weight:600;
   letter-spacing:.02em;text-align:center;padding:8px;}
 .mk-card__media:has(.mk-card__badge--out) img{filter:grayscale(1);opacity:.9;}
@@ -167,7 +172,8 @@ img{display:block;}
 .mk-card__price--contact{font-weight:400;color:var(--mk-muted);}
 .mk-card__seller{
   display:flex;align-items:center;gap:5px;margin-top:2px;
-  font-size:var(--fs-xs);color:var(--mk-muted);}
+  font-size:var(--fs-xs);color:var(--mk-muted-strong);
+  text-transform:capitalize;/* slug fallback satıcı adı küçük harf geliyor */}
 .mk-card__seller-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 /* ── Yatay raylar (featured + kategori) ── */
@@ -232,7 +238,7 @@ img{display:block;}
   display:flex;align-items:center;gap:8px;padding:10px 0;
   font-size:var(--fs-base);}
 .mk-facet__opt input{accent-color:var(--mk-accent);}
-.mk-facet__count{margin-inline-start:auto;color:var(--dim);font-size:var(--fs-xs);}
+.mk-facet__count{margin-inline-start:auto;color:var(--mk-muted-strong);font-size:var(--fs-xs);}
 
 /* Fiyat aralığı */
 .mk-price-range{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
@@ -374,8 +380,12 @@ img{display:block;}
 }
 
 /* ── Trust ── */
-.mk-trust{text-align:center;color:var(--mk-muted);font-size:var(--fs-sm);
+.mk-trust{text-align:center;color:var(--mk-muted-strong);font-size:var(--fs-sm);
   padding:24px 0;border-top:1px solid var(--mk-line);margin-top:24px;}
+/* Footer küçük metin kontrastı — theme.css'teki --muted/--dim /market'in
+ * --bg zemininde 4.5:1 altı; marketplace.css theme.css'ten sonra yüklendiği
+ * için burada koyulaştırılır (hover'lar theme.css'te --fg'ye gider, kalır). */
+.app-footer,.app-footer a,.app-footer__trust{color:var(--mk-muted-strong);}
 
 /* ── a11y ── */
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
@@ -407,26 +417,37 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   text-transform:uppercase;color:var(--mk-muted);
   margin:0 0 8px;padding:0 16px;}
 
-/* Dış "Kategoriler" toggle — mobilde kapalı, masaüstünde açık */
+/* Dış "Kategoriler" toggle — render <details>'e server-side `open` basar.
+ * ≥900px: summary tamamen gizli (interaktif no-op yok, klavye tuzağı yok),
+ * içerik normal akışta görünür. <900px: summary belirgin bir pill olarak
+ * görünür ve native details toggle olduğu gibi çalışır. */
 .mk-sidebar__all{border:0;}
 .mk-sidebar__all > .mk-sidebar__heading{
   display:flex;align-items:center;justify-content:space-between;
-  cursor:pointer;list-style:none;user-select:none;padding:6px 16px;}
+  min-height:44px;cursor:pointer;list-style:none;user-select:none;
+  padding:6px 16px;}
 .mk-sidebar__all > .mk-sidebar__heading::-webkit-details-marker{display:none;}
 .mk-sidebar__all-chevron{transition:transform .2s;font-size:.8rem;}
 .mk-sidebar__all[open] > .mk-sidebar__heading .mk-sidebar__all-chevron{transform:rotate(180deg);}
-@media(min-width:769px){
-  .mk-sidebar__all > .mk-sidebar__nav{display:flex !important;}
-  .mk-sidebar__all::details-content{content-visibility:visible;}
-  .mk-sidebar__all > .mk-sidebar__heading{cursor:default;pointer-events:none;}
-  .mk-sidebar__all-chevron{display:none;}
+@media(max-width:899px){
+  /* Kapalı haldeyken fark edilsin: chip/pill görünümü */
+  .mk-sidebar__all > .mk-sidebar__heading{
+    display:inline-flex;gap:8px;width:fit-content;
+    margin:0 0 10px;padding:10px 16px;
+    border:1px solid var(--line-strong);border-radius:var(--radius-pill);
+    background:var(--mk-card);color:var(--mk-fg);
+    font-size:var(--fs-sm);letter-spacing:0;text-transform:none;}
+}
+@media(min-width:900px){
+  .mk-sidebar__all > summary{display:none;}
 }
 
 .mk-sidebar__nav{display:flex;flex-direction:column;}
 
 /* Çocuksuz üst seviye linkler */
 .mk-sidebar__link--top{
-  display:block;padding:8px 16px;font-size:var(--fs-base);font-weight:500;
+  display:flex;align-items:center;min-height:44px;
+  padding:8px 16px;font-size:var(--fs-base);font-weight:500;
   color:var(--mk-fg);border-radius:0;transition:background .12s,color .12s;}
 .mk-sidebar__link--top:hover{background:var(--mk-input);color:var(--mk-accent);}
 
@@ -435,7 +456,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 summary::-webkit-details-marker{display:none;}
 .mk-sidebar__summary{
   display:flex;align-items:center;justify-content:space-between;
-  padding:8px 16px;font-size:var(--fs-base);font-weight:500;
+  min-height:44px;padding:8px 16px;font-size:var(--fs-base);font-weight:500;
   color:var(--mk-fg);cursor:pointer;list-style:none;user-select:none;
   transition:background .12s,color .12s;}
 .mk-sidebar__summary:hover{background:var(--mk-input);color:var(--mk-accent);}
@@ -450,7 +471,7 @@ details.mk-sidebar__group[open] .mk-sidebar__chevron{transform:rotate(90deg);}
 .mk-sidebar__item{display:block;}
 .mk-sidebar__item--all .mk-sidebar__link{font-style:italic;color:var(--mk-muted);}
 .mk-sidebar__link{
-  display:block;padding-block:6px;padding-inline:28px 16px;
+  display:block;padding-block:10px;padding-inline:28px 16px;
   font-size:var(--fs-sm);color:var(--mk-fg);
   transition:background .12s,color .12s;}
 .mk-sidebar__link:hover{background:var(--mk-input);color:var(--mk-accent);}
@@ -578,3 +599,12 @@ details.mk-sidebar__group[open] .mk-sidebar__chevron{transform:rotate(90deg);}
 .mk-acct-group__foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;flex-wrap:wrap;}
 .mk-acct-group__total{font-size:var(--fs-base);font-weight:700;color:var(--mk-fg);}
 .mk-acct-group__order{max-width:100%;}
+
+/* ── View Transitions — cross-document MPA geçişleri (destekleyen tarayıcıda
+ * yumuşak cross-fade; desteklemeyende no-op). ── */
+@view-transition{navigation:auto;}
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*){animation:none!important;}
+}

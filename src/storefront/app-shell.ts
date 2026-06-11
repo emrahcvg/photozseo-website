@@ -116,6 +116,10 @@ export function renderAppFooter(opts: AppFooterOptions): string {
   html += '    <a class="app-footer__brand" href="https://photozseo.com" target="_blank" rel="noopener noreferrer">photoZseo</a>\n';
   html += '    <span class="app-footer__sep">·</span>\n';
   html += `    <a class="app-footer__report" href="${escapeAttr(reportHref)}">${escapeHtml(mt(locale, reportLabelKey))}</a>\n`;
+  html += '    <span class="app-footer__sep">·</span>\n';
+  html += '    <a class="app-footer__legal" href="/privacy">Privacy</a>\n';
+  html += '    <span class="app-footer__sep">·</span>\n';
+  html += '    <a class="app-footer__legal" href="/terms">Terms</a>\n';
   html += '  </div>\n';
   html += '</footer>\n';
   return html;

@@ -82,9 +82,34 @@ function adaptFacets(f: LibFacets | Facets): Facets {
 }
 
 function buildAlternates(origin: string, path: string): AlternateLink[] {
-  const alts: AlternateLink[] = SUPPORTED_LOCALES.map((l) => ({ lang: l, href: `${origin}${path}?lang=${l}` }));
+  // Default dil (en) parametresiz URL'de yaşar; diğer diller ?lang=xx.
+  // x-default da en'i (parametresiz URL) gösterir → canonical ile çelişmez.
+  const alts: AlternateLink[] = SUPPORTED_LOCALES.map((l) => ({
+    lang: l,
+    href: l === DEFAULT_LANG ? `${origin}${path}` : `${origin}${path}?lang=${l}`,
+  }));
   alts.push({ lang: 'x-default', href: `${origin}${path}` });
   return alts;
+}
+
+/** Self-referencing canonical: en → parametresiz URL, diğer diller → kendi ?lang=xx URL'i. */
+function buildCanonical(origin: string, path: string, locale: string): string {
+  return locale === DEFAULT_LANG ? `${origin}${path}` : `${origin}${path}?lang=${locale}`;
+}
+
+/** WebSite + SearchAction JSON-LD (/market home head'i için, sitelinks search box). */
+function buildWebSiteJsonLd(origin: string): string {
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'photoZseo Market',
+    url: `${origin}/market`,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${origin}/market/search?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  });
 }
 
 
@@ -129,13 +154,14 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
         }))
       : [];
     const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf, categoryTree });
-    const canonical = `${origin}/market`;
+    const canonical = buildCanonical(origin, '/market', locale);
     return htmlResponse(renderDocument({
       title: mt(locale, 'marketTitle') + ' — photoZseo',
       description: mt(locale, 'trustBadge'),
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market'),
-      jsonLd: buildItemListJsonLd(newP.items, origin),
+      ogImage: `${origin}/og-image.png`,
+      jsonLd: [buildItemListJsonLd(newP.items, origin), buildWebSiteJsonLd(origin)],
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
     }));
@@ -166,6 +192,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       description: mt(locale, 'trustBadge'),
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/search'),
+      ogImage: `${origin}/og-image.png`,
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
@@ -178,12 +205,13 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
   if (parts[0] === 'stores' && parts.length === 1) {
     const stores = await deps.listStores(deps.db, { limit: 100 });
     const body = renderStoresPage({ stores: stores.items, total: stores.total, locale });
-    const canonical = `${origin}/market/stores`;
+    const canonical = buildCanonical(origin, '/market/stores', locale);
     return htmlResponse(renderDocument({
       title: mt(locale, 'stores') + ' — photoZseo',
       description: mt(locale, 'trustBadge'),
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
+      ogImage: `${origin}/og-image.png`,
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
@@ -201,12 +229,13 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const jsonLd: string | string[] = breadcrumb && breadcrumb.length
       ? [buildBreadcrumbJsonLd(breadcrumb, origin), itemListLd]
       : itemListLd;
-    const canonical = `${origin}/market/c/${encodeURIComponent(categoryId)}`;
+    const canonical = buildCanonical(origin, `/market/c/${encodeURIComponent(categoryId)}`, locale);
     return htmlResponse(renderDocument({
       title: leaf + ' — ' + mt(locale, 'marketTitle'),
       description: mt(locale, 'trustBadge'),
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
+      ogImage: `${origin}/og-image.png`,
       jsonLd,
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],

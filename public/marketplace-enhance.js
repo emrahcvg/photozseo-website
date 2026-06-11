@@ -1,6 +1,7 @@
 /* marketplace-enhance.js — progressive enhancement for /market.
- * Hover/touch prefetch, View Transitions (if supported), mobile filter-sheet
- * (backdrop + Escape + scroll lock + focus return), lang switcher, currency.
+ * Hover/focus prefetch, mobile filter-sheet (backdrop + Escape + scroll lock +
+ * focus return), mobile sidebar collapse, lang switcher, currency.
+ * Cross-document view transitions are handled purely in CSS (@view-transition).
  * Everything degrades to plain navigation when JS/APIs are absent. */
 (function () {
   'use strict';
@@ -19,25 +20,16 @@
     document.querySelectorAll('a.mk-card-link, a.mk-store, a.mk-chip, a.mk-cat-card').forEach(function (a) {
       var run = function () { prefetch(a.getAttribute('href')); };
       a.addEventListener('mouseenter', run);
-      a.addEventListener('touchstart', run, { passive: true });
+      a.addEventListener('focus', run);
     });
   }
 
-  // ── View Transitions on same-origin nav ────────────────────────────────────────
-  function bindViewTransitions() {
-    if (!document.startViewTransition) return;
-    document.addEventListener('click', function (e) {
-      // Yeni sekme/varsayılan davranış niyetini ezme (a11y/UX): modifier, orta tık, download
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var a = e.target && e.target.closest ? e.target.closest('a') : null;
-      if (!a) return;
-      var href = a.getAttribute('href') || '';
-      if (!href || href.charAt(0) === '#' || a.target === '_blank' || a.hasAttribute('download')) return;
-      var url;
-      try { url = new URL(href, location.href); } catch (_) { return; }
-      if (url.origin !== location.origin) return;
-      e.preventDefault();
-      document.startViewTransition(function () { location.href = url.href; });
+  // ── Mobile sidebar collapse — SSR <details open> mobilde kapansın ─────────────
+  // JS yoksa açık kalır (progressive); masaüstünde dokunulmaz.
+  function collapseSidebarOnMobile() {
+    if (!window.matchMedia || !window.matchMedia('(max-width: 899px)').matches) return;
+    document.querySelectorAll('.mk-sidebar details[open]').forEach(function (d) {
+      d.removeAttribute('open');
     });
   }
 
@@ -117,13 +109,13 @@
     }
 
     function convertAll(target) {
-      if (ratesCache[target]) { applyTo(target, ratesCache[target]); return; }
       var bases = {};
       document.querySelectorAll('[data-mk-currency]').forEach(function (el) {
         var b = el.getAttribute('data-mk-currency') || 'USD';
         if (b !== target) bases[b] = true;
       });
       var base = Object.keys(bases)[0] || 'USD';
+      if (ratesCache[base]) { applyTo(target, ratesCache[base]); return; }
       fetch('/api/rates/' + encodeURIComponent(base))
         .then(function (r) { return r.json(); })
         .then(function (data) {
@@ -135,7 +127,7 @@
     convertAll(stored);
   }
 
-  function init() { bindPrefetch(); bindViewTransitions(); bindFilterSheet(); bindLangSwitcher(); bindCurrency(); }
+  function init() { bindPrefetch(); collapseSidebarOnMobile(); bindFilterSheet(); bindLangSwitcher(); bindCurrency(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
