@@ -17,8 +17,12 @@ import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell'
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
 export type LabelOf = (id: string, locale: string) => string;
 
-/** Varsayılan: kimlik (label yoksa ham id) — geri uyumlu test/edge. */
-const identityLabel: LabelOf = (id) => id;
+/** Varsayılan: id'yi insanileştir (tire→boşluk + Title Case) — ham slug sızdırma. */
+const identityLabel: LabelOf = (id) =>
+  id
+    .split('-')
+    .map((w) => (w ? w.charAt(0).toLocaleUpperCase() + w.slice(1) : w))
+    .join(' ');
 
 // ── P1 contract mirror (render-layer view) ────────────────────────────────────
 export interface ProductRow {
@@ -127,19 +131,21 @@ function renderLangSwitcher(locale: string): string {
   return html;
 }
 
-/** A marketplace product card linking to its store product page. */
-export function renderProductCard(p: ProductRow, locale: string): string {
+/** A marketplace product card linking to its store product page.
+ * `opts.eager` — LCP adayı kartlar için loading="eager" + fetchpriority="high" (geri uyumlu). */
+export function renderProductCard(p: ProductRow, locale: string, opts?: { eager?: boolean }): string {
   const title = escapeHtml(p.title);
   const price = mkFormatPrice(p.price, p.currency, locale);
   const soldOut = p.stock === 0;
   const href = escapeAttr(p.product_path);
   const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
+  const loadAttrs = opts?.eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
 
   let html = `<a class="mk-card-link" href="${href}">\n`;
   html += '  <article class="mk-card">\n';
   html += '    <div class="mk-card__media">\n';
   if (p.image_url) {
-    html += `      <img src="${escapeAttr(p.image_url)}" alt="${title}" loading="lazy" decoding="async" width="600" height="600" />\n`;
+    html += `      <img src="${escapeAttr(p.image_url)}" alt="${title}" ${loadAttrs} decoding="async" width="600" height="600" />\n`;
   } else {
     html += `      <div class="mk-card__media-empty" aria-hidden="true">${mkIcon('photo')}</div>\n`;
   }
@@ -150,7 +156,7 @@ export function renderProductCard(p: ProductRow, locale: string): string {
   html += '    <div class="mk-card__body">\n';
   html += `      <h3 class="mk-card__title">${title}</h3>\n`;
   if (price) {
-    html += `      <span class="mk-card__price" data-mk-amount="${p.price ?? ''}" data-mk-currency="${escapeAttr(p.currency)}" data-mk-orig="${escapeHtml(price)}">${escapeHtml(price)}</span>\n`;
+    html += `      <span class="mk-card__price" data-mk-amount="${p.price != null ? p.price.toFixed(2) : ''}" data-mk-currency="${escapeAttr(p.currency)}" data-mk-orig="${escapeHtml(price)}">${escapeHtml(price)}</span>\n`;
   } else {
     html += `      <span class="mk-card__price mk-card__price--contact">${escapeHtml(mt(locale, 'contactForPrice'))}</span>\n`;
   }
@@ -170,6 +176,7 @@ export function renderCategoryChips(
   let html = `<nav class="mk-chips" aria-label="${escapeHtml(mt(locale, 'categories'))}">\n`;
   html += `  <a class="mk-chip mk-chip--all" href="/market/search">${escapeHtml(mt(locale, 'allCategories'))}</a>\n`;
   for (const c of categories) {
+    if (c.count === 0) continue; // hayalet kasaba: ürünsüz kategori chip'i basılmaz
     const href = `/market/c/${encodeURIComponent(c.id)}`;
     const name = escapeHtml(labelOf(c.id, locale));
     html += `  <a class="mk-chip" href="${escapeAttr(href)}">${name} <span class="mk-chip__count">${c.count}</span></a>\n`;
@@ -264,8 +271,9 @@ export interface CategoryTreeNode {
 export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string): string {
   const heading = escapeHtml(mt(locale, 'categories'));
   let html = `<aside class="mk-sidebar" aria-label="${heading}">\n`;
-  // Dış details: mobilde tüm menü tek "Kategoriler" düğmesi altında; masaüstünde CSS açık tutar.
-  html += '  <details class="mk-sidebar__all">\n';
+  // Dış details: server-side `open` — masaüstünde açık gelir; mobilde JS kapatır
+  // (CSS ::details-content hilesine bağımlılık yok).
+  html += '  <details class="mk-sidebar__all" open>\n';
   html += `    <summary class="mk-sidebar__heading">${heading}<span class="mk-sidebar__all-chevron" aria-hidden="true">▾</span></summary>\n`;
   html += '  <nav class="mk-sidebar__nav">\n';
 
@@ -297,26 +305,31 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
   return html;
 }
 
-/** Kategori görsel kartı rayı — kare foto + altında ad (overlay yok). */
+/** Kategori görsel kartı rayı — kare foto + altında ad (overlay yok).
+ * Sadece görseli bulunabilen (ürünü eşleşen) kategoriler basılır; hiç yoksa ray atlanır. */
 function renderCategoryRail(
   categories: { id: string; count: number }[],
   products: ProductRow[],
   locale: string,
   labelOf: LabelOf,
 ): string {
+  const cards: { id: string; image: string }[] = [];
+  for (const c of categories) {
+    if (cards.length >= 6) break;
+    const catProduct = products.find((p) => p.category_id === c.id && p.image_url);
+    if (!catProduct) continue;
+    cards.push({ id: c.id, image: catProduct.image_url });
+  }
+  if (cards.length === 0) return '';
+
   let html = '<section class="mk-section">\n';
   html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'categories'))}</h2>\n`;
   html += '  <div class="mk-rail">\n';
-  for (const c of categories.slice(0, 6)) {
-    const catProduct = products.find((p) => p.category_id === c.id);
+  for (const c of cards) {
     const href = escapeAttr(`/market/c/${encodeURIComponent(c.id)}`);
     const cLabel = escapeHtml(labelOf(c.id, locale));
     html += `    <a class="mk-cat-card" href="${href}">\n`;
-    if (catProduct?.image_url) {
-      html += `      <img class="mk-cat-card__img" src="${escapeAttr(catProduct.image_url)}" alt="${cLabel}" loading="lazy" decoding="async" />\n`;
-    } else {
-      html += `      <div class="mk-cat-card__empty" aria-hidden="true">${mkIcon('photo')}</div>\n`;
-    }
+    html += `      <img class="mk-cat-card__img" src="${escapeAttr(c.image)}" alt="${cLabel}" loading="lazy" decoding="async" />\n`;
     html += `      <span class="mk-cat-card__name">${cLabel}</span>\n`;
     html += '    </a>\n';
   }
@@ -335,7 +348,12 @@ export function renderMarketHome(args: {
 }): string {
   const { products, stores, categories, locale } = args;
   const labelOf = args.labelOf ?? identityLabel;
-  const featured = products.slice(0, 8);
+  // Featured: stoklu (sold-out olmayan) ürünlerden ilk 8 — yalnızca toplam ürün > 8 ise.
+  // Toplam ≤8 iken tek grid yeterli (dublikasyon yok); sold-out ürünler grid'de kalır.
+  const showFeatured = products.length > 8;
+  const featured = showFeatured ? products.filter((p) => p.stock !== 0).slice(0, 8) : [];
+  const featuredIds = new Set(featured.map((p) => p.id));
+  const gridProducts = featured.length ? products.filter((p) => !featuredIds.has(p.id)) : products;
   const hasSidebar = Array.isArray(args.categoryTree) && args.categoryTree.length > 0;
 
   // Ortak sticky üst header (app-shell) — store ile birebir aynı kabuk.
@@ -343,16 +361,18 @@ export function renderMarketHome(args: {
   html += '<div class="mk">\n';
 
   // Sidebar varsa: .mk-layout açılır; yoksa içerik doğrudan devam eder (geri uyumlu)
+  // İçerik gövdesi <main> landmark'ı — sayfada tek main (header/footer/tab-bar main dışında).
   if (hasSidebar) {
     html += '<div class="mk-layout">\n';
     html += renderCategorySidebar(args.categoryTree!, locale);
-    html += '<div class="mk-main">\n';
+    html += '<main class="mk-main">\n';
   }
 
-  // Hero: büyük başlık + tek geniş arama alanı (gömülü SVG buton)
+  // Hero: büyük başlık + sakin değer önerisi alt başlığı + tek geniş arama alanı
   const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
   html += '<div class="mk-hero">\n';
   html += `  <h1 class="mk-hero__title">${escapeHtml(mt(locale, 'marketTitle'))}</h1>\n`;
+  html += `  <p class="mk-hero__sub">${escapeHtml(mt(locale, 'trustBadge'))}</p>\n`;
   html += '  <form class="mk-hero__form" action="/market/search" method="get" role="search">\n';
   html += `    <input class="mk-hero__input" name="q" type="search" placeholder="${ph}" aria-label="${ph}" />\n`;
   html += `    <button type="submit" class="mk-hero__btn" aria-label="${ph}">${mkIcon('search')}</button>\n`;
@@ -366,15 +386,16 @@ export function renderMarketHome(args: {
 
   // Hiç ürün yoksa: çirkin boşluk yerine şık boş durum + mağazalara yönlendir.
   if (products.length === 0) {
-    html += renderEmptyState({ icon: '🛍️', title: mt(locale, 'noResults'), ctaHref: '/market/stores', ctaLabel: mt(locale, 'stores') });
+    html += renderEmptyState({ icon: mkIcon('photo'), title: mt(locale, 'noResults'), ctaHref: '/market/stores', ctaLabel: mt(locale, 'stores') });
   }
 
-  // Featured rayı — standart ürün kartı, yatay snap scroll
+  // Featured rayı — standart ürün kartı, yatay snap scroll.
+  // LCP: ilk rayın ilk 4 görseli eager + fetchpriority=high.
   if (featured.length) {
     html += '<section class="mk-section">\n';
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'featured'))}</h2>\n`;
     html += '  <div class="mk-rail">\n';
-    for (const p of featured) html += renderProductCard(p, locale);
+    featured.forEach((p, i) => { html += renderProductCard(p, locale, { eager: i < 4 }); });
     html += '  </div>\n';
     html += '</section>\n';
   }
@@ -384,12 +405,12 @@ export function renderMarketHome(args: {
     html += renderCategoryRail(categories, products, locale, labelOf);
   }
 
-  // All products grid
-  if (products.length) {
+  // Products grid — featured'a girenler tekrar basılmaz (kalanlardan devam).
+  if (gridProducts.length) {
     html += '<section class="mk-section">\n';
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'newProducts'))}</h2>\n`;
     html += '  <div class="mk-grid">\n';
-    for (const p of products) html += renderProductCard(p, locale);
+    gridProducts.forEach((p, i) => { html += renderProductCard(p, locale, { eager: featured.length === 0 && i < 4 }); });
     html += '  </div>\n</section>\n';
   }
 
@@ -403,7 +424,7 @@ export function renderMarketHome(args: {
 
   // Sidebar layout kapatma
   if (hasSidebar) {
-    html += '</div>\n'; // .mk-main
+    html += '</main>\n'; // .mk-main
     html += '</div>\n'; // .mk-layout
   }
 
@@ -522,7 +543,7 @@ export function renderSearchPage(args: {
 
   html += '    <section class="mk-results">\n';
   if (items.length === 0) {
-    html += renderEmptyState({ icon: '🔍', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
+    html += renderEmptyState({ icon: mkIcon('search'), title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '      <div class="mk-grid">\n';
     for (const p of items) html += renderProductCard(p, locale);
@@ -586,7 +607,7 @@ export function renderCategoryPage(args: {
   html += '<section class="mk-section">\n';
   html += `  <h1 class="mk-page-title">${escapeHtml(h1)}</h1>\n`;
   if (items.length === 0) {
-    html += renderEmptyState({ icon: '🔍', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
+    html += renderEmptyState({ icon: mkIcon('search'), title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '  <div class="mk-grid">\n';
     for (const p of items) html += renderProductCard(p, locale);
@@ -835,7 +856,7 @@ export function renderFavoritesPage(args: { groups: BuyerGroup[]; locale: string
 
   if (groups.length === 0) {
     const signin = loggedIn ? '' : `  <button type="button" class="app-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
-    html += renderEmptyState({ icon: '🤍', title: mt(locale, 'emptyFavorites'), extraHtml: signin, ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
+    html += renderEmptyState({ icon: mkIcon('heart'), title: mt(locale, 'emptyFavorites'), extraHtml: signin, ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     for (const g of groups) {
       html += '  <section class="mk-acct-group">\n';
@@ -867,7 +888,7 @@ export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; log
 
   if (groups.length === 0) {
     const signin = loggedIn ? '' : `  <button type="button" class="app-acct__btn" id="pz-signin-btn-acct" aria-label="${escapeHtml(mt(locale, 'signIn'))}">${escapeHtml(mt(locale, 'signIn'))}</button>\n`;
-    html += renderEmptyState({ icon: '🛒', title: mt(locale, 'emptyCart'), extraHtml: signin, ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
+    html += renderEmptyState({ icon: mkIcon('cart'), title: mt(locale, 'emptyCart'), extraHtml: signin, ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     for (const g of groups) {
       const sum = groupTotal(g.items);

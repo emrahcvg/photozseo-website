@@ -27,8 +27,24 @@ describe('handleMarket', () => {
     expect(html).toContain('Mat');
     expect(html).toContain('/store/s');
     expect(html).toContain('rel="canonical" href="https://photozseo.com/market"');
-    // hreflang x-default present
-    expect(html).toContain('hreflang="x-default"');
+    // hreflang x-default → default dil (en, parametresiz URL)
+    expect(html).toContain('hreflang="x-default" href="https://photozseo.com/market"');
+    expect(html).toContain('hreflang="en" href="https://photozseo.com/market"');
+  });
+
+  it('non-default locale gets a self-referencing ?lang canonical on /market', async () => {
+    const res = await handleMarket([], { url: 'https://photozseo.com/market?lang=tr', lang: 'tr', db: {} as any, ai: undefined, ...deps });
+    const html = await res.text();
+    expect(html).toContain('rel="canonical" href="https://photozseo.com/market?lang=tr"');
+    expect(html).toContain('hreflang="x-default" href="https://photozseo.com/market"');
+  });
+
+  it('includes og:image and WebSite SearchAction JSON-LD on /market home', async () => {
+    const res = await handleMarket([], { url: 'https://photozseo.com/market', lang: 'en', db: {} as any, ai: undefined, ...deps });
+    const html = await res.text();
+    expect(html).toContain('property="og:image" content="https://photozseo.com/og-image.png"');
+    expect(html).toContain('"SearchAction"');
+    expect(html).toContain('https://photozseo.com/market/search?q={search_term_string}');
   });
 
   it('renders /market/search with results + facets', async () => {
