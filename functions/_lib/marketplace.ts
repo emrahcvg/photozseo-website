@@ -288,22 +288,36 @@ export function computeFacets(rows: JoinedRow[]): Facets {
 
 let _oramaCache: OramaIndex | null = null;
 
+/** Kategori yolunun indeksleneceği diller — tüm desteklenen locale'ler.
+ * Etiket tabloları lazy + cache'li (load-local.ts); "mutfak" gibi yerel
+ * aramalar da kategori yolundan eşleşsin diye 12 dil birden indekslenir. */
+const PATH_INDEX_LANGS = ['en', 'tr', 'de', 'es', 'pt', 'ja', 'ko', 'zh', 'ar', 'fa', 'hi', 'ur'];
+
 async function buildOrama(db: D1Database, version: number): Promise<OramaIndex> {
   const products = await fetchAllProducts(db);
   const oramaDb = create({
     schema: { id: 'string', title: 'string', description: 'string', tags: 'string', categoryPath: 'string' },
   }) as OramaIndex['db'];
 
-  // Kategori yolu etiketleri için taxonomy servisini başlat (graceful: hata olursa boş string).
-  let svc: Awaited<ReturnType<typeof getTaxonomyService>> | undefined;
-  try { svc = await getTaxonomyService('en'); } catch { svc = undefined; }
+  // Kategori yolu etiketleri (graceful: yüklenemeyen dil atlanır).
+  const services: { svc: Awaited<ReturnType<typeof getTaxonomyService>>; lang: string }[] = [];
+  for (const lang of PATH_INDEX_LANGS) {
+    try { services.push({ svc: await getTaxonomyService(lang), lang }); } catch { /* dil atla */ }
+  }
+  function multilingualPath(categoryId: string): string {
+    const seen = new Set<string>();
+    for (const { svc, lang } of services) {
+      for (const label of svc.path(categoryId, lang)) seen.add(label);
+    }
+    return [...seen].join(' ');
+  }
 
   const docs: OramaDoc[] = products.map((p) => ({
     id: p.id,
     title: p.title,
     description: p.description,
     tags: p.tags.replace(/,/g, ' '),
-    categoryPath: svc && p.category_id ? svc.path(p.category_id, 'en').join(' ') : '',
+    categoryPath: p.category_id ? multilingualPath(p.category_id) : '',
   }));
   if (docs.length > 0) await insertMultiple(oramaDb, docs);
   return { db: oramaDb, version };
@@ -395,7 +409,8 @@ export async function searchProducts(
     const queryLang = opts.lang ?? canonical;
     const term = await translateQuery(ai, opts.q.trim(), queryLang, canonical);
     const orama = await getOrama(db);
-    const res = await search(orama.db, { term, limit: 1000 });
+    // tolerance: 1 — tek karakterlik yazım hatalarını affet ("yga mat" → "yoga mat")
+    const res = await search(orama.db, { term, limit: 1000, tolerance: 1 });
     const ids = new Set(res.hits.map((h) => String(h.document.id)));
     rows = rows.filter((r) => ids.has(r.id));
   }
@@ -412,6 +427,22 @@ export async function searchProducts(
   const items = paginate(sorted, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
 
   return { items, facets, total };
+}
+
+/** Arama kutusu autocomplete önerileri — başlık bazlı, typo-toleranslı.
+ * Hafif: facet/translate yok; yalnız Orama'dan ilk eşleşen benzersiz başlıklar. */
+export async function suggestProducts(db: D1Database, q: string, limit = 6): Promise<string[]> {
+  const term = q.trim();
+  if (term === '') return [];
+  const orama = await getOrama(db);
+  const res = await search(orama.db, { term, limit: 50, tolerance: 1 });
+  const seen = new Set<string>();
+  for (const h of res.hits) {
+    const title = String((h.document as { title?: unknown }).title ?? '').trim();
+    if (title) seen.add(title);
+    if (seen.size >= limit) break;
+  }
+  return [...seen];
 }
 
 // ── Write-through orkestratör (PUT/DELETE handler'larından çağrılır) ──────────

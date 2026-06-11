@@ -669,7 +669,7 @@ export function renderStoreBody(
   html += '  <script src="/storefront-buyer.js?v=8" defer></script>\n';
   html += '  <script src="/cart-badge.js?v=1" defer></script>\n';
   html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
-  html += '  <script src="/auth.js?v=10" defer></script>\n';
+  html += '  <script src="/auth.js?v=11" defer></script>\n';
   return html;
 }
 
@@ -1031,7 +1031,7 @@ export function renderProductBody(
   html += '      <script src="/storefront-buyer.js?v=8" defer></script>\n';
   html += '      <script src="/marketplace-cart.js?v=4" defer></script>\n';
   html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
-  html += '      <script src="/auth.js?v=10" defer></script>\n';
+  html += '      <script src="/auth.js?v=11" defer></script>\n';
 
   html += '    </div>\n'; // sf-detail__info
   html += '  </div>\n'; // sf-detail

@@ -18,6 +18,7 @@ import {
   searchProducts as realSearch,
   listNewProducts as realListNew,
   listStores as realListStores,
+  suggestProducts as realSuggest,
   type Facets as LibFacets,
 } from '../_lib/marketplace';
 import type { AiBinding } from '../_lib/translate';
@@ -57,6 +58,8 @@ export interface MarketDeps {
   searchProducts: typeof realSearch;
   listNewProducts: typeof realListNew;
   listStores: typeof realListStores;
+  /** Autocomplete önerileri (opsiyonel — eski test deps'leri kırılmasın). */
+  suggestProducts?: typeof realSuggest;
   request?: Request;
   storeWriteKey?: string;
 }
@@ -163,8 +166,22 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: `${origin}/og-image.png`,
       jsonLd: [buildItemListJsonLd(newP.items, origin), buildWebSiteJsonLd(origin)],
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
+  }
+
+  // /market/api/suggest?q=… — arama kutusu autocomplete (JSON, kısa cache)
+  if (parts[0] === 'api' && parts[1] === 'suggest' && parts.length === 2) {
+    const q = u.searchParams.get('q') ?? '';
+    const suggestions = q.trim() && deps.suggestProducts
+      ? await deps.suggestProducts(deps.db, q, 6)
+      : [];
+    return new Response(JSON.stringify({ suggestions }), {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'public, max-age=60',
+      },
+    });
   }
 
   // /market/search
@@ -195,7 +212,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: `${origin}/og-image.png`,
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
     }));
@@ -214,7 +231,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: `${origin}/og-image.png`,
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -238,7 +255,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: `${origin}/og-image.png`,
       jsonLd,
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -257,7 +274,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       body,
       robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -271,7 +288,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       title: mt(locale, 'myFavorites') + ' — photoZseo',
       description: '', lang: locale, body, robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/market-account.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/market-account.js?v=8'],
     }));
   }
 
@@ -285,7 +302,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       title: mt(locale, 'myCart') + ' — photoZseo',
       description: '', lang: locale, body, robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/market-account.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/market-account.js?v=8'],
     }));
   }
 
@@ -311,6 +328,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   return handleMarket(parts, {
     url: ctx.request.url, lang, db: ctx.env.MARKET_DB, ai: ctx.env.AI,
     searchProducts: realSearch, listNewProducts: realListNew, listStores: realListStores,
+    suggestProducts: realSuggest,
     request: ctx.request, storeWriteKey: ctx.env.STORE_WRITE_KEY,
   });
 };

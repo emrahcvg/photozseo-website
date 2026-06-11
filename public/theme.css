@@ -201,7 +201,7 @@ img { max-width: 100%; }
 
 /* Hesap widget (auth.js pz-* ID'lerine bağlı; class'lar ortak) */
 .app-acct { position: relative; display: flex; align-items: center; flex-shrink: 0; }
-.app-acct__signin { display: flex; align-items: center; }
+.app-acct__signin { display: flex; align-items: center; min-height: 40px; } /* GIS buton render'ında zıplamayı önle */
 .app-acct__btn {
   display: inline-flex;
   align-items: center;

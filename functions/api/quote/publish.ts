@@ -22,10 +22,11 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
 
   // Yalnızca legit app örneği yayınlayabilsin: paylaşılan write-key gate
   // (genel kötüye kullanımı önler). Owner kimliği ise x-device-id'den gelir.
-  if (ctx.env.STORE_WRITE_KEY) {
-    const provided = ctx.request.headers.get('x-store-write-key');
-    if (provided !== ctx.env.STORE_WRITE_KEY) return json({ error: 'unauthorized' }, 401);
-  }
+  // FAIL-CLOSED (repo konvansiyonu, bkz. _lib/auth.ts requireWriteKey): key
+  // yapılandırılmamışsa endpoint anonim yazma yüzeyine dönüşmesin → 503.
+  if (!ctx.env.STORE_WRITE_KEY) return json({ error: 'write key not configured' }, 503);
+  const provided = ctx.request.headers.get('x-store-write-key');
+  if (provided !== ctx.env.STORE_WRITE_KEY) return json({ error: 'unauthorized' }, 401);
 
   const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'identity required' }, 400);

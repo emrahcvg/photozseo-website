@@ -154,6 +154,11 @@ describe('renderMarketHome', () => {
     expect(html).toContain('action="/market/search"');
     expect(html).toContain('name="q"');
   });
+  it('search input wires the autocomplete datalist', () => {
+    expect(html).toContain('list="mk-suggest"');
+    expect(html).toContain('data-mk-suggest');
+    expect(html).toContain('<datalist id="mk-suggest"></datalist>');
+  });
   it('≤8 products: single grid, no Featured rail (no duplication)', () => {
     expect(html).not.toContain(mt('en', 'featured'));
     expect(html).toContain(mt('en', 'newProducts'));

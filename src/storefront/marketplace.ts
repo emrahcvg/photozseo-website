@@ -217,7 +217,8 @@ function renderSearchBar(locale: string): string {
   const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
   return (
     '<form class="mk-searchbar" action="/market/search" method="get" role="search">\n' +
-    `  <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" />\n` +
+    `  <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" list="mk-suggest" autocomplete="off" data-mk-suggest />\n` +
+    '  <datalist id="mk-suggest"></datalist>\n' +
     `  <button type="submit" class="mk-searchbar__btn" aria-label="${ph}">${mkIcon('search', true)}</button>\n` +
     '</form>\n'
   );
@@ -374,7 +375,8 @@ export function renderMarketHome(args: {
   html += `  <h1 class="mk-hero__title">${escapeHtml(mt(locale, 'marketTitle'))}</h1>\n`;
   html += `  <p class="mk-hero__sub">${escapeHtml(mt(locale, 'trustBadge'))}</p>\n`;
   html += '  <form class="mk-hero__form" action="/market/search" method="get" role="search">\n';
-  html += `    <input class="mk-hero__input" name="q" type="search" placeholder="${ph}" aria-label="${ph}" />\n`;
+  html += `    <input class="mk-hero__input" name="q" type="search" placeholder="${ph}" aria-label="${ph}" list="mk-suggest" autocomplete="off" data-mk-suggest />\n`;
+  html += '    <datalist id="mk-suggest"></datalist>\n';
   html += `    <button type="submit" class="mk-hero__btn" aria-label="${ph}">${mkIcon('search')}</button>\n`;
   html += '  </form>\n';
   html += '</div>\n';
@@ -526,7 +528,8 @@ export function renderSearchPage(args: {
 
   // Arama satırı (marka artık ortak app-header'da)
   html += '  <div class="mk-searchrow">\n';
-  html += `    <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" value="${escapeAttr(query.q ?? '')}" />\n`;
+  html += `    <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" value="${escapeAttr(query.q ?? '')}" list="mk-suggest" autocomplete="off" data-mk-suggest />\n`;
+  html += '    <datalist id="mk-suggest"></datalist>\n';
   html += `    <button type="button" class="mk-filter-toggle" data-mk-filter-toggle aria-expanded="false" aria-controls="mk-facets-panel">${mkIcon('sliders', true)}<span>${escapeHtml(mt(locale, 'filters'))}</span></button>\n`;
   html += '  </div>\n';
 
