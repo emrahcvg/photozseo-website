@@ -137,7 +137,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market'),
       jsonLd: buildItemListJsonLd(newP.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -168,7 +168,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market/search'),
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
     }));
@@ -186,7 +186,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market/stores'),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -209,7 +209,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
       jsonLd,
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -228,7 +228,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       body,
       robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/cart-badge.js?v=1'],
     }));
   }
 

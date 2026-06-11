@@ -56,6 +56,30 @@ html { scroll-behavior: smooth; }
 .sf-catnav__count { opacity: 0.55; font-variant-numeric: tabular-nums; margin-inline-start: 3px; }
 .sf-no-results { text-align: center; color: var(--dim); padding: var(--sp-5) 0; margin: 0; }
 
+/* CATEGORY MENU (tab-bar style) */
+.sf-catmenu {
+  display: flex; flex-wrap: nowrap; gap: 0; overflow-x: auto;
+  border-bottom: 1px solid var(--line); margin-bottom: var(--sp-4);
+  scrollbar-width: none;
+}
+.sf-catmenu::-webkit-scrollbar { display: none; }
+.sf-catmenu__item {
+  flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border: none; border-bottom: 2px solid transparent;
+  background: none; font-family: inherit; font-size: var(--fs-sm); font-weight: 500;
+  color: var(--muted); cursor: pointer; white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.sf-catmenu__item:hover { color: var(--fg); }
+.sf-catmenu__item--active { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
+.sf-catmenu__count {
+  font-size: 0.75rem; background: var(--input); border-radius: var(--radius-pill);
+  padding: 1px 6px; color: var(--muted); font-weight: 500;
+}
+.sf-catmenu__item--active .sf-catmenu__count {
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent);
+}
+
 /* CATEGORY SECTION ANCHOR OFFSET (sticky toolbar) */
 .sf-section { scroll-margin-top: 120px; }
 

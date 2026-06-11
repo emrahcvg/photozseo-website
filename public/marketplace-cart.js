@@ -90,14 +90,25 @@
     document.querySelectorAll('[data-mk-add]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
+        var productId = btn.getAttribute('data-mk-add');
+        var pslug = btn.getAttribute('data-mk-pslug') || productId;
         addItem(slug, {
-          id: btn.getAttribute('data-mk-add'),
+          id: productId,
           title: btn.getAttribute('data-mk-title') || '',
           price: parseFloat(btn.getAttribute('data-mk-price') || '0') || 0,
           currency: btn.getAttribute('data-mk-currency') || 'USD',
           qty: 1,
         });
         render();
+        // Backend D1 sync (non-blocking; offline tolerant)
+        if (window.__sfBuyer && window.__sfBuyer.setCartItem) {
+          var items = getCart(slug);
+          var newQty = 1;
+          for (var i = 0; i < items.length; i++) {
+            if (items[i].id === productId) { newQty = items[i].qty; break; }
+          }
+          window.__sfBuyer.setCartItem(pslug, newQty).catch(function () {});
+        }
       });
     });
 
@@ -123,39 +134,122 @@
         if (payBox) payBox.hidden = false;
         var descOut = root.querySelector('[data-mk-paydesc]');
         if (descOut) descOut.textContent = ref;
-        // Sipariş D1'e kalıcı olarak kaydedilir; başarısız olsa bile WhatsApp açılır.
+
         var deviceId = (window.__sfBuyer && window.__sfBuyer.deviceId) ? window.__sfBuyer.deviceId() : '';
-        fetch('/api/store/' + slug + '/order', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
-          body: JSON.stringify({ store_name: root.getAttribute('data-mk-store-name') || undefined }),
-        }).then(function (r) {
-          return r.ok ? r.json() : null;
-        }).then(function (res) {
-          // Sunucudan gelen referansı kullan (ikisi de SP-* formatında; satıcı+alıcı aynı ref'i görür)
-          if (res && res.order_ref) {
-            ref = res.order_ref;
-            if (refOut) refOut.textContent = ref;
-            if (descOut) descOut.textContent = ref;
-          }
-        }).catch(function () { /* sessiz hata — WhatsApp akışını bloklama */ });
+
+        // localStorage → D1 pre-sync: cart butonlarından pslug'ları topla, eksik sync'leri tamamla.
+        // Sonra /order endpoint'ini çağır (backend D1'den doğrular).
+        var cartBtns = document.querySelectorAll('[data-mk-add][data-mk-pslug]');
+        var syncPromises = [];
+        if (window.__sfBuyer && window.__sfBuyer.setCartItem && cartBtns.length) {
+          var items = getCart(slug);
+          var qtyByPslug = {};
+          items.forEach(function (x) {
+            var btn = null;
+            for (var i = 0; i < cartBtns.length; i++) {
+              if (cartBtns[i].getAttribute('data-mk-add') === x.id) { btn = cartBtns[i]; break; }
+            }
+            var pslug = btn ? btn.getAttribute('data-mk-pslug') : x.id;
+            if (pslug && x.qty > 0) qtyByPslug[pslug] = x.qty;
+          });
+          Object.keys(qtyByPslug).forEach(function (pslug) {
+            syncPromises.push(window.__sfBuyer.setCartItem(pslug, qtyByPslug[pslug]).catch(function () {}));
+          });
+        }
+
+        Promise.all(syncPromises).catch(function () {}).then(function () {
+          fetch('/api/store/' + slug + '/order', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
+            body: JSON.stringify({ store_name: root.getAttribute('data-mk-store-name') || undefined }),
+          }).then(function (r) {
+            return r.ok ? r.json() : null;
+          }).then(function (res) {
+            if (res && res.order_ref) {
+              ref = res.order_ref;
+              if (refOut) refOut.textContent = ref;
+              if (descOut) descOut.textContent = ref;
+            }
+          }).catch(function () {});
+        });
+
         var waWin = window.open(buildWhatsappUrl(whatsapp, slug, data, ref), '_blank');
         if (waWin) waWin.opener = null;
       });
+    }
+
+    function pslugFor(productId) {
+      var btns = document.querySelectorAll('[data-mk-add][data-mk-pslug]');
+      for (var i = 0; i < btns.length; i++) {
+        if (btns[i].getAttribute('data-mk-add') === productId) {
+          return btns[i].getAttribute('data-mk-pslug') || productId;
+        }
+      }
+      return productId;
     }
 
     function render() {
       var list = root.querySelector('[data-mk-cart-list]');
       if (!list) return;
       var items = getCart(slug);
+      var isEmpty = items.length === 0;
+
+      // Empty state / form / total toggle
+      var emptyEl = root.querySelector('[data-mk-cart-empty]');
+      var formEl = root.querySelector('[data-mk-order-form]');
+      var totalRow = root.querySelector('[data-mk-total-row]');
+      if (isEmpty) {
+        root.setAttribute('data-mk-empty', '');
+      } else {
+        root.removeAttribute('data-mk-empty');
+      }
+      if (emptyEl) emptyEl.hidden = !isEmpty;
+      if (formEl) formEl.hidden = isEmpty;
+      if (totalRow) totalRow.hidden = isEmpty;
+
       list.innerHTML = '';
       items.forEach(function (x) {
         var li = document.createElement('li');
-        li.textContent = x.title + ' ×' + x.qty;
+        li.className = 'sf-cart__item';
+
+        var titleSpan = document.createElement('span');
+        titleSpan.className = 'sf-cart__item-title';
+        titleSpan.textContent = x.title;
+
+        var qtySpan = document.createElement('span');
+        qtySpan.className = 'sf-cart__item-qty';
+        qtySpan.textContent = '×' + x.qty;
+
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'sf-cart__remove';
+        removeBtn.setAttribute('aria-label', 'Remove ' + x.title);
+        removeBtn.textContent = '×';
+        (function (itemId) {
+          removeBtn.addEventListener('click', function () {
+            removeItem(slug, itemId);
+            if (window.__sfBuyer && window.__sfBuyer.setCartItem) {
+              window.__sfBuyer.setCartItem(pslugFor(itemId), 0).catch(function () {});
+            }
+            render();
+          });
+        })(x.id);
+
+        li.appendChild(titleSpan);
+        li.appendChild(qtySpan);
+        li.appendChild(removeBtn);
         list.appendChild(li);
       });
+
       var totalEl = root.querySelector('[data-mk-total]');
       if (totalEl) totalEl.textContent = cartTotal(slug).toFixed(2);
+
+      // Update navbar cart badge
+      var totalQty = items.reduce(function (s, x) { return s + (x.qty || 1); }, 0);
+      document.querySelectorAll('[data-mk-cart-count]').forEach(function (badge) {
+        badge.textContent = totalQty;
+        badge.hidden = totalQty === 0;
+      });
     }
     render();
   }

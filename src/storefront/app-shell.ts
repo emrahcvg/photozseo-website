@@ -63,6 +63,7 @@ export function renderAppHeader(opts: AppHeaderOptions): string {
   if (controlsHtml) html += controlsHtml;
   html += `      <a class="app-cart" href="${escapeAttr(cartHref)}" aria-label="${cartLabel}" title="${cartLabel}">\n`;
   html += '        <svg class="app-cart__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>\n';
+  html += '        <span class="app-cart__badge" data-mk-cart-count hidden>0</span>\n';
   html += '      </a>\n';
   html += renderAccountWidget(locale).replace(/^/gm, '      ').trimStart();
   html += '    </div>\n';

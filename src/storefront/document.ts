@@ -111,7 +111,7 @@ export function renderDocument(opts: DocumentOptions): string {
 <meta name="robots" content="${esc(opts.robots ?? 'index, follow')}" />`;
   // Ortak tasarım sistemi (token'lar) her sayfada İLK yüklenir; ardından
   // sayfaya özel CSS (store → storefront.css, market → marketplace.css) gelir.
-  const pageSheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura37'];
+  const pageSheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura39'];
   const sheets = ['/theme.css?v=1', ...pageSheets];
   for (const href of sheets) {
     head += `\n<link rel="stylesheet" href="${esc(href)}" />`;

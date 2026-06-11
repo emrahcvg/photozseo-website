@@ -332,7 +332,7 @@ function renderProductCard(
   return html;
 }
 
-// ── Toolbar (search + category jump nav) ─────────────────────────────────────────
+// ── Toolbar (search) + Kategori menüsü (ayrı çubuk) ──────────────────────────────
 
 function renderToolbar(
   groups: { category: { id: string; name: Record<string, string> } | null; products: Product[] }[],
@@ -342,26 +342,35 @@ function renderToolbar(
   const catsLabel = mt(locale, 'categories');
   const noResults = mt(locale, 'noResults');
 
+  // Kategori menüsü: en az bir gerçek kategorisi olan grup varsa göster
+  const hasRealCats = groups.some((g) => g.category !== null);
+
   let html = '<div class="sf-toolbar">\n';
   html += `  <input type="search" class="sf-search" data-sf-search-input placeholder="${escapeHtml(searchPlaceholder)}" aria-label="${escapeHtml(searchPlaceholder)}" />\n`;
+  html += `  <p class="sf-no-results" data-sf-no-results hidden>${escapeHtml(noResults)}</p>\n`;
+  html += '</div>\n';
 
-  if (groups.length > 1) {
+  if (hasRealCats) {
     const allLabel = mt(locale, 'allCategories');
     const totalCount = groups.reduce((n, g) => n + g.products.length, 0);
-    html += `  <nav class="sf-catnav" aria-label="${escapeHtml(catsLabel)}">\n`;
-    html += `    <button type="button" class="sf-catnav__link sf-catnav__link--active" data-sf-cat="all">${escapeHtml(allLabel)} <span class="sf-catnav__count">${totalCount}</span></button>\n`;
+    html += `<nav class="sf-catmenu" aria-label="${escapeHtml(catsLabel)}">\n`;
+    html += `  <button type="button" class="sf-catmenu__item sf-catmenu__item--active" data-sf-cat="all">\n`;
+    html += `    <span class="sf-catmenu__name">${escapeHtml(allLabel)}</span>\n`;
+    html += `    <span class="sf-catmenu__count">${totalCount}</span>\n`;
+    html += '  </button>\n';
     for (const group of groups) {
       const id = group.category ? `cat-${group.category.id}` : 'cat-other';
       const name = group.category
         ? resolveLocalized(group.category.name, locale)
         : mt(locale, 'other');
-      html += `    <button type="button" class="sf-catnav__link" data-sf-cat="${escapeAttr(id)}">${escapeHtml(name)} <span class="sf-catnav__count">${group.products.length}</span></button>\n`;
+      html += `  <button type="button" class="sf-catmenu__item" data-sf-cat="${escapeAttr(id)}">\n`;
+      html += `    <span class="sf-catmenu__name">${escapeHtml(name)}</span>\n`;
+      html += `    <span class="sf-catmenu__count">${group.products.length}</span>\n`;
+      html += '  </button>\n';
     }
-    html += '  </nav>\n';
+    html += '</nav>\n';
   }
 
-  html += `  <p class="sf-no-results" data-sf-no-results hidden>${escapeHtml(noResults)}</p>\n`;
-  html += '</div>\n';
   return html;
 }
 
@@ -467,22 +476,26 @@ function controlsScript(locale: string): string {
     });
   }
 
-  // ---- Category filter: clicking a chip shows only that category's products ----
-  var catChips = document.querySelectorAll('.sf-catnav__link');
-  if (catChips.length) {
-    catChips.forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        var cat = chip.getAttribute('data-sf-cat');
+  // ---- Category filter: sf-catmenu__item butonları ----
+  var catItems = document.querySelectorAll('.sf-catmenu__item');
+  if (catItems.length) {
+    catItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var cat = item.getAttribute('data-sf-cat');
         document.querySelectorAll('.sf-section').forEach(function (sec) {
           var match = sec.getAttribute('data-sf-cat') === cat;
           sec.style.display = (cat === 'all' || match) ? '' : 'none';
-          // Tek kategori seçilince tam grid (alta doğru, hepsi); Tümü'de yatay şerit.
           sec.classList.toggle('sf-section--expanded', cat !== 'all' && match);
         });
-        for (var i = 0; i < catChips.length; i++) {
-          catChips[i].classList.toggle('sf-catnav__link--active', catChips[i] === chip);
+        for (var i = 0; i < catItems.length; i++) {
+          catItems[i].classList.toggle('sf-catmenu__item--active', catItems[i] === item);
         }
         if (input) input.value = '';
+        // Seçilen kategoriye scroll
+        if (cat !== 'all') {
+          var target = document.getElementById(cat);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
   }
@@ -654,6 +667,7 @@ export function renderStoreBody(
   if (manifest.products.some((p) => p.fitment?.length)) html += fitmentFilterScript();
   html += controlsScript(locale);
   html += '  <script src="/storefront-buyer.js?v=8" defer></script>\n';
+  html += '  <script src="/cart-badge.js?v=1" defer></script>\n';
   html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
   html += '  <script src="/auth.js?v=10" defer></script>\n';
   return html;
@@ -1015,7 +1029,7 @@ export function renderProductBody(
   html += '        </div>\n';
   html += '      </div>\n';
   html += '      <script src="/storefront-buyer.js?v=8" defer></script>\n';
-  html += '      <script src="/marketplace-cart.js?v=3" defer></script>\n';
+  html += '      <script src="/marketplace-cart.js?v=4" defer></script>\n';
   html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
   html += '      <script src="/auth.js?v=10" defer></script>\n';
 
