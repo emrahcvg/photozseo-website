@@ -8,6 +8,7 @@ import { requireMembership, type PoolEnv } from '../../../../_lib/pool-authz';
 import { getAsset, tombstoneAsset } from '../../../../_lib/pool';
 import { presignR2Url } from '../../../../_lib/r2-presign';
 import { can } from '../../../../_lib/team';
+import { logActivity } from '../../../../_lib/activity-log';
 
 interface Env extends PoolEnv {
   R2_ACCOUNT_ID?: string;
@@ -62,5 +63,19 @@ export async function onRequestDelete(ctx: Ctx): Promise<Response> {
   const body = await ctx.request.json().catch(() => null) as { deletedAt?: string } | null;
   const deletedAt = body?.deletedAt ?? new Date().toISOString();
   await tombstoneAsset(ctx.env.MARKET_DB!, { companyId, projectId, assetId: ctx.params.id, deletedAt, modifiedAt: deletedAt });
+
+  try {
+    await logActivity(ctx.env.MARKET_DB!, {
+      companyId,
+      eventType: 'asset_deleted',
+      actorSub: auth.sub,
+      actorEmail: auth.email,
+      targetSub: null,
+      targetRef: ctx.params.id,
+      meta: { projectId },
+      now: new Date().toISOString(),
+    });
+  } catch {}
+
   return json({ ok: true });
 }

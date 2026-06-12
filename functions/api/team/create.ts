@@ -5,6 +5,7 @@
  */
 import { resolveMember } from '../../_lib/team-session';
 import { createCompany } from '../../_lib/team';
+import { logActivity } from '../../_lib/activity-log';
 import type { D1Like } from '../../_lib/buyer';
 
 interface Env { STORE_WRITE_KEY?: string; MARKET_DB?: D1Like; }
@@ -31,6 +32,19 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   await createCompany(ctx.env.MARKET_DB, {
     companyId, name, ownerSub: member.sub, email: member.email, ownerName: member.name ?? null, now,
   });
+
+  try {
+    await logActivity(ctx.env.MARKET_DB, {
+      companyId,
+      eventType: 'company_created',
+      actorSub: member.sub,
+      actorEmail: member.email,
+      targetSub: null,
+      targetRef: null,
+      meta: null,
+      now: new Date().toISOString(),
+    });
+  } catch {}
 
   return json({ ok: true, companyId, role: 'owner' });
 }

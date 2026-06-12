@@ -5,6 +5,7 @@
  */
 import { resolveMember } from '../../_lib/team-session';
 import { getMembership, createInvite, randomInviteCode, can, type Role } from '../../_lib/team';
+import { logActivity } from '../../_lib/activity-log';
 import type { D1Like } from '../../_lib/buyer';
 
 interface Env { STORE_WRITE_KEY?: string; MARKET_DB?: D1Like; }
@@ -38,6 +39,19 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   const now = new Date().toISOString();
   const expiresAt = new Date(Date.now() + INVITE_TTL_DAYS * 86400_000).toISOString();
   await createInvite(ctx.env.MARKET_DB, { code, companyId, role, createdBy: member.sub, now, expiresAt });
+
+  try {
+    await logActivity(ctx.env.MARKET_DB, {
+      companyId,
+      eventType: 'member_invited',
+      actorSub: member.sub,
+      actorEmail: member.email,
+      targetSub: null,
+      targetRef: null,
+      meta: { role, code },
+      now: new Date().toISOString(),
+    });
+  } catch {}
 
   return json({ ok: true, code, expiresAt });
 }

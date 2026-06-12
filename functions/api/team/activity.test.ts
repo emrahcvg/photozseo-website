@@ -85,7 +85,8 @@ describe('GET /api/team/activity', () => {
 
     const req2 = await authedGet('sub-o', 'o@x.com', `https://x/api/team/activity?companyId=${companyId}&limit=30&cursor=${encodeURIComponent(body1.nextCursor)}`);
     const body2 = await (await getActivity({ request: req2, env })).json() as { items: unknown[]; nextCursor: string | null };
-    expect(body2.items).toHaveLength(5);
+    // 35 member_added + 1 company_created = 36 toplam; sayfa 2'de 6 kayıt
+    expect(body2.items).toHaveLength(6);
     expect(body2.nextCursor).toBeNull();
   });
 });
@@ -104,9 +105,10 @@ describe('POST /api/team/activity (export log)', () => {
     });
     const res = await postActivity({ request: req, env });
     expect(res.status).toBe(201);
-    expect(tables.team_activity_log).toHaveLength(1);
-    expect(tables.team_activity_log[0].event_type).toBe('export_completed');
-    expect(tables.team_activity_log[0].actor_email).toBe('o@x.com');
+    // create zaten company_created logu yazar; export_completed kaydını bul
+    const exportLog = tables.team_activity_log.find((r) => r.event_type === 'export_completed');
+    expect(exportLog).toBeDefined();
+    expect(exportLog!.actor_email).toBe('o@x.com');
   });
 
   it('oturumsuz 401 alır', async () => {

@@ -27,7 +27,7 @@ const CTX = (request: Request, db: any) => ({ request, env: ENV(db), params: { i
 
 describe('PUT pool/project/[id]', () => {
   it('üye projeyi upsert eder (200)', async () => {
-    const { db } = makeFakeD1();
+    const { db, tables } = makeFakeD1();
     await seedCompany(db);
     const req = await authed('sub-emp', 'https://x/api/team/pool/project/p1?companyId=c:co-1', 'PUT', { modifiedAt: '2026-06-08T10:00:00Z', snapshot: { name: 'Ürün' } });
     const res = await onRequestPut(CTX(req, db));
@@ -35,6 +35,8 @@ describe('PUT pool/project/[id]', () => {
     const got = await getProject(db, 'c:co-1', 'p1');
     expect(got!.snapshot).toBe(JSON.stringify({ name: 'Ürün' }));
     expect(got!.created_by).toBe('sub-emp');
+    expect(tables.team_activity_log.length).toBeGreaterThan(0);
+    expect(tables.team_activity_log[0].event_type).toBe('project_created');
   });
 
   it('üye olmayan 403', async () => {
@@ -76,13 +78,15 @@ describe('GET pool/project/[id]', () => {
 
 describe('DELETE pool/project/[id]', () => {
   it('owner tombstone yapar (200)', async () => {
-    const { db } = makeFakeD1();
+    const { db, tables } = makeFakeD1();
     await seedCompany(db);
     await upsertProject(db, { companyId: 'c:co-1', projectId: 'p1', createdBy: 'sub-emp', modifiedAt: '2026-06-08T10:00:00Z', snapshot: '{}' });
     const req = await authed('sub-owner', 'https://x/api/team/pool/project/p1?companyId=c:co-1', 'DELETE', { deletedAt: '2026-06-08T12:00:00Z' });
     const res = await onRequestDelete(CTX(req, db));
     expect(res.status).toBe(200);
     expect((await getProject(db, 'c:co-1', 'p1'))!.deleted_at).toBe('2026-06-08T12:00:00Z');
+    expect(tables.team_activity_log.length).toBeGreaterThan(0);
+    expect(tables.team_activity_log[0].event_type).toBe('project_deleted');
   });
 
   it('employee başkasının projesini silemez (403)', async () => {
