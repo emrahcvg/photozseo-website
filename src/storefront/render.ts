@@ -801,6 +801,45 @@ function renderGallery(images: string[], alt: string): string {
   return html;
 }
 
+// ── renderBuyerSafetySection ─────────────────────────────────────────────────
+
+function renderBuyerSafetySection(
+  store: Manifest['store'],
+  product: Product,
+  locale: string,
+): string {
+  const sellerType = sellerTypeLabel(store.businessType, locale);
+  const hasContact = !!(store.contact.phone || store.contact.whatsapp || store.contact.email);
+  const price = product.price;
+  const compareAt = product.compareAtPrice;
+  const hasLargeDiscount =
+    price != null && compareAt != null && compareAt > price &&
+    (compareAt - price) / compareAt >= 0.5;
+
+  let html = '      <div class="sf-buyer-safety">\n';
+  html += `        <p class="sf-buyer-safety__title">${escapeHtml(mt(locale, 'buyerSafetyTitle'))}</p>\n`;
+  html += '        <ul class="sf-buyer-safety__list">\n';
+
+  if (sellerType) {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--info">🏷 ${escapeHtml(sellerType)}</li>\n`;
+  }
+
+  if (hasContact) {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--ok">✓ ${escapeHtml(mt(locale, 'sellerReachable'))}</li>\n`;
+  } else {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--warn">⚠ ${escapeHtml(mt(locale, 'sellerNotReachable'))}</li>\n`;
+  }
+
+  if (hasLargeDiscount) {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--warn">⚠ ${escapeHtml(mt(locale, 'largeDiscountWarning'))}</li>\n`;
+  }
+
+  html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--note">🔒 ${escapeHtml(mt(locale, 'publisherNote'))}</li>\n`;
+  html += '        </ul>\n';
+  html += '      </div>\n';
+  return html;
+}
+
 // ── renderProductBody ────────────────────────────────────────────────────────
 
 /**
@@ -913,6 +952,9 @@ export function renderProductBody(
   }
   html += `        <button type="button" class="sf-btn sf-btn--cart" data-mk-add="${escapeAttr(product.id)}" data-mk-pslug="${escapeAttr(pSlug)}" data-mk-title="${escapeAttr(title)}" data-mk-price="${escapeAttr(product.price != null ? String(product.price) : '')}" data-mk-currency="${escapeAttr(currency)}">${escapeHtml(addLabel)}</button>\n`;
   html += '      </div>\n';
+
+  // Buyer safety section — shown between CTA and description
+  html += renderBuyerSafetySection(store, product, locale);
 
   // The Narrative (description)
   if (description) {
