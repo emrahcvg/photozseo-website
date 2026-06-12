@@ -455,6 +455,28 @@ export async function suggestProducts(db: D1Database, q: string, limit = 6): Pro
  * (Orama'nın yeniden kurulmasını tetikler). best-effort: hata fırlatabilir,
  * çağıran graceful yakalar.
  */
+export interface ProductDetailRow extends ProductRow {
+  whatsapp: string | null;
+  city: string | null;
+  country: string | null;
+}
+
+/** Tek ürün + mağaza bilgisi — PDP için. */
+export async function getProductById(db: D1Like, id: string): Promise<ProductDetailRow | null> {
+  return db
+    .prepare(
+      `SELECT p.id, p.store_slug, p.title, p.description, p.category_id, p.tags,
+              p.price, p.currency, p.stock, p.image_url, p.product_path, p.updated_at,
+              COALESCE(s.name, p.store_slug) AS store_name,
+              s.whatsapp, s.city, s.country
+       FROM products p
+       LEFT JOIN stores s ON s.slug = p.store_slug
+       WHERE p.id = ?`,
+    )
+    .bind(id)
+    .first<ProductDetailRow>();
+}
+
 export async function syncStoreToMarketplace(
   db: D1Database,
   slug: string,

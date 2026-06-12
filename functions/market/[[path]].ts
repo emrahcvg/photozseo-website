@@ -19,7 +19,9 @@ import {
   listNewProducts as realListNew,
   listStores as realListStores,
   suggestProducts as realSuggest,
+  getProductById as realGetProductById,
   type Facets as LibFacets,
+  type ProductDetailRow,
 } from '../_lib/marketplace';
 import type { AiBinding } from '../_lib/translate';
 import {
@@ -30,9 +32,11 @@ import {
   renderOrdersPage,
   renderFavoritesPage,
   renderCartPage,
+  renderProductPage,
   buildItemListJsonLd,
   buildBreadcrumbJsonLd,
   buildStoreDirectoryJsonLd,
+  buildProductJsonLd,
   type Facets,
   type SearchQuery,
   type LabelOf,
@@ -61,6 +65,7 @@ export interface MarketDeps {
   listStores: typeof realListStores;
   /** Autocomplete önerileri (opsiyonel — eski test deps'leri kırılmasın). */
   suggestProducts?: typeof realSuggest;
+  getProductById?: typeof realGetProductById;
   request?: Request;
   storeWriteKey?: string;
 }
@@ -225,6 +230,33 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     }));
   }
 
+  // /market/p/:id — ürün detay sayfası
+  if (parts[0] === 'p' && parts.length === 2) {
+    const productId = decodeURIComponent(parts[1]);
+    const getter = deps.getProductById ?? realGetProductById;
+    const product = await getter(deps.db, productId);
+    if (!product) {
+      return htmlResponse(renderDocument({
+        title: 'Product not found — photoZseo', description: '', lang: locale,
+        body: '<div class="mk"><p style="padding:2rem;text-align:center">Product not found</p></div>',
+        stylesheets: ['/marketplace.css?v=8'],
+      }), 404);
+    }
+    const pdpUrl = `/market/p/${encodeURIComponent(product.id)}`;
+    const canonical = buildCanonical(origin, pdpUrl, locale);
+    const body = renderProductPage(product, locale);
+    return htmlResponse(renderDocument({
+      title: `${product.title} — photoZseo`,
+      description: product.description ? product.description.slice(0, 160) : `${product.title} — photoZseo marketplace`,
+      lang: locale, body, canonical,
+      ogImage: product.image_url || `${origin}/og-image.png`,
+      preloadImage: product.image_url || undefined,
+      jsonLd: buildProductJsonLd(product, origin),
+      stylesheets: ['/marketplace.css?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/marketplace-cart.js?v=1', '/cart-badge.js?v=1'],
+    }));
+  }
+
   // /market/stores
   if (parts[0] === 'stores' && parts.length === 1) {
     const stores = await deps.listStores(deps.db, { limit: 100 });
@@ -351,7 +383,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   return handleMarket(parts, {
     url: ctx.request.url, lang, db: ctx.env.MARKET_DB, ai: ctx.env.AI,
     searchProducts: realSearch, listNewProducts: realListNew, listStores: realListStores,
-    suggestProducts: realSuggest,
+    suggestProducts: realSuggest, getProductById: realGetProductById,
     request: ctx.request, storeWriteKey: ctx.env.STORE_WRITE_KEY,
   });
 };

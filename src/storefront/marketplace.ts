@@ -138,7 +138,7 @@ export function renderProductCard(p: ProductRow, locale: string, index = 0, opts
   const title = escapeHtml(p.title);
   const price = mkFormatPrice(p.price, p.currency, locale);
   const soldOut = p.stock === 0;
-  const href = escapeAttr(p.product_path);
+  const href = `/market/p/${encodeURIComponent(p.id)}`;
   const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
   const isEager = index === 0 || opts?.eager;
   const loadAttrs = isEager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
@@ -917,4 +917,123 @@ export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; log
   html += '</div>\n';
   html += renderBottomTabBar(locale, 'cart');
   return html;
+}
+
+// ── Product Detail Page ───────────────────────────────────────────────────────
+
+export interface ProductDetail extends ProductRow {
+  whatsapp?: string | null;
+  city?: string | null;
+  country?: string | null;
+}
+
+export function renderProductPage(p: ProductDetail, locale: string): string {
+  const title = escapeHtml(p.title);
+  const price = mkFormatPrice(p.price, p.currency, locale);
+  const soldOut = p.stock === 0;
+  const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
+  const tags = parseTags(p.tags);
+
+  let html = '<div class="mk">\n';
+  html += renderAppHeader({ title: 'photoZseo Market', locale });
+  html += '<main class="mk-pdp">\n';
+
+  // Back link
+  html += `  <a class="mk-pdp__back" href="/market">← ${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
+
+  html += '  <div class="mk-pdp__layout">\n';
+
+  // Left: image
+  html += '    <div class="mk-pdp__media">\n';
+  if (p.image_url) {
+    html += `      <img src="${escapeAttr(p.image_url)}" alt="${title}" loading="eager" fetchpriority="high" decoding="async" width="600" height="600" />\n`;
+  } else {
+    html += `      <div class="mk-pdp__media-empty" aria-hidden="true">${mkIcon('photo')}</div>\n`;
+  }
+  html += '    </div>\n';
+
+  // Right: info
+  html += '    <div class="mk-pdp__info">\n';
+  html += `      <h1 class="mk-pdp__title">${title}</h1>\n`;
+
+  // Seller
+  const storeHref = `/store/${encodeURIComponent(p.store_slug)}`;
+  html += `      <p class="mk-pdp__seller"><a href="${storeHref}">${escapeHtml(sellerName)}</a>`;
+  if (p.city) html += ` · ${escapeHtml(p.city)}`;
+  html += '</p>\n';
+
+  // Price
+  if (price) {
+    html += `      <p class="mk-pdp__price" data-mk-amount="${p.price != null ? p.price.toFixed(2) : ''}" data-mk-currency="${escapeAttr(p.currency)}" data-mk-orig="${escapeHtml(price)}">${escapeHtml(price)}</p>\n`;
+  } else {
+    html += `      <p class="mk-pdp__price mk-pdp__price--contact">${escapeHtml(mt(locale, 'contactForPrice'))}</p>\n`;
+  }
+
+  // Stock badge
+  if (soldOut) {
+    html += `      <span class="mk-card__badge mk-card__badge--out">${escapeHtml(mt(locale, 'soldOut'))}</span>\n`;
+  }
+
+  // Add to cart
+  if (!soldOut && p.price != null) {
+    html += `      <button class="mk-btn mk-pdp__add-btn"
+        data-mk-add="${escapeAttr(p.id)}"
+        data-mk-pslug="${escapeAttr(p.id)}"
+        data-mk-title="${title}"
+        data-mk-price="${p.price.toFixed(2)}"
+        data-mk-currency="${escapeAttr(p.currency)}"
+        data-mk-cart-root-slug="${escapeAttr(p.store_slug)}"
+      >${escapeHtml(mt(locale, 'addToCart'))}</button>\n`;
+  }
+
+  // WhatsApp
+  if (p.whatsapp) {
+    const waNum = p.whatsapp.replace(/[^0-9]/g, '');
+    const waText = encodeURIComponent(`Hi, I'm interested in: ${p.title}`);
+    html += `      <a class="mk-btn mk-btn--wa mk-pdp__wa-btn" href="https://wa.me/${waNum}?text=${waText}" target="_blank" rel="noopener noreferrer">WhatsApp</a>\n`;
+  }
+
+  // Description
+  if (p.description) {
+    html += `      <p class="mk-pdp__desc">${escapeHtml(p.description)}</p>\n`;
+  }
+
+  // Tags
+  if (tags.length) {
+    html += '      <div class="mk-pdp__tags">\n';
+    for (const tag of tags) {
+      html += `        <a class="mk-chip" href="/market/search?q=${encodeURIComponent(tag)}">${escapeHtml(tag)}</a>\n`;
+    }
+    html += '      </div>\n';
+  }
+
+  html += '    </div>\n'; // .mk-pdp__info
+  html += '  </div>\n'; // .mk-pdp__layout
+  html += '</main>\n';
+  html += renderMarketFooter(locale);
+  html += '</div>\n';
+  html += renderBottomTabBar(locale, 'discover');
+  return html;
+}
+
+export function buildProductJsonLd(p: ProductDetail, origin: string): string {
+  const url = `${origin}/market/p/${encodeURIComponent(p.id)}`;
+  const obj: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.title,
+    url,
+    description: p.description || undefined,
+    image: p.image_url || undefined,
+    offers: {
+      '@type': 'Offer',
+      url,
+      priceCurrency: p.currency,
+      price: p.price ?? undefined,
+      availability: p.stock === 0
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock',
+    },
+  };
+  return JSON.stringify(obj);
 }
