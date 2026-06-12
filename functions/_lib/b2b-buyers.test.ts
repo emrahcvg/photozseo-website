@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  listBuyers, addBuyer, deleteBuyer, findBuyerByCode,
+  listBuyers, addBuyer, deleteBuyer, findBuyerByCode, findBuyerById,
   isValidBuyerCode, generateAccessCode,
 } from './b2b-buyers';
 import { makeFakeD1 } from './fakeD1';
@@ -86,5 +86,21 @@ describe('findBuyerByCode', () => {
     await addBuyer(db, 'test-store', 'Pasif', 'AB2C3D', 'uuid-1', '2026-06-12T00:00:00Z');
     await db.prepare('UPDATE store_buyers SET is_active=0 WHERE id=?').bind('uuid-1').run();
     expect(await findBuyerByCode(db, 'test-store', 'AB2C3D')).toBeNull();
+  });
+});
+
+describe('findBuyerById', () => {
+  it('geçerli id için alıcı döner', async () => {
+    const { db } = makeFakeD1();
+    await addBuyer(db, 'test-store', 'Ahmet', 'AB2C3D', 'uuid-1', '2026-06-12T00:00:00Z');
+    const buyer = await findBuyerById(db, 'test-store', 'uuid-1');
+    expect(buyer?.id).toBe('uuid-1');
+    expect(buyer?.buyer_name).toBe('Ahmet');
+  });
+
+  it('yanlış id için null döner', async () => {
+    const { db } = makeFakeD1();
+    const result = await findBuyerById(db, 'test-store', 'non-existent');
+    expect(result).toBeNull();
   });
 });
