@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[]; team_activity_log: Row[]; store_buyers: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[]; team_activity_log: Row[]; store_buyers: Row[]; store_buyer_transactions: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -36,6 +36,7 @@ export function makeFakeD1(): FakeD1 {
     pool_assets: [] as Row[],
     team_activity_log: [] as Row[],
     store_buyers: [] as Row[],
+    store_buyer_transactions: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -399,6 +400,32 @@ export function makeFakeD1(): FakeD1 {
         (r) => !(r.id === args[0] && r.store_slug === args[1]),
       );
       return { kind: 'run' as const };
+    }
+    // store_buyers: UPDATE balance
+    if (/UPDATE store_buyers SET balance = balance \+ \? WHERE id = \? AND store_slug = \?/i.test(s)) {
+      const delta = args[0] as number;
+      const row = tables.store_buyers.find((x) => x.id === args[1] && x.store_slug === args[2]);
+      if (row) row.balance = ((row.balance as number) ?? 0) + delta;
+      return { kind: 'run' as const };
+    }
+    // store_buyers: SELECT balance WHERE id + store_slug
+    if (/SELECT balance FROM store_buyers WHERE id = \? AND store_slug = \?/i.test(s)) {
+      const r = tables.store_buyers.find((x) => x.id === args[0] && x.store_slug === args[1]) ?? null;
+      return { kind: 'first' as const, row: r ? { balance: (r.balance as number) ?? 0 } : null };
+    }
+    // store_buyer_transactions: INSERT
+    if (/INSERT INTO store_buyer_transactions/i.test(s)) {
+      const [id, store_slug, buyer_id, type, amount, currency, description, order_ref, created_by, created_at] = args;
+      tables.store_buyer_transactions.push({ id, store_slug, buyer_id, type, amount, currency, description, order_ref, created_by, created_at });
+      return { kind: 'run' as const };
+    }
+    // store_buyer_transactions: SELECT WHERE store_slug + buyer_id ORDER BY created_at DESC
+    if (/SELECT .+ FROM store_buyer_transactions WHERE store_slug = \? AND buyer_id = \? ORDER BY created_at DESC/i.test(s)) {
+      const rows = tables.store_buyer_transactions
+        .filter((r) => r.store_slug === args[0] && r.buyer_id === args[1])
+        .slice()
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+      return { kind: 'all' as const, rows };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
   }
