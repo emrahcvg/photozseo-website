@@ -352,13 +352,15 @@ export function makeFakeD1(): FakeD1 {
       return { kind: 'run' as const };
     }
     // store_buyers: INSERT (unique constraint: store_slug + access_code)
+    // SQL: INSERT INTO store_buyers (id, store_slug, buyer_name, access_code, is_active, created_at) VALUES (?, ?, ?, ?, 1, ?)
+    // bind args: id, store_slug, buyer_name, access_code, created_at  (is_active is a literal 1 in SQL)
     if (/INSERT INTO store_buyers/i.test(s)) {
-      const [id, store_slug, buyer_name, access_code, is_active, created_at] = args;
+      const [id, store_slug, buyer_name, access_code, created_at] = args;
       const exists = tables.store_buyers.some(
         (r) => r.store_slug === store_slug && r.access_code === access_code,
       );
       if (exists) throw new Error('fakeD1: store_buyers UNIQUE constraint: store_slug+access_code');
-      tables.store_buyers.push({ id, store_slug, buyer_name, access_code, is_active, created_at });
+      tables.store_buyers.push({ id, store_slug, buyer_name, access_code, is_active: 1, created_at });
       return { kind: 'run' as const };
     }
     // store_buyers: SELECT all for store, ordered by created_at DESC
