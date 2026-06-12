@@ -28,3 +28,6 @@
 
 /marketplace-cart.js
   Cache-Control: public, max-age=31536000, immutable
+
+/pimg/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
