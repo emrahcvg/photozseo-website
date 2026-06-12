@@ -73,10 +73,33 @@
     return 'https://wa.me/' + num + '?text=' + encodeURIComponent(lines.join('\n'));
   }
 
+  function checkoutCart(slug, options) {
+    var items = getCart(slug);
+    if (items.length === 0) return Promise.reject(new Error('Sepet boş'));
+    var opts = options || {};
+    var payload = {
+      store_slug: slug,
+      items: items.map(function(x) { return { product_id: x.id, qty: x.qty || 1, price: x.price || 0 }; }),
+      currency: opts.currency || (items[0] && items[0].currency) || 'USD',
+    };
+    if (opts.store_name) payload.store_name = opts.store_name;
+    if (opts.buyer_note) payload.buyer_note = opts.buyer_note;
+    var deviceId = (window.__sfBuyer && window.__sfBuyer.deviceId) ? window.__sfBuyer.deviceId() : '';
+    return fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
+      body: JSON.stringify(payload),
+    }).then(function(r) {
+      if (!r.ok) return r.json().then(function(e) { throw new Error(e.error || 'Sipariş gönderilemedi'); });
+      return r.json();
+    });
+  }
+
   var api = {
     getCart: getCart, saveCart: saveCart, addItem: addItem, removeItem: removeItem,
     cartTotal: cartTotal, clearCart: clearCart, generateRef: generateRef,
     validateOrder: validateOrder, buildWhatsappUrl: buildWhatsappUrl,
+    checkoutCart: checkoutCart,
   };
   window.__mkCart = api;
 
@@ -90,14 +113,25 @@
     document.querySelectorAll('[data-mk-add]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
+        var productId = btn.getAttribute('data-mk-add');
+        var pslug = btn.getAttribute('data-mk-pslug') || productId;
         addItem(slug, {
-          id: btn.getAttribute('data-mk-add'),
+          id: productId,
           title: btn.getAttribute('data-mk-title') || '',
           price: parseFloat(btn.getAttribute('data-mk-price') || '0') || 0,
           currency: btn.getAttribute('data-mk-currency') || 'USD',
           qty: 1,
         });
         render();
+        // Backend D1 sync (non-blocking; offline tolerant)
+        if (window.__sfBuyer && window.__sfBuyer.setCartItem) {
+          var items = getCart(slug);
+          var newQty = 1;
+          for (var i = 0; i < items.length; i++) {
+            if (items[i].id === productId) { newQty = items[i].qty; break; }
+          }
+          window.__sfBuyer.setCartItem(pslug, newQty).catch(function () {});
+        }
       });
     });
 
@@ -123,41 +157,168 @@
         if (payBox) payBox.hidden = false;
         var descOut = root.querySelector('[data-mk-paydesc]');
         if (descOut) descOut.textContent = ref;
-        // Sipariş D1'e kalıcı olarak kaydedilir; başarısız olsa bile WhatsApp açılır.
+
         var deviceId = (window.__sfBuyer && window.__sfBuyer.deviceId) ? window.__sfBuyer.deviceId() : '';
-        fetch('/api/store/' + slug + '/order', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
-          body: JSON.stringify({ store_name: root.getAttribute('data-mk-store-name') || undefined }),
-        }).then(function (r) {
-          return r.ok ? r.json() : null;
-        }).then(function (res) {
-          // Sunucudan gelen referansı kullan (ikisi de SP-* formatında; satıcı+alıcı aynı ref'i görür)
-          if (res && res.order_ref) {
-            ref = res.order_ref;
-            if (refOut) refOut.textContent = ref;
-            if (descOut) descOut.textContent = ref;
-          }
-        }).catch(function () { /* sessiz hata — WhatsApp akışını bloklama */ });
+
+        // localStorage → D1 pre-sync: cart butonlarından pslug'ları topla, eksik sync'leri tamamla.
+        // Sonra /order endpoint'ini çağır (backend D1'den doğrular).
+        var cartBtns = document.querySelectorAll('[data-mk-add][data-mk-pslug]');
+        var syncPromises = [];
+        if (window.__sfBuyer && window.__sfBuyer.setCartItem && cartBtns.length) {
+          var items = getCart(slug);
+          var qtyByPslug = {};
+          items.forEach(function (x) {
+            var btn = null;
+            for (var i = 0; i < cartBtns.length; i++) {
+              if (cartBtns[i].getAttribute('data-mk-add') === x.id) { btn = cartBtns[i]; break; }
+            }
+            var pslug = btn ? btn.getAttribute('data-mk-pslug') : x.id;
+            if (pslug && x.qty > 0) qtyByPslug[pslug] = x.qty;
+          });
+          Object.keys(qtyByPslug).forEach(function (pslug) {
+            syncPromises.push(window.__sfBuyer.setCartItem(pslug, qtyByPslug[pslug]).catch(function () {}));
+          });
+        }
+
+        Promise.all(syncPromises).catch(function () {}).then(function () {
+          fetch('/api/store/' + slug + '/order', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
+            body: JSON.stringify({ store_name: root.getAttribute('data-mk-store-name') || undefined }),
+          }).then(function (r) {
+            return r.ok ? r.json() : null;
+          }).then(function (res) {
+            if (res && res.order_ref) {
+              ref = res.order_ref;
+              if (refOut) refOut.textContent = ref;
+              if (descOut) descOut.textContent = ref;
+            }
+          }).catch(function () {});
+        });
+
         var waWin = window.open(buildWhatsappUrl(whatsapp, slug, data, ref), '_blank');
         if (waWin) waWin.opener = null;
       });
+    }
+
+    function pslugFor(productId) {
+      var btns = document.querySelectorAll('[data-mk-add][data-mk-pslug]');
+      for (var i = 0; i < btns.length; i++) {
+        if (btns[i].getAttribute('data-mk-add') === productId) {
+          return btns[i].getAttribute('data-mk-pslug') || productId;
+        }
+      }
+      return productId;
     }
 
     function render() {
       var list = root.querySelector('[data-mk-cart-list]');
       if (!list) return;
       var items = getCart(slug);
+      var isEmpty = items.length === 0;
+
+      // Empty state / form / total toggle
+      var emptyEl = root.querySelector('[data-mk-cart-empty]');
+      var formEl = root.querySelector('[data-mk-order-form]');
+      var totalRow = root.querySelector('[data-mk-total-row]');
+      if (isEmpty) {
+        root.setAttribute('data-mk-empty', '');
+      } else {
+        root.removeAttribute('data-mk-empty');
+      }
+      if (emptyEl) emptyEl.hidden = !isEmpty;
+      if (formEl) formEl.hidden = isEmpty;
+      if (totalRow) totalRow.hidden = isEmpty;
+
       list.innerHTML = '';
       items.forEach(function (x) {
         var li = document.createElement('li');
-        li.textContent = x.title + ' ×' + x.qty;
+        li.className = 'sf-cart__item';
+
+        var titleSpan = document.createElement('span');
+        titleSpan.className = 'sf-cart__item-title';
+        titleSpan.textContent = x.title;
+
+        var qtySpan = document.createElement('span');
+        qtySpan.className = 'sf-cart__item-qty';
+        qtySpan.textContent = '×' + x.qty;
+
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'sf-cart__remove';
+        removeBtn.setAttribute('aria-label', 'Remove ' + x.title);
+        removeBtn.textContent = '×';
+        (function (itemId) {
+          removeBtn.addEventListener('click', function () {
+            removeItem(slug, itemId);
+            if (window.__sfBuyer && window.__sfBuyer.setCartItem) {
+              window.__sfBuyer.setCartItem(pslugFor(itemId), 0).catch(function () {});
+            }
+            render();
+          });
+        })(x.id);
+
+        li.appendChild(titleSpan);
+        li.appendChild(qtySpan);
+        li.appendChild(removeBtn);
         list.appendChild(li);
       });
+
       var totalEl = root.querySelector('[data-mk-total]');
       if (totalEl) totalEl.textContent = cartTotal(slug).toFixed(2);
+
+      // Update navbar cart badge
+      var totalQty = items.reduce(function (s, x) { return s + (x.qty || 1); }, 0);
+      document.querySelectorAll('[data-mk-cart-count]').forEach(function (badge) {
+        badge.textContent = totalQty;
+        badge.hidden = totalQty === 0;
+      });
     }
     render();
+
+    // ── "Sipariş Ver" — bank transfer checkout ───────────────────────────────
+    var checkoutBtn = root.querySelector('[data-mk-checkout]');
+    if (!checkoutBtn) {
+      checkoutBtn = document.createElement('button');
+      checkoutBtn.setAttribute('data-mk-checkout', '');
+      checkoutBtn.textContent = 'Sipariş Ver';
+      checkoutBtn.style.cssText = 'margin-top:8px;padding:8px 16px;cursor:pointer;width:100%;';
+      root.appendChild(checkoutBtn);
+    }
+    checkoutBtn.addEventListener('click', function() {
+      var items = getCart(slug);
+      if (items.length === 0) { alert('Sepetiniz boş.'); return; }
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = 'Gönderiliyor…';
+      checkoutCart(slug, { store_name: root.getAttribute('data-mk-store-name') || undefined })
+        .then(function(res) {
+          clearCart(slug);
+          render();
+          var payBox = root.querySelector('[data-mk-payment]');
+          if (payBox) payBox.hidden = false;
+          var refOut = root.querySelector('[data-mk-ref]');
+          if (refOut) refOut.textContent = res.order_id;
+          var ibanOut = root.querySelector('[data-mk-iban]');
+          if (ibanOut) ibanOut.textContent = res.payment.iban;
+          var amtOut = root.querySelector('[data-mk-amount]');
+          if (amtOut) amtOut.textContent = res.payment.amount.toFixed(2) + ' ' + res.payment.currency;
+          var instrOut = root.querySelector('[data-mk-instructions]');
+          if (instrOut) instrOut.textContent = res.payment.instructions;
+          if (!payBox) {
+            var msg = document.createElement('p');
+            msg.style.cssText = 'margin-top:8px;padding:8px;background:#f0fdf4;border-radius:4px;';
+            msg.textContent = 'Sipariş alındı: ' + res.order_id + ' — IBAN: ' + res.payment.iban + ' — Tutar: ' + res.payment.amount.toFixed(2) + ' ' + res.payment.currency;
+            root.appendChild(msg);
+          }
+          checkoutBtn.disabled = false;
+          checkoutBtn.textContent = 'Sipariş Ver';
+        })
+        .catch(function(err) {
+          alert('Hata: ' + err.message);
+          checkoutBtn.disabled = false;
+          checkoutBtn.textContent = 'Sipariş Ver';
+        });
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

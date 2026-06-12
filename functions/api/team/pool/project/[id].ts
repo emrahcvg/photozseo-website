@@ -8,6 +8,7 @@
 import { requireMembership, type PoolEnv } from '../../../../_lib/pool-authz';
 import { getProject, upsertProject, listAssets, tombstoneProject } from '../../../../_lib/pool';
 import { can } from '../../../../_lib/team';
+import { logActivity } from '../../../../_lib/activity-log';
 
 type Ctx = { request: Request; env: PoolEnv; params: { id: string } };
 
@@ -53,6 +54,21 @@ export async function onRequestPut(ctx: Ctx): Promise<Response> {
     companyId, projectId: ctx.params.id, createdBy: auth.sub,
     modifiedAt: body.modifiedAt, snapshot: JSON.stringify(body.snapshot), deletedAt: body.deletedAt ?? null,
   });
+
+  const eventType = body.deletedAt ? 'project_deleted' : 'project_created';
+  try {
+    await logActivity(ctx.env.MARKET_DB!, {
+      companyId,
+      eventType,
+      actorSub: auth.sub,
+      actorEmail: auth.email,
+      targetSub: null,
+      targetRef: ctx.params.id,
+      meta: null,
+      now: new Date().toISOString(),
+    });
+  } catch {}
+
   return json({ ok: true });
 }
 
@@ -74,5 +90,19 @@ export async function onRequestDelete(ctx: Ctx): Promise<Response> {
   const body = await ctx.request.json().catch(() => null) as { deletedAt?: string } | null;
   const deletedAt = body?.deletedAt ?? new Date().toISOString();
   await tombstoneProject(ctx.env.MARKET_DB!, { companyId, projectId: ctx.params.id, deletedAt, modifiedAt: deletedAt });
+
+  try {
+    await logActivity(ctx.env.MARKET_DB!, {
+      companyId,
+      eventType: 'project_deleted',
+      actorSub: auth.sub,
+      actorEmail: auth.email,
+      targetSub: null,
+      targetRef: ctx.params.id,
+      meta: null,
+      now: new Date().toISOString(),
+    });
+  } catch {}
+
   return json({ ok: true });
 }

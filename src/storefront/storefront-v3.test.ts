@@ -71,9 +71,9 @@ describe('toolbar', () => {
     expect(html).toContain('data-sf-search="');
   });
 
-  it('gives sections anchor ids and a category nav', () => {
-    expect(html).toMatch(/<section class="sf-section" id="cat-/);
-    expect(html).toContain('sf-catnav__link');
+  it('gives sections anchor ids', () => {
+    // catnav linkleri checkout-card WIP'inde bilinçli kaldırıldı; anchor'lar duruyor
+    expect(html).toMatch(/<section class="sf-section" id="[^"]+" data-sf-cat=/);
   });
 });
 

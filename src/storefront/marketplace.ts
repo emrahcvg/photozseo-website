@@ -13,6 +13,7 @@ import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 import type { BreadcrumbSegment } from './taxonomy/category-resolve';
 import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
+import { idToSlug } from './taxonomy/slug-resolve';
 
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
 export type LabelOf = (id: string, locale: string) => string;
@@ -132,14 +133,15 @@ function renderLangSwitcher(locale: string): string {
 }
 
 /** A marketplace product card linking to its store product page.
- * `opts.eager` — LCP adayı kartlar için loading="eager" + fetchpriority="high" (geri uyumlu). */
-export function renderProductCard(p: ProductRow, locale: string, opts?: { eager?: boolean }): string {
+ * `index` — 0 = LCP adayı: loading="eager" fetchpriority="high"; >0 = loading="lazy". */
+export function renderProductCard(p: ProductRow, locale: string, index = 0, opts?: { eager?: boolean }): string {
   const title = escapeHtml(p.title);
   const price = mkFormatPrice(p.price, p.currency, locale);
   const soldOut = p.stock === 0;
-  const href = escapeAttr(p.product_path);
+  const href = `/market/p/${encodeURIComponent(p.id)}`;
   const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
-  const loadAttrs = opts?.eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
+  const isEager = index === 0 || opts?.eager;
+  const loadAttrs = isEager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
 
   let html = `<a class="mk-card-link" href="${href}">\n`;
   html += '  <article class="mk-card">\n';
@@ -177,7 +179,7 @@ export function renderCategoryChips(
   html += `  <a class="mk-chip mk-chip--all" href="/market/search">${escapeHtml(mt(locale, 'allCategories'))}</a>\n`;
   for (const c of categories) {
     if (c.count === 0) continue; // hayalet kasaba: ürünsüz kategori chip'i basılmaz
-    const href = `/market/c/${encodeURIComponent(c.id)}`;
+    const href = `/market/c/${idToSlug(c.id)}`;
     const name = escapeHtml(labelOf(c.id, locale));
     html += `  <a class="mk-chip" href="${escapeAttr(href)}">${name} <span class="mk-chip__count">${c.count}</span></a>\n`;
   }
@@ -217,7 +219,8 @@ function renderSearchBar(locale: string): string {
   const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
   return (
     '<form class="mk-searchbar" action="/market/search" method="get" role="search">\n' +
-    `  <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" />\n` +
+    `  <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" list="mk-suggest" autocomplete="off" data-mk-suggest />\n` +
+    '  <datalist id="mk-suggest"></datalist>\n' +
     `  <button type="submit" class="mk-searchbar__btn" aria-label="${ph}">${mkIcon('search', true)}</button>\n` +
     '</form>\n'
   );
@@ -280,7 +283,7 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
   for (const node of tree) {
     const safeLabel = escapeHtml(node.label);
     if (node.children.length > 0) {
-      const topHref = escapeAttr(`/market/c/${encodeURIComponent(node.id)}`);
+      const topHref = escapeAttr(`/market/c/${idToSlug(node.id)}`);
       html += '    <details class="mk-sidebar__group">\n';
       html += `      <summary class="mk-sidebar__summary">${safeLabel}<span class="mk-sidebar__chevron" aria-hidden="true">▸</span></summary>\n`;
       html += '      <ul class="mk-sidebar__list">\n';
@@ -288,13 +291,13 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
       const allLabel = escapeHtml(mt(locale, 'allCategories') + ' ' + node.label);
       html += `        <li class="mk-sidebar__item mk-sidebar__item--all"><a class="mk-sidebar__link" href="${topHref}">${allLabel}</a></li>\n`;
       for (const child of node.children) {
-        const childHref = escapeAttr(`/market/c/${encodeURIComponent(child.id)}`);
+        const childHref = escapeAttr(`/market/c/${idToSlug(child.id)}`);
         html += `        <li class="mk-sidebar__item"><a class="mk-sidebar__link" href="${childHref}">${escapeHtml(child.label)}</a></li>\n`;
       }
       html += '      </ul>\n';
       html += '    </details>\n';
     } else {
-      const href = escapeAttr(`/market/c/${encodeURIComponent(node.id)}`);
+      const href = escapeAttr(`/market/c/${idToSlug(node.id)}`);
       html += `    <a class="mk-sidebar__link mk-sidebar__link--top" href="${href}">${safeLabel}</a>\n`;
     }
   }
@@ -326,7 +329,7 @@ function renderCategoryRail(
   html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'categories'))}</h2>\n`;
   html += '  <div class="mk-rail">\n';
   for (const c of cards) {
-    const href = escapeAttr(`/market/c/${encodeURIComponent(c.id)}`);
+    const href = escapeAttr(`/market/c/${idToSlug(c.id)}`);
     const cLabel = escapeHtml(labelOf(c.id, locale));
     html += `    <a class="mk-cat-card" href="${href}">\n`;
     html += `      <img class="mk-cat-card__img" src="${escapeAttr(c.image)}" alt="${cLabel}" loading="lazy" decoding="async" />\n`;
@@ -374,7 +377,8 @@ export function renderMarketHome(args: {
   html += `  <h1 class="mk-hero__title">${escapeHtml(mt(locale, 'marketTitle'))}</h1>\n`;
   html += `  <p class="mk-hero__sub">${escapeHtml(mt(locale, 'trustBadge'))}</p>\n`;
   html += '  <form class="mk-hero__form" action="/market/search" method="get" role="search">\n';
-  html += `    <input class="mk-hero__input" name="q" type="search" placeholder="${ph}" aria-label="${ph}" />\n`;
+  html += `    <input class="mk-hero__input" name="q" type="search" placeholder="${ph}" aria-label="${ph}" list="mk-suggest" autocomplete="off" data-mk-suggest />\n`;
+  html += '    <datalist id="mk-suggest"></datalist>\n';
   html += `    <button type="submit" class="mk-hero__btn" aria-label="${ph}">${mkIcon('search')}</button>\n`;
   html += '  </form>\n';
   html += '</div>\n';
@@ -395,7 +399,7 @@ export function renderMarketHome(args: {
     html += '<section class="mk-section">\n';
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'featured'))}</h2>\n`;
     html += '  <div class="mk-rail">\n';
-    featured.forEach((p, i) => { html += renderProductCard(p, locale, { eager: i < 4 }); });
+    featured.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '  </div>\n';
     html += '</section>\n';
   }
@@ -410,7 +414,7 @@ export function renderMarketHome(args: {
     html += '<section class="mk-section">\n';
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'newProducts'))}</h2>\n`;
     html += '  <div class="mk-grid">\n';
-    gridProducts.forEach((p, i) => { html += renderProductCard(p, locale, { eager: featured.length === 0 && i < 4 }); });
+    gridProducts.forEach((p, i) => { html += renderProductCard(p, locale, featured.length === 0 ? i : i + featured.length); });
     html += '  </div>\n</section>\n';
   }
 
@@ -526,7 +530,8 @@ export function renderSearchPage(args: {
 
   // Arama satırı (marka artık ortak app-header'da)
   html += '  <div class="mk-searchrow">\n';
-  html += `    <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" value="${escapeAttr(query.q ?? '')}" />\n`;
+  html += `    <input type="search" name="q" class="mk-searchbar__input" placeholder="${ph}" aria-label="${ph}" value="${escapeAttr(query.q ?? '')}" list="mk-suggest" autocomplete="off" data-mk-suggest />\n`;
+  html += '    <datalist id="mk-suggest"></datalist>\n';
   html += `    <button type="button" class="mk-filter-toggle" data-mk-filter-toggle aria-expanded="false" aria-controls="mk-facets-panel">${mkIcon('sliders', true)}<span>${escapeHtml(mt(locale, 'filters'))}</span></button>\n`;
   html += '  </div>\n';
 
@@ -546,7 +551,7 @@ export function renderSearchPage(args: {
     html += renderEmptyState({ icon: mkIcon('search'), title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '      <div class="mk-grid">\n';
-    for (const p of items) html += renderProductCard(p, locale);
+    items.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '      </div>\n';
   }
   html += '    </section>\n';
@@ -596,7 +601,7 @@ export function renderCategoryPage(args: {
       if (last) {
         html += `${sep}<span>${escapeHtml(seg.label)}</span>`;
       } else {
-        html += `${sep}<a href="/market/c/${encodeURIComponent(seg.id)}">${escapeHtml(seg.label)}</a>`;
+        html += `${sep}<a href="/market/c/${idToSlug(seg.id)}">${escapeHtml(seg.label)}</a>`;
       }
     });
   } else {
@@ -610,7 +615,7 @@ export function renderCategoryPage(args: {
     html += renderEmptyState({ icon: mkIcon('search'), title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '  <div class="mk-grid">\n';
-    for (const p of items) html += renderProductCard(p, locale);
+    items.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '  </div>\n';
   }
   html += '</section>\n';
@@ -643,7 +648,7 @@ export function buildBreadcrumbJsonLd(segments: BreadcrumbSegment[], origin: str
       '@type': 'ListItem',
       position: i + 1,
       name: s.label,
-      item: `${origin}/market/c/${encodeURIComponent(s.id)}`,
+      item: `${origin}/market/c/${idToSlug(s.id)}`,
     })),
   });
 }
@@ -912,4 +917,123 @@ export function renderCartPage(args: { groups: BuyerGroup[]; locale: string; log
   html += '</div>\n';
   html += renderBottomTabBar(locale, 'cart');
   return html;
+}
+
+// ── Product Detail Page ───────────────────────────────────────────────────────
+
+export interface ProductDetail extends ProductRow {
+  whatsapp?: string | null;
+  city?: string | null;
+  country?: string | null;
+}
+
+export function renderProductPage(p: ProductDetail, locale: string): string {
+  const title = escapeHtml(p.title);
+  const price = mkFormatPrice(p.price, p.currency, locale);
+  const soldOut = p.stock === 0;
+  const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
+  const tags = parseTags(p.tags);
+
+  let html = '<div class="mk">\n';
+  html += renderAppHeader({ title: 'photoZseo Market', locale });
+  html += '<main class="mk-pdp">\n';
+
+  // Back link
+  html += `  <a class="mk-pdp__back" href="/market">← ${escapeHtml(mt(locale, 'marketTitle'))}</a>\n`;
+
+  html += '  <div class="mk-pdp__layout">\n';
+
+  // Left: image
+  html += '    <div class="mk-pdp__media">\n';
+  if (p.image_url) {
+    html += `      <img src="${escapeAttr(p.image_url)}" alt="${title}" loading="eager" fetchpriority="high" decoding="async" width="600" height="600" />\n`;
+  } else {
+    html += `      <div class="mk-pdp__media-empty" aria-hidden="true">${mkIcon('photo')}</div>\n`;
+  }
+  html += '    </div>\n';
+
+  // Right: info
+  html += '    <div class="mk-pdp__info">\n';
+  html += `      <h1 class="mk-pdp__title">${title}</h1>\n`;
+
+  // Seller
+  const storeHref = `/store/${encodeURIComponent(p.store_slug)}`;
+  html += `      <p class="mk-pdp__seller"><a href="${storeHref}">${escapeHtml(sellerName)}</a>`;
+  if (p.city) html += ` · ${escapeHtml(p.city)}`;
+  html += '</p>\n';
+
+  // Price
+  if (price) {
+    html += `      <p class="mk-pdp__price" data-mk-amount="${p.price != null ? p.price.toFixed(2) : ''}" data-mk-currency="${escapeAttr(p.currency)}" data-mk-orig="${escapeHtml(price)}">${escapeHtml(price)}</p>\n`;
+  } else {
+    html += `      <p class="mk-pdp__price mk-pdp__price--contact">${escapeHtml(mt(locale, 'contactForPrice'))}</p>\n`;
+  }
+
+  // Stock badge
+  if (soldOut) {
+    html += `      <span class="mk-card__badge mk-card__badge--out">${escapeHtml(mt(locale, 'soldOut'))}</span>\n`;
+  }
+
+  // Add to cart
+  if (!soldOut && p.price != null) {
+    html += `      <button class="mk-btn mk-pdp__add-btn"
+        data-mk-add="${escapeAttr(p.id)}"
+        data-mk-pslug="${escapeAttr(p.id)}"
+        data-mk-title="${title}"
+        data-mk-price="${p.price.toFixed(2)}"
+        data-mk-currency="${escapeAttr(p.currency)}"
+        data-mk-cart-root-slug="${escapeAttr(p.store_slug)}"
+      >${escapeHtml(mt(locale, 'addToCart'))}</button>\n`;
+  }
+
+  // WhatsApp
+  if (p.whatsapp) {
+    const waNum = p.whatsapp.replace(/[^0-9]/g, '');
+    const waText = encodeURIComponent(`Hi, I'm interested in: ${p.title}`);
+    html += `      <a class="mk-btn mk-btn--wa mk-pdp__wa-btn" href="https://wa.me/${waNum}?text=${waText}" target="_blank" rel="noopener noreferrer">WhatsApp</a>\n`;
+  }
+
+  // Description
+  if (p.description) {
+    html += `      <p class="mk-pdp__desc">${escapeHtml(p.description)}</p>\n`;
+  }
+
+  // Tags
+  if (tags.length) {
+    html += '      <div class="mk-pdp__tags">\n';
+    for (const tag of tags) {
+      html += `        <a class="mk-chip" href="/market/search?q=${encodeURIComponent(tag)}">${escapeHtml(tag)}</a>\n`;
+    }
+    html += '      </div>\n';
+  }
+
+  html += '    </div>\n'; // .mk-pdp__info
+  html += '  </div>\n'; // .mk-pdp__layout
+  html += '</main>\n';
+  html += renderMarketFooter(locale);
+  html += '</div>\n';
+  html += renderBottomTabBar(locale, 'discover');
+  return html;
+}
+
+export function buildProductJsonLd(p: ProductDetail, origin: string): string {
+  const url = `${origin}/market/p/${encodeURIComponent(p.id)}`;
+  const obj: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.title,
+    url,
+    description: p.description || undefined,
+    image: p.image_url || undefined,
+    offers: {
+      '@type': 'Offer',
+      url,
+      priceCurrency: p.currency,
+      price: p.price ?? undefined,
+      availability: p.stock === 0
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock',
+    },
+  };
+  return JSON.stringify(obj);
 }

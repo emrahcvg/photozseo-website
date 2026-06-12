@@ -91,4 +91,24 @@ describe('handleMarket', () => {
     const res = await handleMarket(['nope'], { url: 'https://photozseo.com/market/nope', lang: 'en', db: {} as any, ai: undefined, ...deps });
     expect(res.status).toBe(404);
   });
+
+  it('serves /market/api/suggest as JSON via injected suggestProducts', async () => {
+    const res = await handleMarket(['api', 'suggest'], {
+      url: 'https://photozseo.com/market/api/suggest?q=ma', lang: 'en', db: {} as any, ai: undefined,
+      ...deps, suggestProducts: async () => ['Mat', 'Macramé Wall Hanging'],
+    });
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toContain('application/json');
+    const data = await res.json() as { suggestions: string[] };
+    expect(data.suggestions).toEqual(['Mat', 'Macramé Wall Hanging']);
+  });
+
+  it('suggest returns empty list when q is blank (no lib call)', async () => {
+    const res = await handleMarket(['api', 'suggest'], {
+      url: 'https://photozseo.com/market/api/suggest?q=', lang: 'en', db: {} as any, ai: undefined,
+      ...deps, suggestProducts: async () => { throw new Error('should not be called'); },
+    });
+    const data = await res.json() as { suggestions: string[] };
+    expect(data.suggestions).toEqual([]);
+  });
 });

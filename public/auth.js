@@ -35,10 +35,30 @@
     return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
   }
 
-  /* ── Oturum API çağrısı ── */
+  /* ── Oturum API çağrısı (sessionStorage cache, 5 dk TTL) ──
+   * Sayfa geçişlerinde her seferinde /api/auth/me'ye gitmemek için;
+   * login/logout anında cache temizlenir (aşağıda). */
+  var AUTH_CACHE_KEY = 'pz-auth-cache';
+  var AUTH_CACHE_TTL = 5 * 60 * 1000;
+  function clearAuthCache() {
+    try { sessionStorage.removeItem(AUTH_CACHE_KEY); } catch (e) {}
+  }
   function checkSession() {
+    try {
+      var raw = sessionStorage.getItem(AUTH_CACHE_KEY);
+      if (raw) {
+        var cached = JSON.parse(raw);
+        if (cached && Date.now() - cached.t < AUTH_CACHE_TTL) {
+          return Promise.resolve(cached.data);
+        }
+      }
+    } catch (e) {}
     return fetch('/api/auth/me')
       .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        try { sessionStorage.setItem(AUTH_CACHE_KEY, JSON.stringify({ t: Date.now(), data: data })); } catch (e) {}
+        return data;
+      })
       .catch(function () { return null; });
   }
 
@@ -56,7 +76,7 @@
       headers: headers,
       body: JSON.stringify({ credential: response.credential }),
     }).then(function (r) {
-      if (r.ok) location.reload();
+      if (r.ok) { clearAuthCache(); location.reload(); }
     }).catch(function () { /* sessiz hata */ });
   }
 
@@ -84,10 +104,18 @@
     });
   }
 
-  /* ── One Tap başlat (sadece giriş yapılmamışsa çağrılır) ── */
+  /* ── One Tap başlat (sadece giriş yapılmamışsa çağrılır) ──
+   * Otomatik prompt OTURUMDA BİR KEZ denenir (sessionStorage bayrağı);
+   * sonraki sayfalarda sessizce buton gösterilir — her geçişte Google'a
+   * "yeniden bağlanma" izlenimi vermemek için. Butona tıklama her zaman
+   * prompt'u yeniden dener (davranış değişmedi). */
+  var ONETAP_FLAG = 'pz-onetap-done';
+  var oneTapInited = false;
   function initOneTap() {
+    if (oneTapInited) return; // onload + script.onload çift tetiklenmesine karşı
     var g = window.google;
     if (!g || !g.accounts || !g.accounts.id) return;
+    oneTapInited = true;
 
     g.accounts.id.initialize({
       client_id: clientId,
@@ -98,12 +126,20 @@
       itp_support: true,
     });
 
-    // Sayfa yüklenince One Tap dene; gösterilemezse fallback butonu render et
-    g.accounts.id.prompt(function (notification) {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        showFallbackButton();
-      }
-    });
+    var oneTapDone = false;
+    try { oneTapDone = sessionStorage.getItem(ONETAP_FLAG) === '1'; } catch (e) {}
+    if (oneTapDone) {
+      // Bu oturumda zaten denendi → sessizce resmi butonu göster
+      showFallbackButton();
+    } else {
+      try { sessionStorage.setItem(ONETAP_FLAG, '1'); } catch (e) {}
+      // Sayfa yüklenince One Tap dene; gösterilemezse fallback butonu render et
+      g.accounts.id.prompt(function (notification) {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          showFallbackButton();
+        }
+      });
+    }
 
     // Butona tıklanınca: One Tap'ı yeniden dene, yine olmazsa fallback
     var signinBtn = document.getElementById('pz-signin-btn');
@@ -190,6 +226,7 @@
     if (logoutBtn) {
       logoutBtn.addEventListener('click', function () {
         fetch('/api/auth/logout', { method: 'POST' }).finally(function () {
+          clearAuthCache();
           location.reload();
         });
       });

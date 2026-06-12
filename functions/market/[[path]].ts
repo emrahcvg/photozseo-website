@@ -18,7 +18,10 @@ import {
   searchProducts as realSearch,
   listNewProducts as realListNew,
   listStores as realListStores,
+  suggestProducts as realSuggest,
+  getProductById as realGetProductById,
   type Facets as LibFacets,
+  type ProductDetailRow,
 } from '../_lib/marketplace';
 import type { AiBinding } from '../_lib/translate';
 import {
@@ -29,9 +32,11 @@ import {
   renderOrdersPage,
   renderFavoritesPage,
   renderCartPage,
+  renderProductPage,
   buildItemListJsonLd,
   buildBreadcrumbJsonLd,
   buildStoreDirectoryJsonLd,
+  buildProductJsonLd,
   type Facets,
   type SearchQuery,
   type LabelOf,
@@ -46,6 +51,7 @@ import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { categoryBreadcrumb } from '../../src/storefront/taxonomy/category-resolve';
 import { UNCATEGORIZED } from '../../src/storefront/taxonomy/legacy-map';
+import { idToSlug, slugToId } from '../../src/storefront/taxonomy/slug-resolve';
 
 const DEFAULT_LANG = 'en';
 
@@ -57,6 +63,9 @@ export interface MarketDeps {
   searchProducts: typeof realSearch;
   listNewProducts: typeof realListNew;
   listStores: typeof realListStores;
+  /** Autocomplete önerileri (opsiyonel — eski test deps'leri kırılmasın). */
+  suggestProducts?: typeof realSuggest;
+  getProductById?: typeof realGetProductById;
   request?: Request;
   storeWriteKey?: string;
 }
@@ -155,16 +164,32 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       : [];
     const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf, categoryTree });
     const canonical = buildCanonical(origin, '/market', locale);
+    const homeOgImage = newP.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
     return htmlResponse(renderDocument({
       title: mt(locale, 'marketTitle') + ' — photoZseo',
-      description: mt(locale, 'trustBadge'),
+      description: 'photoZseo marketplace — find and buy products worldwide.',
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market'),
-      ogImage: `${origin}/og-image.png`,
+      ogImage: homeOgImage,
+      preloadImage: newP.items[0]?.image_url,
       jsonLd: [buildItemListJsonLd(newP.items, origin), buildWebSiteJsonLd(origin)],
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
+  }
+
+  // /market/api/suggest?q=… — arama kutusu autocomplete (JSON, kısa cache)
+  if (parts[0] === 'api' && parts[1] === 'suggest' && parts.length === 2) {
+    const q = u.searchParams.get('q') ?? '';
+    const suggestions = q.trim() && deps.suggestProducts
+      ? await deps.suggestProducts(deps.db, q, 6)
+      : [];
+    return new Response(JSON.stringify({ suggestions }), {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'public, max-age=60',
+      },
+    });
   }
 
   // /market/search
@@ -187,17 +212,48 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     });
     const body = renderSearchPage({ items: result.items, facets: adaptFacets(result.facets), total: result.total, locale, query: q, labelOf });
     const canonical = `${origin}/market/search`;
+    const searchDesc = q.q
+      ? `Search results for "${q.q}" — photoZseo marketplace`
+      : 'photoZseo marketplace — find and buy products worldwide.';
+    const searchOgImage = result.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
     return htmlResponse(renderDocument({
       title: (q.q ? q.q + ' — ' : '') + mt(locale, 'marketTitle'),
-      description: mt(locale, 'trustBadge'),
+      description: searchDesc,
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/search'),
-      ogImage: `${origin}/og-image.png`,
+      ogImage: searchOgImage,
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
+    }));
+  }
+
+  // /market/p/:id — ürün detay sayfası
+  if (parts[0] === 'p' && parts.length === 2) {
+    const productId = decodeURIComponent(parts[1]);
+    const getter = deps.getProductById ?? realGetProductById;
+    const product = await getter(deps.db, productId);
+    if (!product) {
+      return htmlResponse(renderDocument({
+        title: 'Product not found — photoZseo', description: '', lang: locale,
+        body: '<div class="mk"><p style="padding:2rem;text-align:center">Product not found</p></div>',
+        stylesheets: ['/marketplace.css?v=8'],
+      }), 404);
+    }
+    const pdpUrl = `/market/p/${encodeURIComponent(product.id)}`;
+    const canonical = buildCanonical(origin, pdpUrl, locale);
+    const body = renderProductPage(product, locale);
+    return htmlResponse(renderDocument({
+      title: `${product.title} — photoZseo`,
+      description: product.description ? product.description.slice(0, 160) : `${product.title} — photoZseo marketplace`,
+      lang: locale, body, canonical,
+      ogImage: product.image_url || `${origin}/og-image.png`,
+      preloadImage: product.image_url || undefined,
+      jsonLd: buildProductJsonLd(product, origin),
+      stylesheets: ['/marketplace.css?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/marketplace-cart.js?v=1', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -208,19 +264,33 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const canonical = buildCanonical(origin, '/market/stores', locale);
     return htmlResponse(renderDocument({
       title: mt(locale, 'stores') + ' — photoZseo',
-      description: mt(locale, 'trustBadge'),
+      description: 'Browse all seller stores on photoZseo marketplace.',
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
       ogImage: `${origin}/og-image.png`,
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
   }
 
-  // /market/c/<id>
+  // /market/c/<slug-or-id>
   if (parts[0] === 'c' && parts.length === 2) {
-    const categoryId = decodeURIComponent(parts[1]);
+    const segment = decodeURIComponent(parts[1]);
+    // Numeric ID → 301 permanent redirect to slug URL (old bookmarks / external links)
+    if (/^\d+$/.test(segment)) {
+      const slug = idToSlug(segment);
+      const target = locale === DEFAULT_LANG
+        ? `${origin}/market/c/${slug}`
+        : `${origin}/market/c/${slug}?lang=${locale}`;
+      return new Response(null, {
+        status: 301,
+        headers: { Location: target, 'Cache-Control': 'public, max-age=31536000' },
+      });
+    }
+    // Slug → resolve to numeric ID for DB query; unknown segment stays as-is
+    const categoryId = slugToId(segment) ?? segment;
+    const slugPath = `/market/c/${idToSlug(categoryId)}`;
     const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, { categoryId, lang: locale, sort: 'new', limit: 40 });
     const breadcrumb = svc ? categoryBreadcrumb(categoryId, locale, svc) : null;
     const body = renderCategoryPage({ categoryId, items: result.items, total: result.total, locale, breadcrumb });
@@ -229,16 +299,18 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const jsonLd: string | string[] = breadcrumb && breadcrumb.length
       ? [buildBreadcrumbJsonLd(breadcrumb, origin), itemListLd]
       : itemListLd;
-    const canonical = buildCanonical(origin, `/market/c/${encodeURIComponent(categoryId)}`, locale);
+    const canonical = buildCanonical(origin, slugPath, locale);
+    const categoryOgImage = result.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
     return htmlResponse(renderDocument({
       title: leaf + ' — ' + mt(locale, 'marketTitle'),
-      description: mt(locale, 'trustBadge'),
+      description: `${leaf} — photoZseo marketplace`,
       lang: locale, body, canonical,
-      alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
-      ogImage: `${origin}/og-image.png`,
+      alternates: buildAlternates(origin, slugPath),
+      ogImage: categoryOgImage,
+      preloadImage: result.items[0]?.image_url,
       jsonLd,
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -257,7 +329,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       body,
       robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
     }));
   }
 
@@ -271,7 +343,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       title: mt(locale, 'myFavorites') + ' — photoZseo',
       description: '', lang: locale, body, robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/market-account.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/market-account.js?v=8'],
     }));
   }
 
@@ -285,7 +357,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       title: mt(locale, 'myCart') + ' — photoZseo',
       description: '', lang: locale, body, robots: 'noindex',
       stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=10', '/marketplace-enhance.js?v=8', '/market-account.js?v=8'],
+      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/market-account.js?v=8'],
     }));
   }
 
@@ -311,6 +383,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   return handleMarket(parts, {
     url: ctx.request.url, lang, db: ctx.env.MARKET_DB, ai: ctx.env.AI,
     searchProducts: realSearch, listNewProducts: realListNew, listStores: realListStores,
+    suggestProducts: realSuggest, getProductById: realGetProductById,
     request: ctx.request, storeWriteKey: ctx.env.STORE_WRITE_KEY,
   });
 };

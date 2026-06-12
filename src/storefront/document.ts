@@ -44,6 +44,7 @@ export interface DocumentOptions {
   stylesheets?: string[];
   bodyScripts?: string[];
   robots?: string; // varsayılan "index, follow"; arama sonuç sayfaları "noindex, follow" geçer
+  preloadImage?: string; // LCP görsel — <link rel="preload" as="image" fetchpriority="high"> enjekte eder
 }
 
 /** Neutralize a closing-script sequence so JSON-LD can't break out of its tag. */
@@ -52,7 +53,7 @@ function safeJsonLd(json: string): string {
 }
 
 export function renderDocument(opts: DocumentOptions): string {
-  const { title, description = '', lang, body, canonical, alternates, ogImage, jsonLd } = opts;
+  const { title, description = '', lang, body, canonical, alternates, ogImage, jsonLd, preloadImage } = opts;
   const dir = RTL_LANGS.includes(lang) ? 'rtl' : 'ltr';
   const esc = escapeHtml;
   const escapedTitle = esc(title);
@@ -111,10 +112,14 @@ export function renderDocument(opts: DocumentOptions): string {
 <meta name="robots" content="${esc(opts.robots ?? 'index, follow')}" />`;
   // Ortak tasarım sistemi (token'lar) her sayfada İLK yüklenir; ardından
   // sayfaya özel CSS (store → storefront.css, market → marketplace.css) gelir.
-  const pageSheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura27'];
-  const sheets = ['/theme.css?v=1', ...pageSheets];
+  const pageSheets = opts.stylesheets && opts.stylesheets.length ? opts.stylesheets : ['/storefront.css?v=aura39'];
+  const sheets = ['/theme.css?v=2', ...pageSheets];
   for (const href of sheets) {
     head += `\n<link rel="stylesheet" href="${esc(href)}" />`;
+  }
+
+  if (preloadImage) {
+    head += `\n<link rel="preload" as="image" href="${esc(preloadImage)}" fetchpriority="high" />`;
   }
 
   if (jsonLd) {

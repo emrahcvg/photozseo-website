@@ -41,5 +41,7 @@ describe('POST /api/team/create', () => {
     expect(json.role).toBe('owner');
     expect(tables.companies).toHaveLength(1);
     expect(tables.memberships[0]).toMatchObject({ role: 'owner', user_sub: 'sub-ahmet' });
+    expect(tables.team_activity_log.length).toBeGreaterThan(0);
+    expect(tables.team_activity_log[0].event_type).toBe('company_created');
   });
 });

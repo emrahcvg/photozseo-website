@@ -5,6 +5,7 @@
  */
 import { resolveMember } from '../../_lib/team-session';
 import { redeemInvite, isValidInviteCode } from '../../_lib/team';
+import { logActivity } from '../../_lib/activity-log';
 import type { D1Like } from '../../_lib/buyer';
 
 interface Env { STORE_WRITE_KEY?: string; MARKET_DB?: D1Like; }
@@ -32,5 +33,19 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   });
 
   if (!result.ok) return json({ error: result.reason }, 409);
+
+  try {
+    await logActivity(ctx.env.MARKET_DB, {
+      companyId: result.companyId,
+      eventType: 'member_added',
+      actorSub: member.sub,
+      actorEmail: member.email,
+      targetSub: null,
+      targetRef: null,
+      meta: { role: result.role },
+      now: new Date().toISOString(),
+    });
+  } catch {}
+
   return json({ ok: true, companyId: result.companyId, role: result.role });
 }

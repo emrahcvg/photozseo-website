@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[]; team_activity_log: Row[]; store_buyers: Row[]; store_buyer_transactions: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -34,6 +34,9 @@ export function makeFakeD1(): FakeD1 {
     invites: [] as Row[],
     pool_projects: [] as Row[],
     pool_assets: [] as Row[],
+    team_activity_log: [] as Row[],
+    store_buyers: [] as Row[],
+    store_buyer_transactions: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -373,6 +376,110 @@ export function makeFakeD1(): FakeD1 {
       const r = tables.pool_assets.find((x) => x.company_id === args[2] && x.project_id === args[3] && x.asset_id === args[4]);
       if (r) { r.deleted_at = args[0]; r.modified_at = args[1]; }
       return { kind: 'run' as const };
+    }
+    // INSERT INTO team_activity_log
+    if (/INSERT INTO team_activity_log/i.test(s)) {
+      const [id, company_id, event_type, actor_sub, actor_email, target_sub, target_ref, meta, created_at] = args;
+      tables.team_activity_log.push({ id, company_id, event_type, actor_sub, actor_email, target_sub, target_ref, meta, created_at });
+      return { kind: 'run' as const };
+    }
+    // SELECT ... FROM team_activity_log WHERE company_id
+    if (/SELECT .+ FROM team_activity_log WHERE company_id/i.test(s)) {
+      // cursor varsa: args = [company_id, cursor, limit]
+      // cursor yoksa: args = [company_id, limit]
+      let company_id: string, cursor: string | undefined, limit: number;
+      if (args.length === 3) {
+        [company_id, cursor, limit] = args as [string, string, number];
+      } else {
+        [company_id, limit] = args as [string, number];
+        cursor = undefined;
+      }
+      const all = tables.team_activity_log
+        .filter((r) => r.company_id === company_id && (cursor == null || (r.created_at as string) < cursor))
+        .sort((a, b) => ((b.created_at as string) > (a.created_at as string) ? 1 : -1))
+        .slice(0, limit);
+      return { kind: 'all' as const, rows: all };
+    }
+    // DELETE FROM team_activity_log WHERE created_at < ?
+    if (/DELETE FROM team_activity_log WHERE created_at/i.test(s)) {
+      const [before] = args as [string];
+      tables.team_activity_log = tables.team_activity_log.filter((r) => (r.created_at as string) >= before);
+      return { kind: 'run' as const };
+    }
+    // store_buyers: INSERT (unique constraint: store_slug + access_code)
+    // SQL: INSERT INTO store_buyers (id, store_slug, buyer_name, access_code, is_active, created_at) VALUES (?, ?, ?, ?, 1, ?)
+    // bind args: id, store_slug, buyer_name, access_code, created_at  (is_active is a literal 1 in SQL)
+    if (/INSERT INTO store_buyers/i.test(s)) {
+      const [id, store_slug, buyer_name, access_code, created_at] = args;
+      const exists = tables.store_buyers.some(
+        (r) => r.store_slug === store_slug && r.access_code === access_code,
+      );
+      if (exists) throw new Error('fakeD1: store_buyers UNIQUE constraint: store_slug+access_code');
+      tables.store_buyers.push({ id, store_slug, buyer_name, access_code, is_active: 1, created_at });
+      return { kind: 'run' as const };
+    }
+    // store_buyers: SELECT all for store, ordered by created_at DESC
+    if (/SELECT .+ FROM store_buyers WHERE store_slug = \? ORDER BY created_at DESC/i.test(s)) {
+      const rows = tables.store_buyers
+        .filter((r) => r.store_slug === args[0])
+        .slice()
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+      return { kind: 'all' as const, rows };
+    }
+    // store_buyers: SELECT one by store_slug + access_code + is_active = 1
+    if (/SELECT .+ FROM store_buyers WHERE store_slug = \? AND access_code = \? AND is_active = 1/i.test(s)) {
+      const r = tables.store_buyers.find(
+        (x) => x.store_slug === args[0] && x.access_code === args[1] && (x.is_active as number) === 1,
+      ) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // store_buyers: SELECT one by id + store_slug
+    if (/SELECT .+ FROM store_buyers WHERE id = \? AND store_slug = \?/i.test(s)) {
+      const r = tables.store_buyers.find(
+        (x) => x.id === args[0] && x.store_slug === args[1],
+      ) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // store_buyers: UPDATE is_active by id (e.g. SET is_active=0 WHERE id=?)
+    if (/UPDATE store_buyers SET is_active=\d+ WHERE id=\?/i.test(s)) {
+      const match = s.match(/SET is_active=(\d+)/i);
+      const val = match ? parseInt(match[1], 10) : 0;
+      const row = tables.store_buyers.find((x) => x.id === args[0]);
+      if (row) row.is_active = val;
+      return { kind: 'run' as const };
+    }
+    // store_buyers: DELETE by id + store_slug
+    if (/DELETE FROM store_buyers WHERE id = \? AND store_slug = \?/i.test(s)) {
+      tables.store_buyers = tables.store_buyers.filter(
+        (r) => !(r.id === args[0] && r.store_slug === args[1]),
+      );
+      return { kind: 'run' as const };
+    }
+    // store_buyers: UPDATE balance
+    if (/UPDATE store_buyers SET balance = balance \+ \? WHERE id = \? AND store_slug = \?/i.test(s)) {
+      const delta = args[0] as number;
+      const row = tables.store_buyers.find((x) => x.id === args[1] && x.store_slug === args[2]);
+      if (row) row.balance = ((row.balance as number) ?? 0) + delta;
+      return { kind: 'run' as const };
+    }
+    // store_buyers: SELECT balance WHERE id + store_slug
+    if (/SELECT balance FROM store_buyers WHERE id = \? AND store_slug = \?/i.test(s)) {
+      const r = tables.store_buyers.find((x) => x.id === args[0] && x.store_slug === args[1]) ?? null;
+      return { kind: 'first' as const, row: r ? { balance: (r.balance as number) ?? 0 } : null };
+    }
+    // store_buyer_transactions: INSERT
+    if (/INSERT INTO store_buyer_transactions/i.test(s)) {
+      const [id, store_slug, buyer_id, type, amount, currency, description, order_ref, created_by, created_at] = args;
+      tables.store_buyer_transactions.push({ id, store_slug, buyer_id, type, amount, currency, description, order_ref, created_by, created_at });
+      return { kind: 'run' as const };
+    }
+    // store_buyer_transactions: SELECT WHERE store_slug + buyer_id ORDER BY created_at DESC
+    if (/SELECT .+ FROM store_buyer_transactions WHERE store_slug = \? AND buyer_id = \? ORDER BY created_at DESC/i.test(s)) {
+      const rows = tables.store_buyer_transactions
+        .filter((r) => r.store_slug === args[0] && r.buyer_id === args[1])
+        .slice()
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+      return { kind: 'all' as const, rows };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
   }

@@ -10,6 +10,7 @@
  */
 import { resolveMember } from '../../_lib/team-session';
 import { getMembership, updateMembershipRole, can, ROLES } from '../../_lib/team';
+import { logActivity } from '../../_lib/activity-log';
 import type { Role } from '../../_lib/team';
 import type { D1Like } from '../../_lib/buyer';
 
@@ -56,5 +57,19 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   }
 
   await updateMembershipRole(ctx.env.MARKET_DB, companyId, targetSub, role as Role);
+
+  try {
+    await logActivity(ctx.env.MARKET_DB, {
+      companyId,
+      eventType: 'member_role_changed',
+      actorSub: member.sub,
+      actorEmail: member.email,
+      targetSub,
+      targetRef: null,
+      meta: { from: target.role, to: role },
+      now: new Date().toISOString(),
+    });
+  } catch {}
+
   return json({ ok: true });
 }

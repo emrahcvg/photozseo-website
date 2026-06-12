@@ -127,7 +127,38 @@
     convertAll(stored);
   }
 
-  function init() { bindPrefetch(); collapseSidebarOnMobile(); bindFilterSheet(); bindLangSwitcher(); bindCurrency(); }
+  // ── Arama autocomplete — /market/api/suggest, debounce + abort ────────────────
+  // datalist tabanlı: JS yoksa input normal çalışır (progressive).
+  function bindSuggest() {
+    var input = document.querySelector('input[data-mk-suggest]');
+    var list = document.getElementById('mk-suggest');
+    if (!input || !list) return;
+    var timer = null;
+    var ctrl = null;
+    input.addEventListener('input', function () {
+      var q = input.value.trim();
+      if (timer) clearTimeout(timer);
+      if (q.length < 2) { list.innerHTML = ''; return; }
+      timer = setTimeout(function () {
+        if (ctrl) ctrl.abort();
+        ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        fetch('/market/api/suggest?q=' + encodeURIComponent(q), ctrl ? { signal: ctrl.signal } : undefined)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data || !Array.isArray(data.suggestions)) return;
+            list.innerHTML = '';
+            data.suggestions.slice(0, 6).forEach(function (s) {
+              var opt = document.createElement('option');
+              opt.value = s; // .value ataması — HTML enjeksiyonu yok
+              list.appendChild(opt);
+            });
+          })
+          .catch(function () { /* abort/ağ hatası sessiz */ });
+      }, 200);
+    });
+  }
+
+  function init() { bindPrefetch(); collapseSidebarOnMobile(); bindFilterSheet(); bindLangSwitcher(); bindCurrency(); bindSuggest(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

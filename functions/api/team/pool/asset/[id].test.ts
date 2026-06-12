@@ -69,13 +69,15 @@ describe('GET pool/asset/[id]', () => {
 
 describe('DELETE pool/asset/[id]', () => {
   it('owner başka birinin asset\'ini tombstone yapar (200)', async () => {
-    const { db } = makeFakeD1();
+    const { db, tables } = makeFakeD1();
     await seedCompany(db);
     await seedAsset(db, 'sub-emp');
     const req = await authed('sub-owner', 'DELETE', { deletedAt: '2026-06-08T12:00:00Z' });
     const res = await onRequestDelete(CTX(req, db));
     expect(res.status).toBe(200);
     expect((await getAsset(db, 'c:co-1', 'p1', 'a1'))!.deleted_at).toBe('2026-06-08T12:00:00Z');
+    expect(tables.team_activity_log.length).toBeGreaterThan(0);
+    expect(tables.team_activity_log[0].event_type).toBe('asset_deleted');
   });
 
   it('employee başkasının asset\'ini silemez (403)', async () => {

@@ -34,6 +34,9 @@ describe('team join akışı', () => {
     expect(jRes.status).toBe(200);
     expect(await jRes.json()).toMatchObject({ ok: true, companyId, role: 'employee' });
     expect(tables.memberships.find((m) => m.user_sub === 'sub-emp')).toMatchObject({ role: 'employee' });
+    expect(tables.team_activity_log.length).toBeGreaterThan(0);
+    expect(tables.team_activity_log.some(r => r.event_type === 'member_added')).toBe(true);
+    expect(tables.team_activity_log.some(r => r.event_type === 'member_invited')).toBe(true);
   });
 
   it('employee davet üretemez (403)', async () => {

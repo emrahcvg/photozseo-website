@@ -188,58 +188,107 @@ function renderControls(
 
 // ── renderStoreHeader ────────────────────────────────────────────────────────
 
+// Sosyal platform tipi → görünen etiket
+function socialLabel(type: string): string {
+  const map: Record<string, string> = {
+    instagram: 'Instagram', telegram: 'Telegram', facebook: 'Facebook',
+    twitter: 'Twitter', x: 'X', youtube: 'YouTube', tiktok: 'TikTok',
+    linkedin: 'LinkedIn', pinterest: 'Pinterest', website: 'Web',
+  };
+  const key = type.toLowerCase();
+  return map[key] ?? (type.charAt(0).toUpperCase() + type.slice(1));
+}
+
+// Sosyal platform tipi → emoji ikon
+function socialIcon(type: string): string {
+  const map: Record<string, string> = {
+    instagram: '📷', telegram: '✈️', facebook: 'f', twitter: '𝕏', x: '𝕏',
+    youtube: '▶', tiktok: '♪', linkedin: 'in', pinterest: '📌',
+    website: '🌐', whatsapp: '💬',
+  };
+  return map[type.toLowerCase()] ?? '🔗';
+}
+
+// Sosyal değeri → görünen kısa metin (handle, domain vs.)
+function socialDisplayValue(type: string, value: string): string {
+  if (/^https?:\/\//.test(value)) {
+    // URL'den sadece host + path kısmı
+    try { const u = new URL(value); return (u.hostname + u.pathname).replace(/\/$/, ''); } catch { return value; }
+  }
+  const handle = value.replace(/^@/, '');
+  return '@' + handle;
+}
+
 function renderStoreHeader(manifest: Manifest, locale: string, defaultLang: string): string {
   const store = manifest.store;
-  const tagline = resolveLocalized(store.tagline, locale);
   const c = store.contact;
+  const tagline = resolveLocalized(store.tagline, locale);
   const locationText = [store.location?.city, store.location?.country].filter(Boolean).join(', ');
   const map = mapHref(store.location);
-  const contactLabel = mt(locale, 'contact');
-
-  const buttons: { label: string; href: string; cls: string }[] = [];
-  if (c.whatsapp) buttons.push({ label: 'WhatsApp', href: whatsappHref(c.whatsapp), cls: 'sf-btn sf-btn--wa' });
-  if (c.phone) buttons.push({ label: mt(locale, 'call'), href: `tel:${c.phone}`, cls: 'sf-btn sf-btn--ghost' });
-  if (c.email) buttons.push({ label: 'E-mail', href: `mailto:${c.email}`, cls: 'sf-btn sf-btn--ghost' });
-  for (const s of c.social ?? []) {
-    buttons.push({ label: escapeHtml(s.type), href: socialHref(s.type, s.value), cls: 'sf-btn sf-btn--ghost' });
-  }
+  const sellerType = sellerTypeLabel(store.businessType, locale);
 
   let html = '<header class="sf-header">\n';
+  html += '  <div class="sf-header__inner">\n';
 
+  // Sol: Logo
   if (store.logo) {
-    html += `  <img class="sf-header__logo" src="${escapeAttr(store.logo)}" alt="${escapeHtml(store.displayName)}" width="96" height="96" />\n`;
+    html += '    <div class="sf-header__logo-wrap">\n';
+    html += `      <img class="sf-header__logo" src="${escapeAttr(store.logo)}" alt="${escapeHtml(store.displayName)}" width="72" height="72" />\n`;
+    html += '    </div>\n';
   }
 
-  html += `  <h1 class="sf-header__name">${escapeHtml(store.displayName)}</h1>\n`;
+  // Sağ: Firma adı + chip satırı (konum + iletişim + sosyal medya tek satırda)
+  html += '    <div class="sf-header__info">\n';
 
-  // Şeffaflık rozeti: satıcının kim olduğunu (şahıs/üretici vb.) alıcıya göster.
-  const sellerType = sellerTypeLabel(store.businessType, locale);
-  if (sellerType) {
-    html += `  <span class="sf-seller-type">${escapeHtml(sellerType)}</span>\n`;
-  }
+  html += '      <div class="sf-header__title-row">\n';
+  html += `        <h1 class="sf-header__name">${escapeHtml(store.displayName)}</h1>\n`;
+  if (sellerType) html += `        <span class="sf-seller-type">${escapeHtml(sellerType)}</span>\n`;
+  html += '      </div>\n';
 
   if (tagline) {
-    html += `  <p class="sf-header__tagline">${escapeHtml(tagline)}</p>\n`;
+    html += `      <p class="sf-header__tagline">${escapeHtml(tagline)}</p>\n`;
   }
 
-  if (locationText) {
-    if (map) {
-      html += `  <a class="sf-header__location sf-header__location--link" href="${escapeAttr(map)}" target="_blank" rel="noopener noreferrer">📍 ${escapeHtml(locationText)}</a>\n`;
-    } else {
-      html += `  <p class="sf-header__location">📍 ${escapeHtml(locationText)}</p>\n`;
+  // Chip satırı: konum + iletişim + sosyal medya — hepsi flex-wrap pill olarak
+  const hasChips = locationText || c.whatsapp || c.phone || c.email || (c.social ?? []).length > 0;
+  if (hasChips) {
+    html += '      <div class="sf-header__chips">\n';
+
+    if (locationText) {
+      if (map) {
+        html += `        <a class="sf-chip sf-chip--loc sf-chip--link" href="${escapeAttr(map)}" target="_blank" rel="noopener noreferrer">📍 ${escapeHtml(locationText)}</a>\n`;
+      } else {
+        html += `        <span class="sf-chip sf-chip--loc">📍 ${escapeHtml(locationText)}</span>\n`;
+      }
     }
-  }
 
-  if (buttons.length > 0) {
-    html += `  <nav class="sf-header__contact" aria-label="${escapeHtml(contactLabel)}">\n`;
-    for (const b of buttons) {
-      const external = !/^(tel:|mailto:)/.test(b.href);
-      const extras = external ? ' target="_blank" rel="noopener noreferrer"' : '';
-      html += `    <a class="${b.cls}" href="${escapeAttr(b.href)}"${extras}>${escapeHtml(b.label)}</a>\n`;
+    if (c.whatsapp) {
+      const displayNum = c.whatsapp.replace(/[^0-9+]/g, '') || c.whatsapp;
+      html += `        <a class="sf-chip sf-chip--wa sf-chip--link" href="${escapeAttr(whatsappHref(c.whatsapp))}" target="_blank" rel="noopener noreferrer" title="WhatsApp">💬 ${escapeHtml(displayNum)}</a>\n`;
     }
-    html += '  </nav>\n';
+
+    if (c.phone && c.phone !== c.whatsapp) {
+      html += `        <a class="sf-chip sf-chip--link" href="tel:${escapeAttr(c.phone)}">📞 ${escapeHtml(c.phone)}</a>\n`;
+    }
+
+    if (c.email) {
+      html += `        <a class="sf-chip sf-chip--link" href="mailto:${escapeAttr(c.email)}">✉️ ${escapeHtml(c.email)}</a>\n`;
+    }
+
+    for (const s of c.social ?? []) {
+      const icon = socialIcon(s.type);
+      const label = socialLabel(s.type);
+      const displayVal = socialDisplayValue(s.type, s.value);
+      const href = socialHref(s.type, s.value);
+      if (!href) continue;
+      html += `        <a class="sf-chip sf-chip--social sf-chip--link" href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer" title="${escapeAttr(label + ': ' + displayVal)}">${icon} ${escapeHtml(label)}</a>\n`;
+    }
+
+    html += '      </div>\n';
   }
 
+  html += '    </div>\n'; // sf-header__info
+  html += '  </div>\n';  // sf-header__inner
   html += '</header>\n';
 
   return html;
@@ -283,7 +332,7 @@ function renderProductCard(
   return html;
 }
 
-// ── Toolbar (search + category jump nav) ─────────────────────────────────────────
+// ── Toolbar (search) + Kategori menüsü (ayrı çubuk) ──────────────────────────────
 
 function renderToolbar(
   groups: { category: { id: string; name: Record<string, string> } | null; products: Product[] }[],
@@ -293,26 +342,35 @@ function renderToolbar(
   const catsLabel = mt(locale, 'categories');
   const noResults = mt(locale, 'noResults');
 
+  // Kategori menüsü: en az bir gerçek kategorisi olan grup varsa göster
+  const hasRealCats = groups.some((g) => g.category !== null);
+
   let html = '<div class="sf-toolbar">\n';
   html += `  <input type="search" class="sf-search" data-sf-search-input placeholder="${escapeHtml(searchPlaceholder)}" aria-label="${escapeHtml(searchPlaceholder)}" />\n`;
+  html += `  <p class="sf-no-results" data-sf-no-results hidden>${escapeHtml(noResults)}</p>\n`;
+  html += '</div>\n';
 
-  if (groups.length > 1) {
+  if (hasRealCats) {
     const allLabel = mt(locale, 'allCategories');
     const totalCount = groups.reduce((n, g) => n + g.products.length, 0);
-    html += `  <nav class="sf-catnav" aria-label="${escapeHtml(catsLabel)}">\n`;
-    html += `    <button type="button" class="sf-catnav__link sf-catnav__link--active" data-sf-cat="all">${escapeHtml(allLabel)} <span class="sf-catnav__count">${totalCount}</span></button>\n`;
+    html += `<nav class="sf-catmenu" aria-label="${escapeHtml(catsLabel)}">\n`;
+    html += `  <button type="button" class="sf-catmenu__item sf-catmenu__item--active" data-sf-cat="all">\n`;
+    html += `    <span class="sf-catmenu__name">${escapeHtml(allLabel)}</span>\n`;
+    html += `    <span class="sf-catmenu__count">${totalCount}</span>\n`;
+    html += '  </button>\n';
     for (const group of groups) {
       const id = group.category ? `cat-${group.category.id}` : 'cat-other';
       const name = group.category
         ? resolveLocalized(group.category.name, locale)
         : mt(locale, 'other');
-      html += `    <button type="button" class="sf-catnav__link" data-sf-cat="${escapeAttr(id)}">${escapeHtml(name)} <span class="sf-catnav__count">${group.products.length}</span></button>\n`;
+      html += `  <button type="button" class="sf-catmenu__item" data-sf-cat="${escapeAttr(id)}">\n`;
+      html += `    <span class="sf-catmenu__name">${escapeHtml(name)}</span>\n`;
+      html += `    <span class="sf-catmenu__count">${group.products.length}</span>\n`;
+      html += '  </button>\n';
     }
-    html += '  </nav>\n';
+    html += '</nav>\n';
   }
 
-  html += `  <p class="sf-no-results" data-sf-no-results hidden>${escapeHtml(noResults)}</p>\n`;
-  html += '</div>\n';
   return html;
 }
 
@@ -418,22 +476,26 @@ function controlsScript(locale: string): string {
     });
   }
 
-  // ---- Category filter: clicking a chip shows only that category's products ----
-  var catChips = document.querySelectorAll('.sf-catnav__link');
-  if (catChips.length) {
-    catChips.forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        var cat = chip.getAttribute('data-sf-cat');
+  // ---- Category filter: sf-catmenu__item butonları ----
+  var catItems = document.querySelectorAll('.sf-catmenu__item');
+  if (catItems.length) {
+    catItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var cat = item.getAttribute('data-sf-cat');
         document.querySelectorAll('.sf-section').forEach(function (sec) {
           var match = sec.getAttribute('data-sf-cat') === cat;
           sec.style.display = (cat === 'all' || match) ? '' : 'none';
-          // Tek kategori seçilince tam grid (alta doğru, hepsi); Tümü'de yatay şerit.
           sec.classList.toggle('sf-section--expanded', cat !== 'all' && match);
         });
-        for (var i = 0; i < catChips.length; i++) {
-          catChips[i].classList.toggle('sf-catnav__link--active', catChips[i] === chip);
+        for (var i = 0; i < catItems.length; i++) {
+          catItems[i].classList.toggle('sf-catmenu__item--active', catItems[i] === item);
         }
         if (input) input.value = '';
+        // Seçilen kategoriye scroll
+        if (cat !== 'all') {
+          var target = document.getElementById(cat);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
   }
@@ -573,15 +635,19 @@ export function renderStoreBody(
   html += renderStoreHeader(manifest, locale, defaultLang);
   html += renderToolbar(groups, locale);
 
+  // Tek grup ve kategori yoksa (tüm ürünler kategorisiz) → başlık gizle
+  const isSingleUncategorized = groups.length === 1 && !groups[0].category;
+
   for (const group of groups) {
-    // svc varsa taxonomy label'ına fallback yapar; yoksa mevcut davranış korunur.
     const heading = svc
       ? resolveCategoryName(group.category?.id, group.category?.name, locale, svc)
       : (group.category ? resolveLocalized(group.category.name, locale) : mt(locale, 'other'));
     const id = group.category ? `cat-${group.category.id}` : 'cat-other';
 
     html += `<section class="sf-section" id="${escapeAttr(id)}" data-sf-cat="${escapeAttr(id)}">\n`;
-    html += `  <h2 class="sf-section__title">${escapeHtml(heading)} <span class="sf-section__count">${group.products.length}</span></h2>\n`;
+    if (!isSingleUncategorized) {
+      html += `  <h2 class="sf-section__title">${escapeHtml(heading)} <span class="sf-section__count">${group.products.length}</span></h2>\n`;
+    }
     html += renderCategoryProducts(group.products, locale, store.currency, store.slug, defaultLang, slugMap);
     html += '</section>\n';
   }
@@ -601,8 +667,9 @@ export function renderStoreBody(
   if (manifest.products.some((p) => p.fitment?.length)) html += fitmentFilterScript();
   html += controlsScript(locale);
   html += '  <script src="/storefront-buyer.js?v=8" defer></script>\n';
+  html += '  <script src="/cart-badge.js?v=1" defer></script>\n';
   html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
-  html += '  <script src="/auth.js?v=10" defer></script>\n';
+  html += '  <script src="/auth.js?v=11" defer></script>\n';
   return html;
 }
 
@@ -734,6 +801,45 @@ function renderGallery(images: string[], alt: string): string {
   return html;
 }
 
+// ── renderBuyerSafetySection ─────────────────────────────────────────────────
+
+function renderBuyerSafetySection(
+  store: Manifest['store'],
+  product: Product,
+  locale: string,
+): string {
+  const sellerType = sellerTypeLabel(store.businessType, locale);
+  const hasContact = !!(store.contact.phone || store.contact.whatsapp || store.contact.email);
+  const price = product.price;
+  const compareAt = product.compareAtPrice;
+  const hasLargeDiscount =
+    price != null && compareAt != null && compareAt > price &&
+    (compareAt - price) / compareAt >= 0.5;
+
+  let html = '      <div class="sf-buyer-safety">\n';
+  html += `        <p class="sf-buyer-safety__title">${escapeHtml(mt(locale, 'buyerSafetyTitle'))}</p>\n`;
+  html += '        <ul class="sf-buyer-safety__list">\n';
+
+  if (sellerType) {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--info">🏷 ${escapeHtml(sellerType)}</li>\n`;
+  }
+
+  if (hasContact) {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--ok">✓ ${escapeHtml(mt(locale, 'sellerReachable'))}</li>\n`;
+  } else {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--warn">⚠ ${escapeHtml(mt(locale, 'sellerNotReachable'))}</li>\n`;
+  }
+
+  if (hasLargeDiscount) {
+    html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--warn">⚠ ${escapeHtml(mt(locale, 'largeDiscountWarning'))}</li>\n`;
+  }
+
+  html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--note">🔒 ${escapeHtml(mt(locale, 'publisherNote'))}</li>\n`;
+  html += '        </ul>\n';
+  html += '      </div>\n';
+  return html;
+}
+
 // ── renderProductBody ────────────────────────────────────────────────────────
 
 /**
@@ -799,13 +905,13 @@ export function renderProductBody(
     }
   }
 
-  // Seller chip
+  // Seller chip — mağazaya link
   const sellerInitial = escapeHtml(store.displayName.charAt(0).toUpperCase());
-  html += `      <div class="sf-seller-chip">\n`;
+  const storeHref = escapeAttr(storeUrl(store.slug, locale, defaultLang));
+  html += `      <a class="sf-seller-chip" href="${storeHref}">\n`;
   html += `        <span class="sf-seller-chip__avatar">${sellerInitial}</span>\n`;
   html += `        <span class="sf-seller-chip__name">${escapeHtml(store.displayName)}</span>\n`;
-  html += `        <span class="sf-seller-chip__verified" aria-label="Verified">✓</span>\n`;
-  html += `      </div>\n`;
+  html += `      </a>\n`;
 
   html += `      <h1 class="sf-detail__title">${escapeHtml(title)}</h1>\n`;
 
@@ -844,8 +950,11 @@ export function renderProductBody(
   if (waHref) {
     html += `        <a class="sf-btn sf-btn--buy" href="${escapeAttr(waHref)}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n`;
   }
-  html += `        <button type="button" class="sf-btn sf-btn--cart" data-mk-add="${escapeAttr(product.id)}" data-mk-title="${escapeAttr(title)}" data-mk-price="${escapeAttr(product.price != null ? String(product.price) : '')}" data-mk-currency="${escapeAttr(currency)}">${escapeHtml(addLabel)}</button>\n`;
+  html += `        <button type="button" class="sf-btn sf-btn--cart" data-mk-add="${escapeAttr(product.id)}" data-mk-pslug="${escapeAttr(pSlug)}" data-mk-title="${escapeAttr(title)}" data-mk-price="${escapeAttr(product.price != null ? String(product.price) : '')}" data-mk-currency="${escapeAttr(currency)}">${escapeHtml(addLabel)}</button>\n`;
   html += '      </div>\n';
+
+  // Buyer safety section — shown between CTA and description
+  html += renderBuyerSafetySection(store, product, locale);
 
   // The Narrative (description)
   if (description) {
@@ -857,8 +966,8 @@ export function renderProductBody(
 
   // Specs
   if (rows.length > 0) {
-    html += '      <div class="sf-specs-section">\n';
-    html += `        <h2 class="sf-specs-heading">${escapeHtml(specsHeading)}</h2>\n`;
+    html += '      <details class="sf-specs-section">\n';
+    html += `        <summary class="sf-specs-heading">${escapeHtml(specsHeading)}</summary>\n`;
     html += '        <dl class="sf-specs">\n';
     for (const row of rows) {
       html += '          <div>\n';
@@ -867,7 +976,7 @@ export function renderProductBody(
       html += '          </div>\n';
     }
     html += '        </dl>\n';
-    html += '      </div>\n';
+    html += '      </details>\n';
   }
 
   // Shipping
@@ -884,15 +993,6 @@ export function renderProductBody(
     }
     html += '      </div>\n';
   }
-
-  // Seller Reviews placeholder (static — real reviews need backend)
-  html += '      <div class="sf-reviews">\n';
-  html += `        <h2 class="sf-reviews__heading">Seller Reviews</h2>\n`;
-  html += '        <div class="sf-reviews__summary">\n';
-  html += '          <span class="sf-reviews__stars">★★★★★</span>\n';
-  html += `          <span>${escapeHtml(store.displayName)}</span>\n`;
-  html += '        </div>\n';
-  html += '      </div>\n';
 
   // Platform-mechanism FAQ — visible content backing the FAQPage JSON-LD.
   // Conditional on real store data (order/payment/contact); never invented.
@@ -917,18 +1017,30 @@ export function renderProductBody(
   const phoneL = mt(locale, 'phone');
   const addrL = mt(locale, 'address');
   const noteL = mt(locale, 'note');
+  const deliveryL = mt(locale, 'deliveryInfo');
+  const addNoteL = mt(locale, 'addNote');
   const reqL = mt(locale, 'required');
   const refL = mt(locale, 'orderRef');
   const payL = mt(locale, 'payByTransfer');
 
-  html += `      <div class="sf-cart" data-mk-cart-root data-mk-slug="${escapeAttr(store.slug)}" data-mk-whatsapp="${escapeAttr(wa)}">\n`;
+  html += `      <div class="sf-cart" data-mk-cart-root data-mk-slug="${escapeAttr(store.slug)}" data-mk-whatsapp="${escapeAttr(wa)}" data-mk-empty>\n`;
+  html += '        <div class="sf-cart__empty" data-mk-cart-empty>\n';
+  html += '          <span class="sf-cart__empty-icon">🛒</span>\n';
+  html += `          <p class="sf-cart__empty-text">${escapeHtml(mt(locale, 'emptyCart'))}</p>\n`;
+  html += '        </div>\n';
   html += '        <ul class="sf-cart__list" data-mk-cart-list></ul>\n';
-  html += `        <p class="sf-cart__total">${escapeHtml(mt(locale, 'total'))}: <span data-mk-total>0.00</span></p>\n`;
-  html += '        <form class="sf-cart__form" data-mk-order-form novalidate>\n';
-  html += `          <label>${escapeHtml(nameL)}<input name="name" required /></label><span data-mk-err="name" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
-  html += `          <label>${escapeHtml(phoneL)}<input name="phone" type="tel" required /></label><span data-mk-err="phone" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
-  html += `          <label>${escapeHtml(addrL)}<textarea name="address" required></textarea></label><span data-mk-err="address" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
-  html += `          <label>${escapeHtml(noteL)}<textarea name="note"></textarea></label>\n`;
+  html += `        <p class="sf-cart__total" data-mk-total-row hidden>${escapeHtml(mt(locale, 'total'))}: <span data-mk-total>0.00</span></p>\n`;
+  html += '        <form class="sf-cart__form" data-mk-order-form novalidate hidden>\n';
+  html += `          <p class="sf-cart__form-heading">${escapeHtml(deliveryL)}</p>\n`;
+  html += '          <div class="sf-cart__fields">\n';
+  html += `            <label>${escapeHtml(nameL)}<input name="name" required /></label><span data-mk-err="name" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
+  html += `            <label>${escapeHtml(phoneL)}<input name="phone" type="tel" required /></label><span data-mk-err="phone" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
+  html += `            <label>${escapeHtml(addrL)}<textarea name="address" required></textarea></label><span data-mk-err="address" hidden class="sf-cart__err">${escapeHtml(reqL)}</span>\n`;
+  html += '          </div>\n';
+  html += '          <details class="sf-cart__note">\n';
+  html += `            <summary>${escapeHtml(addNoteL)}</summary>\n`;
+  html += `            <label class="sf-cart__note-label"><textarea name="note" aria-label="${escapeAttr(noteL)}"></textarea></label>\n`;
+  html += '          </details>\n';
   html += `          <button type="submit" class="sf-btn sf-btn--order">${escapeHtml(sendLabel)}</button>\n`;
   html += '        </form>\n';
   html += '        <div class="sf-cart__payment" data-mk-payment hidden>\n';
@@ -958,16 +1070,10 @@ export function renderProductBody(
   html += `          <p>${escapeHtml(mt(locale, 'paymentDesc'))}: <strong data-mk-paydesc></strong></p>\n`;
   html += '        </div>\n';
   html += '      </div>\n';
-  html += '      <script src="/marketplace-cart.js" defer></script>\n';
   html += '      <script src="/storefront-buyer.js?v=8" defer></script>\n';
+  html += '      <script src="/marketplace-cart.js?v=4" defer></script>\n';
   html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
-  html += '      <script src="/auth.js?v=10" defer></script>\n';
-
-  // AI chat bar (placeholder)
-  html += '      <div class="sf-ai-chat">\n';
-  html += '        <input class="sf-ai-chat__input" type="text" placeholder="Ask AI about size or fit..." />\n';
-  html += '        <button class="sf-ai-chat__btn" type="button" aria-label="Send">↑</button>\n';
-  html += '      </div>\n';
+  html += '      <script src="/auth.js?v=11" defer></script>\n';
 
   html += '    </div>\n'; // sf-detail__info
   html += '  </div>\n'; // sf-detail

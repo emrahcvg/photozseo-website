@@ -62,7 +62,7 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   if (isNaN(tokenExp) || tokenExp < nowSec) return json({ error: 'Token expired' }, 401);
 
   // email_verified kontrolü
-  if (claims.email_verified !== 'true' && claims.email_verified !== true as unknown as string) {
+  if (claims.email_verified !== true && claims.email_verified !== 'true') {
     return json({ error: 'Email not verified' }, 401);
   }
 
