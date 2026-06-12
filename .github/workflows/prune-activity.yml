@@ -1,0 +1,16 @@
+name: Prune Activity Log
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # Her gün 03:00 UTC
+  workflow_dispatch:       # Manuel tetikleme (test için)
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call prune endpoint
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://photozseo.com/api/cron/prune-activity)
+          echo "Response: $STATUS"
+          [ "$STATUS" = "200" ] || exit 1
