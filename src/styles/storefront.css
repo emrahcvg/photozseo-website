@@ -656,3 +656,17 @@ html { scroll-behavior: smooth; }
 .sf-cart__form input:focus,
 .sf-cart__form textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
 .sf-cart__err { font-size: 0.78rem; color: #c0392b; margin-block-start: -6px; }
+
+/* B2B Kart */
+.sf-b2b-card{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--sf-surface,#f5f5f7);border-radius:12px;margin:0 0 16px;cursor:default}
+.sf-b2b-card--unlocked{background:#e8f5e9}
+.sf-b2b-card__icon{font-size:22px}
+.sf-b2b-card__title{font-weight:600;font-size:15px}
+.sf-b2b-card__subtitle{font-size:13px;color:#666;margin-top:2px}
+.sf-b2b-card__btn{background:none;border:none;color:var(--sf-accent,#0071e3);cursor:pointer;font-size:13px;padding:0;text-decoration:underline}
+.sf-b2b-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.sf-b2b-modal__box{background:#fff;border-radius:16px;padding:28px 24px;width:min(340px,90vw);position:relative;display:flex;flex-direction:column;gap:12px}
+.sf-b2b-modal__close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:18px;cursor:pointer;color:#666}
+.sf-b2b-modal__box h3{margin:0;font-size:17px;font-weight:600}
+.sf-b2b-modal__box input{border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:16px;letter-spacing:3px;text-transform:uppercase;width:100%;box-sizing:border-box}
+.sf-b2b-modal__box button:last-child{background:var(--sf-accent,#0071e3);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;width:100%}

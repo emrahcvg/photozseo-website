@@ -86,6 +86,8 @@ export interface Product {
   partTypeLabel?: Localized;
   /** Katman 3 = araç uyumu (make/model/yıl aralığı). Bir ürün birden çok araca uyabilir. */
   fitment?: ProductFitment[];
+  /** true → B2B ürünü; geçerli oturum olmadan web store'da gizlenir */
+  b2b?: boolean;
 }
 
 export interface ProductFitment {

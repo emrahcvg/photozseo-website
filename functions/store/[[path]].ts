@@ -30,6 +30,7 @@ import {
 } from '../../src/storefront/manifest';
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { applyLegacyMapToManifest } from '../_lib/taxonomy-migrate';
+import { findBuyerById } from '../_lib/b2b-buyers';
 import { parseImageFilename, toProxyImages } from '../../src/storefront/image-proxy';
 import type { Manifest } from '../../src/storefront/types';
 import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
@@ -37,9 +38,21 @@ import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
 interface Env {
   STORE_KV: KVNamespace;
   AI?: AiBinding;
+  MARKET_DB?: D1Database;
 }
 
 const DEFAULT_LANG = 'en';
+
+function getCookie(request: Request, name: string): string | null {
+  const header = request.headers.get('cookie') ?? '';
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = header.match(new RegExp('(?:^|;\\s*)' + escaped + '=([^;]*)'));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
 function notFoundHtml(message: string): string {
   return renderDocument({
@@ -153,7 +166,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const translatedFull = { ...translated, store: { ...translated.store, languages: SUPPORTED_LOCALES } };
 
   // Legacy kategori id'lerini Google Taxonomy id'lerine normalize et (graceful).
-  const manifest = applyLegacyMapToManifest(translatedFull, legacyMap as Record<string, string>);
+  let manifest = applyLegacyMapToManifest(translatedFull, legacyMap as Record<string, string>);
 
   // Taxonomy service: kategori adı çözümleme + breadcrumb için (graceful fallback).
   let svc; try { svc = await getTaxonomyService(locale); } catch { svc = undefined; }
@@ -161,6 +174,33 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   // Origin for absolute SEO URLs (canonical / hreflang / og), derived from the request.
   const origin = new URL(ctx.request.url).origin;
   const languages = SUPPORTED_LOCALES;
+
+  // B2B: cookie kontrolü — geçersiz/eksik ise b2b ürünleri gizle
+  const b2bCookieName = `b2b_${slug}`;
+  const buyerCookieId = getCookie(ctx.request, b2bCookieName);
+  let hasBuyer = false;
+  let buyerDisplayName: string | undefined;
+
+  if (buyerCookieId && ctx.env.MARKET_DB) {
+    const buyer = await findBuyerById(ctx.env.MARKET_DB, slug, buyerCookieId);
+    if (buyer) {
+      hasBuyer = true;
+      buyerDisplayName = buyer.buyer_name;
+    }
+  }
+
+  if (!hasBuyer) {
+    manifest = { ...manifest, products: manifest.products.filter((p) => !p.b2b) };
+  }
+
+  // B2B kart için: mağazanın aktif B2B alıcısı var mı?
+  let hasB2BBuyers = false;
+  if (ctx.env.MARKET_DB) {
+    const row = await ctx.env.MARKET_DB.prepare(
+      'SELECT COUNT(*) as cnt FROM store_buyers WHERE store_slug = ? AND is_active = 1'
+    ).bind(slug).first<{ cnt: number }>();
+    hasB2BBuyers = (row?.cnt ?? 0) > 0;
+  }
 
   // Görsel URL'lerini SEO proxy yollarına çevir (gallery + card + schema + og).
   // Yeni ürün nesneleri üretir; KV cache'indeki orijinal görseller değişmez.
@@ -203,6 +243,42 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     ].filter(Boolean);
   } else {
     htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG, svc);
+
+    if (hasB2BBuyers) {
+      const b2bCard = hasBuyer
+        ? `<div class="sf-b2b-card sf-b2b-card--unlocked">
+             <span class="sf-b2b-card__icon">✓</span>
+             <div>
+               <div class="sf-b2b-card__title">B2B Erişimi Aktif</div>
+               <div class="sf-b2b-card__subtitle">Merhaba, ${escapeHtml(buyerDisplayName ?? '')} — toptan ürünler görüntüleniyor</div>
+             </div>
+           </div>`
+        : `<div class="sf-b2b-card" id="sf-b2b-card">
+             <span class="sf-b2b-card__icon">🔒</span>
+             <div>
+               <div class="sf-b2b-card__title">Toptan / B2B</div>
+               <div class="sf-b2b-card__subtitle">Erişim kodunuz varsa <button class="sf-b2b-card__btn" onclick="document.getElementById('sf-b2b-modal').style.display='flex'">giriş yapın</button></div>
+             </div>
+           </div>
+           <div class="sf-b2b-modal" id="sf-b2b-modal" style="display:none">
+             <div class="sf-b2b-modal__box">
+               <button class="sf-b2b-modal__close" onclick="document.getElementById('sf-b2b-modal').style.display='none'">✕</button>
+               <h3>B2B Erişim Kodu</h3>
+               <input id="sf-b2b-input" maxlength="6" placeholder="Erişim kodunuz" style="text-transform:uppercase">
+               <div id="sf-b2b-error" style="color:red;display:none">Geçersiz kod</div>
+               <button onclick="b2bLogin('${escapeHtml(slug)}')">Giriş Yap</button>
+             </div>
+           </div>
+           <script>
+           async function b2bLogin(slug){
+             const code=document.getElementById('sf-b2b-input').value.toUpperCase();
+             const r=await fetch('/api/store/'+slug+'/b2b/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({access_code:code})});
+             if(r.ok){location.reload();}else{document.getElementById('sf-b2b-error').style.display='block';}
+           }
+           <\/script>`;
+      htmlBody = b2bCard + htmlBody;
+    }
+
     pageTitle = manifest.meta.seo?.title ?? manifest.store.displayName;
     pageDesc = manifest.meta.seo?.description ?? resolveLocalized(manifest.store.tagline, locale);
     canonical = origin + storeUrl(slug, locale, DEFAULT_LANG);
