@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[]; team_activity_log: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[]; team_activity_log: Row[]; store_buyers: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -35,6 +35,7 @@ export function makeFakeD1(): FakeD1 {
     pool_projects: [] as Row[],
     pool_assets: [] as Row[],
     team_activity_log: [] as Row[],
+    store_buyers: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -348,6 +349,53 @@ export function makeFakeD1(): FakeD1 {
     if (/DELETE FROM team_activity_log WHERE created_at/i.test(s)) {
       const [before] = args as [string];
       tables.team_activity_log = tables.team_activity_log.filter((r) => (r.created_at as string) >= before);
+      return { kind: 'run' as const };
+    }
+    // store_buyers: INSERT (unique constraint: store_slug + access_code)
+    if (/INSERT INTO store_buyers/i.test(s)) {
+      const [id, store_slug, buyer_name, access_code, is_active, created_at] = args;
+      const exists = tables.store_buyers.some(
+        (r) => r.store_slug === store_slug && r.access_code === access_code,
+      );
+      if (exists) throw new Error('fakeD1: store_buyers UNIQUE constraint: store_slug+access_code');
+      tables.store_buyers.push({ id, store_slug, buyer_name, access_code, is_active, created_at });
+      return { kind: 'run' as const };
+    }
+    // store_buyers: SELECT all for store, ordered by created_at DESC
+    if (/SELECT .+ FROM store_buyers WHERE store_slug = \? ORDER BY created_at DESC/i.test(s)) {
+      const rows = tables.store_buyers
+        .filter((r) => r.store_slug === args[0])
+        .slice()
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+      return { kind: 'all' as const, rows };
+    }
+    // store_buyers: SELECT one by store_slug + access_code + is_active = 1
+    if (/SELECT .+ FROM store_buyers WHERE store_slug = \? AND access_code = \? AND is_active = 1/i.test(s)) {
+      const r = tables.store_buyers.find(
+        (x) => x.store_slug === args[0] && x.access_code === args[1] && (x.is_active as number) === 1,
+      ) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // store_buyers: SELECT one by id + store_slug
+    if (/SELECT .+ FROM store_buyers WHERE id = \? AND store_slug = \?/i.test(s)) {
+      const r = tables.store_buyers.find(
+        (x) => x.id === args[0] && x.store_slug === args[1],
+      ) ?? null;
+      return { kind: 'first' as const, row: r };
+    }
+    // store_buyers: UPDATE is_active by id (e.g. SET is_active=0 WHERE id=?)
+    if (/UPDATE store_buyers SET is_active=\d+ WHERE id=\?/i.test(s)) {
+      const match = s.match(/SET is_active=(\d+)/i);
+      const val = match ? parseInt(match[1], 10) : 0;
+      const row = tables.store_buyers.find((x) => x.id === args[0]);
+      if (row) row.is_active = val;
+      return { kind: 'run' as const };
+    }
+    // store_buyers: DELETE by id + store_slug
+    if (/DELETE FROM store_buyers WHERE id = \? AND store_slug = \?/i.test(s)) {
+      tables.store_buyers = tables.store_buyers.filter(
+        (r) => !(r.id === args[0] && r.store_slug === args[1]),
+      );
       return { kind: 'run' as const };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
