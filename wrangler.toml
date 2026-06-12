@@ -30,3 +30,6 @@ migrations_dir = "migrations"
 binding = "POOL_R2"
 bucket_name = "photozseo-team-pool"
 preview_bucket_name = "photozseo-team-pool-preview"
+
+[triggers]
+crons = ["0 3 * * *"]
