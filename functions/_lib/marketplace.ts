@@ -46,6 +46,7 @@ export interface StoreRow {
   country: string;
   iban: string;
   iban_name: string;
+  payment_json: string | null;
   whatsapp: string;
   listed: number;
   lang: string;
@@ -94,6 +95,7 @@ export function storeRecordToStoreFields(
     country: s.location?.country ?? '',
     iban: s.payment?.iban ?? '',
     iban_name: s.payment?.ibanName ?? '',
+    payment_json: s.payment ? JSON.stringify(s.payment) : null,
     whatsapp: s.contact?.whatsapp ?? '',
     listed: s.marketplaceListed === true ? 1 : 0,
     lang: canonicalLang(record.manifest),
@@ -159,10 +161,10 @@ export async function upsertStoreToD1(db: D1Database, slug: string, record: Stor
   // 1) Store satırını upsert.
   await db.prepare(
     `INSERT OR REPLACE INTO stores
-       (slug, name, city, country, iban, iban_name, whatsapp, listed, lang, index_version, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       (slug, name, city, country, iban, iban_name, payment_json, whatsapp, listed, lang, index_version, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
   ).bind(
-    sf.slug, sf.name, sf.city, sf.country, sf.iban, sf.iban_name,
+    sf.slug, sf.name, sf.city, sf.country, sf.iban, sf.iban_name, sf.payment_json,
     sf.whatsapp, sf.listed, sf.lang, sf.index_version, sf.updated_at,
   ).run();
 
@@ -201,7 +203,7 @@ async function fetchAllProducts(db: D1Database): Promise<ProductRow[]> {
 
 async function fetchListedStores(db: D1Database): Promise<StoreRow[]> {
   const { results } = await db.prepare(
-    `SELECT slug, name, city, country, iban, iban_name, whatsapp, listed, lang, index_version, updated_at
+    `SELECT slug, name, city, country, iban, iban_name, payment_json, whatsapp, listed, lang, index_version, updated_at
      FROM stores WHERE listed = 1`
   ).all<StoreRow>();
   return results ?? [];

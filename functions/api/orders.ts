@@ -66,16 +66,22 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
     ...(buyer_note ? { buyer_note } : {}),
   });
 
-  const iban = ctx.env.STORE_IBAN ?? 'TR000000000000000000000000';
+  const storeRow = await ctx.env.MARKET_DB
+    .prepare('SELECT iban, iban_name, payment_json FROM stores WHERE slug = ?')
+    .bind(store_slug).first<{ iban: string | null; iban_name: string | null; payment_json: string | null }>();
+
+  let paymentInfo: Record<string, unknown>;
+  if (storeRow?.payment_json) {
+    paymentInfo = JSON.parse(storeRow.payment_json);
+  } else if (storeRow?.iban) {
+    paymentInfo = { method: 'bank_transfer', iban: storeRow.iban, ibanName: storeRow.iban_name };
+  } else {
+    paymentInfo = { method: 'bank_transfer', iban: ctx.env.STORE_IBAN ?? 'TR000000000000000000000000' };
+  }
+
   return json({
     order_id,
     status: 'pending',
-    payment: {
-      method: 'bank_transfer',
-      iban,
-      amount: total,
-      currency,
-      instructions: 'Sipariş no: ' + order_id,
-    },
+    payment: paymentInfo,
   });
 }
