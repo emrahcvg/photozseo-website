@@ -133,14 +133,15 @@ function renderLangSwitcher(locale: string): string {
 }
 
 /** A marketplace product card linking to its store product page.
- * `opts.eager` — LCP adayı kartlar için loading="eager" + fetchpriority="high" (geri uyumlu). */
-export function renderProductCard(p: ProductRow, locale: string, opts?: { eager?: boolean }): string {
+ * `index` — 0 = LCP adayı: loading="eager" fetchpriority="high"; >0 = loading="lazy". */
+export function renderProductCard(p: ProductRow, locale: string, index = 0, opts?: { eager?: boolean }): string {
   const title = escapeHtml(p.title);
   const price = mkFormatPrice(p.price, p.currency, locale);
   const soldOut = p.stock === 0;
   const href = escapeAttr(p.product_path);
   const sellerName = p.store_name ?? p.store_slug.replace(/-/g, ' ');
-  const loadAttrs = opts?.eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
+  const isEager = index === 0 || opts?.eager;
+  const loadAttrs = isEager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
 
   let html = `<a class="mk-card-link" href="${href}">\n`;
   html += '  <article class="mk-card">\n';
@@ -398,7 +399,7 @@ export function renderMarketHome(args: {
     html += '<section class="mk-section">\n';
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'featured'))}</h2>\n`;
     html += '  <div class="mk-rail">\n';
-    featured.forEach((p, i) => { html += renderProductCard(p, locale, { eager: i < 4 }); });
+    featured.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '  </div>\n';
     html += '</section>\n';
   }
@@ -413,7 +414,7 @@ export function renderMarketHome(args: {
     html += '<section class="mk-section">\n';
     html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'newProducts'))}</h2>\n`;
     html += '  <div class="mk-grid">\n';
-    gridProducts.forEach((p, i) => { html += renderProductCard(p, locale, { eager: featured.length === 0 && i < 4 }); });
+    gridProducts.forEach((p, i) => { html += renderProductCard(p, locale, featured.length === 0 ? i : i + featured.length); });
     html += '  </div>\n</section>\n';
   }
 
@@ -550,7 +551,7 @@ export function renderSearchPage(args: {
     html += renderEmptyState({ icon: mkIcon('search'), title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '      <div class="mk-grid">\n';
-    for (const p of items) html += renderProductCard(p, locale);
+    items.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '      </div>\n';
   }
   html += '    </section>\n';
@@ -614,7 +615,7 @@ export function renderCategoryPage(args: {
     html += renderEmptyState({ icon: mkIcon('search'), title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'browseAll') });
   } else {
     html += '  <div class="mk-grid">\n';
-    for (const p of items) html += renderProductCard(p, locale);
+    items.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '  </div>\n';
   }
   html += '</section>\n';

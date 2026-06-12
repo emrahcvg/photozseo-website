@@ -73,10 +73,33 @@
     return 'https://wa.me/' + num + '?text=' + encodeURIComponent(lines.join('\n'));
   }
 
+  function checkoutCart(slug, options) {
+    var items = getCart(slug);
+    if (items.length === 0) return Promise.reject(new Error('Sepet boş'));
+    var opts = options || {};
+    var payload = {
+      store_slug: slug,
+      items: items.map(function(x) { return { product_id: x.id, qty: x.qty || 1, price: x.price || 0 }; }),
+      currency: opts.currency || (items[0] && items[0].currency) || 'USD',
+    };
+    if (opts.store_name) payload.store_name = opts.store_name;
+    if (opts.buyer_note) payload.buyer_note = opts.buyer_note;
+    var deviceId = (window.__sfBuyer && window.__sfBuyer.deviceId) ? window.__sfBuyer.deviceId() : '';
+    return fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-device-id': deviceId },
+      body: JSON.stringify(payload),
+    }).then(function(r) {
+      if (!r.ok) return r.json().then(function(e) { throw new Error(e.error || 'Sipariş gönderilemedi'); });
+      return r.json();
+    });
+  }
+
   var api = {
     getCart: getCart, saveCart: saveCart, addItem: addItem, removeItem: removeItem,
     cartTotal: cartTotal, clearCart: clearCart, generateRef: generateRef,
     validateOrder: validateOrder, buildWhatsappUrl: buildWhatsappUrl,
+    checkoutCart: checkoutCart,
   };
   window.__mkCart = api;
 
@@ -252,6 +275,50 @@
       });
     }
     render();
+
+    // ── "Sipariş Ver" — bank transfer checkout ───────────────────────────────
+    var checkoutBtn = root.querySelector('[data-mk-checkout]');
+    if (!checkoutBtn) {
+      checkoutBtn = document.createElement('button');
+      checkoutBtn.setAttribute('data-mk-checkout', '');
+      checkoutBtn.textContent = 'Sipariş Ver';
+      checkoutBtn.style.cssText = 'margin-top:8px;padding:8px 16px;cursor:pointer;width:100%;';
+      root.appendChild(checkoutBtn);
+    }
+    checkoutBtn.addEventListener('click', function() {
+      var items = getCart(slug);
+      if (items.length === 0) { alert('Sepetiniz boş.'); return; }
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = 'Gönderiliyor…';
+      checkoutCart(slug, { store_name: root.getAttribute('data-mk-store-name') || undefined })
+        .then(function(res) {
+          clearCart(slug);
+          render();
+          var payBox = root.querySelector('[data-mk-payment]');
+          if (payBox) payBox.hidden = false;
+          var refOut = root.querySelector('[data-mk-ref]');
+          if (refOut) refOut.textContent = res.order_id;
+          var ibanOut = root.querySelector('[data-mk-iban]');
+          if (ibanOut) ibanOut.textContent = res.payment.iban;
+          var amtOut = root.querySelector('[data-mk-amount]');
+          if (amtOut) amtOut.textContent = res.payment.amount.toFixed(2) + ' ' + res.payment.currency;
+          var instrOut = root.querySelector('[data-mk-instructions]');
+          if (instrOut) instrOut.textContent = res.payment.instructions;
+          if (!payBox) {
+            var msg = document.createElement('p');
+            msg.style.cssText = 'margin-top:8px;padding:8px;background:#f0fdf4;border-radius:4px;';
+            msg.textContent = 'Sipariş alındı: ' + res.order_id + ' — IBAN: ' + res.payment.iban + ' — Tutar: ' + res.payment.amount.toFixed(2) + ' ' + res.payment.currency;
+            root.appendChild(msg);
+          }
+          checkoutBtn.disabled = false;
+          checkoutBtn.textContent = 'Sipariş Ver';
+        })
+        .catch(function(err) {
+          alert('Hata: ' + err.message);
+          checkoutBtn.disabled = false;
+          checkoutBtn.textContent = 'Sipariş Ver';
+        });
+    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

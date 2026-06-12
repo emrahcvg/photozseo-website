@@ -159,12 +159,14 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       : [];
     const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf, categoryTree });
     const canonical = buildCanonical(origin, '/market', locale);
+    const homeOgImage = newP.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
     return htmlResponse(renderDocument({
       title: mt(locale, 'marketTitle') + ' — photoZseo',
-      description: mt(locale, 'trustBadge'),
+      description: 'photoZseo marketplace — find and buy products worldwide.',
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market'),
-      ogImage: `${origin}/og-image.png`,
+      ogImage: homeOgImage,
+      preloadImage: newP.items[0]?.image_url,
       jsonLd: [buildItemListJsonLd(newP.items, origin), buildWebSiteJsonLd(origin)],
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
@@ -205,12 +207,16 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     });
     const body = renderSearchPage({ items: result.items, facets: adaptFacets(result.facets), total: result.total, locale, query: q, labelOf });
     const canonical = `${origin}/market/search`;
+    const searchDesc = q.q
+      ? `Search results for "${q.q}" — photoZseo marketplace`
+      : 'photoZseo marketplace — find and buy products worldwide.';
+    const searchOgImage = result.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
     return htmlResponse(renderDocument({
       title: (q.q ? q.q + ' — ' : '') + mt(locale, 'marketTitle'),
-      description: mt(locale, 'trustBadge'),
+      description: searchDesc,
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/search'),
-      ogImage: `${origin}/og-image.png`,
+      ogImage: searchOgImage,
       jsonLd: buildItemListJsonLd(result.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
@@ -226,7 +232,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const canonical = buildCanonical(origin, '/market/stores', locale);
     return htmlResponse(renderDocument({
       title: mt(locale, 'stores') + ' — photoZseo',
-      description: mt(locale, 'trustBadge'),
+      description: 'Browse all seller stores on photoZseo marketplace.',
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
       ogImage: `${origin}/og-image.png`,
@@ -262,12 +268,14 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ? [buildBreadcrumbJsonLd(breadcrumb, origin), itemListLd]
       : itemListLd;
     const canonical = buildCanonical(origin, slugPath, locale);
+    const categoryOgImage = result.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
     return htmlResponse(renderDocument({
       title: leaf + ' — ' + mt(locale, 'marketTitle'),
-      description: mt(locale, 'trustBadge'),
+      description: `${leaf} — photoZseo marketplace`,
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, slugPath),
-      ogImage: `${origin}/og-image.png`,
+      ogImage: categoryOgImage,
+      preloadImage: result.items[0]?.image_url,
       jsonLd,
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
