@@ -7,8 +7,8 @@ import { resolveOwnerKey } from '../_lib/buyer-owner';
 import { listOrders, createOrder } from '../_lib/orders';
 import type { D1Like } from '../_lib/buyer';
 
-interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; STORE_IBAN?: string; }
-type Ctx = { request: Request; env: Env };
+interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; STORE_IBAN?: string; RESEND_API_KEY?: string; }
+type Ctx = { request: Request; env: Env; waitUntil: (p: Promise<unknown>) => void };
 
 function json(obj: unknown, status = 200): Response {
   return new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
@@ -67,8 +67,8 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   });
 
   const storeRow = await ctx.env.MARKET_DB
-    .prepare('SELECT iban, iban_name, payment_json FROM stores WHERE slug = ?')
-    .bind(store_slug).first<{ iban: string | null; iban_name: string | null; payment_json: string | null }>();
+    .prepare('SELECT iban, iban_name, payment_json, owner_email, name FROM stores WHERE slug = ?')
+    .bind(store_slug).first<{ iban: string | null; iban_name: string | null; payment_json: string | null; owner_email: string | null; name: string | null }>();
 
   let paymentInfo: Record<string, unknown>;
   if (storeRow?.payment_json) {
@@ -77,6 +77,38 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
     paymentInfo = { method: 'bank_transfer', iban: storeRow.iban, ibanName: storeRow.iban_name };
   } else {
     paymentInfo = { method: 'bank_transfer', iban: ctx.env.STORE_IBAN ?? 'TR000000000000000000000000' };
+  }
+
+  // Satıcıya email bildirimi (best-effort — sipariş yanıtını bloklamaz)
+  if (ctx.env.RESEND_API_KEY && storeRow?.owner_email) {
+    const itemLines = items
+      .map((x) => `• ${x.product_id ?? '-'} × ${x.qty ?? 1}  ${x.price != null ? x.price + ' ' + currency : ''}`)
+      .join('\n');
+    const emailBody = [
+      `New order received: ${order_id}`,
+      `Store: ${storeRow.name ?? store_slug}`,
+      `Total: ${total.toFixed(2)} ${currency}`,
+      '',
+      'Items:',
+      itemLines,
+      '',
+      `View orders: https://photozseo.com/market/orders`,
+    ].join('\n');
+    ctx.waitUntil(
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${ctx.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: 'orders@photozseo.com',
+          to: storeRow.owner_email,
+          subject: `New order ${order_id} — ${storeRow.name ?? store_slug}`,
+          text: emailBody,
+        }),
+      }).catch(() => {}),
+    );
   }
 
   return json({
