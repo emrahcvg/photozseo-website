@@ -670,3 +670,75 @@ html { scroll-behavior: smooth; }
 .sf-b2b-modal__box h3{margin:0;font-size:17px;font-weight:600}
 .sf-b2b-modal__box input{border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:16px;letter-spacing:3px;text-transform:uppercase;width:100%;box-sizing:border-box}
 .sf-b2b-modal__box button:last-child{background:var(--sf-accent,#0071e3);color:#fff;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;width:100%}
+
+/* B2B Account / Ekstre */
+.b2b-account-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  margin: 8px 0 16px;
+}
+.b2b-account-section {
+  margin: 32px 0;
+  padding: 24px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+}
+.b2b-account-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.b2b-account-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+.b2b-balance-card {
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-align: right;
+}
+.b2b-balance-debit { background: #fff0f0; border: 1px solid #ffcccc; }
+.b2b-balance-credit { background: #f0fff4; border: 1px solid #b2dfdb; }
+.b2b-balance-label { display: block; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.b2b-balance-amount { font-size: 22px; font-weight: 700; }
+.b2b-balance-debit .b2b-balance-amount { color: #c0392b; }
+.b2b-balance-credit .b2b-balance-amount { color: #27ae60; }
+.b2b-tx-table-wrap { overflow-x: auto; }
+.b2b-tx-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.b2b-tx-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: #eee;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.b2b-tx-table td { padding: 10px 12px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.b2b-tx-table tr:last-child td { border-bottom: none; }
+.b2b-tx-debit { color: #c0392b; font-weight: 500; text-align: right; }
+.b2b-tx-credit { color: #27ae60; font-weight: 500; text-align: right; }
+.b2b-tx-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  background: #e8f4fd;
+  color: #1a73e8;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.b2b-no-tx { color: #888; font-size: 14px; text-align: center; padding: 20px; }

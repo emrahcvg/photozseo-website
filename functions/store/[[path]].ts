@@ -31,6 +31,7 @@ import {
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { applyLegacyMapToManifest } from '../_lib/taxonomy-migrate';
 import { findBuyerById } from '../_lib/b2b-buyers';
+import { listTransactions, getBuyerBalance } from '../_lib/b2b-ledger';
 import { parseImageFilename, toProxyImages } from '../../src/storefront/image-proxy';
 import type { Manifest } from '../../src/storefront/types';
 import legacyMap from '../../src/storefront/taxonomy/legacy-map.json';
@@ -180,12 +181,14 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const buyerCookieId = getCookie(ctx.request, b2bCookieName);
   let hasBuyer = false;
   let buyerDisplayName: string | undefined;
+  let buyerSession: { buyer_id: string; buyer_name: string } | undefined;
 
   if (buyerCookieId && ctx.env.MARKET_DB) {
     const buyer = await findBuyerById(ctx.env.MARKET_DB, slug, buyerCookieId);
     if (buyer) {
       hasBuyer = true;
       buyerDisplayName = buyer.buyer_name;
+      buyerSession = { buyer_id: buyer.id, buyer_name: buyer.buyer_name };
     }
   }
 
@@ -244,6 +247,54 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   } else {
     htmlBody = renderStoreBody(manifest, locale, DEFAULT_LANG, svc);
 
+    // B2B Hesabım / ekstre section
+    let accountTabHtml = '';
+    let accountBtnHtml = '';
+    if (buyerSession && ctx.env.MARKET_DB) {
+      const [transactions, balance] = await Promise.all([
+        listTransactions(ctx.env.MARKET_DB, slug, buyerSession.buyer_id),
+        getBuyerBalance(ctx.env.MARKET_DB, slug, buyerSession.buyer_id),
+      ]);
+
+      const balanceSign = balance >= 0 ? '+' : '';
+      const balanceClass = balance >= 0 ? 'b2b-balance-debit' : 'b2b-balance-credit';
+
+      const txRows = transactions.map(tx => {
+        const isDebit = tx.type === 'debit' || tx.type === 'order';
+        const amtFormatted = tx.amount.toLocaleString('tr-TR', { minimumFractionDigits: 2 });
+        const dateFormatted = tx.created_at.slice(0, 10);
+        const badge = tx.type === 'order' ? '<span class="b2b-tx-badge">Sipariş</span>' : '';
+        return `<tr>
+    <td>${escapeHtml(dateFormatted)}</td>
+    <td>${escapeHtml(tx.description ?? '')}${badge}</td>
+    <td class="b2b-tx-debit">${isDebit ? amtFormatted : ''}</td>
+    <td class="b2b-tx-credit">${!isDebit ? amtFormatted : ''}</td>
+  </tr>`;
+      }).join('');
+
+      accountTabHtml = `
+<div class="b2b-account-section" id="b2b-account">
+  <div class="b2b-account-header">
+    <h2 class="b2b-account-title">Hesabım</h2>
+    <div class="b2b-balance-card ${balanceClass}">
+      <span class="b2b-balance-label">Bakiye</span>
+      <span class="b2b-balance-amount">${balanceSign}${balance.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ${transactions[0]?.currency ?? 'TRY'}</span>
+    </div>
+  </div>
+  ${transactions.length === 0
+    ? '<p class="b2b-no-tx">Henüz işlem yok.</p>'
+    : `<div class="b2b-tx-table-wrap">
+        <table class="b2b-tx-table">
+          <thead><tr><th>Tarih</th><th>Açıklama</th><th>Borç</th><th>Alacak</th></tr></thead>
+          <tbody>${txRows}</tbody>
+        </table>
+      </div>`
+  }
+</div>`;
+
+      accountBtnHtml = `<a href="#b2b-account" class="b2b-account-btn">📋 Hesabım</a>`;
+    }
+
     if (hasB2BBuyers) {
       const b2bCard = hasBuyer
         ? `<div class="sf-b2b-card sf-b2b-card--unlocked">
@@ -277,6 +328,11 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
            }
            <\/script>`;
       htmlBody = b2bCard + htmlBody;
+    }
+
+    // Inject Hesabım button (before product grid) and account section (after product grid)
+    if (accountBtnHtml || accountTabHtml) {
+      htmlBody = accountBtnHtml + htmlBody + accountTabHtml;
     }
 
     pageTitle = manifest.meta.seo?.title ?? manifest.store.displayName;
