@@ -31,5 +31,5 @@ binding = "POOL_R2"
 bucket_name = "photozseo-team-pool"
 preview_bucket_name = "photozseo-team-pool-preview"
 
-[triggers]
-crons = ["0 3 * * *"]
+# Cron: /api/cron/prune-activity — 365 günlük temizlik (günlük 03:00 UTC)
+# Pages'te native cron yok; harici bir cron servisi (cron-job.org gibi) ile GET isteği at.
