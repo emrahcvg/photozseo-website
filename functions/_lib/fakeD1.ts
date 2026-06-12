@@ -18,7 +18,7 @@ export interface FakeD1 {
     };
     batch(stmts: unknown[]): Promise<unknown[]>;
   };
-  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[] };
+  tables: { meta: Row[]; stores: Row[]; products: Row[]; favorites: Row[]; cart_items: Row[]; orders: Row[]; companies: Row[]; memberships: Row[]; invites: Row[]; pool_projects: Row[]; pool_assets: Row[]; team_activity_log: Row[] };
 }
 
 export function makeFakeD1(): FakeD1 {
@@ -34,6 +34,7 @@ export function makeFakeD1(): FakeD1 {
     invites: [] as Row[],
     pool_projects: [] as Row[],
     pool_assets: [] as Row[],
+    team_activity_log: [] as Row[],
   };
 
   function exec(sql: string, args: unknown[]) {
@@ -318,6 +319,35 @@ export function makeFakeD1(): FakeD1 {
     if (/UPDATE pool_assets SET deleted_at = \?, modified_at = \? WHERE company_id = \? AND project_id = \? AND asset_id = \?/i.test(s)) {
       const r = tables.pool_assets.find((x) => x.company_id === args[2] && x.project_id === args[3] && x.asset_id === args[4]);
       if (r) { r.deleted_at = args[0]; r.modified_at = args[1]; }
+      return { kind: 'run' as const };
+    }
+    // INSERT INTO team_activity_log
+    if (/INSERT INTO team_activity_log/i.test(s)) {
+      const [id, company_id, event_type, actor_sub, actor_email, target_sub, target_ref, meta, created_at] = args;
+      tables.team_activity_log.push({ id, company_id, event_type, actor_sub, actor_email, target_sub, target_ref, meta, created_at });
+      return { kind: 'run' as const };
+    }
+    // SELECT ... FROM team_activity_log WHERE company_id
+    if (/SELECT .+ FROM team_activity_log WHERE company_id/i.test(s)) {
+      // cursor varsa: args = [company_id, cursor, limit]
+      // cursor yoksa: args = [company_id, limit]
+      let company_id: string, cursor: string | undefined, limit: number;
+      if (args.length === 3) {
+        [company_id, cursor, limit] = args as [string, string, number];
+      } else {
+        [company_id, limit] = args as [string, number];
+        cursor = undefined;
+      }
+      const all = tables.team_activity_log
+        .filter((r) => r.company_id === company_id && (cursor == null || (r.created_at as string) < cursor))
+        .sort((a, b) => ((b.created_at as string) > (a.created_at as string) ? 1 : -1))
+        .slice(0, limit);
+      return { kind: 'all' as const, rows: all };
+    }
+    // DELETE FROM team_activity_log WHERE created_at < ?
+    if (/DELETE FROM team_activity_log WHERE created_at/i.test(s)) {
+      const [before] = args as [string];
+      tables.team_activity_log = tables.team_activity_log.filter((r) => (r.created_at as string) >= before);
       return { kind: 'run' as const };
     }
     throw new Error('fakeD1: tanınmayan SQL: ' + s);
