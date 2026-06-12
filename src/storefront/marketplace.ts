@@ -13,6 +13,7 @@ import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 import type { BreadcrumbSegment } from './taxonomy/category-resolve';
 import { renderAppHeader, renderAppFooter, renderEmptyState } from './app-shell';
+import { idToSlug } from './taxonomy/slug-resolve';
 
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
 export type LabelOf = (id: string, locale: string) => string;
@@ -177,7 +178,7 @@ export function renderCategoryChips(
   html += `  <a class="mk-chip mk-chip--all" href="/market/search">${escapeHtml(mt(locale, 'allCategories'))}</a>\n`;
   for (const c of categories) {
     if (c.count === 0) continue; // hayalet kasaba: ürünsüz kategori chip'i basılmaz
-    const href = `/market/c/${encodeURIComponent(c.id)}`;
+    const href = `/market/c/${idToSlug(c.id)}`;
     const name = escapeHtml(labelOf(c.id, locale));
     html += `  <a class="mk-chip" href="${escapeAttr(href)}">${name} <span class="mk-chip__count">${c.count}</span></a>\n`;
   }
@@ -281,7 +282,7 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
   for (const node of tree) {
     const safeLabel = escapeHtml(node.label);
     if (node.children.length > 0) {
-      const topHref = escapeAttr(`/market/c/${encodeURIComponent(node.id)}`);
+      const topHref = escapeAttr(`/market/c/${idToSlug(node.id)}`);
       html += '    <details class="mk-sidebar__group">\n';
       html += `      <summary class="mk-sidebar__summary">${safeLabel}<span class="mk-sidebar__chevron" aria-hidden="true">▸</span></summary>\n`;
       html += '      <ul class="mk-sidebar__list">\n';
@@ -289,13 +290,13 @@ export function renderCategorySidebar(tree: CategoryTreeNode[], locale: string):
       const allLabel = escapeHtml(mt(locale, 'allCategories') + ' ' + node.label);
       html += `        <li class="mk-sidebar__item mk-sidebar__item--all"><a class="mk-sidebar__link" href="${topHref}">${allLabel}</a></li>\n`;
       for (const child of node.children) {
-        const childHref = escapeAttr(`/market/c/${encodeURIComponent(child.id)}`);
+        const childHref = escapeAttr(`/market/c/${idToSlug(child.id)}`);
         html += `        <li class="mk-sidebar__item"><a class="mk-sidebar__link" href="${childHref}">${escapeHtml(child.label)}</a></li>\n`;
       }
       html += '      </ul>\n';
       html += '    </details>\n';
     } else {
-      const href = escapeAttr(`/market/c/${encodeURIComponent(node.id)}`);
+      const href = escapeAttr(`/market/c/${idToSlug(node.id)}`);
       html += `    <a class="mk-sidebar__link mk-sidebar__link--top" href="${href}">${safeLabel}</a>\n`;
     }
   }
@@ -327,7 +328,7 @@ function renderCategoryRail(
   html += `  <h2 class="mk-section__title">${escapeHtml(mt(locale, 'categories'))}</h2>\n`;
   html += '  <div class="mk-rail">\n';
   for (const c of cards) {
-    const href = escapeAttr(`/market/c/${encodeURIComponent(c.id)}`);
+    const href = escapeAttr(`/market/c/${idToSlug(c.id)}`);
     const cLabel = escapeHtml(labelOf(c.id, locale));
     html += `    <a class="mk-cat-card" href="${href}">\n`;
     html += `      <img class="mk-cat-card__img" src="${escapeAttr(c.image)}" alt="${cLabel}" loading="lazy" decoding="async" />\n`;
@@ -599,7 +600,7 @@ export function renderCategoryPage(args: {
       if (last) {
         html += `${sep}<span>${escapeHtml(seg.label)}</span>`;
       } else {
-        html += `${sep}<a href="/market/c/${encodeURIComponent(seg.id)}">${escapeHtml(seg.label)}</a>`;
+        html += `${sep}<a href="/market/c/${idToSlug(seg.id)}">${escapeHtml(seg.label)}</a>`;
       }
     });
   } else {
@@ -646,7 +647,7 @@ export function buildBreadcrumbJsonLd(segments: BreadcrumbSegment[], origin: str
       '@type': 'ListItem',
       position: i + 1,
       name: s.label,
-      item: `${origin}/market/c/${encodeURIComponent(s.id)}`,
+      item: `${origin}/market/c/${idToSlug(s.id)}`,
     })),
   });
 }

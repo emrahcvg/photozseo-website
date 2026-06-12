@@ -47,6 +47,7 @@ import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { categoryBreadcrumb } from '../../src/storefront/taxonomy/category-resolve';
 import { UNCATEGORIZED } from '../../src/storefront/taxonomy/legacy-map';
+import { idToSlug, slugToId } from '../../src/storefront/taxonomy/slug-resolve';
 
 const DEFAULT_LANG = 'en';
 
@@ -235,9 +236,23 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     }));
   }
 
-  // /market/c/<id>
+  // /market/c/<slug-or-id>
   if (parts[0] === 'c' && parts.length === 2) {
-    const categoryId = decodeURIComponent(parts[1]);
+    const segment = decodeURIComponent(parts[1]);
+    // Numeric ID → 301 permanent redirect to slug URL (old bookmarks / external links)
+    if (/^\d+$/.test(segment)) {
+      const slug = idToSlug(segment);
+      const target = locale === DEFAULT_LANG
+        ? `${origin}/market/c/${slug}`
+        : `${origin}/market/c/${slug}?lang=${locale}`;
+      return new Response(null, {
+        status: 301,
+        headers: { Location: target, 'Cache-Control': 'public, max-age=31536000' },
+      });
+    }
+    // Slug → resolve to numeric ID for DB query; unknown segment stays as-is
+    const categoryId = slugToId(segment) ?? segment;
+    const slugPath = `/market/c/${idToSlug(categoryId)}`;
     const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, { categoryId, lang: locale, sort: 'new', limit: 40 });
     const breadcrumb = svc ? categoryBreadcrumb(categoryId, locale, svc) : null;
     const body = renderCategoryPage({ categoryId, items: result.items, total: result.total, locale, breadcrumb });
@@ -246,12 +261,12 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const jsonLd: string | string[] = breadcrumb && breadcrumb.length
       ? [buildBreadcrumbJsonLd(breadcrumb, origin), itemListLd]
       : itemListLd;
-    const canonical = buildCanonical(origin, `/market/c/${encodeURIComponent(categoryId)}`, locale);
+    const canonical = buildCanonical(origin, slugPath, locale);
     return htmlResponse(renderDocument({
       title: leaf + ' — ' + mt(locale, 'marketTitle'),
       description: mt(locale, 'trustBadge'),
       lang: locale, body, canonical,
-      alternates: buildAlternates(origin, `/market/c/${encodeURIComponent(categoryId)}`),
+      alternates: buildAlternates(origin, slugPath),
       ogImage: `${origin}/og-image.png`,
       jsonLd,
       stylesheets: ['/marketplace.css?v=8'],
