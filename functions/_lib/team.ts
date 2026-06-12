@@ -261,27 +261,3 @@ export async function redeemInvite(
   return { ok: true, companyId: inv.company_id, role: inv.role };
 }
 
-export async function removeMembership(db: D1Like, companyId: string, userSub: string): Promise<void> {
-  await db
-    .prepare('DELETE FROM memberships WHERE company_id = ? AND user_sub = ?')
-    .bind(companyId, userSub)
-    .run();
-}
-
-export async function updateMembershipRole(db: D1Like, companyId: string, userSub: string, role: Role): Promise<void> {
-  await db
-    .prepare('UPDATE memberships SET role = ? WHERE company_id = ? AND user_sub = ?')
-    .bind(role, companyId, userSub)
-    .run();
-}
-
-export async function transferOwnership(db: D1Like, companyId: string, fromSub: string, toSub: string): Promise<void> {
-  await db
-    .prepare('UPDATE memberships SET role = ? WHERE company_id = ? AND user_sub = ?')
-    .bind('admin', companyId, fromSub)
-    .run();
-  await db
-    .prepare('UPDATE memberships SET role = ? WHERE company_id = ? AND user_sub = ?')
-    .bind('owner', companyId, toSub)
-    .run();
-}
