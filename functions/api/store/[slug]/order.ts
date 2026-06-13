@@ -11,6 +11,8 @@
 import { isValidSlug, getCart, clearCart, type D1Like } from '../../../_lib/buyer';
 import { resolveOwnerKey } from '../../../_lib/buyer-owner';
 import { createOrder, makeOrderRef } from '../../../_lib/orders';
+import { addTransaction } from '../../../_lib/b2b-ledger';
+import { findBuyerById } from '../../../_lib/b2b-buyers';
 
 interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; }
 type Ctx = { request: Request; env: Env; params: { slug: string } };
@@ -30,9 +32,9 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'identity required' }, 400);
 
-  // Opsiyonel JSON gövde (store_name gibi meta bilgiler)
-  let bodyData: { store_name?: string } = {};
-  try { bodyData = (await ctx.request.json().catch(() => ({}))) as { store_name?: string }; } catch { /* yoksay */ }
+  // Opsiyonel JSON gövde (store_name, total, currency)
+  let bodyData: { store_name?: string; total?: number; currency?: string } = {};
+  try { bodyData = (await ctx.request.json().catch(() => ({}))) as typeof bodyData; } catch { /* yoksay */ }
 
   // Sunucu taraflı sepet snapshot — istemci listesine güvenme
   const cartItems = await getCart(ctx.env.MARKET_DB, owner, storeSlug);
@@ -59,6 +61,33 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
 
   // Sipariş verildi → sepeti temizle
   await clearCart(ctx.env.MARKET_DB, owner, storeSlug);
+
+  // B2B alıcı oturumu varsa otomatik debit transaction oluştur
+  const cookieHeader = ctx.request.headers.get('cookie') ?? '';
+  const cookieName = `b2b_${storeSlug}`;
+  const cookieMatch = cookieHeader.match(
+    new RegExp('(?:^|;\\s*)' + cookieName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)')
+  );
+  const b2bBuyerId = cookieMatch ? decodeURIComponent(cookieMatch[1]) : null;
+  const orderTotal = typeof bodyData.total === 'number' ? bodyData.total : 0;
+
+  if (b2bBuyerId && orderTotal > 0) {
+    const buyer = await findBuyerById(ctx.env.MARKET_DB, storeSlug, b2bBuyerId);
+    if (buyer) {
+      await addTransaction(ctx.env.MARKET_DB, {
+        id: crypto.randomUUID(),
+        store_slug: storeSlug,
+        buyer_id: b2bBuyerId,
+        type: 'order',
+        amount: orderTotal,
+        currency: bodyData.currency ?? 'TRY',
+        description: 'Sipariş',
+        order_ref: orderRef,
+        created_by: 'system',
+        created_at: now,
+      });
+    }
+  }
 
   return json({ ok: true, order_ref: orderRef });
 }
