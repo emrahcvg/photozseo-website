@@ -9,7 +9,7 @@
  */
 
 import { takedownStore } from '../../_lib/registry';
-import { requireWriteKey } from '../../_lib/auth';
+import { requireWriteAuth } from '../../_lib/auth';
 import { removeStoreFromD1, bumpIndexVersion } from '../../_lib/marketplace';
 
 interface Env {
@@ -26,12 +26,16 @@ function json(status: number, body: unknown) {
 }
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
+  // Read body once up front so the signed (HMAC) auth layer can hash it.
+  const raw = await ctx.request.text();
+  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
+
+  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
   if (denied) return denied;
 
   let body: { slug?: string; reason?: string };
   try {
-    body = await ctx.request.json();
+    body = raw ? JSON.parse(raw) : {};
   } catch {
     return json(400, { error: 'Invalid JSON body' });
   }
