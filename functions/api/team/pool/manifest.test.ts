@@ -50,4 +50,15 @@ describe('GET /api/team/pool/manifest', () => {
     const body = await res.json() as { projects: { projectId: string }[] };
     expect(body.projects.map((p) => p.projectId)).toEqual(['p2']);
   });
+
+  it('hasMore ve snapshot gömülü gelir', async () => {
+    const { db } = makeFakeD1();
+    await createCompany(db, { companyId: 'c:co-1', name: 'A', ownerSub: 'sub-owner', email: 'o@x.com', ownerName: 'O', now: '2026-06-14T00:00:00Z' });
+    await upsertProject(db, { companyId: 'c:co-1', projectId: 'p1', createdBy: 'sub-owner', modifiedAt: '2026-06-14T10:00:00Z', snapshot: '{"name":"hello"}' });
+    const res = await onRequestGet({ request: await authedGet('sub-owner', 'https://x/api/team/pool/manifest?companyId=c:co-1'), env: { STORE_WRITE_KEY: SECRET, MARKET_DB: db } });
+    expect(res.status).toBe(200);
+    const body = await res.json() as { projects: { projectId: string; snapshot: { name: string } }[]; hasMore: boolean };
+    expect(body.hasMore).toBe(false);
+    expect(body.projects[0].snapshot?.name).toBe('hello');
+  });
 });
