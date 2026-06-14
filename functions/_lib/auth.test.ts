@@ -1,7 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import { requireWriteKey, requireWriteAuth, verifySignedRequest, SIGN_MAX_SKEW_SECONDS } from './auth';
+import { requireSession, requireWriteAuthOrSession } from './require-session';
+import { signSession } from './session';
+import { SESSION_COOKIE } from '../../src/storefront/auth/config';
 
 const SECRET = 'a'.repeat(64);
+
+/** Geçerli pz_session cookie değeri üretir (Faz B oturum testleri için). */
+async function makeSessionCookie(nowSec: number, sub = 'google-sub-123'): Promise<string> {
+  const token = await signSession(
+    { sub, email: 'seller@example.com', exp: nowSec + 3600 },
+    SECRET,
+  );
+  return `${SESSION_COOKIE}=${token}`;
+}
 
 // --- test signer (mirrors the iOS client) ---
 
@@ -100,5 +112,79 @@ describe('verifySignedRequest', () => {
     const sig = await sign('POST', '/api/store/claim', ts, '');
     const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { 'x-pz-ts': ts, 'x-pz-sign': sig } });
     expect(await verifySignedRequest(req, new ArrayBuffer(0), SECRET, now)).toBe(false);
+  });
+});
+
+describe('requireSession (Faz B pz_session gate)', () => {
+  const now = 1_700_000_000;
+
+  it('returns SessionPayload for a valid pz_session cookie', async () => {
+    const cookie = await makeSessionCookie(now);
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { cookie } });
+    const r = await requireSession(req, { STORE_WRITE_KEY: SECRET }, now);
+    expect(r).not.toBeInstanceOf(Response);
+    expect((r as { sub: string; email?: string }).sub).toBe('google-sub-123');
+    expect((r as { sub: string; email?: string }).email).toBe('seller@example.com');
+  });
+
+  it('401 when no cookie present', async () => {
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim' });
+    const r = await requireSession(req, { STORE_WRITE_KEY: SECRET }, now);
+    expect((r as Response).status).toBe(401);
+  });
+
+  it('401 when secret missing', async () => {
+    const cookie = await makeSessionCookie(now);
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { cookie } });
+    const r = await requireSession(req, {}, now);
+    expect((r as Response).status).toBe(401);
+  });
+});
+
+describe('requireWriteAuthOrSession (OR: session OR legacy key/HMAC)', () => {
+  const now = 1_700_000_000;
+
+  it('valid session accepted → kind:session', async () => {
+    const cookie = await makeSessionCookie(now);
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { cookie } });
+    const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now);
+    expect(r).not.toBeInstanceOf(Response);
+    expect((r as { kind: string }).kind).toBe('session');
+    expect((r as { kind: 'session'; session: { sub: string } }).session.sub).toBe('google-sub-123');
+  });
+
+  it('no session + valid legacy key accepted → kind:legacy', async () => {
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { 'x-store-write-key': SECRET } });
+    const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now);
+    expect(r).not.toBeInstanceOf(Response);
+    expect((r as { kind: string }).kind).toBe('legacy');
+  });
+
+  it('no session + valid fresh HMAC signature accepted → kind:legacy', async () => {
+    const body = JSON.stringify({ desiredSlug: 'acme' });
+    const ts = String(now);
+    const sig = await sign('POST', '/api/store/claim', ts, body);
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { 'x-pz-ts': ts, 'x-pz-sign': sig }, body });
+    const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now, body);
+    expect(r).not.toBeInstanceOf(Response);
+    expect((r as { kind: string }).kind).toBe('legacy');
+  });
+
+  it('neither session nor key → 401', async () => {
+    const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim' });
+    const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now);
+    expect((r as Response).status).toBe(401);
+  });
+
+  it('valid session + invalid key still accepted (session wins) → kind:session', async () => {
+    const cookie = await makeSessionCookie(now);
+    const req = makeReq({
+      method: 'POST',
+      url: 'https://x/api/store/claim',
+      headers: { cookie, 'x-store-write-key': 'wrong-key' },
+    });
+    const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now);
+    expect(r).not.toBeInstanceOf(Response);
+    expect((r as { kind: string }).kind).toBe('session');
   });
 });

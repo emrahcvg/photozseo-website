@@ -135,6 +135,11 @@ export function requireWriteKey(request: Request, env: WriteAuthEnv): Response |
  * only read the body once); pass an empty ArrayBuffer for bodyless requests.
  *
  * Returns null when authorized, or a 401/503 Response when denied.
+ *
+ * @deprecated Faz C'de kaldırılacak. Yeni endpoint'ler `requireWriteAuthOrSession`
+ *   (functions/_lib/require-session.ts) kullanmalı — o, pz_session oturumunu
+ *   bu key/HMAC geçidine OR ile ekler. Faz B boyunca bu fonksiyon legacy
+ *   yedek olarak delege edilir ve davranışı DEĞİŞTİRİLMEMELİDİR.
  */
 export async function requireWriteAuth(
   request: Request,

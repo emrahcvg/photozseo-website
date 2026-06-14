@@ -5,7 +5,7 @@
  */
 
 import { claimSlug, putStore } from '../../_lib/registry';
-import { requireWriteAuth } from '../../_lib/auth';
+import { requireWriteAuthOrSession } from '../../_lib/require-session';
 
 interface Env {
   STORE_KV: KVNamespace;
@@ -37,10 +37,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       headers: { 'content-type': 'application/json' },
     });
   }
-  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
+  // requireWriteAuthOrSession imzalı (HMAC) layer için ham gövde metnini ister.
+  const nowSec = Math.floor(Date.now() / 1000);
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, nowSec, raw);
+  if (auth instanceof Response) return auth;
 
-  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
-  if (denied) return denied;
+  // kind==='session' → mağaza kaydına owner_sub yaz; kind==='legacy' → anonim (NULL).
+  const ownerSub = auth.kind === 'session' ? auth.session.sub : undefined;
 
   let body: { desiredSlug?: string; phone?: string };
   try {
@@ -55,14 +58,18 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (body.phone && body.phone.length > 30) return json400('phone too long');
   const slug = await claimSlug(ctx.env.STORE_KV, desired);
 
-  // Write a reservation marker so subsequent claim calls find it taken
+  // Write a reservation marker so subsequent claim calls find it taken.
+  // ownerSub yalnızca session yolunda yazılır (B2 Faz B sahiplik); legacy/anonim
+  // yolda undefined kalır → eski anonim davranış korunur. Alan StoreRecord'da
+  // opsiyonel olmadığından cast ile eklenir (registry.ts'e dokunmadan).
   await putStore(ctx.env.STORE_KV, slug, {
     manifest: {} as never, // placeholder until PUT fills it
     phone: body.phone,
     status: 'reserved',
     version: 0,
     updatedAt: new Date().toISOString(),
-  });
+    ...(ownerSub ? { ownerSub } : {}),
+  } as never);
 
   return new Response(JSON.stringify({ slug }), {
     status: 200,

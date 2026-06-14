@@ -9,13 +9,21 @@
  */
 
 import { takedownStore } from '../../_lib/registry';
-import { requireWriteAuth } from '../../_lib/auth';
+import { requireWriteAuthOrSession } from '../../_lib/require-session';
 import { removeStoreFromD1, bumpIndexVersion } from '../../_lib/marketplace';
 
 interface Env {
   STORE_KV: KVNamespace;
   STORE_WRITE_KEY?: string;
   MARKET_DB?: D1Database;
+  ADMIN_SUBS?: string; // virgülle ayrılmış izinli Google sub listesi (yoksa boş → hiçbir session admin değil)
+}
+
+/** Virgülle ayrılmış ADMIN_SUBS içinde sub var mı? Boş/eksik liste → false. */
+function isAdminSub(sub: string, adminSubs: string | undefined): boolean {
+  if (!adminSubs) return false;
+  const allow = adminSubs.split(',').map((s) => s.trim()).filter(Boolean);
+  return allow.includes(sub);
 }
 
 function json(status: number, body: unknown) {
@@ -28,10 +36,16 @@ function json(status: number, body: unknown) {
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // Read body once up front so the signed (HMAC) auth layer can hash it.
   const raw = await ctx.request.text();
-  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
 
-  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
-  if (denied) return denied;
+  // Faz B OR-gate: pz_session VEYA legacy key/HMAC (gövde metni HMAC hash'i için).
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, Math.floor(Date.now() / 1000), raw);
+  if (auth instanceof Response) return auth;
+
+  // Admin allowlist: SADECE session yolunda sub, ADMIN_SUBS içinde olmalı.
+  // Legacy (key/HMAC) yolu geriye uyumlu olarak admin sayılır (eski davranış).
+  if (auth.kind === 'session' && !isAdminSub(auth.session.sub, ctx.env.ADMIN_SUBS)) {
+    return json(403, { error: 'Forbidden' });
+  }
 
   let body: { slug?: string; reason?: string };
   try {
