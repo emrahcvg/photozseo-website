@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { makeFakeD1 } from './fakeD1';
-import { upsertProject, getProject, projectsSince, tombstoneProject } from './pool';
+import { upsertProject, getProject, projectsSince, tombstoneProject, projectsSinceWithSnapshots, assignProjects } from './pool';
 
 const C = 'c:co-1';
 
@@ -56,6 +56,46 @@ describe('pool projeler', () => {
 });
 
 import { upsertAsset, getAsset, listAssets, tombstoneAsset } from './pool';
+
+describe('projectsSinceWithSnapshots', () => {
+  it('snapshot gömülü döner', async () => {
+    const { db } = makeFakeD1();
+    await upsertProject(db, { companyId: 'c:co-1', projectId: 'p1', createdBy: 's', modifiedAt: '2026-06-14T10:00:00Z', snapshot: '{"name":"test"}' });
+    const { entries, hasMore } = await projectsSinceWithSnapshots(db, 'c:co-1', '');
+    expect(entries).toHaveLength(1);
+    expect((entries[0].snapshot as any)?.name).toBe('test');
+    expect(hasMore).toBe(false);
+  });
+
+  it('assignedTo filtresi çalışır', async () => {
+    const { db } = makeFakeD1();
+    await upsertProject(db, { companyId: 'c:co-1', projectId: 'p1', createdBy: 's', modifiedAt: '2026-06-14T09:00:00Z', snapshot: '{}' });
+    await upsertProject(db, { companyId: 'c:co-1', projectId: 'p2', createdBy: 's', modifiedAt: '2026-06-14T10:00:00Z', snapshot: '{}' });
+    await assignProjects(db, [{ companyId: 'c:co-1', projectId: 'p1', assignTo: 'sub-ahmet' }]);
+    const { entries } = await projectsSinceWithSnapshots(db, 'c:co-1', '', { assignedTo: 'sub-ahmet' });
+    expect(entries.map((e) => e.projectId)).toEqual(['p1']);
+  });
+
+  it('hasMore limit ile doğru çalışır', async () => {
+    const { db } = makeFakeD1();
+    for (let i = 0; i < 3; i++) {
+      await upsertProject(db, { companyId: 'c:co-1', projectId: `p${i}`, createdBy: 's', modifiedAt: `2026-06-14T${10+i}:00:00Z`, snapshot: '{}' });
+    }
+    const { entries, hasMore } = await projectsSinceWithSnapshots(db, 'c:co-1', '', { limit: 2 });
+    expect(entries).toHaveLength(2);
+    expect(hasMore).toBe(true);
+  });
+});
+
+describe('assignProjects', () => {
+  it('assigned_to günceller', async () => {
+    const { db } = makeFakeD1();
+    await upsertProject(db, { companyId: 'c:co-1', projectId: 'p1', createdBy: 's', modifiedAt: '2026-06-14T10:00:00Z', snapshot: '{}' });
+    await assignProjects(db, [{ companyId: 'c:co-1', projectId: 'p1', assignTo: 'sub-x', status: 'in_progress' }]);
+    const { entries } = await projectsSinceWithSnapshots(db, 'c:co-1', '', { assignedTo: 'sub-x' });
+    expect(entries[0].assignedTo).toBe('sub-x');
+  });
+});
 
 describe('pool asset', () => {
   it('upsert + get + list', async () => {

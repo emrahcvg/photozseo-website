@@ -322,11 +322,13 @@ export function makeFakeD1(): FakeD1 {
       const [company_id, project_id, created_by, modified_at, deleted_at, snapshot] = args;
       const i = tables.pool_projects.findIndex((r) => r.company_id === company_id && r.project_id === project_id);
       if (i < 0) {
-        tables.pool_projects.push({ company_id, project_id, created_by, modified_at, deleted_at, snapshot });
+        tables.pool_projects.push({ company_id, project_id, created_by, modified_at, deleted_at, snapshot, assigned_to: null, assignment_status: 'unassigned' });
       } else if (String(modified_at) >= String(tables.pool_projects[i].modified_at)) {
         // created_by ilk yazanı korur (excluded.created_by ile değişmez)
         const keepCreatedBy = tables.pool_projects[i].created_by;
-        tables.pool_projects[i] = { company_id, project_id, created_by: keepCreatedBy, modified_at, deleted_at, snapshot };
+        const keepAssignedTo = tables.pool_projects[i].assigned_to;
+        const keepAssignmentStatus = tables.pool_projects[i].assignment_status;
+        tables.pool_projects[i] = { company_id, project_id, created_by: keepCreatedBy, modified_at, deleted_at, snapshot, assigned_to: keepAssignedTo, assignment_status: keepAssignmentStatus };
       }
       return { kind: 'run' as const };
     }
@@ -349,6 +351,26 @@ export function makeFakeD1(): FakeD1 {
       if (r) { r.deleted_at = args[0]; r.modified_at = args[1]; }
       return { kind: 'run' as const };
     }
+    // pool_projects: assigned_to UPDATE (assignProjects)
+    if (/UPDATE pool_projects SET assigned_to = \?, assignment_status = \? WHERE company_id = \? AND project_id = \?/i.test(s)) {
+      const [assignedTo, assignmentStatus, companyId, projectId] = args as [string | null, string, string, string];
+      const r = tables.pool_projects.find((x) => x.company_id === companyId && x.project_id === projectId);
+      if (r) { r.assigned_to = assignedTo; r.assignment_status = assignmentStatus; }
+      return { kind: 'run' as const };
+    }
+    // pool_projects: projectsSinceWithSnapshots SELECT (assigned_to filtreli veya filtresiz)
+    if (/SELECT project_id, modified_at, deleted_at, snapshot, assigned_to, assignment_status FROM pool_projects WHERE company_id = \? AND modified_at > \?/i.test(s)) {
+      let rows = tables.pool_projects.filter((x) => x.company_id === args[0] && String(x.modified_at) > String(args[1]));
+      // opsiyonel assigned_to filtresi
+      if (args.length >= 3 && s.includes('AND assigned_to = ?')) {
+        rows = rows.filter((x) => x.assigned_to === args[2]);
+      }
+      rows = rows.slice().sort((a, b) => String(a.modified_at).localeCompare(String(b.modified_at)));
+      // LIMIT: son arg her zaman limit
+      const limitVal = typeof args[args.length - 1] === 'number' ? args[args.length - 1] as number : 9999;
+      rows = rows.slice(0, limitVal);
+      return { kind: 'all' as const, rows };
+    }
     // pool_assets: LWW upsert
     if (/INSERT INTO pool_assets/i.test(s)) {
       const [company_id, project_id, asset_id, r2_key, created_by, modified_at, deleted_at, snapshot] = args;
@@ -365,6 +387,11 @@ export function makeFakeD1(): FakeD1 {
     if (/SELECT .* FROM pool_assets WHERE company_id = \? AND project_id = \? AND asset_id = \?/i.test(s)) {
       const r = tables.pool_assets.find((x) => x.company_id === args[0] && x.project_id === args[1] && x.asset_id === args[2]) ?? null;
       return { kind: 'first' as const, row: r };
+    }
+    // pool_assets: batch select by project (projectsSinceWithSnapshots: SELECT asset_id, r2_key, ...)
+    if (/SELECT asset_id, r2_key, modified_at, deleted_at, snapshot FROM pool_assets WHERE company_id = \? AND project_id = \?/i.test(s)) {
+      const rows = tables.pool_assets.filter((r) => r.company_id === args[0] && r.project_id === args[1]);
+      return { kind: 'all' as const, rows };
     }
     // pool_assets: list by project
     if (/SELECT .* FROM pool_assets WHERE company_id = \? AND project_id = \?$/i.test(s)) {
@@ -501,7 +528,13 @@ export function makeFakeD1(): FakeD1 {
         run: async () => stmt(sql, []).run(),
       };
     },
-    async batch(stmts: unknown[]) { return stmts.map(() => ({ success: true })); },
+    async batch(stmts: unknown[]) {
+      return Promise.all((stmts as any[]).map(async (s) => {
+        if (typeof s.all === 'function') return await s.all();
+        if (typeof s.run === 'function') return await s.run();
+        return { success: true, results: [] };
+      }));
+    },
   };
 
   return { db, tables };
