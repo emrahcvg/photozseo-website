@@ -63,7 +63,7 @@ describe('renderStoreBody', () => {
   it('ortak app-footer (photoZseo marka + şikâyet) içerir', () => {
     expect(html).toContain('app-footer');
     expect(html).toContain('https://photozseo.com');
-    expect(html).toContain('mailto:abuse@photozseo.com');
+    expect(html).toContain('mailto:support@photozseo.com');
   });
 
   it('ortak app-header (marka + sepet) içerir', () => {

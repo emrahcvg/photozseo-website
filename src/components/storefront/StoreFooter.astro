@@ -7,7 +7,7 @@ interface Props {
 const { slug, locale } = Astro.props;
 const poweredBy = locale === 'tr' ? 'Bu mağaza photoZseo ile oluşturuldu' : 'This store was created with photoZseo';
 const reportLabel = locale === 'tr' ? 'Bu mağazayı şikayet et' : 'Report this store';
-const reportHref = `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report store: ' + slug)}`;
+const reportHref = `mailto:support@photozseo.com?subject=${encodeURIComponent('Report store: ' + slug)}`;
 ---
 
 <footer class="sf-footer">

@@ -666,7 +666,7 @@ export function renderStoreBody(
 
   html += renderAppFooter({
     locale,
-    reportHref: `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report store: ' + store.slug)}`,
+    reportHref: `mailto:support@photozseo.com?subject=${encodeURIComponent('Report store: ' + store.slug)}`,
     reportLabelKey: 'reportStore',
   });
 
@@ -837,7 +837,7 @@ function renderReportLink(
   const label = mt(locale, kind === 'product' ? 'reportProduct' : 'reportStore');
   const subjectPrefix = kind === 'product' ? 'Report product: ' : 'Report store: ';
   const subjectTarget = kind === 'product' && productSlug ? `${storeSlug}/${productSlug}` : storeSlug;
-  const mailto = `mailto:abuse@photozseo.com?subject=${encodeURIComponent(subjectPrefix + subjectTarget)}`;
+  const mailto = `mailto:support@photozseo.com?subject=${encodeURIComponent(subjectPrefix + subjectTarget)}`;
   const pslugAttr = productSlug ? ` data-sf-report-product="${escapeAttr(productSlug)}"` : '';
 
   // Progressive enhancement: form POST'u JS ile /api/report'a yönlendirilir
@@ -1163,7 +1163,7 @@ export function renderProductBody(
   html += '  </div>\n'; // sf-detail
   html += renderAppFooter({
     locale,
-    reportHref: `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report product: ' + store.slug + '/' + pSlug)}`,
+    reportHref: `mailto:support@photozseo.com?subject=${encodeURIComponent('Report product: ' + store.slug + '/' + pSlug)}`,
     reportLabelKey: 'reportProduct',
   });
   html += '</div>\n'; // sf-store
