@@ -4,7 +4,7 @@
  *      Auth: write-key (satıcı) VEYA b2b_<slug> cookie (alıcının kendisi)
  * POST /api/store/:slug/buyers/:id/transactions  — borç/alacak gir (write-key)
  */
-import { requireWriteKey } from '../../../../../_lib/auth';
+import { requireWriteAuth } from '../../../../../_lib/auth';
 import { addTransaction, listTransactions, getBuyerBalance } from '../../../../../_lib/b2b-ledger';
 import { findBuyerById } from '../../../../../_lib/b2b-buyers';
 
@@ -37,8 +37,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   if (!env.MARKET_DB) return json({ error: 'DB not configured' }, 503);
 
-  // Auth: write-key (satıcı) VEYA b2b cookie ile alıcının kendisi
-  const denied = requireWriteKey(request, env);
+  // Auth: write-key/signed (satıcı) VEYA b2b cookie ile alıcının kendisi
+  const denied = await requireWriteAuth(request, env, new ArrayBuffer(0));
   const isSellerAuth = denied === null;
   const cookieBuyerId = getCookie(request, `b2b_${slug}`);
   const isBuyerAuth = cookieBuyerId === buyerId;
@@ -62,12 +62,16 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   if (!env.MARKET_DB) return json({ error: 'DB not configured' }, 503);
 
-  const denied = requireWriteKey(request, env);
+  // Read body once up front so the signed (HMAC) auth layer can hash it.
+  const raw = await request.text();
+  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
+
+  const denied = await requireWriteAuth(request, env, bodyBytes);
   if (denied) return denied;
 
   let body: { type?: string; amount?: number; currency?: string; description?: string };
   try {
-    body = await request.json();
+    body = raw ? JSON.parse(raw) : {};
   } catch {
     return json({ error: 'Invalid JSON' }, 400);
   }

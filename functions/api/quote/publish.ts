@@ -8,6 +8,7 @@
  */
 import type { D1Like } from '../../_lib/buyer';
 import { resolveOwnerKey } from '../../_lib/buyer-owner';
+import { requireWriteAuth } from '../../_lib/auth';
 import { createApproval, makeApprovalToken, type QuoteSnapshot } from '../../_lib/quote-approvals';
 
 interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; }
@@ -20,20 +21,22 @@ function json(obj: unknown, status = 200): Response {
 export async function onRequestPost(ctx: Ctx): Promise<Response> {
   if (!ctx.env.MARKET_DB) return json({ error: 'db unavailable' }, 503);
 
-  // Yalnızca legit app örneği yayınlayabilsin: paylaşılan write-key gate
-  // (genel kötüye kullanımı önler). Owner kimliği ise x-device-id'den gelir.
-  // FAIL-CLOSED (repo konvansiyonu, bkz. _lib/auth.ts requireWriteKey): key
-  // yapılandırılmamışsa endpoint anonim yazma yüzeyine dönüşmesin → 503.
-  if (!ctx.env.STORE_WRITE_KEY) return json({ error: 'write key not configured' }, 503);
-  const provided = ctx.request.headers.get('x-store-write-key');
-  if (provided !== ctx.env.STORE_WRITE_KEY) return json({ error: 'unauthorized' }, 401);
+  // Yalnızca legit app örneği yayınlayabilsin: write-key VEYA imzalı istek gate
+  // (genel kötüye kullanımı önler; B2 hardening). Owner kimliği ise Google
+  // oturumu ya da x-device-id'den gelir. FAIL-CLOSED (repo konvansiyonu, bkz.
+  // _lib/auth.ts): key yapılandırılmamışsa 503; ne imza ne key varsa 401.
+  // Gövde bir kez okunup imza katmanına (HMAC) hash'lenmek üzere veriliyor.
+  const raw = await ctx.request.text();
+  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
+  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
+  if (denied) return denied;
 
   const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'identity required' }, 400);
 
   let body: { quote?: QuoteSnapshot; expiresInDays?: number };
   try {
-    body = (await ctx.request.json()) as { quote?: QuoteSnapshot; expiresInDays?: number };
+    body = (raw ? JSON.parse(raw) : {}) as { quote?: QuoteSnapshot; expiresInDays?: number };
   } catch {
     return json({ error: 'bad json' }, 400);
   }

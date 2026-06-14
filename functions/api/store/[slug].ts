@@ -5,7 +5,7 @@
  */
 
 import { getStore, putStore, deleteStore, isBlocked } from '../../_lib/registry';
-import { requireWriteKey } from '../../_lib/auth';
+import { requireWriteAuth } from '../../_lib/auth';
 import { syncStoreToMarketplace, removeStoreFromD1, bumpIndexVersion } from '../../_lib/marketplace';
 import type { Manifest } from '../../../src/storefront/types';
 
@@ -26,7 +26,25 @@ function json400(msg: string) {
 }
 
 export const onRequestPut: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
+  const contentLength = Number(ctx.request.headers.get('content-length') ?? 0);
+  if (contentLength > MAX_MANIFEST_BYTES) {
+    return new Response(JSON.stringify({ error: 'Payload too large' }), {
+      status: 413,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+
+  // Read body once up front: the signed (HMAC) auth layer hashes it.
+  const text = await ctx.request.text();
+  if (text.length > MAX_MANIFEST_BYTES) {
+    return new Response(JSON.stringify({ error: 'Payload too large' }), {
+      status: 413,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+  const bodyBytes = new TextEncoder().encode(text).buffer as ArrayBuffer;
+
+  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
   if (denied) return denied;
 
   const slug = ctx.params.slug as string;
@@ -40,23 +58,8 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
     );
   }
 
-  const contentLength = Number(ctx.request.headers.get('content-length') ?? 0);
-  if (contentLength > MAX_MANIFEST_BYTES) {
-    return new Response(JSON.stringify({ error: 'Payload too large' }), {
-      status: 413,
-      headers: { 'content-type': 'application/json' },
-    });
-  }
-
   let manifest: Manifest;
   try {
-    const text = await ctx.request.text();
-    if (text.length > MAX_MANIFEST_BYTES) {
-      return new Response(JSON.stringify({ error: 'Payload too large' }), {
-        status: 413,
-        headers: { 'content-type': 'application/json' },
-      });
-    }
     manifest = JSON.parse(text);
   } catch {
     return json400('Invalid JSON body');
@@ -113,7 +116,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 };
 
 export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
+  const denied = await requireWriteAuth(ctx.request, ctx.env, new ArrayBuffer(0));
   if (denied) return denied;
 
   const slug = ctx.params.slug as string;

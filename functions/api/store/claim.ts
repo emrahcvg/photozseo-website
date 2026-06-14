@@ -5,7 +5,7 @@
  */
 
 import { claimSlug, putStore } from '../../_lib/registry';
-import { requireWriteKey } from '../../_lib/auth';
+import { requireWriteAuth } from '../../_lib/auth';
 
 interface Env {
   STORE_KV: KVNamespace;
@@ -20,9 +20,6 @@ function json400(msg: string) {
 }
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
-  if (denied) return denied;
-
   const contentLength = Number(ctx.request.headers.get('content-length') ?? 0);
   if (contentLength > 4096) {
     return new Response(JSON.stringify({ error: 'Payload too large' }), {
@@ -31,9 +28,23 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     });
   }
 
+  // Body must be read once, then handed to the auth layer so the signed
+  // (HMAC) check can hash it. Bodyless legacy callers still pass an empty buffer.
+  const raw = await ctx.request.text();
+  if (raw.length > 4096) {
+    return new Response(JSON.stringify({ error: 'Payload too large' }), {
+      status: 413,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
+
+  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
+  if (denied) return denied;
+
   let body: { desiredSlug?: string; phone?: string };
   try {
-    body = await ctx.request.json();
+    body = raw ? JSON.parse(raw) : {};
   } catch {
     return json400('Invalid JSON body');
   }

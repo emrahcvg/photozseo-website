@@ -4,7 +4,7 @@
  * POST /api/store/:slug/buyers        — alıcı ekle (write-key)
  * DELETE /api/store/:slug/buyers      — alıcı sil (write-key + ?id=<buyerId>)
  */
-import { requireWriteKey } from '../../../_lib/auth';
+import { requireWriteAuth } from '../../../_lib/auth';
 import {
   listBuyers, addBuyer, deleteBuyer,
   generateAccessCode, isValidBuyerCode,
@@ -25,7 +25,7 @@ function json(body: unknown, status = 200): Response {
 }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
+  const denied = await requireWriteAuth(ctx.request, ctx.env, new ArrayBuffer(0));
   if (denied) return denied;
 
   const slug = ctx.params.slug as string;
@@ -39,7 +39,11 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 };
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
+  // Read body once up front so the signed (HMAC) auth layer can hash it.
+  const raw = await ctx.request.text();
+  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
+
+  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
   if (denied) return denied;
 
   const slug = ctx.params.slug as string;
@@ -50,7 +54,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   let body: { buyer_name?: string; access_code?: string };
   try {
-    body = await ctx.request.json();
+    body = raw ? JSON.parse(raw) : {};
   } catch {
     return json({ error: 'Invalid JSON' }, 400);
   }
@@ -78,7 +82,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 };
 
 export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
-  const denied = requireWriteKey(ctx.request, ctx.env);
+  const denied = await requireWriteAuth(ctx.request, ctx.env, new ArrayBuffer(0));
   if (denied) return denied;
 
   const slug = ctx.params.slug as string;
