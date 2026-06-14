@@ -8,7 +8,7 @@
  */
 import type { D1Like } from '../../_lib/buyer';
 import { resolveOwnerKey } from '../../_lib/buyer-owner';
-import { requireWriteAuth } from '../../_lib/auth';
+import { requireWriteAuthOrSession } from '../../_lib/require-session';
 import { createApproval, makeApprovalToken, type QuoteSnapshot } from '../../_lib/quote-approvals';
 
 interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; }
@@ -26,10 +26,11 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   // oturumu ya da x-device-id'den gelir. FAIL-CLOSED (repo konvansiyonu, bkz.
   // _lib/auth.ts): key yapılandırılmamışsa 503; ne imza ne key varsa 401.
   // Gövde bir kez okunup imza katmanına (HMAC) hash'lenmek üzere veriliyor.
+  // Faz B OR-gate: pz_session VEYA legacy key/HMAC (geriye uyumlu). Owner kimliği
+  // aşağıda resolveOwnerKey ile çözülmeye devam eder (session→b:<sub>, yoksa cihaz).
   const raw = await ctx.request.text();
-  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
-  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
-  if (denied) return denied;
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, Math.floor(Date.now() / 1000), raw);
+  if (auth instanceof Response) return auth;
 
   const owner = await resolveOwnerKey(ctx.request, ctx.env.STORE_WRITE_KEY, Math.floor(Date.now() / 1000));
   if (!owner) return json({ error: 'identity required' }, 400);

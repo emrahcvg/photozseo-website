@@ -5,7 +5,7 @@
  */
 
 import { getStore, putStore, deleteStore, isBlocked } from '../../_lib/registry';
-import { requireWriteAuth } from '../../_lib/auth';
+import { requireWriteAuthOrSession } from '../../_lib/require-session';
 import { syncStoreToMarketplace, removeStoreFromD1, bumpIndexVersion } from '../../_lib/marketplace';
 import type { Manifest } from '../../../src/storefront/types';
 
@@ -21,6 +21,30 @@ const VALID_SLUG = /^[a-z0-9][a-z0-9-]{0,98}[a-z0-9]$|^[a-z0-9]$/;
 function json400(msg: string) {
   return new Response(JSON.stringify({ error: msg }), {
     status: 400,
+    headers: { 'content-type': 'application/json' },
+  });
+}
+
+// StoreRecord (registry.ts) henüz owner_sub tutmuyor; alan KV'ye cast ile yazılıp
+// cast ile okunur. registry.ts'e dokunmadan B2 Faz B sahipliğini sağlar.
+type OwnedRecord = { ownerSub?: string } | null | undefined;
+
+/**
+ * B2 Faz B sahiplik geçidi — SADECE şu üçü birlikteyken 403:
+ *   kayıtta owner_sub DOLU  VE  auth kind==='session'  VE  session.sub !== owner_sub.
+ * Diğer tüm durumlar (owner_sub null, veya legacy/HMAC yolu) → izin ver (eski davranış).
+ */
+function ownershipForbidden(
+  existing: OwnedRecord,
+  auth: { kind: 'session'; session: { sub: string } } | { kind: 'legacy' },
+): boolean {
+  const ownerSub = existing?.ownerSub;
+  return !!ownerSub && auth.kind === 'session' && auth.session.sub !== ownerSub;
+}
+
+function json403(msg: string) {
+  return new Response(JSON.stringify({ error: msg }), {
+    status: 403,
     headers: { 'content-type': 'application/json' },
   });
 }
@@ -42,10 +66,10 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
       headers: { 'content-type': 'application/json' },
     });
   }
-  const bodyBytes = new TextEncoder().encode(text).buffer as ArrayBuffer;
-
-  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
-  if (denied) return denied;
+  // requireWriteAuthOrSession imzalı (HMAC) layer için ham gövde metnini ister.
+  const nowSec = Math.floor(Date.now() / 1000);
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, nowSec, text);
+  if (auth instanceof Response) return auth;
 
   const slug = ctx.params.slug as string;
   if (!VALID_SLUG.test(slug)) return json400('Invalid slug');
@@ -66,8 +90,19 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
   }
 
   const existing = await getStore(ctx.env.STORE_KV, slug);
+
+  // B2 Faz B sahiplik geçidi: sahipli mağazaya başka bir oturum yazamaz.
+  if (ownershipForbidden(existing as OwnedRecord, auth)) {
+    return json403('You are not the owner of this store.');
+  }
+
   const version = (existing?.version ?? 0) + 1;
   const updatedAt = new Date().toISOString(); // KV ve D1 aynı timestamp'i yazsın.
+
+  // Sahipliği koru: kayıtta owner_sub varsa onu taşı; yoksa bu istek bir oturum
+  // ise sahibi bu kullanıcı yap (ilk sahiplenme). Legacy/anonim yolda undefined.
+  const ownerSub =
+    (existing as OwnedRecord)?.ownerSub ?? (auth.kind === 'session' ? auth.session.sub : undefined);
 
   await putStore(ctx.env.STORE_KV, slug, {
     manifest,
@@ -75,7 +110,8 @@ export const onRequestPut: PagesFunction<Env> = async (ctx) => {
     status: 'active',
     version,
     updatedAt,
-  });
+    ...(ownerSub ? { ownerSub } : {}),
+  } as never);
 
   // Write-through D1 (best-effort): pazar yeri indeksini güncelle. KV/render asla bozulmaz.
   if (ctx.env.MARKET_DB) {
@@ -116,10 +152,19 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 };
 
 export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
-  const denied = await requireWriteAuth(ctx.request, ctx.env, new ArrayBuffer(0));
-  if (denied) return denied;
+  // DELETE gövdesizdir → bodyText ''.
+  const nowSec = Math.floor(Date.now() / 1000);
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, nowSec, '');
+  if (auth instanceof Response) return auth;
 
   const slug = ctx.params.slug as string;
+
+  // B2 Faz B sahiplik geçidi: sahipli mağazayı başka bir oturum silemez.
+  const existing = await getStore(ctx.env.STORE_KV, slug);
+  if (ownershipForbidden(existing as OwnedRecord, auth)) {
+    return json403('You are not the owner of this store.');
+  }
+
   await deleteStore(ctx.env.STORE_KV, slug);
 
   // Pazar yerinden de düşür (best-effort).

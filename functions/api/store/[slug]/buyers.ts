@@ -4,7 +4,7 @@
  * POST /api/store/:slug/buyers        — alıcı ekle (write-key)
  * DELETE /api/store/:slug/buyers      — alıcı sil (write-key + ?id=<buyerId>)
  */
-import { requireWriteAuth } from '../../../_lib/auth';
+import { requireWriteAuthOrSession } from '../../../_lib/require-session';
 import {
   listBuyers, addBuyer, deleteBuyer,
   generateAccessCode, isValidBuyerCode,
@@ -25,8 +25,9 @@ function json(body: unknown, status = 200): Response {
 }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
-  const denied = await requireWriteAuth(ctx.request, ctx.env, new ArrayBuffer(0));
-  if (denied) return denied;
+  // Faz B OR-gate: pz_session VEYA legacy key/HMAC. Bodyless istek → bodyText ''.
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, Math.floor(Date.now() / 1000), '');
+  if (auth instanceof Response) return auth;
 
   const slug = ctx.params.slug as string;
   if (!VALID_SLUG.test(slug)) return json({ error: 'Invalid slug' }, 400);
@@ -41,10 +42,10 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // Read body once up front so the signed (HMAC) auth layer can hash it.
   const raw = await ctx.request.text();
-  const bodyBytes = new TextEncoder().encode(raw).buffer as ArrayBuffer;
 
-  const denied = await requireWriteAuth(ctx.request, ctx.env, bodyBytes);
-  if (denied) return denied;
+  // Faz B OR-gate: pz_session VEYA legacy key/HMAC (gövde metni HMAC hash'i için).
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, Math.floor(Date.now() / 1000), raw);
+  if (auth instanceof Response) return auth;
 
   const slug = ctx.params.slug as string;
   if (!VALID_SLUG.test(slug)) return json({ error: 'Invalid slug' }, 400);
@@ -82,8 +83,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 };
 
 export const onRequestDelete: PagesFunction<Env> = async (ctx) => {
-  const denied = await requireWriteAuth(ctx.request, ctx.env, new ArrayBuffer(0));
-  if (denied) return denied;
+  // Faz B OR-gate: pz_session VEYA legacy key/HMAC. Bodyless istek → bodyText ''.
+  const auth = await requireWriteAuthOrSession(ctx.request, ctx.env, Math.floor(Date.now() / 1000), '');
+  if (auth instanceof Response) return auth;
 
   const slug = ctx.params.slug as string;
   const url = new URL(ctx.request.url);
