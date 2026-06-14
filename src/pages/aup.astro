@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultLang, useTranslations } from '../i18n/ui';
+import '../styles/legal.css';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t('aup.title')} lang={lang}>
+  <article class="legal">
+    <a href="/" class="legal-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Home</span>
+    </a>
+
+    <header class="legal-head">
+      <span class="kicker">{t('aup.kicker')}</span>
+      <h1>{t('aup.title')}</h1>
+      <p class="updated"><strong>{t('aup.updated')}</strong> {t('aup.date')} &middot; {t('aup.version')}</p>
+    </header>
+
+    <h2>{t('aup.intro.title')}</h2>
+    <p>{t('aup.intro.desc')}</p>
+
+    <h2>{t('aup.prohibited.title')}</h2>
+    <p>{t('aup.prohibited.desc')}</p>
+    <ul>
+      <li>{t('aup.prohibited.weapons')}</li>
+      <li>{t('aup.prohibited.drugs')}</li>
+      <li>{t('aup.prohibited.counterfeit')}</li>
+      <li>{t('aup.prohibited.stolen')}</li>
+      <li>{t('aup.prohibited.hate')}</li>
+      <li>{t('aup.prohibited.wildlife')}</li>
+      <li>{t('aup.prohibited.regulated')}</li>
+      <li>{t('aup.prohibited.fraud')}</li>
+      <li>{t('aup.prohibited.bodyParts')}</li>
+      <li>{t('aup.prohibited.adult')}</li>
+    </ul>
+
+    <h2>{t('aup.conduct.title')}</h2>
+    <p>{t('aup.conduct.desc')}</p>
+    <ul>
+      <li>{t('aup.conduct.fraud')}</li>
+      <li>{t('aup.conduct.pricing')}</li>
+      <li>{t('aup.conduct.spam')}</li>
+      <li>{t('aup.conduct.impersonation')}</li>
+      <li>{t('aup.conduct.unlawful')}</li>
+    </ul>
+
+    <h2>{t('aup.enforcement.title')}</h2>
+    <p>{t('aup.enforcement.desc')}</p>
+    <ul>
+      <li>{t('aup.enforcement.screening')}</li>
+      <li>{t('aup.enforcement.removal')}</li>
+      <li>{t('aup.enforcement.suspension')}</li>
+      <li>{t('aup.enforcement.waiver')}</li>
+    </ul>
+
+    <h2>{t('aup.report.title')}</h2>
+    <p>{t('aup.report.desc')}</p>
+    <p>{t('aup.report.email')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+
+    <h2>{t('aup.changes.title')}</h2>
+    <p>{t('aup.changes.desc')}</p>
+
+    <h2>{t('aup.contact.title')}</h2>
+    <p>{t('aup.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+  </article>
+</Layout>

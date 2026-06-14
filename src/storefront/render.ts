@@ -657,6 +657,13 @@ export function renderStoreBody(
     html += renderEmptyState({ icon: '🛍️', title: mt(locale, 'noResults'), ctaHref: '/market', ctaLabel: mt(locale, 'backToMarket') });
   }
 
+  // Şeffaflık katmanı (anti-fraud): bağımsız-satıcı sorumluluk reddi + belirgin
+  // mağaza şikayet bağlantısı — footer'dan hemen önce, her mağaza sayfasında.
+  html += '<div class="sf-trust">\n';
+  html += renderIndependentSellerDisclaimer(locale);
+  html += renderReportLink(store.slug, locale, 'store');
+  html += '</div>\n';
+
   html += renderAppFooter({
     locale,
     reportHref: `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report store: ' + store.slug)}`,
@@ -801,6 +808,47 @@ function renderGallery(images: string[], alt: string): string {
   return html;
 }
 
+// ── Trust & transparency helpers ─────────────────────────────────────────────
+
+/**
+ * Bağımsız-satıcı sorumluluk reddi (anti-fraud şeffaflık). "Bu mağaza bağımsız
+ * bir satıcıya aittir; photoZseo satışın tarafı değildir." Footer'da ve ürün
+ * sayfasında görünür. Kapatılamaz, net ve göz hizasında.
+ */
+function renderIndependentSellerDisclaimer(locale: string): string {
+  let html = '  <p class="sf-disclaimer" role="note">\n';
+  html += `    ${escapeHtml(mt(locale, 'independentSellerDisclaimer'))}\n`;
+  html += '  </p>\n';
+  return html;
+}
+
+/**
+ * Şikayet (report) bağlantısı — her mağaza/ürün sayfasında belirgin. Önce
+ * /api/report'a POST eden buton (TrustReport endpoint'i), JS kapalıysa mailto
+ * fallback'i ile çalışır. `kind` = 'store' | 'product'; productSlug ürün
+ * sayfasında dolar.
+ */
+function renderReportLink(
+  storeSlug: string,
+  locale: string,
+  kind: 'store' | 'product',
+  productSlug?: string,
+): string {
+  const label = mt(locale, kind === 'product' ? 'reportProduct' : 'reportStore');
+  const subjectPrefix = kind === 'product' ? 'Report product: ' : 'Report store: ';
+  const subjectTarget = kind === 'product' && productSlug ? `${storeSlug}/${productSlug}` : storeSlug;
+  const mailto = `mailto:abuse@photozseo.com?subject=${encodeURIComponent(subjectPrefix + subjectTarget)}`;
+  const pslugAttr = productSlug ? ` data-sf-report-product="${escapeAttr(productSlug)}"` : '';
+
+  // Progressive enhancement: form POST'u JS ile /api/report'a yönlendirilir
+  // (storefront-buyer.js), JS yoksa mailto fallback'i tıklanabilir.
+  let html = `  <div class="sf-report" data-sf-report data-sf-report-kind="${kind}" data-sf-report-store="${escapeAttr(storeSlug)}"${pslugAttr}>\n`;
+  html += `    <a class="sf-report__link" href="${escapeAttr(mailto)}" data-sf-report-fallback>⚠ ${escapeHtml(label)}</a>\n`;
+  html += `    <span class="sf-report__prompt">${escapeHtml(mt(locale, 'reportPrompt'))}</span>\n`;
+  html += '  </div>\n';
+  return html;
+}
+
 // ── renderBuyerSafetySection ─────────────────────────────────────────────────
 
 function renderBuyerSafetySection(
@@ -809,7 +857,9 @@ function renderBuyerSafetySection(
   locale: string,
 ): string {
   const sellerType = sellerTypeLabel(store.businessType, locale);
-  const hasContact = !!(store.contact.phone || store.contact.whatsapp || store.contact.email);
+  // Görünür iletişim kanalı (numara/e-posta) — satıcı kimliğini somutlaştırır.
+  const contactValue = store.contact.whatsapp || store.contact.phone || store.contact.email || '';
+  const hasContact = !!contactValue;
   const price = product.price;
   const compareAt = product.compareAtPrice;
   const hasLargeDiscount =
@@ -818,6 +868,18 @@ function renderBuyerSafetySection(
 
   let html = '      <div class="sf-buyer-safety">\n';
   html += `        <p class="sf-buyer-safety__title">${escapeHtml(mt(locale, 'buyerSafetyTitle'))}</p>\n`;
+
+  // Satıcı kimlik şeffaflığı: kimden alıyorsunuz — isim + tür + iletişim açık.
+  html += '        <div class="sf-seller-identity">\n';
+  html += `          <p class="sf-seller-identity__heading">${escapeHtml(mt(locale, 'sellerIdentityHeading'))}</p>\n`;
+  html += `          <p class="sf-seller-identity__name">${escapeHtml(store.displayName)}`;
+  if (sellerType) html += ` <span class="sf-seller-identity__type">${escapeHtml(sellerType)}</span>`;
+  html += '</p>\n';
+  if (hasContact) {
+    html += `          <p class="sf-seller-identity__contact">${escapeHtml(mt(locale, 'sellerContactHeading'))}: <strong>${escapeHtml(contactValue)}</strong></p>\n`;
+  }
+  html += '        </div>\n';
+
   html += '        <ul class="sf-buyer-safety__list">\n';
 
   if (sellerType) {
@@ -836,6 +898,10 @@ function renderBuyerSafetySection(
 
   html += `          <li class="sf-buyer-safety__row sf-buyer-safety__row--note">🔒 ${escapeHtml(mt(locale, 'publisherNote'))}</li>\n`;
   html += '        </ul>\n';
+
+  // Bağımsız-satıcı sorumluluk reddi — net ve görünür.
+  html += renderIndependentSellerDisclaimer(locale).replace(/^/gm, '  ').trimStart();
+
   html += '      </div>\n';
   return html;
 }
@@ -921,6 +987,21 @@ export function renderProductBody(
   if (formattedPrice) {
     html += '      <div class="sf-detail__price-row">\n';
     html += `        <span class="sf-detail__price">${escapeHtml(formattedPrice)}</span>\n`;
+    // Yanıltıcı fiyat şeffaflığı: indirim gösteriliyorsa referans (eski) fiyat
+    // dürüst gösterilir — yalnızca compareAt gerçekten daha yüksekse. (İmkansız
+    // indirim risk assessor'da engellenir; burada tutarlı sunum.)
+    if (
+      product.price != null &&
+      product.compareAtPrice != null &&
+      product.compareAtPrice > product.price
+    ) {
+      const wasFmt = mkFormatDetailPrice(product.compareAtPrice, currency, locale);
+      const savePct = Math.round(
+        ((product.compareAtPrice - product.price) / product.compareAtPrice) * 100,
+      );
+      html += `        <span class="sf-detail__compare"><s>${escapeHtml(wasFmt)}</s> <span class="sf-detail__compare-label">${escapeHtml(mt(locale, 'wasPrice'))}</span></span>\n`;
+      html += `        <span class="sf-detail__save">${escapeHtml(mt(locale, 'youSave'))} ${savePct}%</span>\n`;
+    }
     if (stock) {
       html += `        <span class="sf-stock ${escapeHtml(sc)}">${escapeHtml(stock)}</span>\n`;
     }
@@ -1075,12 +1156,15 @@ export function renderProductBody(
   html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
   html += '      <script src="/auth.js?v=11" defer></script>\n';
 
+  // Belirgin ürün şikayet bağlantısı — alıcı bilgi panelinin sonunda.
+  html += renderReportLink(store.slug, locale, 'product', pSlug);
+
   html += '    </div>\n'; // sf-detail__info
   html += '  </div>\n'; // sf-detail
   html += renderAppFooter({
     locale,
-    reportHref: `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report store: ' + store.slug)}`,
-    reportLabelKey: 'reportStore',
+    reportHref: `mailto:abuse@photozseo.com?subject=${encodeURIComponent('Report product: ' + store.slug + '/' + pSlug)}`,
+    reportLabelKey: 'reportProduct',
   });
   html += '</div>\n'; // sf-store
   html += controlsScript(locale);

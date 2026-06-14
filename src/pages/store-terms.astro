@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultLang, useTranslations } from '../i18n/ui';
+import '../styles/legal.css';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
+---
+
+<Layout title={t('storeterms.title')} lang={lang}>
+  <article class="legal">
+    <a href="/" class="legal-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Home</span>
+    </a>
+
+    <header class="legal-head">
+      <span class="kicker">{t('storeterms.kicker')}</span>
+      <h1>{t('storeterms.title')}</h1>
+      <p class="updated"><strong>{t('storeterms.updated')}</strong> {t('storeterms.date')} &middot; {t('storeterms.version')}</p>
+    </header>
+
+    <h2>{t('storeterms.intro.title')}</h2>
+    <p>{t('storeterms.intro.desc')}</p>
+
+    <h2>{t('storeterms.role.title')}</h2>
+    <p>{t('storeterms.role.desc')}</p>
+
+    <h2>{t('storeterms.payments.title')}</h2>
+    <p>{t('storeterms.payments.desc')}</p>
+
+    <h2>{t('storeterms.seller.title')}</h2>
+    <p>{t('storeterms.seller.desc')}</p>
+    <ul>
+      <li>{t('storeterms.seller.legality')}</li>
+      <li>{t('storeterms.seller.accuracy')}</li>
+      <li>{t('storeterms.seller.tax')}</li>
+      <li>{t('storeterms.seller.fulfillment')}</li>
+      <li>{t('storeterms.seller.support')}</li>
+    </ul>
+
+    <h2>{t('storeterms.buyer.title')}</h2>
+    <p>{t('storeterms.buyer.desc')}</p>
+    <ul>
+      <li>{t('storeterms.buyer.verify')}</li>
+      <li>{t('storeterms.buyer.payment')}</li>
+      <li>{t('storeterms.buyer.report')}</li>
+    </ul>
+
+    <h2>{t('storeterms.removal.title')}</h2>
+    <p>{t('storeterms.removal.desc')}</p>
+
+    <h2>{t('storeterms.disclaimer.title')}</h2>
+    <p>{t('storeterms.disclaimer.desc')}</p>
+
+    <h2>{t('storeterms.changes.title')}</h2>
+    <p>{t('storeterms.changes.desc')}</p>
+
+    <h2>{t('storeterms.contact.title')}</h2>
+    <p>{t('storeterms.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+    <p>{t('storeterms.relatedAup')} <a href="/aup">{t('storeterms.relatedAupLink')}</a>.</p>
+  </article>
+</Layout>

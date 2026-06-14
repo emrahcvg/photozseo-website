@@ -102,14 +102,38 @@ export async function deleteStore(kv: KVNamespace, slug: string): Promise<void> 
 export interface BlockRecord {
   reason?: string;
   blockedAt: string;
+  /** Bloğu uygulayan admin (session sub veya 'legacy'). Audit izi. */
+  actor?: string;
+  /** Bu bloğu tetikleyen şikayet kaydının id'si (reports.id), varsa. */
+  reportId?: string;
+  /** Mağaza sahibinin Google sub'ı — satıcı-bazlı repeat-infringer izi (slug bloğuna EK). */
+  sellerSub?: string;
+}
+
+/** blockStore/takedownStore için opsiyonel audit alanları (hepsi geriye uyumlu). */
+export interface BlockAudit {
+  actor?: string;
+  reportId?: string;
+  sellerSub?: string;
 }
 
 export async function isBlocked(kv: KVNamespace, slug: string): Promise<boolean> {
   return (await kv.get(blockKey(slug))) !== null;
 }
 
-export async function blockStore(kv: KVNamespace, slug: string, reason?: string): Promise<void> {
-  const record: BlockRecord = { reason, blockedAt: new Date().toISOString() };
+export async function blockStore(
+  kv: KVNamespace,
+  slug: string,
+  reason?: string,
+  audit?: BlockAudit,
+): Promise<void> {
+  const record: BlockRecord = {
+    reason,
+    blockedAt: new Date().toISOString(),
+    ...(audit?.actor ? { actor: audit.actor } : {}),
+    ...(audit?.reportId ? { reportId: audit.reportId } : {}),
+    ...(audit?.sellerSub ? { sellerSub: audit.sellerSub } : {}),
+  };
   await kv.put(blockKey(slug), JSON.stringify(record));
 }
 
@@ -121,7 +145,12 @@ export async function unblockStore(kv: KVNamespace, slug: string): Promise<void>
  * Takedown: mağazayı yayından kaldır VE slug'ı blokla. Tek atomik niyet —
  * banlı satıcı aynı adı tekrar claim/PUT edemez. unblockStore ile geri alınır.
  */
-export async function takedownStore(kv: KVNamespace, slug: string, reason?: string): Promise<void> {
+export async function takedownStore(
+  kv: KVNamespace,
+  slug: string,
+  reason?: string,
+  audit?: BlockAudit,
+): Promise<void> {
   await deleteStore(kv, slug);
-  await blockStore(kv, slug, reason);
+  await blockStore(kv, slug, reason, audit);
 }
