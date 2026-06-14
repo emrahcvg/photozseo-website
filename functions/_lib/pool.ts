@@ -121,3 +121,117 @@ export async function tombstoneAsset(
     .bind(t.deletedAt, t.modifiedAt, t.companyId, t.projectId, t.assetId)
     .run();
 }
+
+export interface DeltaWithSnapshot {
+  projectId: string;
+  modifiedAt: string;
+  deletedAt: string | null;
+  snapshot: unknown | null;
+  assets: AssetDeltaRow[];
+  assignedTo: string | null;
+  assignmentStatus: string | null;
+}
+
+export interface AssetDeltaRow {
+  assetId: string;
+  r2Key: string;
+  modifiedAt: string;
+  deletedAt: string | null;
+  snapshot: unknown;
+}
+
+export async function projectsSinceWithSnapshots(
+  db: D1Like,
+  companyId: string,
+  since: string,
+  options: { assignedTo?: string; limit?: number } = {}
+): Promise<{ entries: DeltaWithSnapshot[]; hasMore: boolean }> {
+  const limit = options.limit ?? 500;
+
+  let sql =
+    'SELECT project_id, modified_at, deleted_at, snapshot, assigned_to, assignment_status ' +
+    'FROM pool_projects WHERE company_id = ? AND modified_at > ?';
+  const bindings: unknown[] = [companyId, since];
+
+  if (options.assignedTo !== undefined) {
+    sql += ' AND assigned_to = ?';
+    bindings.push(options.assignedTo);
+  }
+  sql += ' ORDER BY modified_at ASC LIMIT ?';
+  bindings.push(limit + 1);
+
+  const stmt = db.prepare(sql);
+  const bound = (stmt as any).bind(...bindings);
+  const { results } = await bound.all<{
+    project_id: string;
+    modified_at: string;
+    deleted_at: string | null;
+    snapshot: string;
+    assigned_to: string | null;
+    assignment_status: string | null;
+  }>();
+
+  const hasMore = results.length > limit;
+  const rows = hasMore ? results.slice(0, limit) : results;
+
+  if (rows.length === 0) return { entries: [], hasMore: false };
+
+  const liveIds = rows.filter((r) => !r.deleted_at).map((r) => r.project_id);
+  const assetMap: Record<string, AssetDeltaRow[]> = {};
+
+  if (liveIds.length > 0) {
+    const stmts = liveIds.map((id) =>
+      db
+        .prepare(
+          'SELECT asset_id, r2_key, modified_at, deleted_at, snapshot FROM pool_assets WHERE company_id = ? AND project_id = ?'
+        )
+        .bind(companyId, id)
+    );
+    const batchResults = await db.batch(stmts);
+    liveIds.forEach((id, i) => {
+      const assetRows = ((batchResults[i] as any).results ?? []) as {
+        asset_id: string;
+        r2_key: string;
+        modified_at: string;
+        deleted_at: string | null;
+        snapshot: string;
+      }[];
+      assetMap[id] = assetRows.map((a) => ({
+        assetId: a.asset_id,
+        r2Key: a.r2_key,
+        modifiedAt: a.modified_at,
+        deletedAt: a.deleted_at,
+        snapshot: (() => { try { return JSON.parse(a.snapshot); } catch { return null; } })(),
+      }));
+    });
+  }
+
+  const entries: DeltaWithSnapshot[] = rows.map((r) => ({
+    projectId: r.project_id,
+    modifiedAt: r.modified_at,
+    deletedAt: r.deleted_at,
+    snapshot: r.deleted_at
+      ? null
+      : (() => { try { return JSON.parse(r.snapshot); } catch { return null; } })(),
+    assets: r.deleted_at ? [] : (assetMap[r.project_id] ?? []),
+    assignedTo: r.assigned_to,
+    assignmentStatus: r.assignment_status,
+  }));
+
+  return { entries, hasMore };
+}
+
+export async function assignProjects(
+  db: D1Like,
+  assignments: { companyId: string; projectId: string; assignTo: string | null; status?: string }[]
+): Promise<void> {
+  if (assignments.length === 0) return;
+  const stmts = assignments.map((a) =>
+    db
+      .prepare(
+        'UPDATE pool_projects SET assigned_to = ?, assignment_status = ? WHERE company_id = ? AND project_id = ?'
+      )
+      .bind(a.assignTo, a.status ?? 'assigned', a.companyId, a.projectId)
+  );
+  await db.batch(stmts);
+}
