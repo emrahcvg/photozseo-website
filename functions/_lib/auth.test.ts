@@ -141,7 +141,7 @@ describe('requireSession (Faz B pz_session gate)', () => {
   });
 });
 
-describe('requireWriteAuthOrSession (OR: session OR legacy key/HMAC)', () => {
+describe('requireWriteAuthOrSession (Faz-2: session zorunlu)', () => {
   const now = 1_700_000_000;
 
   it('valid session accepted → kind:session', async () => {
@@ -153,30 +153,28 @@ describe('requireWriteAuthOrSession (OR: session OR legacy key/HMAC)', () => {
     expect((r as { kind: 'session'; session: { sub: string } }).session.sub).toBe('google-sub-123');
   });
 
-  it('no session + valid legacy key accepted → kind:legacy', async () => {
+  it('no session + legacy key → 401 (legacy kaldırıldı)', async () => {
     const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { 'x-store-write-key': SECRET } });
     const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now);
-    expect(r).not.toBeInstanceOf(Response);
-    expect((r as { kind: string }).kind).toBe('legacy');
+    expect((r as Response).status).toBe(401);
   });
 
-  it('no session + valid fresh HMAC signature accepted → kind:legacy', async () => {
+  it('no session + valid HMAC signature → 401 (HMAC kaldırıldı)', async () => {
     const body = JSON.stringify({ desiredSlug: 'acme' });
     const ts = String(now);
     const sig = await sign('POST', '/api/store/claim', ts, body);
     const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim', headers: { 'x-pz-ts': ts, 'x-pz-sign': sig }, body });
     const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now, body);
-    expect(r).not.toBeInstanceOf(Response);
-    expect((r as { kind: string }).kind).toBe('legacy');
+    expect((r as Response).status).toBe(401);
   });
 
-  it('neither session nor key → 401', async () => {
+  it('no session, no key → 401', async () => {
     const req = makeReq({ method: 'POST', url: 'https://x/api/store/claim' });
     const r = await requireWriteAuthOrSession(req, { STORE_WRITE_KEY: SECRET }, now);
     expect((r as Response).status).toBe(401);
   });
 
-  it('valid session + invalid key still accepted (session wins) → kind:session', async () => {
+  it('valid session + invalid key still accepted (session sole gate) → kind:session', async () => {
     const cookie = await makeSessionCookie(now);
     const req = makeReq({
       method: 'POST',

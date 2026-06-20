@@ -2,9 +2,17 @@ import { describe, it, expect } from 'vitest';
 import { onRequestPut, onRequestDelete } from './[slug]';
 import { makeFakeD1 } from '../../_lib/fakeD1';
 import { getStore } from '../../_lib/registry';
+import { signSession } from '../../_lib/session';
+import { SESSION_COOKIE } from '../../../src/storefront/auth/config';
 import type { Manifest } from '../../../src/storefront/types';
 
 const KEY = 'test-write-key';
+
+async function makeSessionCookie(key: string = KEY): Promise<string> {
+  const exp = Math.floor(Date.now() / 1000) + 3600;
+  const token = await signSession({ sub: 'google-sub-123', email: 'seller@example.com', exp }, key);
+  return `${SESSION_COOKIE}=${token}`;
+}
 
 // Minimal bellek-içi KV — registry sadece get/put/delete kullanır.
 function makeFakeKV() {
@@ -28,10 +36,11 @@ function manifest(listed: boolean): Manifest {
   };
 }
 
-// PagesFunction context'ini taklit eder.
-function putCtx(opts: { slug?: string; body?: unknown; env: Record<string, unknown>; key?: string | null }) {
+async function putCtx(opts: { slug?: string; body?: unknown; env: Record<string, unknown>; cookie?: string | null }) {
   const headers: Record<string, string> = { 'content-type': 'application/json' };
-  if (opts.key !== null) headers['x-store-write-key'] = opts.key ?? KEY;
+  if (opts.cookie !== null) {
+    headers['cookie'] = opts.cookie ?? await makeSessionCookie();
+  }
   const slug = opts.slug ?? 'acme';
   return {
     request: new Request(`https://photozseo.com/api/store/${slug}`, {
@@ -44,9 +53,11 @@ function putCtx(opts: { slug?: string; body?: unknown; env: Record<string, unkno
   } as never;
 }
 
-function delCtx(opts: { slug?: string; env: Record<string, unknown>; key?: string | null }) {
+async function delCtx(opts: { slug?: string; env: Record<string, unknown>; cookie?: string | null }) {
   const headers: Record<string, string> = {};
-  if (opts.key !== null) headers['x-store-write-key'] = opts.key ?? KEY;
+  if (opts.cookie !== null) {
+    headers['cookie'] = opts.cookie ?? await makeSessionCookie();
+  }
   const slug = opts.slug ?? 'acme';
   return {
     request: new Request(`https://photozseo.com/api/store/${slug}`, { method: 'DELETE', headers }),
@@ -62,15 +73,15 @@ describe('PUT /api/store/:slug — opt-in publish', () => {
     const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY, MARKET_DB: db };
     const before = tables.meta[0].value as number;
 
-    const res = await onRequestPut(putCtx({ body: manifest(true), env }));
+    const res = await onRequestPut(await putCtx({ body: manifest(true), env }));
 
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true, slug: 'acme', version: 1 });
-    expect(map.size).toBe(1);                          // KV: mağaza kaydedildi
-    expect(tables.stores).toHaveLength(1);             // D1: market'te listeli
+    expect(map.size).toBe(1);
+    expect(tables.stores).toHaveLength(1);
     expect(tables.stores[0].listed).toBe(1);
     expect(tables.products).toHaveLength(1);
-    expect(tables.meta[0].value as number).toBe(before + 1); // index bump
+    expect(tables.meta[0].value as number).toBe(before + 1);
   });
 
   it('opt-out (marketplaceListed=false): KV\'de kalır ama market D1\'den düşer', async () => {
@@ -78,14 +89,14 @@ describe('PUT /api/store/:slug — opt-in publish', () => {
     const { kv } = makeFakeKV();
     const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY, MARKET_DB: db };
 
-    await onRequestPut(putCtx({ body: manifest(true), env }));   // önce yayında
+    await onRequestPut(await putCtx({ body: manifest(true), env }));
     expect(tables.stores).toHaveLength(1);
 
-    const res = await onRequestPut(putCtx({ body: manifest(false), env })); // opt-out
+    const res = await onRequestPut(await putCtx({ body: manifest(false), env }));
     expect(res.status).toBe(200);
-    expect(tables.stores).toHaveLength(0);             // market'ten kalktı
+    expect(tables.stores).toHaveLength(0);
     expect(tables.products).toHaveLength(0);
-    const stored = await getStore(kv, 'acme');         // ama mağaza hâlâ var
+    const stored = await getStore(kv, 'acme');
     expect(stored?.manifest.store.marketplaceListed).toBe(false);
   });
 
@@ -94,40 +105,40 @@ describe('PUT /api/store/:slug — opt-in publish', () => {
     const { kv, map } = makeFakeKV();
     const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY, MARKET_DB: brokenDb };
 
-    const res = await onRequestPut(putCtx({ body: manifest(true), env }));
-
-    expect(res.status).toBe(200);                      // 200 döner
-    expect(map.size).toBe(1);                          // KV yazıldı
-  });
-
-  it('MARKET_DB binding yoksa crash yok, mağaza yine kaydedilir', async () => {
-    const { kv, map } = makeFakeKV();
-    const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY }; // MARKET_DB yok
-
-    const res = await onRequestPut(putCtx({ body: manifest(true), env }));
+    const res = await onRequestPut(await putCtx({ body: manifest(true), env }));
 
     expect(res.status).toBe(200);
     expect(map.size).toBe(1);
   });
 
-  it('write-key olmadan PUT reddedilir (401)', async () => {
+  it('MARKET_DB binding yoksa crash yok, mağaza yine kaydedilir', async () => {
+    const { kv, map } = makeFakeKV();
+    const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY };
+
+    const res = await onRequestPut(await putCtx({ body: manifest(true), env }));
+
+    expect(res.status).toBe(200);
+    expect(map.size).toBe(1);
+  });
+
+  it('oturum olmadan PUT reddedilir (401)', async () => {
     const { db } = makeFakeD1();
     const { kv, map } = makeFakeKV();
     const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY, MARKET_DB: db };
 
-    const res = await onRequestPut(putCtx({ body: manifest(true), env, key: null }));
+    const res = await onRequestPut(await putCtx({ body: manifest(true), env, cookie: null }));
 
     expect(res.status).toBe(401);
-    expect(map.size).toBe(0);                          // hiçbir şey yazılmadı
+    expect(map.size).toBe(0);
   });
 
-  it('STORE_WRITE_KEY tanımsızsa fail-closed (503)', async () => {
+  it('STORE_WRITE_KEY tanımsızsa fail-closed (401)', async () => {
     const { kv } = makeFakeKV();
-    const env = { STORE_KV: kv };                      // secret yok
+    const env = { STORE_KV: kv };
 
-    const res = await onRequestPut(putCtx({ body: manifest(true), env }));
+    const res = await onRequestPut(await putCtx({ body: manifest(true), env }));
 
-    expect(res.status).toBe(503);
+    expect(res.status).toBe(401);
   });
 });
 
@@ -137,30 +148,30 @@ describe('DELETE /api/store/:slug — market temizliği', () => {
     const { kv, map } = makeFakeKV();
     const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY, MARKET_DB: db };
 
-    await onRequestPut(putCtx({ body: manifest(true), env }));
+    await onRequestPut(await putCtx({ body: manifest(true), env }));
     expect(map.size).toBe(1);
     expect(tables.stores).toHaveLength(1);
     const beforeDelete = tables.meta[0].value as number;
 
-    const res = await onRequestDelete(delCtx({ env }));
+    const res = await onRequestDelete(await delCtx({ env }));
 
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true, slug: 'acme', deleted: true });
-    expect(map.size).toBe(0);                          // KV temiz
-    expect(tables.stores).toHaveLength(0);             // market temiz
+    expect(map.size).toBe(0);
+    expect(tables.stores).toHaveLength(0);
     expect(tables.products).toHaveLength(0);
     expect(tables.meta[0].value as number).toBe(beforeDelete + 1);
   });
 
-  it('write-key olmadan DELETE reddedilir (401)', async () => {
+  it('oturum olmadan DELETE reddedilir (401)', async () => {
     const { db } = makeFakeD1();
     const { kv, map } = makeFakeKV();
     map.set('store:acme', JSON.stringify({ status: 'active', version: 1 }));
     const env = { STORE_KV: kv, STORE_WRITE_KEY: KEY, MARKET_DB: db };
 
-    const res = await onRequestDelete(delCtx({ env, key: null }));
+    const res = await onRequestDelete(await delCtx({ env, cookie: null }));
 
     expect(res.status).toBe(401);
-    expect(map.size).toBe(1);                          // silinmedi
+    expect(map.size).toBe(1);
   });
 });

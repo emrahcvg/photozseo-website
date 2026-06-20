@@ -1,18 +1,15 @@
 /**
- * require-session.ts — B2 Faz B oturum geçidi (Seçenek A: Google girişi zorunlu).
+ * require-session.ts — Faz-2 oturum geçidi (Google girişi zorunlu).
  *
- * `team-session.ts:resolveMember` desenini genelleştirir ve Faz A'nın
- * `requireWriteAuth` (key/HMAC) geçidiyle GERİYE UYUMLU bir OR-gate kurar:
+ * Tüm write/read-protected endpoint'ler `pz_session` cookie'si gerektirir.
+ * Legacy key/HMAC yolu (Faz A/B) kaldırıldı.
  *
  *   1. requireSession           — pz_session cookie'sini verifySession ile doğrular.
- *   2. requireWriteAuthOrSession — ÖNCE session, yoksa LEGACY key/HMAC dener (OR).
- *
- * Faz-1'de anonim/legacy yol AÇIK kalır; hiçbir şey 401'e zorlanmaz.
- * Faz C'de legacy yol kaldırılınca bu modül tek geçit olarak kalır.
+ *   2. requireWriteAuthOrSession — geriye uyumluluk için korunan isim;
+ *                                  artık sadece session kontrol eder.
  */
 import { verifySession, parseCookies } from './session';
 import { SESSION_COOKIE } from '../../src/storefront/auth/config';
-import { requireWriteAuth, type WriteAuthEnv } from './auth';
 
 /** Oturum sahibinin kimliği — Google `sub` zorunlu, `email` opsiyonel. */
 export interface SessionPayload {
@@ -20,7 +17,7 @@ export interface SessionPayload {
   email?: string;
 }
 
-export interface SessionEnv extends WriteAuthEnv {
+export interface SessionEnv {
   STORE_WRITE_KEY?: string;
 }
 
@@ -56,36 +53,22 @@ export async function requireSession(
 }
 
 /**
- * Combined OR-gate (Faz B): authorized when EITHER a valid pz_session cookie
- * exists (preferred, `kind:'session'`) OR the Faz A legacy key/HMAC gate passes
- * (`kind:'legacy'`). Returns a 401 Response only when BOTH fail.
+ * Session gate (Faz-2): pz_session cookie zorunlu. Legacy key/HMAC yolu kaldırıldı.
  *
- * Legacy delegation kullanır Faz A'nın `requireWriteAuth` imza/davranışını
- * birebir (bodyText'in SHA-256 hash gereksinimi dahil — imzalı isteğin gövde
- * hash'i bodyText'ten türetilir). Bodyless istekler için bodyText '' olabilir.
+ * `bodyText` parametresi geriye uyumluluk için korundu (çağrı tarafları değişmez);
+ * artık kullanılmıyor.
  *
- * @param nowSec   Test edilebilirlik için dışarıdan verilen unix saniye.
- * @param bodyText İmzalı (HMAC) layer için gövde metni; varsayılan ''.
+ * @param nowSec Test edilebilirlik için dışarıdan verilen unix saniye.
  */
 export async function requireWriteAuthOrSession(
   request: Request,
   env: SessionEnv,
   nowSec: number,
   bodyText: string = '',
-): Promise<{ kind: 'session'; session: SessionPayload } | { kind: 'legacy' } | Response> {
-  // 1) Tercih edilen: geçerli oturum cookie'si.
+): Promise<{ kind: 'session'; session: SessionPayload } | Response> {
   const sessionResult = await requireSession(request, env, nowSec);
   if (!(sessionResult instanceof Response)) {
     return { kind: 'session', session: sessionResult };
   }
-
-  // 2) Geriye uyumlu yedek: Faz A key/HMAC geçidi (delege).
-  const bodyBytes = new TextEncoder().encode(bodyText).buffer as ArrayBuffer;
-  const denied = await requireWriteAuth(request, env, bodyBytes, nowSec);
-  if (denied === null) {
-    return { kind: 'legacy' };
-  }
-
-  // 3) İkisi de geçersiz → 401 (legacy geçidinin yanıtını aynen ilet).
-  return denied;
+  return sessionResult;
 }

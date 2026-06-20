@@ -55,9 +55,9 @@ export function makeFakeD1(): FakeD1 {
     }
     // stores upsert (INSERT OR REPLACE INTO stores ...)
     if (/INSERT OR REPLACE INTO stores/i.test(s)) {
-      const [slug, name, city, country, iban, iban_name, whatsapp, listed, lang, index_version, updated_at] = args;
+      const [slug, name, city, country, iban, iban_name, payment_json, whatsapp, owner_email, listed, lang, index_version, updated_at] = args;
       const i = tables.stores.findIndex((r) => r.slug === slug);
-      const row = { slug, name, city, country, iban, iban_name, whatsapp, listed, lang, index_version, updated_at };
+      const row = { slug, name, city, country, iban, iban_name, payment_json, whatsapp, owner_email, listed, lang, index_version, updated_at };
       if (i >= 0) tables.stores[i] = row; else tables.stores.push(row);
       return { kind: 'run' as const };
     }
