@@ -929,7 +929,7 @@ export function renderProductBody(
   const backHref = storeUrl(store.slug, locale, defaultLang);
   const backLabel = mt(locale, 'backToStore');
   const phone = store.contact.whatsapp ?? store.contact.phone;
-  const waHref = phone ? productWhatsappHref(phone, title, locale) : null;
+  const waHref = phone ? productWhatsappHref(phone, title, locale, product.price, product.currency ?? store.currency) : null;
   const waLabel = mt(locale, 'orderViaWhatsApp');
   const specsHeading = mt(locale, 'productDetails');
   const rows = specRows(product, locale);
@@ -1028,6 +1028,29 @@ export function renderProductBody(
   // Buy Now + Add to Cart
   const addLabel = mt(locale, 'addToCart');
   html += '      <div class="sf-btn-group">\n';
+
+  const pay = store.payment;
+  const productCurrency = product.currency ?? store.currency;
+  const productPrice = product.price;
+
+  // PayPal.me: per-product dynamic link
+  if (pay?.paypalUsername && productPrice != null) {
+    const ppLink = `https://paypal.me/${encodeURIComponent(pay.paypalUsername)}/${productPrice}${productCurrency}`;
+    html += `        <a class="sf-btn sf-btn--paypal" href="${escapeAttr(ppLink)}" target="_blank" rel="noopener noreferrer">Pay with PayPal</a>\n`;
+  }
+
+  // Wise Quick Pay: per-product dynamic link
+  if (pay?.wiseHandle && productPrice != null) {
+    const wiseLink = `https://wise.com/pay/business/${encodeURIComponent(pay.wiseHandle)}?amount=${productPrice}&currency=${encodeURIComponent(productCurrency)}`;
+    html += `        <a class="sf-btn sf-btn--wise" href="${escapeAttr(wiseLink)}" target="_blank" rel="noopener noreferrer">Pay with Wise</a>\n`;
+  }
+
+  // Custom Link (UPI, PIX, MercadoPago, etc.)
+  if (pay?.customLinkURL) {
+    const label = pay.customLinkLabel ?? 'Pay Now';
+    html += `        <a class="sf-btn sf-btn--custom" href="${escapeAttr(pay.customLinkURL)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>\n`;
+  }
+
   if (waHref) {
     html += `        <a class="sf-btn sf-btn--buy" href="${escapeAttr(waHref)}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n`;
   }
@@ -1092,7 +1115,6 @@ export function renderProductBody(
 
   // Marketplace cart (store-scoped)
   const wa = store.contact.whatsapp ?? store.contact.phone ?? '';
-  const pay = store.payment;
   const sendLabel = mt(locale, 'sendCart');
   const nameL = mt(locale, 'name');
   const phoneL = mt(locale, 'phone');

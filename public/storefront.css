@@ -575,6 +575,12 @@ html { scroll-behavior: smooth; }
   text-align: center; transition: background .15s;
 }
 .sf-btn--buy:hover { background: var(--accent-hover); }
+.sf-btn--paypal { background: #003087; color: #fff; }
+.sf-btn--paypal:hover { background: #002070; }
+.sf-btn--wise { background: #163300; color: #9fe870; }
+.sf-btn--wise:hover { background: #0d2200; }
+.sf-btn--custom { background: #6b21a8; color: #fff; }
+.sf-btn--custom:hover { background: #581c87; }
 .sf-btn--cart {
   display: flex; align-items: center; justify-content: center;
   padding: 15px; border-radius: 14px;

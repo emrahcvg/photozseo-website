@@ -32,11 +32,31 @@ export interface StoreInfo {
   // Marketplace (P3 iOS tarafından yazılır — geriye uyumlu, opsiyonel).
   marketplaceListed?: boolean;
   payment?: {
+    method?: string;
+    // Bank Transfer / IBAN
     iban?: string;
     ibanName?: string;
     swift?: string;
     bankName?: string;
     currencyCode?: string;
+    // PayPal email (legacy)
+    paypalEmail?: string;
+    // Wise email (legacy)
+    wiseEmail?: string;
+    // ACH
+    achRouting?: string;
+    achAccount?: string;
+    achBankName?: string;
+    // Papara
+    paparaNumber?: string;
+    paparaName?: string;
+    // PayPal.me (username → generates per-product price link)
+    paypalUsername?: string;
+    // Wise Quick Pay (handle → generates per-product price link)
+    wiseHandle?: string;
+    // Custom Link (UPI, PIX, MercadoPago, Payoneer, etc.)
+    customLinkURL?: string;
+    customLinkLabel?: string;
   };
   /** Satıcı işletme türü (BusinessType rawValue: individual/manufacturer/...).
    *  Storefront şeffaflık rozeti; etiket buyer-dilinde sellerTypeLabel ile üretilir. */

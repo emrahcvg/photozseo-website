@@ -263,10 +263,19 @@ export function mapHref(location: StoreLocation | undefined): string | null {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 }
 
-export function productWhatsappHref(phone: string, productTitle: string, locale: string): string {
+export function productWhatsappHref(
+  phone: string,
+  productTitle: string,
+  locale: string,
+  price?: number | null,
+  currency?: string | null,
+): string {
+  const priceStr = price != null && currency
+    ? ` (${new Intl.NumberFormat(locale, { style: 'currency', currency }).format(price)})`
+    : '';
   const msg = locale === 'tr'
-    ? `Merhaba, "${productTitle}" ürünü hakkında bilgi almak istiyorum.`
-    : `Hello, I'd like info about "${productTitle}".`;
+    ? `Merhaba, "${productTitle}"${priceStr} ürününü sipariş etmek istiyorum.`
+    : `Hello, I'd like to order "${productTitle}"${priceStr}.`;
   return `${whatsappHref(phone)}?text=${encodeURIComponent(msg)}`;
 }
 
