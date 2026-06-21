@@ -120,8 +120,50 @@ const fr: HomeContent = {
         "bullets": [
           "Carrousel de photos, inspecteur des médias, éditeur en ligne EXIF",
           "Majoration par produit, PDSF, prix B2B, mode TVA",
-          "Partage rapide vers un devis, un catalogue ou une place de marché",
+          "Partage rapide vers un devis, un catalogue ou une place de marché"
+        ]
+      },
+      {
+        "eyebrow": "Importation CSV / XLSX en masse",
+        "h": "Déposez un catalogue. Faites correspondre 41 plates-formes.",
+        "sub": "Déposez un fichier de catalogue : photoZseo détecte automatiquement 41 signatures de plate-forme et extrait des photos de produits en parallèle. Les catalogues Shopify ou Amazon existants sont disponibles en quelques minutes.",
+        "bullets": [
+          "CSV · TSV · XLSX · Importation de catalogue JSON",
+          "41 signatures de plate-forme détectées automatiquement à partir des en-têtes",
+          "Téléchargement parallèle de l'URL de la photo · Bascule Wi-Fi uniquement",
+          "Exportation ZIP par lots par plateforme"
+        ]
+      },
+      {
+        "eyebrow": "Mac + iPhone + iPad",
+        "h": "Application Mac native. Binaire universel.",
+        "sub": "iOS 17+, iPadOS et macOS 14+ via Mac Catalyst. Raccourcis clavier, glisser-déposer du Finder, un inspecteur à 3 volets et des projets synchronisés avec iCloud sur tous les appareils.",
+        "bullets": [
+          "Raccourcis clavier ⌘N / ⌘E / ⌘F / ⌘A",
+          "Glisser-déposer depuis le Finder · Menus contextuels par clic droit",
+          "Inspecteur à 3 volets : barre latérale · grille · détail",
+          "Synchronisation iCloud Drive sur iPhone, iPad et Mac"
+        ]
+      },
+      {
+        "eyebrow": "La confidentialité d'abord",
+        "h": "Aucun suivi. Aucune publicité. Pas de nuages.",
+        "sub": "Conçu pour les vendeurs qui ne font pas confiance au cloud. Conforme aux normes RGPD, KVKK et CCPA. 12 langues dont 3 scripts RTL. GPS supprimé à l'exportation par défaut.",
+        "bullets": [
+          "RGPD · KVKK · CCPA — pas d'analyse, pas de SDK tiers",
+          "EN · TR · DE · ES · FR · PT · JA · KO · ZH · AR · HI · FA",
+          "L'IA fonctionne sur l'appareil : vos photos ne partent jamais",
           "Données GPS supprimées lors de l'exportation · balise logicielle préservée"
+        ]
+      },
+      {
+        "eyebrow": "Tarifs",
+        "h": "Libre de commencer. Pro quand vous êtes prêt.",
+        "sub": "Commencez gratuitement. Effectuez la mise à niveau uniquement lorsque vous êtes prêt à exporter vers tous les marchés. Annulez à tout moment, pas de carte pour un accès anticipé.",
+        "bullets": [
+          "Gratuit pour toujours pour la capture, l'organisation et l'exportation de base",
+          "Pro ajoute 46 formats de marché, AI SEO, devis B2B, importation en masse",
+          "Hebdomadaire 2,99 $ · Mensuel 6,99 $ · Annuel 39,99 $ (meilleure valeur)"
         ]
       }
     ]
@@ -203,33 +245,22 @@ const fr: HomeContent = {
       {
         "name": "Hebdomadaire",
         "pricePer": "2,99$/semaine",
-        "trial": "ou 71,99 $/an · économisez 40 %",
         "features": [
           "Accès Pro complet",
           "Essayez-le pendant une semaine",
           "Annuler à tout moment dans Paramètres",
-          "— Pas d'engagement à long terme",
-          "Noms de fichiers SEO et conversion WebP",
-          "100 images / mois"
+          "— Pas d'engagement à long terme"
         ],
         "cta": "Commencer chaque semaine"
       },
       {
         "name": "Mensuel",
         "pricePer": "6,99 $/mois",
-        "trial": "ou 143,99 $/an · économisez 40 %",
-        "featured": true,
         "features": [
           "Accès Pro complet",
           "Facturé mensuellement, annulez à tout moment",
           "Mêmes caractéristiques que l'annuel",
-          "— Économisez 52 % avec l'abonnement annuel",
-          "Boutique en ligne (photozseo.com)",
-          "Inscription sur le marché",
-          "Inventaire et code-barres",
-          "1 000 images / mois",
-          "iPhone, iPad et Mac universels",
-          "iCloud Drive synchronisation + récupération de la corbeille"
+          "— Économisez 52 % avec l'abonnement annuel"
         ],
         "cta": "Choisissez mensuellement"
       },
@@ -237,6 +268,7 @@ const fr: HomeContent = {
         "name": "Annuel",
         "pricePer": "39,99 $/an",
         "trial": "Seulement 3,33 $/mois · économisez 52 %",
+        "featured": true,
         "features": [
           "**Supprimer le filigrane** sur toutes les exportations",
           "**Exportation par lots** chaque photo à la fois",
@@ -245,7 +277,9 @@ const fr: HomeContent = {
           "Remplissage automatique AI SEO (13 champs, 12 langues)",
           "Générateur de devis B2B (TVA, IBAN, HS, e-sign)",
           "Importation groupée de catalogue CSV / XLSX / JSON",
-          "Éditeur EXIF ​​et pipeline de métadonnées (GPS supprimé)"
+          "Éditeur EXIF ​​et pipeline de métadonnées (GPS supprimé)",
+          "iPhone, iPad et Mac universels",
+          "iCloud Drive synchronisation + récupération de la corbeille"
         ],
         "cta": "Obtenez annuel"
       }
@@ -279,6 +313,18 @@ const fr: HomeContent = {
       {
         "q": "Combien de plates-formes représente exactement « 46 » ?",
         "a": "Au lancement : 46 préréglages de marché (Amazon, Shopify, Etsy, eBay, Walmart, WooCommerce, Trendyol, AliExpress, Mercado Libre, Coupang, Lazada, Shopee, Temu, SHEIN, DHgate, Made-in-China, Global Sources…) ainsi que des formats sociaux/de messagerie (Instagram Shopping, TikTok Boutique, Pinterest, WeChat, RED, Stories). Les nouveaux préréglages sont livrés dans les mises à jour."
+      },
+      {
+        "q": "Ma position GPS figurera-t-elle sur les photos exportées ?",
+        "a": "Non. photoZseo supprime les données GPS lors de l'exportation par défaut. Les autres EXIF ​​— Artiste, Copyright, Logiciel, dimensions, appareil photo — sont conservés et modifiables en ligne. Vous gardez le contrôle."
+      },
+      {
+        "q": "Est-il conforme au RGPD/KVKK/CCPA ?",
+        "a": "Oui, et l'application parle votre langue : anglais, turc, allemand, espagnol, français, portugais, japonais, coréen, chinois, arabe, hindi et persan. Les mises en page RTL pour l'arabe, le persan et l'ourdou sont de première classe."
+      },
+      {
+        "q": "Puis-je importer ma liste de produits existante ?",
+        "a": "Oui. Les URL CSV, TSV, XLSX, JSON et photo sont tous pris en charge. 41 modèles d'importation de plate-forme inclus avec détection automatique à partir des en-têtes de fichiers : ajoutez une exportation Shopify ou Amazon existante et photoZseo gère le reste."
       }
     ]
   },
