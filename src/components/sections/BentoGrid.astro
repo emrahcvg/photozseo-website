@@ -54,14 +54,16 @@ const { content } = Astro.props as Props;
 
       <div class="bento-cell bento-langs" data-reveal>
         <div class="bento-label">{content.langs.label}</div>
-        <div class="bento-bignum">12</div>
+        <div class="bento-bignum">15</div>
         <div class="bento-flags">
           <span title="English">🇺🇸</span><span title="Turkish">🇹🇷</span>
           <span title="German">🇩🇪</span><span title="Spanish">🇪🇸</span>
-          <span title="French">🇫🇷</span><span title="Portuguese">🇵🇹</span>
-          <span title="Japanese">🇯🇵</span><span title="Korean">🇰🇷</span>
-          <span title="Chinese">🇨🇳</span><span title="Arabic">🇸🇦</span>
-          <span title="Hindi">🇮🇳</span><span title="Persian">🇮🇷</span>
+          <span title="Italian">🇮🇹</span><span title="French">🇫🇷</span>
+          <span title="Portuguese">🇵🇹</span><span title="Japanese">🇯🇵</span>
+          <span title="Korean">🇰🇷</span><span title="Chinese">🇨🇳</span>
+          <span title="Arabic">🇸🇦</span><span title="Hindi">🇮🇳</span>
+          <span title="Persian">🇮🇷</span><span title="Polish">🇵🇱</span>
+          <span title="Urdu">🇵🇰</span>
         </div>
         <div class="bento-sublabel">{content.langs.sublabel}</div>
       </div>
@@ -74,7 +76,7 @@ const { content } = Astro.props as Props;
             <div class="bento-sublabel-sm">{content.stats.marketplaces}</div>
           </div>
           <div>
-            <div class="bento-bignum-sm"><CountUp client:visible to={9} /></div>
+            <div class="bento-bignum-sm"><CountUp client:visible to={13} /></div>
             <div class="bento-sublabel-sm">{content.stats.seoFields}</div>
           </div>
           <div>

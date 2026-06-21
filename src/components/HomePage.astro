@@ -22,7 +22,6 @@ const features = c.features.items.map((item, idx) => ({
   ipad: `/screenshots/ipad/slot-${String(idx + 1).padStart(2, '0')}.png`,
 }));
 
-const statsTitleHtml = c.stats.title.replace(/\n/g, '<br/>');
 ---
 
 <SmoothScroll client:load />
@@ -69,41 +68,6 @@ const statsTitleHtml = c.stats.title.replace(/\n/g, '<br/>');
 
 <section class="seodemo-wrap">
   <SEODemo client:visible content={c.seoDemo} />
-</section>
-
-<!-- Stats -->
-<section class="stats">
-  <div class="container">
-    <div data-reveal>
-      <span class="kicker">{c.stats.kicker}</span>
-      <h2 class="section-title" set:html={statsTitleHtml}></h2>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card" data-reveal>
-        <div class="stat-num"><CountUp client:visible to={46} suffix="+" /></div>
-        <div class="stat-label">{c.stats.labels.marketplaces}</div>
-      </div>
-      <div class="stat-card" data-reveal style="transition-delay: 80ms">
-        <div class="stat-num"><CountUp client:visible to={9} /></div>
-        <div class="stat-label">{c.stats.labels.seoFields}</div>
-      </div>
-      <div class="stat-card" data-reveal style="transition-delay: 160ms">
-        <div class="stat-num"><CountUp client:visible to={12} /></div>
-        <div class="stat-label">{c.stats.labels.languages}</div>
-      </div>
-      <div class="stat-card" data-reveal style="transition-delay: 240ms">
-        <div class="stat-num">0</div>
-        <div class="stat-label">{c.stats.labels.zero}</div>
-      </div>
-    </div>
-    <div class="compliance-row" data-reveal>
-      <span class="pill"><span class="pill-dot"/> {c.stats.pills.gdpr}</span>
-      <span class="pill"><span class="pill-dot"/> {c.stats.pills.kvkk}</span>
-      <span class="pill"><span class="pill-dot"/> {c.stats.pills.ccpa}</span>
-      <span class="pill"><span class="pill-dot"/> {c.stats.pills.wcag}</span>
-      <span class="pill"><span class="pill-dot"/> {c.stats.pills.noTracking}</span>
-    </div>
-  </div>
 </section>
 
 <!-- Pricing -->
@@ -199,12 +163,15 @@ const statsTitleHtml = c.stats.title.replace(/\n/g, '<br/>');
       "description": "Turn one product photo into 46 marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol and more.",
       "url": "https://photozseo.com",
       "offers": [
-        { "@type": "Offer", "price": "2.99", "priceCurrency": "USD", "category": "Pro Weekly" },
-        { "@type": "Offer", "price": "6.99", "priceCurrency": "USD", "category": "Pro Monthly" },
-        { "@type": "Offer", "price": "39.99", "priceCurrency": "USD", "category": "Pro Annual" }
+        { "@type": "Offer", "price": "9.99", "priceCurrency": "USD", "category": "Starter Monthly" },
+        { "@type": "Offer", "price": "71.99", "priceCurrency": "USD", "category": "Starter Annual" },
+        { "@type": "Offer", "price": "19.99", "priceCurrency": "USD", "category": "Pro Monthly" },
+        { "@type": "Offer", "price": "143.99", "priceCurrency": "USD", "category": "Pro Annual" },
+        { "@type": "Offer", "price": "49.99", "priceCurrency": "USD", "category": "Business Monthly" },
+        { "@type": "Offer", "price": "359.99", "priceCurrency": "USD", "category": "Business Annual" }
       ],
-      "featureList": ["46 marketplace export presets","AI SEO auto-fill","Pro camera studio","Background removal","B2B quote builder","Stories","EXIF editor","iPhone iPad Mac universal","iCloud Drive sync","On-device AI"],
-      "inLanguage": ["en","tr","de","es","fr","pt","ja","ko","zh","ar","hi","fa"]
+      "featureList": ["46 marketplace export presets","AI SEO auto-fill","AI background removal","Pro camera studio","B2B quote builder","EXIF editor","iPhone iPad Mac universal","iCloud Drive sync","On-device AI","Shopify API","Team collaboration"],
+      "inLanguage": ["en","tr","de","es","it","fr","pt","ja","ko","zh","ar","hi","fa","pl","ur"]
     },
     {
       "@type": "FAQPage",
