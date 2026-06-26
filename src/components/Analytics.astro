@@ -1,0 +1,72 @@
+---
+// photoZseo — Google Analytics 4 (GA4) + dönüşüm event takibi.
+// Tek kaynak: ölçüm ID burada tutulur, her iki layout bu bileşeni kullanır.
+const GA_MEASUREMENT_ID = 'G-TD3FJV44ZF';
+---
+
+<!-- Google tag (gtag.js) -->
+<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+<script is:inline define:vars={{ id: GA_MEASUREMENT_ID }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  // anonymize_ip: GDPR/KVKK için IP anonimleştirme açık.
+  gtag('config', id, { anonymize_ip: true });
+</script>
+
+<!-- photoZseo dönüşüm event takibi (delegated, bağımlılıksız) -->
+<script is:inline>
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('a, button');
+    if (!el || typeof window.gtag !== 'function') return;
+
+    // 1) Açık özel event: data-ga-event="ad" [data-ga-label="..."]
+    var custom = el.getAttribute('data-ga-event');
+    if (custom) {
+      window.gtag('event', custom, {
+        event_category: 'engagement',
+        label: el.getAttribute('data-ga-label') || el.textContent.trim().slice(0, 80),
+      });
+      return;
+    }
+
+    var href = el.getAttribute('href') || '';
+
+    // 2) App Store / Google Play çıkışları (lansman sonrası için hazır)
+    if (href.indexOf('apps.apple.com') > -1) {
+      window.gtag('event', 'click_app_store', { event_category: 'conversion', transport_type: 'beacon' });
+      return;
+    }
+    if (href.indexOf('play.google.com') > -1) {
+      window.gtag('event', 'click_google_play', { event_category: 'conversion', transport_type: 'beacon' });
+      return;
+    }
+
+    // 3) E-posta lead'leri (notify / iletişim)
+    if (href.indexOf('mailto:') === 0) {
+      window.gtag('event', 'lead_email', {
+        event_category: 'conversion',
+        label: href.replace('mailto:', '').split('?')[0],
+      });
+      return;
+    }
+
+    // 4) Fiyatlandırma planı seçimi (Starter / Pro / Business)
+    if (el.classList.contains('plan-cta')) {
+      window.gtag('event', 'select_plan', { event_category: 'conversion', label: el.textContent.trim().slice(0, 60) });
+      return;
+    }
+
+    // 5) /market ürün kartı tıklaması
+    if (el.classList.contains('sf-card-link')) {
+      window.gtag('event', 'select_item', { event_category: 'conversion', label: el.textContent.trim().slice(0, 60) });
+      return;
+    }
+
+    // 6) Birincil Early Access / indir CTA
+    if (href === '#download' || el.classList.contains('btn-app')) {
+      window.gtag('event', 'cta_early_access', { event_category: 'engagement', label: el.textContent.trim().slice(0, 60) });
+      return;
+    }
+  }, { capture: true });
+</script>

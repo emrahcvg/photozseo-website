@@ -1,6 +1,7 @@
 ---
 import { languages, rtlLanguages, defaultLang, type Lang, useTranslations } from '../i18n/ui';
 import { getHomeContent } from '../i18n/home';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
@@ -65,6 +66,7 @@ const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
     <meta name="keywords" content="product photo app, marketplace listing tool, Amazon photo size, Shopify product photo, Etsy listing app, AI SEO product description, background removal app, EXIF metadata, B2B quote app, iPhone product photography, ecommerce photo optimizer" />
     <meta name="apple-itunes-app" content="app-id=APP_STORE_ID_TBD" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <Analytics />
     <slot name="head" />
   </head>
   <body class={fullBleed ? 'full-bleed' : ''}>

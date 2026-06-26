@@ -1,4 +1,6 @@
 ---
+import Analytics from '../components/Analytics.astro';
+
 interface Props {
   title: string;
   description?: string;
@@ -55,6 +57,7 @@ const ogImageAbsolute = ogImage.startsWith('http') ? ogImage : `https://photozse
 
     <!-- SEO -->
     <meta name="robots" content="index, follow" />
+    <Analytics />
   </head>
   <body>
     <slot />
