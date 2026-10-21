@@ -11,6 +11,10 @@
  *   • Alıcı durumu: D1 `favorites`, `cart_items`, `orders` (owner_key=b:<sub>).
  *   • B2B: kullanıcının sahip OLDUĞU mağazalara ait `store_buyers` +
  *     `store_buyer_transactions` (mağaza silinince beraber).
+ *   • Takım: kullanıcının `memberships` satırları. Sahibi olduğu şirket:
+ *     başka üye varsa sahiplik en eski admin'e (yoksa en eski üyeye) devredilir;
+ *     tek başınaysa şirket + havuz tamamen silinir (deleteCompany).
+ *     `team_activity_log.actor_email` anonimleştirilir (satır denetim için kalır).
  *
  * KORUNAN (silinmez — anonimleştirilir):
  *   • `legal_consents`: kabul (consent) KANITI yasal saklama gerektirir
@@ -23,6 +27,7 @@
 
 import type { D1Like } from './buyer';
 import { ownerKeyFromBuyer } from './buyer';
+import { listMemberships, listCompanyMembers, deleteCompany, removeMembership, transferOwnership } from './team';
 
 /** KV list/get/delete için ihtiyaç duyulan minimum yüzey (test edilebilirlik). */
 export interface KVLike {
@@ -44,6 +49,9 @@ export interface DeleteSummary {
   b2bBuyers: number;
   b2bTransactions: number;
   consentsAnonymized: number;
+  companiesDeleted: number;
+  companiesTransferred: number;
+  membershipsRemoved: number;
 }
 
 /**
@@ -91,6 +99,9 @@ export async function deleteAccountData(
     b2bBuyers: 0,
     b2bTransactions: 0,
     consentsAnonymized: 0,
+    companiesDeleted: 0,
+    companiesTransferred: 0,
+    membershipsRemoved: 0,
   };
 
   const ownerKey = ownerKeyFromBuyer(sub); // b:<sub>; geçersiz sub → null
@@ -149,9 +160,40 @@ export async function deleteAccountData(
       .bind(sub)
       .run();
     summary.consentsAnonymized += rowsAffected(cons);
+
+    // 5) Takım üyelikleri / sahip olunan şirketler.
+    await deleteTeamData(db, sub, summary);
   }
 
   return summary;
+}
+
+/** Rol önceliği: devir için admin > employee; eşitlikte en eski katılan. */
+const ROLE_RANK: Record<string, number> = { owner: 0, admin: 1, employee: 2 };
+
+export async function deleteTeamData(db: D1Like, sub: string, summary: DeleteSummary): Promise<void> {
+  const memberships = await listMemberships(db, sub);
+  for (const m of memberships) {
+    if (m.role === 'owner') {
+      const others = (await listCompanyMembers(db, m.companyId)).filter((x) => x.sub !== sub);
+      if (others.length === 0) {
+        await deleteCompany(db, m.companyId);
+        await db.prepare('DELETE FROM team_activity_log WHERE company_id = ?').bind(m.companyId).run();
+        summary.companiesDeleted++;
+        continue;
+      }
+      others.sort((a, b) =>
+        (ROLE_RANK[a.role] ?? 9) - (ROLE_RANK[b.role] ?? 9) || a.joinedAt.localeCompare(b.joinedAt));
+      await transferOwnership(db, m.companyId, sub, others[0].sub);
+      summary.companiesTransferred++;
+    }
+    await removeMembership(db, m.companyId, sub);
+    summary.membershipsRemoved++;
+  }
+  await db
+    .prepare("UPDATE team_activity_log SET actor_email = '' WHERE actor_sub = ?")
+    .bind(sub)
+    .run();
 }
 
 /** D1 `run()` sonucundan etkilenen satır sayısını güvenli çeker (yoksa 0). */
