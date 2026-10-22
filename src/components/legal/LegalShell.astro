@@ -1,0 +1,27 @@
+---
+/**
+ * Hukuk sayfası kabuğu — / (en) ve /[lang]/ sürümleri aynı gövdeyi paylaşsın diye.
+ * Gövde, slot ile verilir; başlık/tarih alanları props'tan gelir.
+ */
+import Layout from '../../layouts/Layout.astro';
+import { defaultLang, type Lang } from '../../i18n/ui';
+import '../../styles/legal.css';
+
+interface Props { lang: Lang; title: string; kicker: string; updatedLabel: string; date: string; version?: string }
+const { lang, title, kicker, updatedLabel, date, version } = Astro.props;
+const home = lang === defaultLang ? '/' : `/${lang}/`;
+---
+<Layout title={title} lang={lang}>
+  <article class="legal">
+    <a href={home} class="legal-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>Home</span>
+    </a>
+    <header class="legal-head">
+      <span class="kicker">{kicker}</span>
+      <h1>{title}</h1>
+      <p class="updated"><strong>{updatedLabel}</strong> {date}{version && <> &middot; {version}</>}</p>
+    </header>
+    <slot />
+  </article>
+</Layout>

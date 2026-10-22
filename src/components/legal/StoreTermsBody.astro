@@ -1,0 +1,71 @@
+---
+import LegalShell from './LegalShell.astro';
+import { defaultLang, type Lang, useTranslations } from '../../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const href = (page: string) => (lang === defaultLang ? `/${page}` : `/${lang}/${page}`);
+---
+<LegalShell lang={lang} title={t('storeterms.title')} kicker={t('storeterms.kicker')} updatedLabel={t('storeterms.updated')} date={t('storeterms.date2')} version={t('storeterms.version2')}>
+  <h2>{t('storeterms.intro.title')}</h2>
+  <p>{t('storeterms.intro.desc')}</p>
+
+  <h2>{t('storeterms.role.title')}</h2>
+  <p>{t('storeterms.role.desc')}</p>
+
+  <h2>{t('storeterms.payments.title')}</h2>
+  <p>{t('storeterms.payments.desc')}</p>
+
+  <h2>{t('storeterms.seller.title')}</h2>
+  <p>{t('storeterms.seller.desc')}</p>
+  <ul>
+    <li>{t('storeterms.seller.legality')}</li>
+    <li>{t('storeterms.seller.accuracy')}</li>
+    <li>{t('storeterms.seller.tax')}</li>
+    <li>{t('storeterms.seller.fulfillment')}</li>
+    <li>{t('storeterms.seller.support')}</li>
+  </ul>
+
+  <h2>{t('storeterms.identity.title')}</h2>
+  <p>{t('storeterms.identity.desc')}</p>
+
+  <h2>{t('storeterms.consumer.title')}</h2>
+  <p>{t('storeterms.consumer.desc')}</p>
+
+  <h2>{t('storeterms.safety.title')}</h2>
+  <p>{t('storeterms.safety.desc')}</p>
+
+  <h2>{t('storeterms.pricing2.title')}</h2>
+  <p>{t('storeterms.pricing2.desc')}</p>
+
+  <h2>{t('storeterms.reviews.title')}</h2>
+  <p>{t('storeterms.reviews.desc')}</p>
+
+  <h2>{t('storeterms.buyerdata.title')}</h2>
+  <p>{t('storeterms.buyerdata.desc')}</p>
+
+  <h2>{t('storeterms.sanctions.title')}</h2>
+  <p>{t('storeterms.sanctions.desc')}</p>
+
+  <h2>{t('storeterms.buyer.title')}</h2>
+  <p>{t('storeterms.buyer.desc')}</p>
+  <ul>
+    <li>{t('storeterms.buyer.verify')}</li>
+    <li>{t('storeterms.buyer.payment')}</li>
+    <li>{t('storeterms.buyer.report')}</li>
+  </ul>
+
+  <h2>{t('storeterms.removal.title')}</h2>
+  <p>{t('storeterms.removal.desc')}</p>
+
+  <h2>{t('storeterms.disclaimer.title')}</h2>
+  <p>{t('storeterms.disclaimer.desc')}</p>
+
+  <h2>{t('storeterms.changes.title')}</h2>
+  <p>{t('storeterms.changes.desc')}</p>
+
+  <h2>{t('storeterms.contact.title')}</h2>
+  <p>{t('storeterms.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+  <p>{t('storeterms.relatedAup')} <a href={href('aup')}>{t('storeterms.relatedAupLink')}</a> &middot; <a href={href('marketplace-rules')}>{t('mrules.title')}</a>.</p>
+</LegalShell>

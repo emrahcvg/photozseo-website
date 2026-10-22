@@ -1,0 +1,38 @@
+---
+import LegalShell from './LegalShell.astro';
+import { defaultLang, type Lang, useTranslations } from '../../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const href = (page: string) => (lang === defaultLang ? `/${page}` : `/${lang}/${page}`);
+const sections = ['intro', 'contact', 'role', 'listing', 'trader', 'ranking', 'reviews', 'prices', 'safety'] as const;
+const after = ['decisions', 'appeal', 'misuse', 'ads', 'law'] as const;
+---
+<LegalShell lang={lang} title={t('mrules.title')} kicker={t('mrules.kicker')} updatedLabel={t('aup.updated')} date={t('mrules.date')} version={t('mrules.version')}>
+  {sections.map((s) => (
+    <>
+      <h2 id={s}>{t(`mrules.${s}.title`)}</h2>
+      <p>{t(`mrules.${s}.desc`)}</p>
+    </>
+  ))}
+
+  <h2 id="report">{t('mrules.notice.title')}</h2>
+  <p>{t('mrules.notice.desc')}</p>
+  <ul>
+    <li>{t('mrules.notice.url')}</li>
+    <li>{t('mrules.notice.why')}</li>
+    <li>{t('mrules.notice.contact')}</li>
+    <li>{t('mrules.notice.good')}</li>
+  </ul>
+  <p>{t('mrules.notice.after')} <a href="mailto:support@photozseo.com?subject=Marketplace%20report">support@photozseo.com</a></p>
+
+  {after.map((s) => (
+    <>
+      <h2 id={s}>{t(`mrules.${s}.title`)}</h2>
+      <p>{t(`mrules.${s}.desc`)}</p>
+    </>
+  ))}
+
+  <p>{t('mrules.related')} <a href={href('store-terms')}>{t('storeterms.title')}</a> &middot; <a href={href('aup')}>{t('aup.title')}</a> &middot; <a href={href('privacy')}>{t('privacy.title')}</a> &middot; <a href={href('terms')}>{t('terms.title')}</a></p>
+</LegalShell>

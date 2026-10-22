@@ -796,3 +796,4 @@ body{font-family:var(--mk-font);background:var(--mk-paper);}
 .mk-card__price--contact{font-size:.83rem;font-weight:500;color:var(--mk-muted-strong);}
 .mk-card__badge--out{inset:auto auto 10px 10px;display:inline-block;padding:3px 8px;border-radius:6px;background:var(--mk-paper);color:var(--mk-fg);font-family:var(--mk-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;}
 .mk-card__media:has(.mk-card__badge--out) img{filter:grayscale(1);opacity:.55;}
+.mk-search-body{margin-top:24px;}

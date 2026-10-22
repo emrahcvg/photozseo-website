@@ -4,6 +4,8 @@
  * translation cache; THIS table is only chrome (labels, buttons, headings).
  */
 
+import { MK_GENERATED } from './marketplace-i18n.generated';
+
 export const MK_LOCALES = ['en', 'tr', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'ja', 'ko', 'zh', 'ar', 'fa', 'ur', 'hi'] as const;
 export type MkLocale = (typeof MK_LOCALES)[number];
 
@@ -221,10 +223,16 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
   hi: { marketTitle: 'मार्केटप्लेस', searchPlaceholder: 'उत्पाद खोजें…', newProducts: 'नए उत्पाद', stores: 'स्टोर', featured: 'फ़ीचर्ड', categories: 'श्रेणियाँ', allCategories: 'सभी', noResults: 'कोई परिणाम नहीं मिला', filters: 'फ़िल्टर', apply: 'लागू करें', clear: 'साफ़ करें', price: 'मूल्य', city: 'शहर', inStock: 'केवल स्टॉक में', sortNew: 'नवीनतम', sortPriceAsc: 'मूल्य: कम से अधिक', sortPriceDesc: 'मूल्य: अधिक से कम', sortLabel: 'क्रमबद्ध करें', min: 'न्यूनतम', max: 'अधिकतम', results: 'परिणाम', visitStore: 'स्टोर देखें', trustBadge: 'स्वतंत्र विक्रेता · बैंक ट्रांसफ़र · कोई नकली समीक्षा नहीं', report: 'रिपोर्ट करें', addToCart: 'कार्ट में जोड़ें', cart: 'कार्ट', sendCart: 'कार्ट भेजें', emptyCart: 'आपका कार्ट खाली है', name: 'पूरा नाम', phone: 'फ़ोन', address: 'पता', note: 'टिप्पणी', required: 'यह फ़ील्ड आवश्यक है', submitOrder: 'WhatsApp से ऑर्डर भेजें', orderRef: 'ऑर्डर संदर्भ', payByTransfer: 'बैंक ट्रांसफ़र से भुगतान', iban: 'IBAN', ibanName: 'खाताधारक का नाम', paymentDesc: 'भुगतान विवरण', openWhatsapp: 'WhatsApp खोलें', qty: 'मात्रा', remove: 'हटाएँ', total: 'कुल', browseAll: 'सभी देखें', soldOut: 'स्टॉक ख़त्म', contactForPrice: 'मूल्य के लिए संपर्क करें', backToStore: 'स्टोर पर वापस जाएं', backToMarket: '← मार्केट', currency: 'मुद्रा', language: 'भाषा', rateNote: '≈ लगभग · दरें रोज़ अपडेट', contact: 'संपर्क', call: 'कॉल', other: 'अन्य', poweredBy: 'यह स्टोर photoZseo से बनाया गया है', reportStore: 'इस स्टोर की रिपोर्ट करें', productDetails: 'उत्पाद विवरण', orderViaWhatsApp: 'WhatsApp से ऑर्डर करें', deliveryInfo: 'वितरण विवरण', addNote: 'एक नोट जोड़ें (वैकल्पिक)', favorite: 'पसंदीदा में जोड़े', signIn: 'दाखिल करना', signOut: 'साइन आउट', myFavorites: 'मेरे प्रिय', myOrders: 'मेरे आदेश', discover: 'खोज करना', noOrders: 'अभी तक कोई आदेश नहीं', orderStatus: 'स्थिति', orderItems: 'सामान', myCart: 'मेरी गाड़ी', emptyFavorites: 'अभी तक कोई पसंदीदा नहीं', bankName: 'किनारा', swift: 'गिरगिट', fitsVehicle: 'वाहन द्वारा फ़िल्टर करें', allMakes: 'सब बनाता है', allModels: 'सभी मॉडल', paySafetyTitle: 'इससे पहले कि आप भुगतान करें', paySafetyTip: 'बैंक हस्तांतरण को उलटा नहीं किया जा सकता. सुनिश्चित करें कि आप इस विक्रेता पर भरोसा करते हैं, कभी भी अतिरिक्त "शुल्क" का भुगतान न करें, और जब संभव हो तो खरीदार सुरक्षा के साथ भुगतान विधि को प्राथमिकता दें। photoZseo केवल इस स्टोर को प्रकाशित करता है - यह भुगतान या गारंटी ऑर्डर संसाधित नहीं करता है।', sellerTypeIndividual: 'व्यक्तिगत विक्रेता', sellerTypeManufacturer: 'उत्पादक', sellerTypeTradingCompany: 'ट्रेडिंग कंपनी', sellerTypeManufacturerTrader: 'निर्माता एवं व्यापारी', sellerTypeBrandOwner: 'ब्रांड के मालिक', sellerTypeDistributor: 'वितरक' },
 };
 
+/** Elle yazılmış tablo (çeviri üretici betiği eksikleri bulmak için okur). */
+export const MK_STRINGS: Readonly<Record<string, Partial<Record<Key, string>>>> = STRINGS;
+
 export function mt(locale: string, key: Key | string): string {
   const table = STRINGS[locale] ?? STRINGS.en;
   const fromLocale = (table as Record<string, string>)[key];
   if (fromLocale != null) return fromLocale;
+  // Elle çevrilmemiş anahtar → Translation Swarm (Google) üretimi, o da yoksa İngilizce.
+  const generated = (MK_GENERATED[locale] as Record<string, string> | undefined)?.[key];
+  if (generated != null) return generated;
   const fromEn = (STRINGS.en as Record<string, string>)[key];
   return fromEn ?? key;
 }

@@ -1,0 +1,114 @@
+---
+import LegalShell from './LegalShell.astro';
+import { defaultLang, type Lang, useTranslations } from '../../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const href = (page: string) => (lang === defaultLang ? `/${page}` : `/${lang}/${page}`);
+---
+<LegalShell lang={lang} title={t('privacy.title')} kicker="Privacy" updatedLabel={t('privacy.updated')} date={t('privacy.date2')}>
+  <h2>{t('privacy.overview.title')}</h2>
+  <p>{t('privacy.overview.desc')}</p>
+
+  <h2>{t('privacy.controller.title')}</h2>
+  <p>{t('privacy.controller.desc')}</p>
+
+  <h2>{t('privacy.collection.title')}</h2>
+  <p>{t('privacy.collection.desc')}</p>
+  <ul>
+    <li><strong>{t('privacy.collection.photos')}</strong></li>
+    <li><strong>{t('privacy.collection.account')}</strong></li>
+    <li><strong>{t('privacy.collection.purchase')}</strong></li>
+    <li><strong>{t('privacy.collection.diagnostic')}</strong></li>
+  </ul>
+
+  <h2>{t('privacy.marketplace.title')}</h2>
+  <p>{t('privacy.marketplace.desc')}</p>
+
+  <h2>{t('privacy.buyers.title')}</h2>
+  <p>{t('privacy.buyers.desc')}</p>
+  <ul>
+    <li>{t('privacy.buyers.device')}</li>
+    <li>{t('privacy.buyers.account')}</li>
+    <li>{t('privacy.buyers.cart')}</li>
+    <li>{t('privacy.buyers.whatsapp')}</li>
+    <li>{t('privacy.buyers.search')}</li>
+    <li>{t('privacy.buyers.reports')}</li>
+  </ul>
+
+  <h2>{t('privacy.cookies.title')}</h2>
+  <p>{t('privacy.cookies.desc')}</p>
+  <ul>
+    <li>{t('privacy.cookies.session')}</li>
+    <li>{t('privacy.cookies.local')}</li>
+    <li>{t('privacy.cookies.analytics')}</li>
+  </ul>
+
+  <h2>{t('privacy.legal.title')}</h2>
+  <p>{t('privacy.legal.desc')}</p>
+  <ul>
+    <li>{t('privacy.legal.contract')}</li>
+    <li>{t('privacy.legal.interest')}</li>
+    <li>{t('privacy.legal.obligation')}</li>
+    <li>{t('privacy.legal.consent')}</li>
+  </ul>
+
+  <h2>{t('privacy.thirdparty.title')}</h2>
+  <ul>
+    <li>{t('privacy.thirdparty.apple')}</li>
+    <li>{t('privacy.thirdparty.revenuecat')} <a href="https://www.revenuecat.com/privacy" rel="noopener">RevenueCat Privacy Policy</a>.</li>
+    <li>{t('privacy.thirdparty.firebase')} <a href="https://firebase.google.com/support/privacy" rel="noopener">Firebase Privacy</a>.</li>
+    <li>{t('privacy.thirdparty.cloudflare')} <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare Privacy Policy</a>.</li>
+    <li>{t('privacy.thirdparty.google')} <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a>.</li>
+    <li>{t('privacy.thirdparty.resend')} <a href="https://resend.com/legal/privacy-policy" rel="noopener">Resend Privacy Policy</a>.</li>
+    <li>{t('privacy.thirdparty.shopify')}</li>
+  </ul>
+
+  <h2>{t('privacy.sharing.title')}</h2>
+  <p>{t('privacy.sharing.desc')}</p>
+
+  <h2>{t('privacy.transfers.title')}</h2>
+  <p>{t('privacy.transfers.desc')}</p>
+
+  <h2>{t('privacy.retention.title')}</h2>
+  <ul>
+    <li>{t('privacy.retention.session')}</li>
+    <li>{t('privacy.retention.buyer')}</li>
+    <li>{t('privacy.retention.orders')}</li>
+    <li>{t('privacy.retention.security')}</li>
+    <li>{t('privacy.retention.reports')}</li>
+  </ul>
+
+  <h2>{t('privacy.storage.title')}</h2>
+  <p>{t('privacy.storage.desc')}</p>
+
+  <h2>{t('privacy.camera.title')}</h2>
+  <p>{t('privacy.camera.desc')}</p>
+
+  <h2>{t('privacy.biometric.title')}</h2>
+  <p>{t('privacy.biometric.desc')}</p>
+
+  <h2>{t('privacy.automated.title')}</h2>
+  <p>{t('privacy.automated.desc')}</p>
+
+  <h2>{t('privacy.rights.title')}</h2>
+  <p>{t('privacy.rights.desc')}</p>
+  <ul>
+    <li>{t('privacy.rights.access')}</li>
+    <li>{t('privacy.rights.correct')}</li>
+    <li>{t('privacy.rights.delete')}</li>
+    <li>{t('privacy.rights.restrict')}</li>
+    <li>{t('privacy.rights.port')}</li>
+  </ul>
+  <p>{t('privacy.rights.how')} <a href={href('delete-account')}>{href('delete-account')}</a></p>
+
+  <h2>{t('privacy.children.title')}</h2>
+  <p>{t('privacy.children2.desc')}</p>
+
+  <h2>{t('privacy.changes.title')}</h2>
+  <p>{t('privacy.changes.desc')}</p>
+
+  <h2>{t('privacy.contact.title')}</h2>
+  <p>{t('privacy.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+</LegalShell>

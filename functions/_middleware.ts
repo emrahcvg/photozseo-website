@@ -21,14 +21,14 @@ export const onRequest: PagesFunction = async (ctx) => {
       'Content-Security-Policy',
       [
         "default-src 'self'",
-        "script-src 'self' accounts.google.com",
+        "script-src 'self' accounts.google.com static.cloudflareinsights.com",
         "style-src 'self' 'unsafe-inline' accounts.google.com",
         "img-src 'self' data: blob: *.googleusercontent.com",  // googleusercontent: Google avatar (auth.js)
-        "connect-src 'self' accounts.google.com",
+        "connect-src 'self' accounts.google.com cloudflareinsights.com",
         "frame-src accounts.google.com",
         "object-src 'none'",
         "base-uri 'self'",
-        "form-action 'self'",
+        "form-action 'self' accounts.google.com",
         "frame-ancestors 'none'",
       ].join('; '),
     );

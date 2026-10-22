@@ -9,7 +9,7 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 
 /market/*
-  Content-Security-Policy: default-src 'self'; script-src 'self' accounts.google.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' accounts.google.com; img-src 'self' data: blob: *.googleusercontent.com; connect-src 'self' accounts.google.com; frame-src accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self' accounts.google.com; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' accounts.google.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' accounts.google.com; img-src 'self' data: blob: *.googleusercontent.com; connect-src 'self' accounts.google.com cloudflareinsights.com; frame-src accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self' accounts.google.com; frame-ancestors 'none'
 
 /marketplace.css
   Cache-Control: public, max-age=31536000, immutable
@@ -27,6 +27,12 @@
   Cache-Control: public, max-age=31536000, immutable
 
 /marketplace-cart.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/theme-init.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/cart-badge.js
   Cache-Control: public, max-age=31536000, immutable
 
 /pimg/*.jpg

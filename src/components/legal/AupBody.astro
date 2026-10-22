@@ -1,0 +1,59 @@
+---
+import LegalShell from './LegalShell.astro';
+import { type Lang, useTranslations } from '../../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<LegalShell lang={lang} title={t('aup.title')} kicker={t('aup.kicker')} updatedLabel={t('aup.updated')} date={t('aup.date2')} version={t('aup.version2')}>
+
+  <h2>{t('aup.intro.title')}</h2>
+  <p>{t('aup.intro.desc')}</p>
+
+  <h2>{t('aup.prohibited.title')}</h2>
+  <p>{t('aup.prohibited.desc')}</p>
+  <ul>
+    <li>{t('aup.prohibited.weapons')}</li>
+    <li>{t('aup.prohibited.drugs')}</li>
+    <li>{t('aup.prohibited.counterfeit')}</li>
+    <li>{t('aup.prohibited.stolen')}</li>
+    <li>{t('aup.prohibited.hate')}</li>
+    <li>{t('aup.prohibited.wildlife')}</li>
+    <li>{t('aup.prohibited.regulated')}</li>
+    <li>{t('aup.prohibited.fraud')}</li>
+    <li>{t('aup.prohibited.bodyParts')}</li>
+    <li>{t('aup.prohibited.adult')}</li>
+    <li>{t('aup.prohibited.unsafe')}</li>
+    <li>{t('aup.prohibited.sanctions')}</li>
+  </ul>
+
+  <h2>{t('aup.conduct.title')}</h2>
+  <p>{t('aup.conduct.desc')}</p>
+  <ul>
+    <li>{t('aup.conduct.fraud')}</li>
+    <li>{t('aup.conduct.pricing')}</li>
+    <li>{t('aup.conduct.spam')}</li>
+    <li>{t('aup.conduct.impersonation')}</li>
+    <li>{t('aup.conduct.unlawful')}</li>
+  </ul>
+
+  <h2>{t('aup.enforcement.title')}</h2>
+  <p>{t('aup.enforcement.desc')}</p>
+  <ul>
+    <li>{t('aup.enforcement.screening')}</li>
+    <li>{t('aup.enforcement.removal')}</li>
+    <li>{t('aup.enforcement.suspension')}</li>
+    <li>{t('aup.enforcement.waiver')}</li>
+  </ul>
+
+  <h2>{t('aup.report.title')}</h2>
+  <p>{t('aup.report.desc')}</p>
+  <p>{t('aup.report.email')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+
+  <h2>{t('aup.changes.title')}</h2>
+  <p>{t('aup.changes.desc')}</p>
+
+  <h2>{t('aup.contact.title')}</h2>
+  <p>{t('aup.contact.desc')} <a href="mailto:support@photozseo.com">support@photozseo.com</a>.</p>
+</LegalShell>
