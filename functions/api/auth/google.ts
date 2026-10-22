@@ -24,9 +24,26 @@ function json(obj: unknown, status = 200): Response {
   });
 }
 
+/**
+ * Giriş CSRF'ine karşı: tarayıcıdan gelen siteler arası POST'u reddet (saldırgan kurbanı
+ * kendi hesabına sokamasın). iOS (URLSession) Origin/Sec-Fetch-Site göndermez → etkilenmez.
+ */
+export function isCrossSiteBrowserPost(request: Request): boolean {
+  const site = request.headers.get('sec-fetch-site');
+  if (site === 'cross-site') return true;
+  const origin = request.headers.get('origin');
+  if (!origin || origin === 'null') return origin === 'null';
+  try {
+    return new URL(origin).host !== new URL(request.url).host;
+  } catch {
+    return true;
+  }
+}
+
 export async function onRequestPost(ctx: Ctx): Promise<Response> {
   const writeKey = ctx.env.STORE_WRITE_KEY;
   if (!writeKey) return json({ error: 'Auth service not configured' }, 503);
+  if (isCrossSiteBrowserPost(ctx.request)) return json({ error: 'Cross-site sign-in blocked' }, 403);
 
   // credential okuma: JSON veya form-data
   let credential: string | null = null;
