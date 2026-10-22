@@ -172,6 +172,8 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market'),
       ogImage: homeOgImage,
       preloadImage: newP.items[0]?.image_url,
+      // Boş pazar yeri ince içerik sayılır; ilk mağaza listelenince otomatik index'e döner.
+      ...(stores.items.length === 0 ? { robots: 'noindex, follow' } : {}),
       jsonLd: [buildItemListJsonLd(newP.items, origin), buildWebSiteJsonLd(origin)],
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
@@ -268,6 +270,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale, body, canonical,
       alternates: buildAlternates(origin, '/market/stores'),
       ogImage: `${origin}/og-image.png`,
+      ...(stores.items.length === 0 ? { robots: 'noindex, follow' } : {}),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
       stylesheets: ['/marketplace.css?v=8'],
       bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],

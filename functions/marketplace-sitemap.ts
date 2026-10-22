@@ -11,7 +11,8 @@ function xmlEscape(s: string): string {
 }
 
 export function buildMarketplaceSitemap(stores: StoreRow[], products: ProductRow[], origin: string, extraUrls: string[] = []): string {
-  const urls: string[] = [`${origin}/market`, `${origin}/market/stores`];
+  // Mağaza yokken /market noindex; sitemap'te noindex URL bulunmasın.
+  const urls: string[] = stores.length ? [`${origin}/market`, `${origin}/market/stores`] : [];
   for (const s of stores) urls.push(`${origin}/store/${s.slug}`);
   for (const p of products) urls.push(`${origin}${p.product_path}`);
   urls.push(...extraUrls);
