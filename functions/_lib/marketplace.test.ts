@@ -160,10 +160,13 @@ describe('removeStoreFromD1', () => {
   });
 });
 
-import { listStores, listNewProducts } from './marketplace';
+import { listStores, listNewProducts, __resetOramaCache } from './marketplace';
+import { makeSqliteD1 } from './sqliteD1';
 
+// Listeleme/arama sorguları SQL'de → testler gerçek SQLite (node:sqlite) üzerinde koşar.
 async function seedTwoStores() {
-  const { db, tables } = makeFakeD1();
+  const { db } = makeSqliteD1();
+  const tables = undefined;
   await upsertStoreToD1(db as any, 'acme', makeRecord({ displayName: 'ACME' }, [
     { id: 'p1', categoryId: 'electronics.phones', title: { tr: 'Telefon' }, price: 100, inStock: true, images: ['a.jpg'] },
     { id: 'p2', categoryId: 'home.kitchen', title: { tr: 'Tava' }, price: 50, inStock: true, images: ['b.jpg'] },
@@ -320,5 +323,66 @@ describe('searchProducts', () => {
     const f = fakeAI();
     await searchProducts(db as any, f.ai as any, { q: 'Tava', lang: 'tr' });
     expect(f.calls).toBe(0);
+  });
+});
+
+
+describe('SQL listeleme (gerçek SQLite)', () => {
+  async function seedMany(n: number) {
+    const { db } = makeSqliteD1();
+    const products = Array.from({ length: n }, (_, i) => ({
+      id: `p${i}`, categoryId: i % 2 ? 'electronics.phones' : 'home.kitchen', title: { tr: `Ürün ${i}` },
+      price: i % 7 === 0 ? undefined : 10 + i, inStock: i % 3 !== 0, images: [`${i}.jpg`],
+    }));
+    await upsertStoreToD1(db as any, 'acme', makeRecord({ displayName: 'ACME' }, products as any));
+    __resetOramaCache();
+    return db;
+  }
+
+  it('listNewProducts sayfalamayı SQL\'de yapar ve toplamı ayrı sayar', async () => {
+    const db = await seedMany(95);
+    const p1 = await listNewProducts(db as any, { limit: 40, offset: 0 });
+    const p3 = await listNewProducts(db as any, { limit: 40, offset: 80 });
+    expect(p1.items).toHaveLength(40);
+    expect(p3.items).toHaveLength(15);
+    expect(p1.total).toBe(95);
+    expect(new Set([...p1.items, ...p3.items].map((x) => x.id)).size).toBe(55); // sayfalar çakışmaz
+  });
+
+  it('listStores ödeme/iletişim kolonlarını hiç döndürmez', async () => {
+    const db = await seedMany(1);
+    const { items } = await listStores(db as any, {});
+    expect(items[0].iban).toBe('');
+    expect(items[0].whatsapp).toBe('');
+    expect(items[0].payment_json).toBeNull();
+    expect(items[0].owner_email).toBeNull();
+  });
+
+  it('searchProducts göz atma: filtre + facet + fiyatsızlar sona', async () => {
+    const db = await seedMany(30);
+    const { ai } = fakeAI();
+    const asc = await searchProducts(db as any, ai as any, { sort: 'price_asc', limit: 100 });
+    const prices = asc.items.map((x) => x.price);
+    const firstNull = prices.indexOf(null);
+    expect(firstNull).toBeGreaterThan(0);
+    expect(prices.slice(firstNull).every((p) => p == null)).toBe(true);
+    const inStock = await searchProducts(db as any, ai as any, { inStock: true });
+    expect(inStock.total).toBe(asc.facets.inStockCount);
+    expect(Object.values(asc.facets.categories).reduce((a, b) => a + b, 0)).toBe(30);
+  });
+
+  it('metin araması 100+ eşleşmede D1 parametre sınırını aşmaz', async () => {
+    const db = await seedMany(150);
+    const { ai } = fakeAI();
+    const res = await searchProducts(db as any, ai as any, { q: 'Ürün', lang: 'tr', limit: 40 });
+    expect(res.total).toBe(150);
+    expect(res.items).toHaveLength(40);
+  });
+
+  it('kötü niyetli filtre değeri SQL\'e gömülmez (parametreli)', async () => {
+    const db = await seedMany(3);
+    const { ai } = fakeAI();
+    const res = await searchProducts(db as any, ai as any, { city: "x' OR '1'='1" });
+    expect(res.total).toBe(0);
   });
 });

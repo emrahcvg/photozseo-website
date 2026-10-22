@@ -191,23 +191,14 @@ export async function removeStoreFromD1(db: D1Database, slug: string): Promise<v
   await db.prepare(`DELETE FROM stores WHERE slug = ?`).bind(slug).run();
 }
 
-// ── Listeleme sorguları (D1'den çek, JS'te filtre/sırala/sayfala) ─────────────
+// ── Listeleme sorguları — filtre/sıralama/sayfalama SQL'de (indeksler: 0016) ──
+// Yalnız Orama indeks kurulumu tüm ürünleri okur; o da index_version değişince bir kez.
 
-// P1: full-scan + JS filtre kabul (küçük indeks, spec onaylı); N>~5k olunca
-// SQL-side filtre/pagination'a (WHERE/LIMIT/OFFSET) geç.
 async function fetchAllProducts(db: D1Database): Promise<ProductRow[]> {
   const { results } = await db.prepare(
     `SELECT id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at
      FROM products`
   ).all<ProductRow>();
-  return results ?? [];
-}
-
-async function fetchListedStores(db: D1Database): Promise<StoreRow[]> {
-  const { results } = await db.prepare(
-    `SELECT slug, name, city, country, iban, iban_name, payment_json, whatsapp, listed, lang, index_version, updated_at
-     FROM stores WHERE listed = 1`
-  ).all<StoreRow>();
   return results ?? [];
 }
 
@@ -217,30 +208,64 @@ function paginate<T>(items: T[], limit?: number, offset?: number): T[] {
   return items.slice(start, end);
 }
 
+/** SQLite/D1: LIMIT -1 = sınırsız. */
+function limitClause(limit?: number, offset?: number): { sql: string; binds: number[] } {
+  return { sql: ' LIMIT ? OFFSET ?', binds: [limit != null ? Math.max(0, limit) : -1, Math.max(0, offset ?? 0)] };
+}
+
 export async function listStores(
   db: D1Database,
   opts: { limit?: number; offset?: number },
 ): Promise<{ items: StoreRow[]; total: number }> {
-  const all = await fetchListedStores(db);
-  all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
-  // Dizin/sitemap yalnız ad + konum gösterir: ödeme ve iletişim alanları render katmanına hiç taşınmaz.
-  const items = paginate(all, opts.limit, opts.offset).map((st) => ({
-    ...st, iban: '', iban_name: '', payment_json: null, whatsapp: '', owner_email: null,
-  }));
-  return { items, total: all.length };
+  // Dizin/sitemap yalnız ad + konum gösterir: ödeme ve iletişim kolonları hiç SEÇİLMEZ.
+  const lim = limitClause(opts.limit, opts.offset);
+  const [{ results }, countRow] = await Promise.all([
+    db.prepare(
+      `SELECT slug, name, city, country, '' AS iban, '' AS iban_name, NULL AS payment_json, '' AS whatsapp,
+              NULL AS owner_email, listed, lang, index_version, updated_at
+       FROM stores WHERE listed = 1 ORDER BY updated_at DESC, slug` + lim.sql,
+    ).bind(...lim.binds).all<StoreRow>(),
+    db.prepare('SELECT COUNT(*) AS n FROM stores WHERE listed = 1').first<{ n: number }>(),
+  ]);
+  return { items: results ?? [], total: Number(countRow?.n ?? 0) };
 }
 
 export async function listNewProducts(
   db: D1Database,
   opts: { limit?: number; offset?: number; categoryId?: string },
 ): Promise<{ items: ProductRow[]; total: number }> {
-  // Opt-in tutarlılığı: yalnız listed mağaza ürünleri görünür (joinedRows listed-only).
-  let all = await joinedRows(db);
-  if (opts.categoryId) all = all.filter((p) => p.category_id === opts.categoryId);
-  all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
-  const total = all.length;
-  const items = paginate(all, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
-  return { items, total };
+  // Opt-in tutarlılığı: yalnız listed mağaza ürünleri görünür (JOIN … listed = 1).
+  const where = buildWhere({ categoryId: opts.categoryId });
+  const lim = limitClause(opts.limit, opts.offset);
+  const [{ results }, countRow] = await Promise.all([
+    db.prepare(`SELECT ${PRODUCT_COLS} ${LISTED_FROM}${where.sql} ORDER BY ${orderBy('new')}` + lim.sql)
+      .bind(...where.binds, ...lim.binds).all<ProductRow>(),
+    db.prepare(`SELECT COUNT(*) AS n ${LISTED_FROM}${where.sql}`).bind(...where.binds).first<{ n: number }>(),
+  ]);
+  return { items: results ?? [], total: Number(countRow?.n ?? 0) };
+}
+
+const PRODUCT_COLS = `p.id, p.store_slug, COALESCE(s.name, p.store_slug) AS store_name, p.title, p.description,
+  p.category_id, p.tags, p.price, p.currency, p.stock, p.image_url, p.product_path, p.updated_at`;
+const LISTED_FROM = 'FROM products p JOIN stores s ON s.slug = p.store_slug AND s.listed = 1';
+
+function orderBy(sort?: 'new' | 'price_asc' | 'price_desc'): string {
+  if (sort === 'price_asc') return 'p.price IS NULL, p.price ASC, p.id';
+  if (sort === 'price_desc') return 'p.price IS NULL, p.price DESC, p.id';
+  return 'p.updated_at DESC, p.id';
+}
+
+/** Yapısal filtreler → WHERE (parametreli; değer asla SQL'e gömülmez). */
+function buildWhere(opts: Pick<SearchOpts, 'categoryId' | 'minPrice' | 'maxPrice' | 'city' | 'inStock'>, ids?: string[]): { sql: string; binds: unknown[] } {
+  const c: string[] = [];
+  const b: unknown[] = [];
+  if (opts.categoryId) { c.push('p.category_id = ?'); b.push(opts.categoryId); }
+  if (opts.minPrice != null) { c.push('p.price IS NOT NULL AND p.price >= ?'); b.push(opts.minPrice); }
+  if (opts.maxPrice != null) { c.push('p.price IS NOT NULL AND p.price <= ?'); b.push(opts.maxPrice); }
+  if (opts.city) { c.push('s.city = ?'); b.push(opts.city); }
+  if (opts.inStock === true) c.push('p.stock > 0');
+  if (ids) { c.push(`p.id IN (${ids.map(() => '?').join(',') || 'NULL'})`); b.push(...ids); }
+  return { sql: c.length ? ' WHERE ' + c.join(' AND ') : '', binds: b };
 }
 
 // ── Facet + filtre (saf) ──────────────────────────────────────────────────────
@@ -259,7 +284,7 @@ export interface SearchOpts {
 }
 
 // Filtre/facet için store şehri lazım — products satırına city eklenmemiş olduğundan
-// arama yolu products'ı stores ile JS'te birleştirir (aşağıda joinedRows).
+// arama yolu products'ı stores ile SQL JOIN'le birleştirir (LISTED_FROM).
 interface JoinedRow extends ProductRow {
   city: string;
 }
@@ -299,7 +324,7 @@ let _oramaCache: OramaIndex | null = null;
 /** Kategori yolunun indeksleneceği diller — tüm desteklenen locale'ler.
  * Etiket tabloları lazy + cache'li (load-local.ts); "mutfak" gibi yerel
  * aramalar da kategori yolundan eşleşsin diye 12 dil birden indekslenir. */
-const PATH_INDEX_LANGS = ['en', 'tr', 'de', 'es', 'pt', 'ja', 'ko', 'zh', 'ar', 'fa', 'hi', 'ur'];
+const PATH_INDEX_LANGS = ['en', 'tr', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'ja', 'ko', 'zh', 'ar', 'fa', 'hi', 'ur'];
 
 async function buildOrama(db: D1Database, version: number): Promise<OramaIndex> {
   const products = await fetchAllProducts(db);
@@ -348,17 +373,17 @@ export function __resetOramaCache(): void {
 const LANG_NAMES: Record<string, string> = {
   en: 'English', tr: 'Turkish', de: 'German', es: 'Spanish', pt: 'Portuguese',
   ja: 'Japanese', ko: 'Korean', zh: 'Chinese (Simplified)', ar: 'Arabic',
-  fa: 'Persian', ur: 'Urdu', hi: 'Hindi',
+  fa: 'Persian', ur: 'Urdu', hi: 'Hindi', fr: 'French', it: 'Italian', pl: 'Polish',
 };
 
 // Kanonik dili D1 store satırlarından çıkar (çoğunluk / ilk listed store dili).
 // LIMITATION: Her ürün KENDİ mağazasının languages[0]'ında saklanıyor, ama sorgu
 // tek bir stores[0].lang'a çevriliyor. Karışık dilli pazaryerinde diğer dildeki
-// ürünler full-text eşleşmeyebilir; ayrıca stores[0] deterministik sıralı değil
-// (fetchListedStores ORDER BY yok). İleride çoğullu-dil sorgu çevirisi (P2).
+// ürünler full-text eşleşmeyebilir. Seçim deterministik: en son güncellenen listed mağaza.
+// İleride çoğullu-dil sorgu çevirisi (P2).
 async function inferCanonicalLang(db: D1Database): Promise<string> {
-  const stores = await fetchListedStores(db);
-  return stores[0]?.lang ?? DEFAULT_LANG;
+  const row = await db.prepare('SELECT lang FROM stores WHERE listed = 1 ORDER BY updated_at DESC, slug LIMIT 1').first<{ lang: string | null }>();
+  return row?.lang ?? DEFAULT_LANG;
 }
 
 async function translateQuery(ai: AiBinding, q: string, fromLang: string, toLang: string): Promise<string> {
@@ -383,18 +408,6 @@ async function translateQuery(ai: AiBinding, q: string, fromLang: string, toLang
 }
 
 // ── searchProducts ─────────────────────────────────────────────────────────────
-
-async function joinedRows(db: D1Database): Promise<JoinedRow[]> {
-  const products = await fetchAllProducts(db);
-  const stores = await fetchListedStores(db);
-  const cityBySlug = new Map(stores.map((s) => [s.slug, s.city]));
-  const nameBySlug = new Map(stores.map((s) => [s.slug, s.name]));
-  const listedSlugs = new Set(stores.map((s) => s.slug));
-  // Sadece listed mağazaların ürünleri pazar yerinde görünür.
-  return products
-    .filter((p) => listedSlugs.has(p.store_slug))
-    .map((p) => ({ ...p, city: cityBySlug.get(p.store_slug) ?? '', store_name: p.store_name ?? nameBySlug.get(p.store_slug) }));
-}
 
 function sortRows(rows: JoinedRow[], sort?: SearchOpts['sort']): JoinedRow[] {
   const r = [...rows];
@@ -422,39 +435,64 @@ async function cachedTranslateQuery(ai: AiBinding, q: string, from: string, to: 
   return term;
 }
 
+/** D1 sorgu başına 100 parametre sınırı → id listesi parça parça (filtre parametrelerine yer bırak). */
+const ID_CHUNK = 80;
+
 export async function searchProducts(
   db: D1Database,
   ai: AiBinding,
   opts: SearchOpts,
 ): Promise<{ items: ProductRow[]; facets: Facets; total: number }> {
-  let rows = await joinedRows(db);
-
-  // 1) Full-text (Orama) — q varsa eşleşen id'lere indir.
-  // Boş pazar yerinde AI çevirisi/Orama kurulumu yapılmaz (maliyet + CPU).
   const qTrim = (opts.q ?? '').trim().slice(0, 100);
-  if (qTrim !== '' && rows.length > 0) {
+
+  // A) Metin araması: Orama eşleşmeleri (en fazla 1000) + yapısal filtreler SQL'de, id parçalarıyla.
+  if (qTrim !== '') {
+    const anyListed = await db.prepare('SELECT 1 AS x FROM stores WHERE listed = 1 LIMIT 1').first<{ x: number }>();
+    if (!anyListed) return { items: [], facets: computeFacets([]), total: 0 }; // boş pazar: AI/Orama yok
     const canonical = await inferCanonicalLang(db);
     const queryLang = opts.lang ?? canonical;
     const term = await cachedTranslateQuery(ai, qTrim, queryLang, canonical);
     const orama = await getOrama(db);
     // tolerance: 1 — tek karakterlik yazım hatalarını affet ("yga mat" → "yoga mat")
     const res = await search(orama.db, { term, limit: 1000, tolerance: 1 });
-    const ids = new Set(res.hits.map((h) => String(h.document.id)));
-    rows = rows.filter((r) => ids.has(r.id));
+    const ids = [...new Set(res.hits.map((h) => String(h.document.id)))];
+    let rows: JoinedRow[] = [];
+    for (let i = 0; i < ids.length; i += ID_CHUNK) {
+      const where = buildWhere(opts, ids.slice(i, i + ID_CHUNK));
+      const { results } = await db.prepare(`SELECT ${PRODUCT_COLS}, s.city AS city ${LISTED_FROM}${where.sql}`)
+        .bind(...where.binds).all<JoinedRow>();
+      rows = rows.concat(results ?? []);
+    }
+    const facets = computeFacets(rows);
+    const sorted = sortRows(rows, opts.sort);
+    const items = paginate(sorted, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
+    return { items, facets, total: sorted.length };
   }
 
-  // 2) Yapısal filtreler.
-  rows = applyFilters(rows, opts);
-
-  // 3) Facet'ler filtrelenmiş küme üzerinden.
-  const facets = computeFacets(rows);
-
-  // 4) Sırala + sayfala.
-  const sorted = sortRows(rows, opts.sort);
-  const total = sorted.length;
-  const items = paginate(sorted, opts.limit, opts.offset).map(({ city, ...rest }) => rest as ProductRow);
-
-  return { items, facets, total };
+  // B) Göz atma (kategori/filtre/sıralama): tamamı SQL — sayfa + toplam + facet'ler.
+  const where = buildWhere(opts);
+  const lim = limitClause(opts.limit, opts.offset);
+  const [{ results }, countRow, cats, cities, agg] = await Promise.all([
+    db.prepare(`SELECT ${PRODUCT_COLS} ${LISTED_FROM}${where.sql} ORDER BY ${orderBy(opts.sort)}` + lim.sql)
+      .bind(...where.binds, ...lim.binds).all<ProductRow>(),
+    db.prepare(`SELECT COUNT(*) AS n ${LISTED_FROM}${where.sql}`).bind(...where.binds).first<{ n: number }>(),
+    db.prepare(`SELECT p.category_id AS k, COUNT(*) AS n ${LISTED_FROM}${where.sql} GROUP BY p.category_id`)
+      .bind(...where.binds).all<{ k: string | null; n: number }>(),
+    db.prepare(`SELECT s.city AS k, COUNT(*) AS n ${LISTED_FROM}${where.sql} GROUP BY s.city`)
+      .bind(...where.binds).all<{ k: string | null; n: number }>(),
+    db.prepare(`SELECT MIN(p.price) AS mn, MAX(p.price) AS mx, SUM(CASE WHEN p.stock > 0 THEN 1 ELSE 0 END) AS ins ${LISTED_FROM}${where.sql}`)
+      .bind(...where.binds).first<{ mn: number | null; mx: number | null; ins: number | null }>(),
+  ]);
+  const toMap = (rs: { k: string | null; n: number }[] | undefined) =>
+    Object.fromEntries((rs ?? []).filter((r) => r.k).map((r) => [r.k as string, Number(r.n)]));
+  const facets: Facets = {
+    categories: toMap(cats.results),
+    cities: toMap(cities.results),
+    priceMin: agg?.mn ?? null,
+    priceMax: agg?.mx ?? null,
+    inStockCount: Number(agg?.ins ?? 0),
+  };
+  return { items: results ?? [], facets, total: Number(countRow?.n ?? 0) };
 }
 
 /** Arama kutusu autocomplete önerileri — başlık bazlı, typo-toleranslı.
