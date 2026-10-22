@@ -1,7 +1,7 @@
 import type { Lang } from './ui';
 
 // App Store Connect → App Information → Apple ID. Boşken smart banner ve rozet basılmaz.
-export const APP_STORE_ID = '';
+export const APP_STORE_ID = '6762639768';
 export const APP_STORE_URL = APP_STORE_ID ? `https://apps.apple.com/app/id${APP_STORE_ID}` : '';
 
 export interface PageMeta {
