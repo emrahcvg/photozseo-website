@@ -47,6 +47,17 @@ export interface AppHeaderOptions {
   cartHref?: string;
 }
 
+/** Açık/koyu tema düğmesi — davranış public/theme-init.js'te; ikon CSS ile seçilir. */
+export function renderThemeToggle(locale: string): string {
+  const label = escapeAttr(mt(locale, 'themeToggle'));
+  return (
+    `      <button type="button" class="app-theme" data-theme-toggle aria-pressed="false" aria-label="${label}" title="${label}">\n` +
+    '        <svg class="app-theme__moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>\n' +
+    '        <svg class="app-theme__sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>\n' +
+    '      </button>\n'
+  );
+}
+
 /** Ortak sticky üst header — store + market birebir aynı kabuk. */
 export function renderAppHeader(opts: AppHeaderOptions): string {
   const { locale, controlsHtml = '', cartHref = '/market/cart' } = opts;
@@ -61,6 +72,7 @@ export function renderAppHeader(opts: AppHeaderOptions): string {
   html += '    </a>\n';
   html += '    <div class="app-header__actions">\n';
   if (controlsHtml) html += controlsHtml;
+  html += renderThemeToggle(locale);
   html += `      <a class="app-cart" href="${escapeAttr(cartHref)}" aria-label="${cartLabel}" title="${cartLabel}">\n`;
   html += '        <svg class="app-cart__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>\n';
   html += '        <span class="app-cart__badge" data-mk-cart-count hidden>0</span>\n';

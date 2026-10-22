@@ -45,9 +45,10 @@ import {
 import { resolveOwnerKey } from '../_lib/buyer-owner';
 import { listOrders } from '../_lib/orders';
 import { listAllFavorites, listAllCart } from '../_lib/buyer';
-import { mt } from '../../src/storefront/marketplace-i18n';
+import { mt, MK_LOCALES } from '../../src/storefront/marketplace-i18n';
 import { renderDocument, type AlternateLink } from '../../src/storefront/document';
-import { SUPPORTED_LOCALES } from '../../src/storefront/manifest';
+/** Market arayüz dilleri (15) — mağaza içerik dilleri (manifest SUPPORTED_LOCALES, 12) ayrı tutulur. */
+const SUPPORTED_LOCALES: readonly string[] = MK_LOCALES;
 import { getTaxonomyService } from '../../src/storefront/taxonomy/load-local';
 import { categoryBreadcrumb } from '../../src/storefront/taxonomy/category-resolve';
 import { UNCATEGORIZED } from '../../src/storefront/taxonomy/legacy-map';

@@ -84,6 +84,7 @@ export const LANG_NAMES: Record<string, string> = {
   en: 'English', tr: 'Türkçe', de: 'Deutsch', es: 'Español',
   pt: 'Português', ja: '日本語', ko: '한국어', zh: '中文',
   ar: 'العربية', fa: 'فارسی', ur: 'اردو', hi: 'हिन्दी',
+  fr: 'Français', it: 'Italiano', pl: 'Polski',
 };
 
 // ── Stock class helper ────────────────────────────────────────────────────────

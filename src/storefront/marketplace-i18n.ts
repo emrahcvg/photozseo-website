@@ -4,7 +4,7 @@
  * translation cache; THIS table is only chrome (labels, buttons, headings).
  */
 
-export const MK_LOCALES = ['en', 'tr', 'de', 'es', 'pt', 'ja', 'ko', 'zh', 'ar', 'fa', 'ur', 'hi'] as const;
+export const MK_LOCALES = ['en', 'tr', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'ja', 'ko', 'zh', 'ar', 'fa', 'ur', 'hi'] as const;
 export type MkLocale = (typeof MK_LOCALES)[number];
 
 type Key =
@@ -43,7 +43,18 @@ type Key =
   // Şikayet (report) görünürlüğü
   | 'reportProduct' | 'reportPrompt'
   // Yanıltıcı fiyat şeffaflığı (referans fiyat)
-  | 'wasPrice' | 'youSave';
+  | 'wasPrice' | 'youSave'
+  // İsviçre redesign (v3) — ana sayfa bölümleri
+  | 'heroTitle' | 'heroTitleMuted' | 'heroSub'
+  | 'factPayTitle' | 'factPayDesc' | 'factReviewsTitle' | 'factReviewsDesc' | 'factIdentityTitle' | 'factIdentityDesc'
+  | 'taxonomyNote' | 'productsLabel' | 'rankingNote'
+  | 'flowEyebrow' | 'flowTitle' | 'flowDesc'
+  | 'step1Title' | 'step1Desc' | 'step2Title' | 'step2Desc' | 'step3Title' | 'step3Desc'
+  | 'sellTitle' | 'sellDesc' | 'sellCta'
+  | 'voidEyebrow' | 'voidTitle' | 'voidDesc' | 'statStores' | 'statProducts' | 'statCategories'
+  | 'colStore' | 'colLocation'
+  | 'themeToggle' | 'themeLight' | 'themeDark'
+  | 'legalPrivacy' | 'legalTerms' | 'legalStoreTerms' | 'legalAup' | 'legalRules' | 'marketFooterNote';
 
 const STRINGS: Record<string, Partial<Record<Key, string>>> = {
   en: {
@@ -98,6 +109,29 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     reportPrompt: 'See something misleading, unsafe, or fraudulent? Report it.',
     wasPrice: 'Was',
     youSave: 'You save',
+    heroTitle: 'Independent sellers.', heroTitleMuted: 'Directly with you.',
+    heroSub: "Every listing comes from a seller's own photoZseo store. You send your order to the seller and pay the seller directly.",
+    factPayTitle: 'Pay the seller directly', factPayDesc: 'Bank transfer or SWIFT, straight to the seller. photoZseo never holds your money.',
+    factReviewsTitle: 'No fake reviews', factReviewsDesc: 'We show no ratings or reviews, so none can be bought.',
+    factIdentityTitle: 'Seller identity shown', factIdentityDesc: 'Business type, location and contact on every listing.',
+    taxonomyNote: 'Google Product Taxonomy', productsLabel: 'products',
+    rankingNote: 'Newest listings first. No listing is sponsored and no seller pays for placement.',
+    flowEyebrow: 'Ordering', flowTitle: 'No middleman, no surprises.',
+    flowDesc: "photoZseo never touches your payment. Your cart goes to the seller, and the payment details come from the seller's store.",
+    step1Title: 'Add to cart', step1Desc: 'Items from different stores share one cart, grouped by store.',
+    step2Title: 'Send the order', step2Desc: 'Your cart goes to the seller via WhatsApp, with an order reference.',
+    step3Title: 'Pay the seller', step3Desc: 'Pay by bank transfer (IBAN or SWIFT) and put your order reference in the payment description.',
+    sellTitle: 'Photograph a product once. Sell it here and on 60+ marketplaces.',
+    sellDesc: 'Open your store in the photoZseo app. Your products appear here as soon as you turn on marketplace listing.',
+    sellCta: 'Open a store',
+    voidEyebrow: 'Opening soon', voidTitle: 'The first stores are on their way.',
+    voidDesc: "Sellers list their products here from the photoZseo app. Nothing is published without the seller's consent. This page stays out of search engines until the first store is listed.",
+    statStores: 'Listed stores', statProducts: 'Products online', statCategories: 'Categories',
+    colStore: 'Store', colLocation: 'Location',
+    themeToggle: 'Switch between light and dark', themeLight: 'Light', themeDark: 'Dark',
+    legalPrivacy: 'Privacy', legalTerms: 'Terms of Use', legalStoreTerms: 'Seller terms',
+    legalAup: 'Acceptable use', legalRules: 'Marketplace rules',
+    marketFooterNote: 'photoZseo Market lists offers from independent sellers. Each sale is a contract between the buyer and the seller. photoZseo is not the seller, does not take payments and does not ship goods. Report a suspicious listing with the Report link on any product page.',
   },
   tr: {
     marketTitle: 'Pazar Yeri', searchPlaceholder: 'Ürün ara…',
@@ -151,6 +185,29 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     reportPrompt: 'Yanıltıcı, güvensiz veya dolandırıcılık şüphesi mi var? Şikayet edin.',
     wasPrice: 'Eski fiyat',
     youSave: 'Kazancınız',
+    heroTitle: 'Bağımsız satıcılar.', heroTitleMuted: 'Doğrudan sizinle.',
+    heroSub: 'Her ilan, satıcının kendi photoZseo mağazasından gelir. Siparişinizi satıcıya iletir, ödemeyi doğrudan satıcıya yaparsınız.',
+    factPayTitle: 'Ödeme doğrudan satıcıya', factPayDesc: 'Havale/EFT veya SWIFT ile doğrudan satıcıya. photoZseo paranızı tutmaz.',
+    factReviewsTitle: 'Sahte yorum yok', factReviewsDesc: 'Puan ve yorum göstermiyoruz; bu yüzden satın alınamaz.',
+    factIdentityTitle: 'Satıcı kimliği açık', factIdentityDesc: 'İşletme türü, konum ve iletişim her ilanda görünür.',
+    taxonomyNote: 'Google Product Taxonomy', productsLabel: 'ürün',
+    rankingNote: 'En yeni ilanlar önce. Hiçbir ilan sponsorlu değildir; hiçbir satıcı öne çıkmak için ödeme yapmaz.',
+    flowEyebrow: 'Sipariş', flowTitle: 'Aracı yok, sürpriz yok.',
+    flowDesc: 'photoZseo ödemenize dokunmaz. Sepetiniz satıcıya iletilir; ödeme bilgisi satıcının mağazasından gelir.',
+    step1Title: 'Sepete ekleyin', step1Desc: 'Farklı mağazaların ürünleri tek sepette, mağazaya göre gruplanır.',
+    step2Title: 'Siparişi iletin', step2Desc: 'Sepetiniz sipariş numarasıyla WhatsApp üzerinden satıcıya gönderilir.',
+    step3Title: 'Satıcıya ödeyin', step3Desc: 'IBAN veya SWIFT ile havale yapın; açıklamaya sipariş numaranızı yazın.',
+    sellTitle: 'Ürününüzü bir kez fotoğraflayın; burada ve 60+ pazar yerinde satın.',
+    sellDesc: 'photoZseo uygulamasında mağazanızı açın. Pazar yerinde listelemeyi açtığınız an ürünleriniz burada görünür.',
+    sellCta: 'Mağaza aç',
+    voidEyebrow: 'Açılış hazırlığı', voidTitle: 'İlk mağazalar yolda.',
+    voidDesc: 'Satıcılar ürünlerini photoZseo uygulamasından burada listeler. Satıcının onayı olmadan hiçbir ürün yayınlanmaz. İlk mağaza listelenene kadar bu sayfa arama motorlarına kapalıdır.',
+    statStores: 'Listelenen mağaza', statProducts: 'Yayındaki ürün', statCategories: 'Kategori',
+    colStore: 'Mağaza', colLocation: 'Konum',
+    themeToggle: 'Açık/koyu tema arasında geç', themeLight: 'Açık', themeDark: 'Koyu',
+    legalPrivacy: 'Gizlilik', legalTerms: 'Kullanım şartları', legalStoreTerms: 'Satıcı şartları',
+    legalAup: 'Kabul edilebilir kullanım', legalRules: 'Pazar yeri kuralları',
+    marketFooterNote: 'photoZseo Market bağımsız satıcıların ilanlarını listeler. Her satış alıcı ile satıcı arasında kurulan bir sözleşmedir. photoZseo satıcı değildir, ödeme almaz ve kargo göndermez. Şüpheli bir ilanı her ürün sayfasındaki Şikayet et bağlantısıyla bildirebilirsiniz.',
   },
   de: { marketTitle: 'Marktplatz', searchPlaceholder: 'Produkte suchen…', newProducts: 'Neue Produkte', stores: 'Shops', featured: 'Empfohlen', categories: 'Kategorien', allCategories: 'Alle', noResults: 'Keine Ergebnisse', filters: 'Filter', apply: 'Anwenden', clear: 'Zurücksetzen', price: 'Preis', city: 'Stadt', inStock: 'Nur auf Lager', sortNew: 'Neueste', sortPriceAsc: 'Preis: aufsteigend', sortPriceDesc: 'Preis: absteigend', sortLabel: 'Sortieren', min: 'Min', max: 'Max', results: 'Ergebnisse', visitStore: 'Shop besuchen', trustBadge: 'Unabhängige Verkäufer · Überweisung · keine gefälschten Bewertungen', report: 'Melden', addToCart: 'In den Warenkorb', cart: 'Warenkorb', sendCart: 'Warenkorb senden', emptyCart: 'Ihr Warenkorb ist leer', name: 'Vollständiger Name', phone: 'Telefon', address: 'Adresse', note: 'Notiz', required: 'Dieses Feld ist erforderlich', submitOrder: 'Bestellung per WhatsApp senden', orderRef: 'Bestellreferenz', payByTransfer: 'Zahlung per Überweisung', iban: 'IBAN', ibanName: 'Kontoinhaber', paymentDesc: 'Verwendungszweck', openWhatsapp: 'WhatsApp öffnen', qty: 'Anz.', remove: 'Entfernen', total: 'Gesamt', browseAll: 'Alle ansehen', soldOut: 'Ausverkauft', contactForPrice: 'Preis auf Anfrage', backToStore: 'Zurück zum Shop', backToMarket: '← Marktplatz', currency: 'Währung', language: 'Sprache', rateNote: '≈ ca. · Kurse täglich aktualisiert', contact: 'Kontakt', call: 'Anrufen', other: 'Sonstige', poweredBy: 'Dieser Shop wurde mit photoZseo erstellt', reportStore: 'Diesen Shop melden', productDetails: 'Produktdetails', orderViaWhatsApp: 'Per WhatsApp bestellen', deliveryInfo: 'Lieferdetails', addNote: 'Fügen Sie eine Notiz hinzu (optional)', favorite: 'Zu Favoriten hinzufügen', signIn: 'anmelden', signOut: 'Abmelden', myFavorites: 'Meine Favoriten', myOrders: 'Meine Bestellungen', discover: 'Entdecken', noOrders: 'Noch keine Bestellungen', orderStatus: 'Status', orderItems: 'Artikel', myCart: 'Mein Warenkorb', emptyFavorites: 'Noch keine Favoriten', bankName: 'Bank', swift: 'SWIFT/BIC', fitsVehicle: 'Nach Fahrzeug filtern', allMakes: 'Alle Marken', allModels: 'Alle Modelle', paySafetyTitle: 'Bevor Sie bezahlen', paySafetyTip: 'Banküberweisungen können nicht rückgängig gemacht werden. Stellen Sie sicher, dass Sie diesem Verkäufer vertrauen, zahlen Sie niemals zusätzliche „Gebühren“ und bevorzugen Sie nach Möglichkeit eine Zahlungsmethode mit Käuferschutz. photoZseo veröffentlicht diesen Shop nur – er verarbeitet keine Zahlungen und garantiert keine Bestellungen.', sellerTypeIndividual: 'Einzelverkäufer', sellerTypeManufacturer: 'Hersteller', sellerTypeTradingCompany: 'Handelsunternehmen', sellerTypeManufacturerTrader: 'Hersteller & Händler', sellerTypeBrandOwner: 'Markeninhaber', sellerTypeDistributor: 'Verteiler' },
   es: { marketTitle: 'Mercado', searchPlaceholder: 'Buscar productos…', newProducts: 'Nuevos productos', stores: 'Tiendas', featured: 'Destacados', categories: 'Categorías', allCategories: 'Todas', noResults: 'No se encontraron resultados', filters: 'Filtros', apply: 'Aplicar', clear: 'Limpiar', price: 'Precio', city: 'Ciudad', inStock: 'Solo en stock', sortNew: 'Más nuevos', sortPriceAsc: 'Precio: de menor a mayor', sortPriceDesc: 'Precio: de mayor a menor', sortLabel: 'Ordenar', min: 'Mín', max: 'Máx', results: 'resultados', visitStore: 'Visitar tienda', trustBadge: 'Vendedores independientes · transferencia · sin reseñas falsas', report: 'Reportar', addToCart: 'Añadir al carrito', cart: 'Carrito', sendCart: 'Enviar carrito', emptyCart: 'Tu carrito está vacío', name: 'Nombre completo', phone: 'Teléfono', address: 'Dirección', note: 'Nota', required: 'Este campo es obligatorio', submitOrder: 'Enviar pedido por WhatsApp', orderRef: 'Referencia del pedido', payByTransfer: 'Pago por transferencia', iban: 'IBAN', ibanName: 'Titular de la cuenta', paymentDesc: 'Concepto de pago', openWhatsapp: 'Abrir WhatsApp', qty: 'Cant.', remove: 'Quitar', total: 'Total', browseAll: 'Ver todo', soldOut: 'Agotado', contactForPrice: 'Consultar precio', backToStore: 'Volver a la tienda', backToMarket: '← Mercado', currency: 'Moneda', language: 'Idioma', rateNote: '≈ aprox. · tasas actualizadas diariamente', contact: 'Contacto', call: 'Llamar', other: 'Otros', poweredBy: 'Esta tienda fue creada con photoZseo', reportStore: 'Reportar esta tienda', productDetails: 'Detalles del producto', orderViaWhatsApp: 'Pedir por WhatsApp', deliveryInfo: 'Detalles de entrega', addNote: 'Agregar una nota (opcional)', favorite: 'Añadir a favoritos', signIn: 'Iniciar sesión', signOut: 'desconectar', myFavorites: 'Mis favoritos', myOrders: 'Mis pedidos', discover: 'Descubrir', noOrders: 'Aún no hay pedidos', orderStatus: 'Estado', orderItems: 'Elementos', myCart: 'Mi carrito', emptyFavorites: 'Aún no hay favoritos', bankName: 'Banco', swift: 'SWIFT/BIC', fitsVehicle: 'Filtrar por vehículo', allMakes: 'Todas las marcas', allModels: 'Todos los modelos', paySafetyTitle: 'antes de pagar', paySafetyTip: 'Las transferencias bancarias no se pueden revertir. Asegúrese de confiar en este vendedor, nunca pague “tarifas” adicionales y, cuando sea posible, prefiera un método de pago con protección del comprador. photoZseo solo publica esta tienda; no procesa pagos ni garantiza pedidos.', sellerTypeIndividual: 'vendedor individual', sellerTypeManufacturer: 'Fabricante', sellerTypeTradingCompany: 'Compañía comercial', sellerTypeManufacturerTrader: 'Fabricante y comerciante', sellerTypeBrandOwner: 'Propietario de la marca', sellerTypeDistributor: 'Distribuidor' },

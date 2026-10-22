@@ -80,9 +80,12 @@
   --tab-h:    60px;   /* mobil alt tab bar yüksekliği (market) */
 }
 
-/* ── Dark mode — store + market ortak ───────────────────────────────── */
+/* ── Dark mode — store + market ortak ───────────────────────────────────
+   Üç durum: <html data-theme="light|dark"> kullanıcı seçimi (theme-init.js,
+   localStorage 'pz-theme'); attribute yoksa işletim sistemi tercihi geçerli. */
+:root { color-scheme: light; }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg:          #0B0B0D;   /* saf siyah yerine yumuşak near-black (OLED'de daha az sert) */
     --bg-page:     #141416;
     --fg:          #F5F5F7;
@@ -100,7 +103,28 @@
     --shadow:    0 2px 12px rgba(0, 0, 0, 0.45);
     --shadow-h:  0 8px 28px rgba(0, 0, 0, 0.55);
     --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+    --bg:          #0B0B0D;   /* saf siyah yerine yumuşak near-black (OLED'de daha az sert) */
+    --bg-page:     #141416;
+    --fg:          #F5F5F7;
+    --muted:       #98989F;
+    --dim:         #8E8E93;
+    --line:        #2C2C2E;
+    --line-strong: #3A3A3C;
+    --card:        #1C1C1E;
+    --input:       #2C2C2E;
+
+    --ok-bg:   rgba(52, 199, 89, 0.16);  --ok-fg:   #34C759;
+    --warn-bg: rgba(255, 159, 10, 0.16); --warn-fg: #FF9F0A;
+    --err-bg:  rgba(255, 69, 58, 0.16);  --err-fg:  #FF453A;
+
+    --shadow:    0 2px 12px rgba(0, 0, 0, 0.45);
+    --shadow-h:  0 8px 28px rgba(0, 0, 0, 0.55);
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
 }
 
 /* ── Temel reset — body zemini/tipografisi her iki storefront için ──── */
@@ -314,3 +338,32 @@ img { max-width: 100%; }
   transition: background 0.15s ease;
 }
 .app-empty__cta:hover { background: var(--accent-hover); }
+
+/* ── Tema seçici (header) — theme-init.js bağlar ─────────────────────── */
+.app-theme {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+.app-theme:hover { background: var(--input); }
+.app-theme:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.app-theme svg { width: 20px; height: 20px; }
+/* Gösterilen ikon = geçilecek tema: açıkta ay, koyuda güneş */
+.app-theme__sun { display: none; }
+:root[data-theme="dark"] .app-theme__sun { display: block; }
+:root[data-theme="dark"] .app-theme__moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .app-theme__sun { display: block; }
+  :root:not([data-theme="light"]) .app-theme__moon { display: none; }
+}
+@media (max-width: 520px) { .app-theme { width: 36px; height: 36px; } }

@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 
 describe('marketplace i18n', () => {
-  it('covers the 12 supported locales', () => {
-    expect(MK_LOCALES).toEqual(['en', 'tr', 'de', 'es', 'pt', 'ja', 'ko', 'zh', 'ar', 'fa', 'ur', 'hi']);
+  it('covers the 15 site locales (fr/it/pl dahil)', () => {
+    expect(MK_LOCALES).toEqual(['en', 'tr', 'de', 'es', 'pt', 'fr', 'it', 'pl', 'ja', 'ko', 'zh', 'ar', 'fa', 'ur', 'hi']);
   });
 
   it('returns the locale string when present', () => {
@@ -143,144 +143,97 @@ describe('renderStoreStrip', () => {
 
 import { renderMarketHome } from './marketplace';
 
-describe('renderMarketHome', () => {
+describe('renderMarketHome (v3 İsviçre)', () => {
   const products: ProductRow[] = [sampleProduct, { ...sampleProduct, id: 'b:2', product_path: '/store/b/product/x', title: 'Second' }];
   const stores: StoreRow[] = [{ slug: 'ahmet-oto', name: 'Ahmet Oto', city: 'Istanbul', country: 'TR', listed: 1 }];
-  // vehicles.accessories: ürünü (ve görseli) olan kategori → kategori rayına girer.
-  const cats = [{ id: 'electronics.phones', count: 5 }, { id: 'vehicles.accessories', count: 2 }];
+  const cats = [{ id: '222', count: 5 }, { id: '888', count: 0 }];
   const html = renderMarketHome({ products, stores, categories: cats, locale: 'en' });
 
-  it('has a search form posting to /market/search (GET)', () => {
+  it('has a search form posting to /market/search (GET) with a 100-char cap', () => {
     expect(html).toContain('action="/market/search"');
     expect(html).toContain('name="q"');
+    expect(html).toContain('maxlength="100"');
   });
   it('search input wires the autocomplete datalist', () => {
     expect(html).toContain('list="mk-suggest"');
     expect(html).toContain('data-mk-suggest');
     expect(html).toContain('<datalist id="mk-suggest"></datalist>');
   });
-  it('≤8 products: single grid, no Featured rail (no duplication)', () => {
-    expect(html).not.toContain(mt('en', 'featured'));
+  it('hero: two-tone title, value proposition and three trust facts', () => {
+    expect(html).toContain(`${mt('en', 'heroTitle')} <span class="mk-hero__muted">${mt('en', 'heroTitleMuted')}</span>`);
+    expect(html).toContain(`<p class="mk-hero__sub">${mt('en', 'heroSub').replace(/'/g, '&#39;')}</p>`);
+    expect(html.match(/class="mk-fact"/g)?.length).toBe(3);
+    expect(html).toContain(mt('en', 'factReviewsTitle'));
+  });
+  it('category index lists every root with taxonomy id and count (empty ones too)', () => {
+    expect(html).toContain('mk-cats');
+    expect(html).toContain('<span class="mk-cat__id">222</span>');
+    expect(html).toContain('href="/market/c/electronics"');
+    expect(html).toContain('mk-cat mk-cat--empty');
+    expect(html).not.toContain('mk-sidebar');
+    expect(html).not.toContain('mk-chips');
+  });
+  it('single product grid with ranking transparency note, no Featured rail', () => {
     expect(html).toContain(mt('en', 'newProducts'));
-  });
-  it('renders category chips and a store strip', () => {
-    expect(html).toContain('/market/c/electronics.phones');
-    expect(html).toContain('/store/ahmet-oto');
-  });
-  it('renders the trust badge', () => {
-    expect(html).toContain('Independent sellers · bank transfer · no fake reviews');
-  });
-  it('renders the category rail with image cards (no overlay variants)', () => {
-    expect(html).toContain('mk-rail');
-    expect(html).toContain('mk-cat-card');
-    expect(html).not.toContain('mk-featured');
-    expect(html).not.toContain('mk-disc-card');
-    expect(html).not.toContain('mk-collection-card');
-    expect(html).not.toContain('mk-trending-item');
-    expect(html).not.toContain('mk-section__label');
-  });
-  it('category rail: only categories with a resolvable product image; rail skipped when none', () => {
-    // electronics.phones'un ürünü yok → karta girmez; vehicles.accessories girer.
-    expect(html).toContain('mk-cat-card" href="/market/c/vehicles.accessories"');
-    expect(html).not.toContain('mk-cat-card" href="/market/c/electronics.phones"');
-    expect(html).not.toContain('mk-cat-card__empty');
-    // Hiç eşleşen görsel yoksa ray tamamen atlanır.
-    const none = renderMarketHome({ products, stores, categories: [{ id: 'electronics.phones', count: 5 }], locale: 'en' });
-    expect(none).not.toContain('mk-cat-card');
-  });
-  it('category chips: count 0 chips are not rendered ("All" chip stays)', () => {
-    const out = renderMarketHome({ products, stores, categories: [{ id: 'empty.cat', count: 0 }, { id: 'vehicles.accessories', count: 2 }], locale: 'en' });
-    expect(out).toContain('href="/market/search"'); // All chip
-    expect(out).not.toContain('mk-chip" href="/market/c/empty.cat"');
-    expect(out).toContain('mk-chip" href="/market/c/vehicles.accessories"');
-    expect(out).toContain('mk-chip__count">2</span>'); // count>0 sayaç kalır
-  });
-  it('hero: trustBadge value-prop subline under the h1', () => {
-    expect(html).toContain('<p class="mk-hero__sub">');
-    expect(html).toContain(`<p class="mk-hero__sub">${mt('en', 'trustBadge')}</p>`);
-  });
-  it('LCP: first 4 grid images eager + fetchpriority=high, rest lazy', () => {
-    expect(html.match(/fetchpriority="high"/g)?.length).toBe(2); // 2 ürün → ikisi de eager
-    expect(html).toContain('loading="eager" fetchpriority="high"');
-  });
-  it('hero: i18n title + embedded SVG search button, no mic / hardcoded copy', () => {
-    expect(html).toContain('mk-hero__title');
-    expect(html).toContain('mk-hero__btn');
-    expect(html).toContain('mk-icon');
-    expect(html).not.toContain('mk-hero__mic');
-    expect(html).not.toContain('What are you looking for?');
-    expect(html).not.toContain('Discovery Flow');
-    expect(html).not.toContain('Recommended for You');
-    expect(html).not.toContain('Trending in Your Area');
-    expect(html).not.toContain('Curated Collections');
-    expect(html).not.toContain('View Details');
-  });
-  it('bottom tab bar: 4 tabs with SVG icons, discover active', () => {
-    expect(html).toContain('mk-tab-bar');
-    expect(html).toContain('href="/market/stores"');
-    expect(html).toContain('href="/market/favorites"');
-    expect(html).toContain('href="/market/cart"');
-    expect(html).toContain('mk-tab-bar__item--active');
-    expect(html.match(/mk-tab-bar__icon/g)?.length).toBe(4);
-    expect(html).toContain('<svg class="mk-icon"');
-  });
-  it('renders both product cards', () => {
+    expect(html).toContain(mt('en', 'rankingNote'));
+    expect(html).not.toContain(mt('en', 'featured'));
     expect(html).toContain('Tesla Model Y Floor Mats');
     expect(html).toContain('Second');
   });
-});
-
-describe('renderMarketHome — featured/grid dedup (>8 products)', () => {
-  // 10 ürün: p1 sold-out → featured stoklulardan ilk 8 (p2..p9), grid kalanlar (p1, p10).
-  const many: ProductRow[] = Array.from({ length: 10 }, (_, i) => ({
-    ...sampleProduct,
-    id: `s:p${i + 1}`,
-    title: `Prod${i + 1}X`,
-    product_path: `/store/s/product/p${i + 1}`,
-    stock: i === 0 ? 0 : 5,
-  }));
-  const html = renderMarketHome({ products: many, stores: [], categories: [], locale: 'en' });
-
-  it('renders the Featured rail with in-stock products only', () => {
-    expect(html).toContain(mt('en', 'featured'));
-    const featuredSection = html.slice(html.indexOf(mt('en', 'featured')), html.indexOf(mt('en', 'newProducts')));
-    expect(featuredSection).not.toContain('Prod1X'); // sold-out featured'a girmez
-    expect(featuredSection).toContain('Prod2X');
-    expect(featuredSection).toContain('Prod9X');
-    expect(featuredSection).not.toContain('Prod10X');
+  it('LCP: first 4 grid images eager + fetchpriority=high', () => {
+    expect(html.match(/fetchpriority="high"/g)?.length).toBe(2);
+    const many = Array.from({ length: 10 }, (_, i) => ({ ...sampleProduct, id: `s:p${i}`, title: `P${i}` }));
+    const out = renderMarketHome({ products: many, stores: [], categories: [], locale: 'en' });
+    expect(out.match(/fetchpriority="high"/g)?.length).toBe(4);
   });
-  it('grid continues with the remainder — featured items are not repeated', () => {
-    // p2..p9 featured'da bir kez; grid'de tekrar yok.
-    for (let i = 2; i <= 9; i++) {
-      expect(html.match(new RegExp(`Prod${i}X`, 'g'))?.length).toBe(2); // alt + title (tek kart)
-    }
-    // Sold-out p1 ve p10 grid'de.
-    const gridSection = html.slice(html.indexOf(mt('en', 'newProducts')));
-    expect(gridSection).toContain('Prod1X');
-    expect(gridSection).toContain('Prod10X');
+  it('order flow explains the real three steps', () => {
+    expect(html).toContain('mk-steps');
+    for (const n of [1, 2, 3]) expect(html).toContain(mt('en', `step${n}Title`));
   });
-  it('LCP: eager images only on the first (featured) rail, first 4 cards', () => {
-    expect(html.match(/fetchpriority="high"/g)?.length).toBe(4);
+  it('store table links each store to /store/<slug>', () => {
+    expect(html).toContain('mk-table');
+    expect(html).toContain('href="/store/ahmet-oto"');
+    expect(html).toContain('Istanbul, TR');
   });
-});
-
-describe('renderMarketHome — main landmark + empty state', () => {
-  const tree: CategoryTreeNode[] = [{ id: '8', label: 'Arts', children: [] }]; // import hoisted (aşağıdaki import bloğu)
-  it('content body is a single <main class="mk-main"> when sidebar present', () => {
-    const html = renderMarketHome({ products: [sampleProduct], stores: [], categories: [], locale: 'en', categoryTree: tree });
-    expect(html).toContain('<main class="mk-main">');
-    expect(html).not.toContain('<div class="mk-main">');
+  it('seller CTA points to the localized site home', () => {
+    expect(html).toContain('class="mk-sell__cta" href="/"');
+    expect(renderMarketHome({ products, stores, categories: cats, locale: 'tr' })).toContain('class="mk-sell__cta" href="/tr/"');
+  });
+  it('single <main> landmark', () => {
     expect(html.match(/<main\b/g)?.length).toBe(1);
   });
-  it('sidebar outer <details> ships server-side open', () => {
-    const html = renderMarketHome({ products: [sampleProduct], stores: [], categories: [], locale: 'en', categoryTree: tree });
-    expect(html).toContain('<details class="mk-sidebar__all" open>');
+  it('bottom tab bar: 4 tabs with SVG icons, discover active', () => {
+    expect(html).toContain('mk-tab-bar');
+    expect(html).toContain('href="/market/favorites"');
+    expect(html).toContain('mk-tab-bar__item--active');
+    expect(html.match(/mk-tab-bar__icon/g)?.length).toBe(4);
   });
-  it('empty home uses an SVG empty-state icon (no emoji)', () => {
-    const html = renderMarketHome({ products: [], stores: [], categories: [], locale: 'en' });
-    expect(html).toContain('app-empty');
-    expect(html).toMatch(/app-empty__icon[^>]*><svg class="mk-icon"/);
-    expect(html).not.toContain('🛍️');
+  it('header carries the light/dark theme toggle', () => {
+    expect(html).toContain('data-theme-toggle');
+    expect(html).toContain(mt('en', 'themeToggle'));
+  });
+  it('escapes hostile product and store names', () => {
+    const out = renderMarketHome({
+      products: [{ ...sampleProduct, title: '<img src=x onerror=alert(1)>' }],
+      stores: [{ slug: 'x', name: '<script>alert(1)</script>', city: '', country: '', listed: 1 }],
+      categories: [], locale: 'en',
+    });
+    expect(out).not.toContain('<img src=x');
+    expect(out).not.toContain('<script>alert(1)</script>');
+  });
+});
+
+describe('renderMarketHome — empty marketplace', () => {
+  const html = renderMarketHome({ products: [], stores: [], categories: [{ id: '222', count: 0 }], locale: 'en' });
+  it('shows the honest opening state with counts instead of "No results"', () => {
+    expect(html).toContain('mk-void');
+    expect(html).toContain(mt('en', 'voidTitle'));
+    expect(html).not.toContain(mt('en', 'noResults'));
+    expect(html).not.toContain('class="mk-grid"');
+  });
+  it('still offers the category index and seller CTA', () => {
+    expect(html).toContain('mk-cats');
+    expect(html).toContain('mk-sell');
   });
 });
 
@@ -393,8 +346,16 @@ describe('renderMarketFooter', () => {
     expect(html).toContain('mailto:support@photozseo.com');
     expect(html).toContain('Report');
   });
-  it('repeats the trust badge', () => {
-    expect(html).toContain('Independent sellers · bank transfer · no fake reviews');
+  it('shows the marketplace (not single-store) disclaimer', () => {
+    expect(html).toContain(mt('en', 'marketFooterNote'));
+  });
+  it('links all legal pages, localized for non-English', () => {
+    for (const page of ['marketplace-rules', 'store-terms', 'aup', 'privacy', 'terms']) {
+      expect(html).toContain(`href="/${page}"`);
+    }
+    const tr = renderMarketFooter('tr');
+    expect(tr).toContain('href="/tr/marketplace-rules"');
+    expect(tr).toContain('href="/tr/privacy"');
   });
 });
 
@@ -541,45 +502,13 @@ describe('renderCategorySidebar', () => {
   });
 });
 
-describe('renderMarketHome — categoryTree integration', () => {
-  const products: ProductRow[] = [sampleProduct];
-  const stores: StoreRow[] = [{ slug: 'ahmet-oto', name: 'Ahmet Oto', city: 'Istanbul', country: 'TR', listed: 1 }];
-  const cats = [{ id: 'electronics.phones', count: 5 }];
-  const tree: CategoryTreeNode[] = [
-    { id: '222', label: 'Electronics', children: [{ id: '267', label: 'Mobile Phones', children: [] }] },
-    { id: '8', label: 'Arts', children: [] },
-  ];
-
-  it('with categoryTree: renders mk-layout + mk-sidebar + mk-main', () => {
-    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
-    expect(html).toContain('mk-layout');
-    expect(html).toContain('mk-sidebar');
-    expect(html).toContain('mk-main');
-  });
-
-  it('without categoryTree: NO mk-layout (backward compat)', () => {
-    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en' });
-    expect(html).not.toContain('mk-layout');
+describe('renderMarketHome — categoryTree (geriye uyum)', () => {
+  it('accepts categoryTree but renders the index instead of a sidebar', () => {
+    const tree: CategoryTreeNode[] = [{ id: '222', label: 'Electronics', children: [] }];
+    const html = renderMarketHome({ products: [sampleProduct], stores: [], categories: [{ id: '222', count: 1 }], locale: 'en', categoryTree: tree });
     expect(html).not.toContain('mk-sidebar');
-    expect(html).not.toContain('mk-main');
-  });
-
-  it('empty categoryTree ([]) also produces no layout wrapper', () => {
-    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: [] });
-    expect(html).not.toContain('mk-layout');
-  });
-
-  it('ortak app-header sidebar varken de render edilir', () => {
-    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
+    expect(html).toContain('mk-cats');
     expect(html).toContain('app-header');
-    expect(html).toContain('app-brand');
-  });
-
-  it('existing content (hero, chips, products) preserved inside mk-main', () => {
-    const html = renderMarketHome({ products, stores, categories: cats, locale: 'en', categoryTree: tree });
-    expect(html).toContain('mk-hero');
-    expect(html).toContain('mk-chips');
-    expect(html).toContain('Tesla Model Y Floor Mats');
   });
 });
 
