@@ -674,8 +674,8 @@ export function renderStoreBody(
   html += '</div>\n';
   if (manifest.products.some((p) => p.fitment?.length)) html += fitmentFilterScript();
   html += controlsScript(locale);
-  html += '  <script src="/storefront-buyer.js?v=8" defer></script>\n';
-  html += '  <script src="/cart-badge.js?v=1" defer></script>\n';
+  html += '  <script src="/storefront-buyer.js?v=9" defer></script>\n';
+  html += '  <script src="/cart-badge.js?v=2" defer></script>\n';
   html += '  <script src="https://accounts.google.com/gsi/client" async></script>\n';
   html += '  <script src="/auth.js?v=11" defer></script>\n';
   return html;
@@ -1174,8 +1174,8 @@ export function renderProductBody(
   html += `          <p>${escapeHtml(mt(locale, 'paymentDesc'))}: <strong data-mk-paydesc></strong></p>\n`;
   html += '        </div>\n';
   html += '      </div>\n';
-  html += '      <script src="/storefront-buyer.js?v=8" defer></script>\n';
-  html += '      <script src="/marketplace-cart.js?v=4" defer></script>\n';
+  html += '      <script src="/storefront-buyer.js?v=9" defer></script>\n';
+  html += '      <script src="/marketplace-cart.js?v=5" defer></script>\n';
   html += '      <script src="https://accounts.google.com/gsi/client" async></script>\n';
   html += '      <script src="/auth.js?v=11" defer></script>\n';
 

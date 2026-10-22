@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { idToSlug as idToSlugT } from './taxonomy/slug-resolve';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 
 describe('marketplace i18n', () => {
@@ -60,15 +61,16 @@ const sampleProduct: ProductRow = {
 
 describe('renderProductCard', () => {
   const html = renderProductCard(sampleProduct, 'en');
-  it('links to product_path', () => {
-    expect(html).toContain('href="/store/ahmet-oto/product/tesla-model-y-floor-mats"');
+  it('links to the marketplace product page', () => {
+    expect(html).toContain(`href="/market/p/${encodeURIComponent(sampleProduct.id)}"`);
   });
   it('shows title and formatted price', () => {
     expect(html).toContain('Tesla Model Y Floor Mats');
     expect(html).toMatch(/49/);
   });
-  it('lazy-loads the image', () => {
-    expect(html).toContain('loading="lazy"');
+  it('first card is the LCP candidate (eager); later cards lazy-load', () => {
+    expect(html).toContain('loading="eager" fetchpriority="high"');
+    expect(renderProductCard(sampleProduct, 'en', 1)).toContain('loading="lazy"');
     expect(html).toContain('https://img.example/mat.avif');
   });
   it('renders a placeholder when out of stock (stock 0)', () => {
@@ -391,9 +393,9 @@ describe('renderCategoryChips — label çözümü (BUG FIX)', () => {
     const html = rcc2([{ id: 'c1', count: 1 }], 'en', labelOf);
     expect(html).toContain('c1');
   });
-  it('href hâlâ numeric/ham id ile (kararlı URL)', () => {
+  it('href kararlı slug URL (numeric id → slug)', () => {
     const html = rcc2([{ id: '267', count: 3 }], 'en', labelOf);
-    expect(html).toContain('/market/c/267');
+    expect(html).toContain(`/market/c/${idToSlugT('267')}`);
   });
 });
 
@@ -404,7 +406,7 @@ describe('renderCategoryPage — breadcrumb + h1 label', () => {
       breadcrumb: [{ id: '222', label: 'Electronics' }, { id: '267', label: 'Mobile Phones' }],
     });
     expect(html).toContain('<h1 class="mk-page-title">Mobile Phones</h1>');
-    expect(html).toContain('href="/market/c/222"');
+    expect(html).toContain(`href="/market/c/${idToSlugT('222')}"`);
     expect(html).toContain('Electronics');
   });
   it('breadcrumb null ise ham id h1\'de (kırılmaz)', () => {
@@ -435,7 +437,7 @@ describe('buildBreadcrumbJsonLd', () => {
     const obj = JSON.parse(json);
     expect(obj['@type']).toBe('BreadcrumbList');
     expect(obj.itemListElement).toHaveLength(2);
-    expect(obj.itemListElement[0]).toMatchObject({ position: 1, name: 'Electronics', item: 'https://photozseo.com/market/c/222' });
+    expect(obj.itemListElement[0]).toMatchObject({ position: 1, name: 'Electronics', item: `https://photozseo.com/market/c/${idToSlugT('222')}` });
   });
 });
 
@@ -463,17 +465,17 @@ describe('renderCategorySidebar', () => {
   });
 
   it('renders a child link href="/market/c/267" with label "Mobile Phones"', () => {
-    expect(html).toContain('href="/market/c/267"');
+    expect(html).toContain(`href="/market/c/${idToSlugT('267')}"`);
     expect(html).toContain('Mobile Phones');
   });
 
   it('renders an "All Electronics" link to /market/c/222', () => {
-    expect(html).toContain('href="/market/c/222"');
+    expect(html).toContain(`href="/market/c/${idToSlugT('222')}"`);
     expect(html).toMatch(/All[^<]*Electronics/);
   });
 
   it('renders Arts (no children) as a plain link href="/market/c/8"', () => {
-    expect(html).toContain('href="/market/c/8"');
+    expect(html).toContain(`href="/market/c/${idToSlugT('8')}"`);
     expect(html).toContain('mk-sidebar__link--top');
     expect(html).toContain('Arts');
   });
@@ -621,5 +623,32 @@ describe('marketplace.css', () => {
   });
   it('uses a responsive grid (2 cols mobile baseline)', () => {
     expect(css).toContain('grid-template-columns');
+  });
+});
+
+import { renderPager, renderProductPage as rpp3 } from './marketplace';
+
+describe('renderPager', () => {
+  const hrefFor = (n: number) => (n === 1 ? '/market/search?q=x' : `/market/search?q=x&page=${n}`);
+  it('tek sayfada hiçbir şey basmaz', () => {
+    expect(renderPager(40, { page: 1, pageSize: 40, hrefFor }, 'en')).toBe('');
+  });
+  it('rel=prev/next bağlantıları ve sayfa durumu', () => {
+    const html = renderPager(100, { page: 2, pageSize: 40, hrefFor }, 'tr');
+    expect(html).toContain('rel="prev" href="/market/search?q=x"');
+    expect(html).toContain('rel="next" href="/market/search?q=x&amp;page=3"');
+    expect(html).toContain('Sayfa 2 / 3');
+  });
+  it('son sayfada sonraki bağlantısı yok', () => {
+    expect(renderPager(100, { page: 3, pageSize: 40, hrefFor }, 'en')).not.toContain('rel="next"');
+  });
+});
+
+describe('renderProductPage — sepet düğmesi', () => {
+  it('buyer API için ürün slug\'ını (iki nokta üst üste olmadan) taşır', () => {
+    const html = rpp3({ ...sampleProduct, id: 'ahmet-oto:tesla-mats', price: 10, stock: 3, store_name: 'Ahmet Oto', whatsapp: '', city: '', country: '' } as never, 'en');
+    expect(html).toContain('data-mk-pslug="tesla-mats"');
+    expect(html).toContain('data-mk-cart-root-slug="ahmet-oto"');
+    expect(html).toContain(`data-mk-added="${mt('en', 'addedToCart')}"`);
   });
 });

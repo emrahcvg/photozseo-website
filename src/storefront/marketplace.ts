@@ -564,6 +564,31 @@ function renderFacets(facets: Facets, q: SearchQuery, locale: string, labelOf: L
   return h;
 }
 
+/** Sayfalama bilgisi — router hesaplar; renderer yalnız bağlantıları basar. */
+export interface PagerInfo {
+  page: number;
+  pageSize: number;
+  /** n. sayfanın göreli URL'i (1 → parametresiz). */
+  hrefFor: (n: number) => string;
+}
+
+export function renderPager(total: number, pager: PagerInfo | undefined, locale: string): string {
+  if (!pager) return '';
+  const pages = Math.max(1, Math.ceil(total / pager.pageSize));
+  if (pages <= 1) return '';
+  const cur = Math.min(Math.max(1, pager.page), pages);
+  let html = `<nav class="mk-pager" aria-label="${escapeAttr(mt(locale, 'pageLabel'))}">\n`;
+  html += cur > 1
+    ? `  <a class="mk-pager__link" rel="prev" href="${escapeAttr(pager.hrefFor(cur - 1))}">← ${escapeHtml(mt(locale, 'prevPage'))}</a>\n`
+    : '  <span class="mk-pager__link mk-pager__link--off" aria-hidden="true"></span>\n';
+  html += `  <span class="mk-pager__state">${escapeHtml(mt(locale, 'pageLabel'))} ${cur} / ${pages}</span>\n`;
+  html += cur < pages
+    ? `  <a class="mk-pager__link" rel="next" href="${escapeAttr(pager.hrefFor(cur + 1))}">${escapeHtml(mt(locale, 'nextPage'))} →</a>\n`
+    : '  <span class="mk-pager__link mk-pager__link--off" aria-hidden="true"></span>\n';
+  html += '</nav>\n';
+  return html;
+}
+
 export function renderSearchPage(args: {
   items: ProductRow[];
   facets: Facets;
@@ -571,6 +596,7 @@ export function renderSearchPage(args: {
   locale: string;
   query: SearchQuery;
   labelOf?: LabelOf;
+  pager?: PagerInfo;
 }): string {
   const { items, facets, total, locale, query, labelOf } = args;
   const ph = escapeHtml(mt(locale, 'searchPlaceholder'));
@@ -607,6 +633,7 @@ export function renderSearchPage(args: {
     html += '      <div class="mk-grid">\n';
     items.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '      </div>\n';
+    html += renderPager(total, args.pager, locale);
   }
   html += '    </section>\n';
   html += '  </div>\n'; // mk-search-body
@@ -638,6 +665,7 @@ export function renderCategoryPage(args: {
   total: number;
   locale: string;
   breadcrumb?: BreadcrumbSegment[] | null;
+  pager?: PagerInfo;
 }): string {
   const { categoryId, items, locale, breadcrumb } = args;
   const segments = breadcrumb ?? null;
@@ -671,6 +699,7 @@ export function renderCategoryPage(args: {
     html += '  <div class="mk-grid">\n';
     items.forEach((p, i) => { html += renderProductCard(p, locale, i); });
     html += '  </div>\n';
+    html += renderPager(args.total, args.pager, locale);
   }
   html += '</section>\n';
   html += renderMarketFooter(locale);
@@ -715,7 +744,7 @@ export function buildStoreDirectoryJsonLd(stores: StoreRow[], origin: string): s
     itemListElement: stores.map((s, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      url: `${origin}/store/${s.slug}`,
+      url: `${origin}/store/${encodeURIComponent(s.slug)}`,
       name: s.name,
     })),
   });
@@ -1030,9 +1059,12 @@ export function renderProductPage(p: ProductDetail, locale: string): string {
 
   // Add to cart
   if (!soldOut && p.price != null) {
+    // id = "<storeSlug>:<productSlug>"; buyer API ürün slug'ını ister (iki nokta üst üste geçersiz).
+    const pslug = p.id.includes(':') ? p.id.slice(p.id.indexOf(':') + 1) : p.id;
     html += `      <button class="mk-btn mk-pdp__add-btn"
         data-mk-add="${escapeAttr(p.id)}"
-        data-mk-pslug="${escapeAttr(p.id)}"
+        data-mk-pslug="${escapeAttr(pslug)}"
+        data-mk-added="${escapeAttr(mt(locale, 'addedToCart'))}"
         data-mk-title="${title}"
         data-mk-price="${p.price.toFixed(2)}"
         data-mk-currency="${escapeAttr(p.currency)}"

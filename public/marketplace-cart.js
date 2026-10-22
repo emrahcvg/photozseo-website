@@ -104,9 +104,66 @@
   window.__mkCart = api;
 
   // ── DOM wiring (no-op when the cart UI is absent, e.g. in unit tests) ──────────
+  // /market/p/<id> ürün sayfası: sepet kutusu yok; düğme doğrudan localStorage + D1'e ekler.
+  function storedDeviceId() {
+    var k = 'sf-device-id', v = null;
+    try { v = localStorage.getItem(k); } catch (e) {}
+    if (!v && self.crypto && self.crypto.randomUUID) {
+      v = self.crypto.randomUUID();
+      try { localStorage.setItem(k, v); } catch (e) {}
+    }
+    return v || '';
+  }
+  function refreshBadges() {
+    var total = 0;
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('mk-cart:') === 0) {
+          var arr = JSON.parse(localStorage.getItem(k) || '[]');
+          for (var j = 0; j < arr.length; j++) total += arr[j].qty || 1;
+        }
+      }
+    } catch (e) {}
+    document.querySelectorAll('[data-mk-cart-count]').forEach(function (b) { b.textContent = String(total); b.hidden = total === 0; });
+  }
+  function wireProductPage() {
+    document.querySelectorAll('[data-mk-add][data-mk-cart-root-slug]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var storeSlug = btn.getAttribute('data-mk-cart-root-slug');
+        var productId = btn.getAttribute('data-mk-add');
+        var pslug = btn.getAttribute('data-mk-pslug') || productId;
+        if (!storeSlug || !productId) return;
+        addItem(storeSlug, {
+          id: productId,
+          title: btn.getAttribute('data-mk-title') || '',
+          price: parseFloat(btn.getAttribute('data-mk-price') || '0') || 0,
+          currency: btn.getAttribute('data-mk-currency') || 'USD',
+          qty: 1,
+        });
+        var qty = 1;
+        getCart(storeSlug).forEach(function (x) { if (x.id === productId) qty = x.qty || 1; });
+        refreshBadges();
+        var label = btn.getAttribute('data-mk-added');
+        if (label) {
+          var orig = btn.textContent;
+          btn.textContent = label;
+          btn.disabled = true;
+          setTimeout(function () { btn.textContent = orig; btn.disabled = false; }, 1600);
+        }
+        fetch('/api/store/' + encodeURIComponent(storeSlug) + '/cart', {
+          method: 'PUT',
+          headers: { 'content-type': 'application/json', 'x-device-id': storedDeviceId() },
+          body: JSON.stringify({ productSlug: pslug, qty: qty }),
+        }).catch(function () {});
+      });
+    });
+  }
+
   function init() {
     var root = document.querySelector('[data-mk-cart-root]');
-    if (!root) return;
+    if (!root) { wireProductPage(); return; }
     var slug = root.getAttribute('data-mk-slug');
     var whatsapp = root.getAttribute('data-mk-whatsapp') || '';
 

@@ -42,7 +42,8 @@ describe('handleMarket', () => {
   it('includes og:image and WebSite SearchAction JSON-LD on /market home', async () => {
     const res = await handleMarket([], { url: 'https://photozseo.com/market', lang: 'en', db: {} as any, ai: undefined, ...deps });
     const html = await res.text();
-    expect(html).toContain('property="og:image" content="https://photozseo.com/og-image.png"');
+    // og:image = ilk ürün görseli (yoksa /og-image.png) — mutlak URL.
+    expect(html).toMatch(/property="og:image" content="https:\/\/[^"]+"/);
     expect(html).toContain('"SearchAction"');
     expect(html).toContain('https://photozseo.com/market/search?q={search_term_string}');
   });
@@ -74,6 +75,21 @@ describe('handleMarket', () => {
     const res = await handleMarket(['c', 'no-such-category'], { url: 'https://photozseo.com/market/c/no-such-category', lang: 'en', db: {} as any, ai: undefined, ...deps });
     expect(res.status).toBe(404);
     expect(await res.text()).toContain('noindex');
+  });
+
+  it('paginates search with ?page and caps at page 50', async () => {
+    let seen: { offset?: number; limit?: number } = {};
+    await handleMarket(['search'], {
+      url: 'https://photozseo.com/market/search?q=mat&page=999', lang: 'en', db: {} as any, ai: undefined, ...deps,
+      searchProducts: (async (_d: unknown, _a: unknown, o: { offset?: number; limit?: number }) => { seen = o; return deps.searchProducts(_d as any, _a as any, o as any); }) as any,
+    });
+    expect(seen.limit).toBe(40);
+    expect(seen.offset).toBe(49 * 40);
+  });
+
+  it('store listing never carries payment or contact fields into the page', async () => {
+    const res = await handleMarket(['stores'], { url: 'https://photozseo.com/market/stores', lang: 'en', db: {} as any, ai: undefined, ...deps });
+    expect(await res.text()).not.toMatch(/TR\d{24}/);
   });
 
   it('marks personal pages private, no-store', async () => {

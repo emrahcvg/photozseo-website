@@ -42,7 +42,7 @@ import {
   type LabelOf,
   type CategoryTreeNode,
 } from '../../src/storefront/marketplace';
-import { resolveOwnerKey } from '../_lib/buyer-owner';
+import { resolvePageOwnerKey } from '../_lib/buyer-owner';
 import { listOrders } from '../_lib/orders';
 import { listAllFavorites, listAllCart } from '../_lib/buyer';
 import { mt, MK_LOCALES } from '../../src/storefront/marketplace-i18n';
@@ -64,15 +64,39 @@ const SUGGEST_MAX = 64;
 
 const MARKET_CSS = ['/marketplace.css?v=9'];
 const GSI = 'https://accounts.google.com/gsi/client';
-const BASE_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/cart-badge.js?v=1'];
-const PDP_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/marketplace-cart.js?v=2', '/cart-badge.js?v=1'];
-const ACCOUNT_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/market-account.js?v=8', '/cart-badge.js?v=1'];
+const BASE_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/cart-badge.js?v=2'];
+const PDP_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/marketplace-cart.js?v=3', '/cart-badge.js?v=2'];
+const ACCOUNT_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/market-account.js?v=8', '/cart-badge.js?v=2'];
 
 /** Sonlu ve negatif olmayan sayı; değilse undefined (NaN/"abc"/boş → filtre yok). */
 function parsePrice(raw: string | null): number | undefined {
   if (raw === null || raw.trim() === '') return undefined;
   const n = Number(raw);
   return Number.isFinite(n) && n >= 0 ? n : undefined;
+}
+
+const PAGE_SIZE = 40;
+/** Sayfa en fazla 50 (2.000 ürün) — derin sayfalar tarama israfı + CPU. */
+const MAX_PAGE = 50;
+function parsePage(raw: string | null): number {
+  const n = Number(raw);
+  return Number.isInteger(n) && n >= 1 ? Math.min(n, MAX_PAGE) : 1;
+}
+
+/** Aynı sorgu parametreleriyle n. sayfa URL'i (1. sayfada page parametresi yok). */
+function pageHref(u: URL, n: number): string {
+  const q = new URLSearchParams(u.searchParams);
+  if (n <= 1) q.delete('page'); else q.set('page', String(n));
+  const qs = q.toString();
+  return u.pathname + (qs ? `?${qs}` : '');
+}
+
+/** og:image/preload mutlak URL ister; göreli görsel yollarını origin'e bağla, yoksa varsayılan. */
+function absImage(origin: string, url: string | undefined | null): string {
+  if (!url) return `${origin}/og-image.png`;
+  if (/^https:\/\//i.test(url)) return url;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return `${origin}/og-image.png`; // data:, javascript: vb.
+  return `${origin}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
 function clampQuery(raw: string | null): string | undefined {
@@ -189,7 +213,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       : [];
     const body = renderMarketHome({ products: newP.items, stores: stores.items, categories: cats, locale, labelOf, categoryTree });
     const canonical = buildCanonical(origin, '/market', locale);
-    const homeOgImage = newP.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
+    const homeOgImage = absImage(origin, newP.items.find((p) => p.image_url)?.image_url);
     return htmlResponse(renderDocument({
       title: mt(locale, 'marketTitle') + ' — photoZseo',
       description: 'photoZseo marketplace — find and buy products worldwide.',
@@ -233,16 +257,20 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       maxPrice: parsePrice(u.searchParams.get('maxPrice')),
       inStock: u.searchParams.get('inStock') === '1',
     };
+    const page = parsePage(u.searchParams.get('page'));
     const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, {
       q: q.q, lang: locale, categoryId: q.categoryId, minPrice: q.minPrice, maxPrice: q.maxPrice,
-      city: q.city, inStock: q.inStock, sort: q.sort, limit: 40, offset: 0,
+      city: q.city, inStock: q.inStock, sort: q.sort, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE,
     });
-    const body = renderSearchPage({ items: result.items, facets: adaptFacets(result.facets), total: result.total, locale, query: q, labelOf });
+    const body = renderSearchPage({
+      items: result.items, facets: adaptFacets(result.facets), total: result.total, locale, query: q, labelOf,
+      pager: { page, pageSize: PAGE_SIZE, hrefFor: (n) => pageHref(u, n) },
+    });
     const canonical = `${origin}/market/search`;
     const searchDesc = q.q
       ? `Search results for "${q.q}" — photoZseo marketplace`
       : 'photoZseo marketplace — find and buy products worldwide.';
-    const searchOgImage = result.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
+    const searchOgImage = absImage(origin, result.items.find((p) => p.image_url)?.image_url);
     return htmlResponse(renderDocument({
       title: (q.q ? q.q + ' — ' : '') + mt(locale, 'marketTitle'),
       description: searchDesc,
@@ -270,13 +298,17 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       }), 404);
     }
     const pdpUrl = `/market/p/${encodeURIComponent(product.id)}`;
-    const canonical = buildCanonical(origin, pdpUrl, locale);
+    // Aynı ürünün asıl SEO sayfası mağaza ürün sayfasıdır (hreflang'ı orada); pazar yeri
+    // kopyası oraya canonical verir → yinelenen içerik yok, JSON-LD ItemList ile tutarlı.
+    const canonical = product.product_path && product.product_path.startsWith('/store/')
+      ? `${origin}${product.product_path}`
+      : buildCanonical(origin, pdpUrl, locale);
     const body = renderProductPage(product, locale);
     return htmlResponse(renderDocument({
       title: `${product.title} — photoZseo`,
       description: product.description ? product.description.slice(0, 160) : `${product.title} — photoZseo marketplace`,
       lang: locale, body, canonical,
-      ogImage: product.image_url || `${origin}/og-image.png`,
+      ogImage: absImage(origin, product.image_url),
       preloadImage: product.image_url || undefined,
       jsonLd: buildProductJsonLd(product, origin),
       stylesheets: MARKET_CSS,
@@ -328,16 +360,21 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     }
     const categoryId = resolved ?? segment;
     const slugPath = `/market/c/${idToSlug(categoryId)}`;
-    const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, { categoryId, lang: locale, sort: 'new', limit: 40 });
+    const page = parsePage(u.searchParams.get('page'));
+    const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, { categoryId, lang: locale, sort: 'new', limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE });
     const breadcrumb = svc ? categoryBreadcrumb(categoryId, locale, svc) : null;
-    const body = renderCategoryPage({ categoryId, items: result.items, total: result.total, locale, breadcrumb });
+    const body = renderCategoryPage({
+      categoryId, items: result.items, total: result.total, locale, breadcrumb,
+      pager: { page, pageSize: PAGE_SIZE, hrefFor: (n) => pageHref(u, n) },
+    });
     const leaf = breadcrumb && breadcrumb.length ? breadcrumb[breadcrumb.length - 1].label : categoryId;
     const itemListLd = buildItemListJsonLd(result.items, origin);
     const jsonLd: string | string[] = breadcrumb && breadcrumb.length
       ? [buildBreadcrumbJsonLd(breadcrumb, origin), itemListLd]
       : itemListLd;
-    const canonical = buildCanonical(origin, slugPath, locale);
-    const categoryOgImage = result.items.find((p) => p.image_url)?.image_url ?? `${origin}/og-image.png`;
+    const baseCanonical = buildCanonical(origin, slugPath, locale);
+    const canonical = page > 1 ? `${baseCanonical}${baseCanonical.includes('?') ? '&' : '?'}page=${page}` : baseCanonical;
+    const categoryOgImage = absImage(origin, result.items.find((p) => p.image_url)?.image_url);
     return htmlResponse(renderDocument({
       title: leaf + ' — ' + mt(locale, 'marketTitle'),
       description: `${leaf} — photoZseo marketplace`,
@@ -355,7 +392,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
   if (parts[0] === 'orders' && parts.length === 1) {
     const now = Math.floor(Date.now() / 1000);
     const owner = deps.request
-      ? await resolveOwnerKey(deps.request, deps.storeWriteKey, now)
+      ? await resolvePageOwnerKey(deps.request, deps.storeWriteKey, now)
       : null;
     const orders = owner ? await listOrders(deps.db as unknown as Parameters<typeof listOrders>[0], owner) : [];
     const body = renderOrdersPage({ orders, locale, loggedIn: owner !== null });
@@ -373,7 +410,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
   // /market/favorites — alıcı favorileri (çapraz-mağaza, hesaba/cihaza bağlı)
   if (parts[0] === 'favorites' && parts.length === 1) {
     const now = Math.floor(Date.now() / 1000);
-    const owner = deps.request ? await resolveOwnerKey(deps.request, deps.storeWriteKey, now) : null;
+    const owner = deps.request ? await resolvePageOwnerKey(deps.request, deps.storeWriteKey, now) : null;
     const groups = owner ? await listAllFavorites(deps.db as unknown as Parameters<typeof listAllFavorites>[0], owner) : [];
     const body = renderFavoritesPage({ groups, locale, loggedIn: owner !== null });
     return htmlResponse(renderDocument({
@@ -387,7 +424,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
   // /market/cart — alıcı sepeti (çapraz-mağaza, hesaba/cihaza bağlı)
   if (parts[0] === 'cart' && parts.length === 1) {
     const now = Math.floor(Date.now() / 1000);
-    const owner = deps.request ? await resolveOwnerKey(deps.request, deps.storeWriteKey, now) : null;
+    const owner = deps.request ? await resolvePageOwnerKey(deps.request, deps.storeWriteKey, now) : null;
     const groups = owner ? await listAllCart(deps.db as unknown as Parameters<typeof listAllCart>[0], owner) : [];
     const body = renderCartPage({ groups, locale, loggedIn: owner !== null });
     return htmlResponse(renderDocument({

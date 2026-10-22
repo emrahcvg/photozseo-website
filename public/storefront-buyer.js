@@ -17,8 +17,20 @@
           });
       try { localStorage.setItem(k, v); } catch (e) {}
     }
+    mirrorDeviceCookie(v);
     return v;
   }
+
+  // Cihaz kimliğini birinci taraf çereze yansıt: /market sepet/favori/sipariş sayfaları
+  // sunucuda render edilirken tarayıcı özel header gönderemez (salt-okuma SSR için).
+  function mirrorDeviceCookie(id) {
+    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) return;
+    try {
+      if (document.cookie.indexOf('pz_device=' + id) !== -1) return;
+      document.cookie = 'pz_device=' + id + '; Path=/; Max-Age=31536000; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    } catch (e) {}
+  }
+
 
   function slug() {
     var m = location.pathname.match(/\/store\/([a-z0-9-]+)/i);

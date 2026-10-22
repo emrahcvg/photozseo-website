@@ -29,3 +29,23 @@ export async function resolveOwnerKey(
   // 2) Anonim cihaz
   return ownerKeyFromDevice(request.headers.get('x-device-id') ?? '');
 }
+
+/** Cihaz kimliği çerezi — tarayıcı localStorage 'sf-device-id' değerinin aynası (storefront-buyer.js / cart-badge.js yazar). */
+export const DEVICE_COOKIE = 'pz_device';
+
+/**
+ * SALT-OKUMA sayfa render'ı için sahip çözümleme (sepet/favori/sipariş SSR).
+ * Tarayıcı sayfa gezintisinde özel header gönderemediği için `x-device-id` yoksa
+ * `pz_device` çerezine düşer. Durum değiştiren uçlar bunu KULLANMAMALI: orada
+ * özel header zorunluluğu CSRF koruması işlevi görür.
+ */
+export async function resolvePageOwnerKey(
+  request: Request,
+  secret: string | undefined,
+  nowSec: number,
+): Promise<string | null> {
+  const owner = await resolveOwnerKey(request, secret, nowSec);
+  if (owner) return owner;
+  const cookieDevice = parseCookies(request.headers.get('cookie'))[DEVICE_COOKIE] ?? '';
+  return ownerKeyFromDevice(cookieDevice);
+}

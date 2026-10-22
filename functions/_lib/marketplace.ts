@@ -223,7 +223,11 @@ export async function listStores(
 ): Promise<{ items: StoreRow[]; total: number }> {
   const all = await fetchListedStores(db);
   all.sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
-  return { items: paginate(all, opts.limit, opts.offset), total: all.length };
+  // Dizin/sitemap yalnız ad + konum gösterir: ödeme ve iletişim alanları render katmanına hiç taşınmaz.
+  const items = paginate(all, opts.limit, opts.offset).map((st) => ({
+    ...st, iban: '', iban_name: '', payment_json: null, whatsapp: '', owner_email: null,
+  }));
+  return { items, total: all.length };
 }
 
 export async function listNewProducts(

@@ -2,7 +2,7 @@
  * buyer-owner.ts birim testleri — sahip anahtar çözümleme.
  */
 import { describe, it, expect } from 'vitest';
-import { resolveOwnerKey } from './buyer-owner';
+import { resolveOwnerKey, resolvePageOwnerKey } from './buyer-owner';
 import { signSession, type SessionPayload } from './session';
 
 const SECRET = 'test-secret-32-bytes-0000000000000';
@@ -43,5 +43,26 @@ describe('resolveOwnerKey', () => {
     const req = makeRequest({});
     const key = await resolveOwnerKey(req, SECRET, NOW);
     expect(key).toBeNull();
+  });
+});
+
+describe('resolvePageOwnerKey (salt-okuma SSR)', () => {
+  const pageReq = (headers: Record<string, string>) => new Request('https://photozseo.com/market/cart', { headers });
+  it('header yoksa pz_device çerezine düşer', async () => {
+    expect(await resolvePageOwnerKey(pageReq({ cookie: `pz_device=${DEVICE_UUID}` }), SECRET, NOW)).toBe(`d:${DEVICE_UUID}`);
+  });
+  it('header varsa header kazanır', async () => {
+    const other = '11111111-2222-4333-8444-555555555555';
+    expect(await resolvePageOwnerKey(pageReq({ 'x-device-id': other, cookie: `pz_device=${DEVICE_UUID}` }), SECRET, NOW)).toBe(`d:${other}`);
+  });
+  it('geçerli oturum çerezden önce gelir', async () => {
+    const token = await signSession({ sub: SUB, email: 'a@b.c', exp: FUTURE_EXP }, SECRET);
+    expect(await resolvePageOwnerKey(pageReq({ cookie: `pz_session=${token}; pz_device=${DEVICE_UUID}` }), SECRET, NOW)).toBe(`b:${SUB}`);
+  });
+  it('geçersiz çerez değeri kimlik üretmez', async () => {
+    expect(await resolvePageOwnerKey(pageReq({ cookie: 'pz_device=../../etc' }), SECRET, NOW)).toBeNull();
+  });
+  it('durum değiştiren uçların kullandığı resolveOwnerKey çereze DÜŞMEZ (CSRF koruması)', async () => {
+    expect(await resolveOwnerKey(pageReq({ cookie: `pz_device=${DEVICE_UUID}` }), SECRET, NOW)).toBeNull();
   });
 });
