@@ -12,7 +12,10 @@
  *    olmaz; cihaz favori/sepeti owner_key=d:<uuid>'dir, b:<sub> değil.)
  *
  * KAPSAM (functions/_lib/account-delete.ts):
- *   • Silinir : mağazalar (KV+D1), ürünler, favoriler, sepet, siparişler, B2B.
+ *   • Silinir : mağazalar (KV+D1), ürünler, favoriler, sepet, siparişler, B2B,
+ *               takım üyelikleri (tek sahipli şirket silinir, değilse devredilir).
+ *   • Apple   : sub `apple_` ise refresh token Apple'da İPTAL edilir (Apple şartı)
+ *               ve KV'deki token + profil kaydı silinir.
  *   • Korunur : legal_consents — kabul kanıtı (yasal saklama); user_email
  *               anonimleştirilir, user_sub + kayıt KORUNUR.
  *
@@ -23,13 +26,21 @@
 import { requireSession } from '../../_lib/require-session';
 import { deleteAccountData, type KVLike } from '../../_lib/account-delete';
 import type { D1Like } from '../../_lib/buyer';
+import {
+  isAppleOwnerSub,
+  hasAppleKey,
+  openToken,
+  revokeAppleToken,
+  appleKv,
+  type AppleEnv,
+} from '../../_lib/apple-auth';
 
-interface Env {
+interface Env extends AppleEnv {
   STORE_KV?: KVLike;
   STORE_WRITE_KEY?: string;
   MARKET_DB?: D1Like;
 }
-type Ctx = { request: Request; env: Env };
+type Ctx = { request: Request; env: Env; fetchImpl?: typeof fetch };
 
 function json(obj: unknown, status = 200): Response {
   return new Response(JSON.stringify(obj), {
@@ -56,5 +67,38 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
 
   const deleted = await deleteAccountData(sub, ctx.env.STORE_KV, ctx.env.MARKET_DB);
 
-  return json({ ok: true, deleted });
+  let appleRevoked: boolean | undefined;
+  if (isAppleOwnerSub(sub)) {
+    appleRevoked = await revokeAppleAccount(ctx, sub, nowSec);
+  }
+
+  return json({ ok: true, deleted, ...(appleRevoked === undefined ? {} : { appleRevoked }) });
+}
+
+/**
+ * Apple refresh token'ını iptal eder ve KV kayıtlarını temizler.
+ * Token yoksa (eski giriş / anahtar yapılandırılmadan önce) iptal edilecek bir şey yok → true.
+ * Ağ hatası silmeyi BLOKLAMAZ: kullanıcı verisi zaten silindi; sonuç yanıtta raporlanır.
+ */
+async function revokeAppleAccount(ctx: Ctx, sub: string, nowSec: number): Promise<boolean> {
+  const kv = ctx.env.STORE_KV;
+  if (!kv) return false;
+  const sealed = await kv.get(appleKv.refreshToken(sub));
+  let ok = true;
+  if (sealed) {
+    const rt = await openToken(sealed, ctx.env.STORE_WRITE_KEY!);
+    if (rt && hasAppleKey(ctx.env)) {
+      try {
+        ok = await revokeAppleToken(ctx.env, rt, nowSec, ctx.fetchImpl);
+      } catch (e) {
+        console.error('apple revoke failed:', e);
+        ok = false;
+      }
+    } else {
+      ok = false;
+    }
+  }
+  await kv.delete(appleKv.refreshToken(sub));
+  await kv.delete(appleKv.profile(sub));
+  return ok;
 }

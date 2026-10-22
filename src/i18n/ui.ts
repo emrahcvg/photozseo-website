@@ -311,6 +311,7 @@ export const ui = {
  'privacy.collection.diagnostic': 'Diagnostic Data: Anonymous crash logs and performance metrics may be collected to help us fix bugs and improve stability. No personal identifiers, no advertising ID, no tracking.',
  'privacy.thirdparty.title': 'Third-Party Services',
  'privacy.thirdparty.apple': 'Apple App Store: Handles purchases and subscriptions.',
+ 'privacy.thirdparty.siwa': 'Sign in with Apple (optional): If you choose to sign in with Apple, we receive a stable Apple user identifier and, only if you share it, your name and email (which may be an Apple private relay address). When you delete your account, we revoke the Apple sign-in token and delete the associated data.',
  'privacy.thirdparty.revenuecat': 'RevenueCat: Manages subscription status. See their privacy policy at revenuecat.com/privacy.',
  'privacy.thirdparty.firebase': 'Firebase Crashlytics (Google): Collects anonymous crash reports and performance diagnostics. No IDFA, no advertising tracking. See firebase.google.com/support/privacy.',
  'privacy.thirdparty.shopify': 'Shopify (export only): photoZseo does not connect to Shopify\'s servers. The app exports your product list as CSV, XLSX or DOCX files; you upload that file to your Shopify Admin yourself. Your data only leaves your device when you actively share or upload the export file.',
@@ -1429,6 +1430,7 @@ export const ui = {
  'mrules.law.title': "适用规则",
  'mrules.law.desc': "这些规则在适用时遵循欧盟《数字服务法》(条例 (EU) 2022/2065)、欧盟《通用产品安全条例》(条例 (EU) 2023/988)、欧盟关于降价和评价的消费者法、GDPR、土耳其第 6563 号《电子商务法》及其条例、土耳其第 6502 号《消费者保护法》、KVKK 以及美国 INFORM Consumers Act。本页的任何内容均不限制您依强制性法律享有的权利。",
  'mrules.related': "相关内容:",
+ 'privacy.thirdparty.siwa': "通过 Apple 登录（可选）：如果您选择通过 Apple 登录，我们会收到一个固定的 Apple 用户标识符；仅在您选择分享时，才会收到您的姓名和电子邮件（可能是 Apple 私密中转地址）。删除账户时，我们会撤销 Apple 登录令牌并删除相关数据。",
  },
 
  tr: {
@@ -1643,6 +1645,7 @@ export const ui = {
  'privacy.collection.diagnostic': 'Tanılama Verileri: Hataları düzeltmemize ve kararlılığı artırmamıza yardımcı olmak için anonim çökme günlükleri ve performans metrikleri toplanabilir. Kişisel tanımlayıcı yok, reklam kimliği yok, izleme yok.',
  'privacy.thirdparty.title': 'Üçüncü Taraf Hizmetler',
  'privacy.thirdparty.apple': 'Apple App Store: Satın alma ve abonelikleri yönetir.',
+ 'privacy.thirdparty.siwa': 'Apple ile Giriş (isteğe bağlı): Apple ile giriş yapmayı seçerseniz Apple\'dan sabit bir kullanıcı kimliği ve yalnızca paylaşmanız halinde adınızı ve e-postanızı (Apple gizli aktarma adresi olabilir) alırız. Hesabınızı sildiğinizde Apple giriş belirtecini iptal eder ve ilişkili verileri sileriz.',
  'privacy.thirdparty.revenuecat': 'RevenueCat: Abonelik durumunu yönetir. Gizlilik politikalarını revenuecat.com/privacy adresinde inceleyin.',
  'privacy.thirdparty.firebase': 'Firebase Crashlytics (Google): Anonim çökme raporları ve performans tanılama verileri toplar. IDFA yok, reklam izleme yok. Bkz: firebase.google.com/support/privacy.',
  'privacy.thirdparty.shopify': 'Shopify (yalnızca dışa aktarım): photoZseo Shopify\'ın sunucularına bağlanmaz. Uygulama ürün listenizi CSV, XLSX veya DOCX dosyaları olarak dışa aktarır; bu dosyayı Shopify Admin\'e siz yüklersiniz. Verileriniz cihazınızdan ancak siz aktif olarak dışa aktarım dosyasını paylaştığınızda veya yüklediğinizde çıkar.',
@@ -2806,6 +2809,7 @@ export const ui = {
  'mrules.law.title': "Normas aplicables",
  'mrules.law.desc': "Estas reglas siguen, cuando resultan aplicables, el Reglamento de Servicios Digitales de la UE (Reglamento (UE) 2022/2065), el Reglamento de Seguridad General de los Productos de la UE (Reglamento (UE) 2023/988), la legislación de consumo de la UE sobre reducciones de precio y reseñas, el RGPD, la Ley turca de Comercio Electrónico n.º 6563 y su normativa de desarrollo, la Ley turca de Protección del Consumidor n.º 6502, la KVKK y la INFORM Consumers Act de EE. UU. Nada de lo dispuesto en esta página limita los derechos que le otorga la legislación imperativa.",
  'mrules.related': "Relacionado:",
+ 'privacy.thirdparty.siwa': "Iniciar sesión con Apple (opcional): si eliges iniciar sesión con Apple, recibimos un identificador de usuario de Apple estable y, solo si lo compartes, tu nombre y correo electrónico (que puede ser una dirección de retransmisión privada de Apple). Cuando eliminas tu cuenta, revocamos el token de inicio de sesión de Apple y eliminamos los datos asociados.",
  },
 
  de: {
@@ -3481,6 +3485,7 @@ export const ui = {
  'mrules.law.title': "Anwendbare Vorschriften",
  'mrules.law.desc': "Diese Regeln folgen, soweit anwendbar, dem Gesetz über digitale Dienste der EU (Verordnung (EU) 2022/2065), der Allgemeinen Produktsicherheitsverordnung der EU (Verordnung (EU) 2023/988), dem EU-Verbraucherrecht zu Preisermäßigungen und Bewertungen, der DSGVO, dem türkischen Gesetz Nr. 6563 über den elektronischen Geschäftsverkehr und seinen Verordnungen, dem türkischen Verbraucherschutzgesetz Nr. 6502, dem KVKK und dem US-amerikanischen INFORM Consumers Act. Nichts auf dieser Seite schränkt Rechte ein, die Ihnen nach zwingendem Recht zustehen.",
  'mrules.related': "Siehe auch:",
+ 'privacy.thirdparty.siwa': "Mit Apple anmelden (optional): Wenn Sie sich mit Apple anmelden, erhalten wir eine dauerhafte Apple-Benutzerkennung und, nur wenn Sie sie teilen, Ihren Namen und Ihre E-Mail-Adresse (ggf. eine private Apple-Relay-Adresse). Wenn Sie Ihr Konto löschen, widerrufen wir das Apple-Anmeldetoken und löschen die zugehörigen Daten.",
  },
 
  ja: {
@@ -4156,6 +4161,7 @@ export const ui = {
  'mrules.law.title': "適用されるルール",
  'mrules.law.desc': "これらのルールは、適用される場合、EU デジタルサービス法(規則 (EU) 2022/2065)、EU 一般製品安全規則(規則 (EU) 2023/988)、値下げとレビューに関する EU 消費者法、GDPR、トルコ電子商取引法(法律第6563号)およびその規則、トルコ消費者保護法(法律第6502号)、KVKK、米国の INFORM Consumers Act に従います。このページのいかなる内容も、強行法規に基づきお客様が有する権利を制限するものではありません。",
  'mrules.related': "関連:",
+ 'privacy.thirdparty.siwa': "Appleでサインイン（任意）：Appleでサインインを選択した場合、Appleの固定ユーザーIDを受け取ります。お名前とメールアドレス（Appleのプライベートリレーアドレスの場合があります）は、共有を選択した場合にのみ受け取ります。アカウントを削除すると、Appleのサインイントークンを無効化し、関連データを削除します。",
  },
 
  pt: {
@@ -4831,6 +4837,7 @@ export const ui = {
  'mrules.law.title': "Normas aplicáveis",
  'mrules.law.desc': "Estas regras seguem, quando aplicáveis, o Regulamento de Serviços Digitais da UE (Regulamento (UE) 2022/2065), o Regulamento de Segurança Geral dos Produtos da UE (Regulamento (UE) 2023/988), a legislação de consumo da UE sobre reduções de preço e avaliações, o GDPR, a Lei turca de Comércio Eletrônico nº 6563 e seus regulamentos, a Lei turca de Proteção ao Consumidor nº 6502, a KVKK e a INFORM Consumers Act dos EUA. Nada nesta página limita os direitos que você tem sob a lei imperativa.",
  'mrules.related': "Relacionado:",
+ 'privacy.thirdparty.siwa': "Iniciar sessão com a Apple (opcional): se você optar por entrar com a Apple, recebemos um identificador de usuário Apple estável e, somente se você compartilhar, seu nome e e-mail (que pode ser um endereço de retransmissão privada da Apple). Ao excluir sua conta, revogamos o token de login da Apple e excluímos os dados associados.",
  },
 
  hi: {
@@ -5506,6 +5513,7 @@ export const ui = {
  'mrules.law.title': "लागू नियम",
  'mrules.law.desc': "ये नियम, जहां लागू हों, EU Digital Services Act (Regulation (EU) 2022/2065), EU General Product Safety Regulation (Regulation (EU) 2023/988), कीमत में कटौती और समीक्षाओं पर EU उपभोक्ता कानून, GDPR, तुर्की ई-कॉमर्स कानून संख्या 6563 और उसके विनियमों, तुर्की उपभोक्ता संरक्षण कानून संख्या 6502, KVKK और U.S. INFORM Consumers Act का पालन करते हैं। इस पृष्ठ पर कुछ भी अनिवार्य कानून के अंतर्गत आपके अधिकारों को सीमित नहीं करता।",
  'mrules.related': "संबंधित:",
+ 'privacy.thirdparty.siwa': "Apple से साइन इन (वैकल्पिक): यदि आप Apple से साइन इन करना चुनते हैं, तो हमें एक स्थायी Apple उपयोगकर्ता पहचानकर्ता मिलता है और केवल आपके साझा करने पर आपका नाम और ईमेल (जो Apple का निजी रिले पता हो सकता है)। अपना खाता हटाने पर हम Apple साइन-इन टोकन रद्द कर देते हैं और संबंधित डेटा हटा देते हैं।",
  },
 
  ur: {
@@ -6181,6 +6189,7 @@ export const ui = {
  'mrules.law.title': "قابل اطلاق قواعد",
  'mrules.law.desc': "یہ قواعد، جہاں لاگو ہوں، EU Digital Services Act (Regulation (EU) 2022/2065)، EU General Product Safety Regulation (Regulation (EU) 2023/988)، قیمتوں میں کمی اور جائزوں سے متعلق EU کے صارفین کے قانون، GDPR، ترکی کے ای کامرس قانون نمبر 6563 اور اس کے ضوابط، ترکی کے تحفظ صارف قانون نمبر 6502، KVKK اور امریکی INFORM Consumers Act کی پیروی کرتے ہیں۔ اس صفحے پر کوئی بات لازمی قانون کے تحت آپ کے حقوق کو محدود نہیں کرتی۔",
  'mrules.related': "متعلقہ:",
+ 'privacy.thirdparty.siwa': "Apple کے ساتھ سائن ان (اختیاری): اگر آپ Apple کے ساتھ سائن ان کرنا منتخب کرتے ہیں تو ہمیں ایک مستقل Apple صارف شناخت کنندہ ملتا ہے، اور صرف آپ کے شیئر کرنے پر آپ کا نام اور ای میل (جو Apple کا نجی ریلے پتہ ہو سکتا ہے)۔ اکاؤنٹ حذف کرنے پر ہم Apple سائن ان ٹوکن منسوخ کر دیتے ہیں اور متعلقہ ڈیٹا حذف کر دیتے ہیں۔",
  },
 
  ar: {
@@ -6856,6 +6865,7 @@ export const ui = {
  'mrules.law.title': "القواعد المطبّقة",
  'mrules.law.desc': "تتبع هذه القواعد، حيثما تنطبق، قانون الخدمات الرقمية في الاتحاد الأوروبي (اللائحة (EU) 2022/2065)، ولائحة السلامة العامة للمنتجات في الاتحاد الأوروبي (اللائحة (EU) 2023/988)، وقانون المستهلك الأوروبي بشأن تخفيض الأسعار والمراجعات، وGDPR، وقانون التجارة الإلكترونية التركي رقم 6563 ولوائحه، وقانون حماية المستهلك التركي رقم 6502، وKVKK، وقانون INFORM Consumers Act الأمريكي. ولا شيء في هذه الصفحة يحدّ من الحقوق التي تتمتع بها بموجب القانون الآمر.",
  'mrules.related': "ذو صلة:",
+ 'privacy.thirdparty.siwa': "تسجيل الدخول باستخدام Apple (اختياري): إذا اخترت تسجيل الدخول باستخدام Apple، نتلقى معرّف مستخدم ثابتًا من Apple، ولا نتلقى اسمك وبريدك الإلكتروني (الذي قد يكون عنوان ترحيل خاص من Apple) إلا إذا شاركتهما. عند حذف حسابك، نُلغي رمز تسجيل الدخول من Apple ونحذف البيانات المرتبطة به.",
  },
 
  fa: {
@@ -7531,6 +7541,7 @@ export const ui = {
  'mrules.law.title': "مقررات قابل‌اجرا",
  'mrules.law.desc': "این قوانین، در جاهایی که اعمال می‌شود، از قانون خدمات دیجیتال اتحادیه اروپا (مقررات (EU) 2022/2065)، مقررات عمومی ایمنی محصول اتحادیه اروپا (مقررات (EU) 2023/988)، قانون مصرف‌کننده اتحادیه اروپا درباره کاهش قیمت و نظرات، GDPR، قانون تجارت الکترونیک ترکیه شماره 6563 و آیین‌نامه‌های آن، قانون حمایت از مصرف‌کننده ترکیه شماره 6502، KVKK و INFORM Consumers Act آمریکا پیروی می‌کنند. هیچ‌چیز در این صفحه حقوقی را که بر اساس قوانین آمره دارید محدود نمی‌کند.",
  'mrules.related': "مرتبط:",
+ 'privacy.thirdparty.siwa': "ورود با Apple (اختیاری): اگر ورود با Apple را انتخاب کنید، یک شناسه کاربری ثابت Apple دریافت می‌کنیم و فقط در صورتی که به اشتراک بگذارید، نام و ایمیل شما را (که ممکن است نشانی بازپخش خصوصی Apple باشد). هنگام حذف حساب، توکن ورود Apple را لغو کرده و داده‌های مرتبط را حذف می‌کنیم.",
  },
 
  ko: {
@@ -8206,6 +8217,7 @@ export const ui = {
  'mrules.law.title': "적용 규칙",
  'mrules.law.desc': "이 규칙은 해당되는 경우 EU 디지털서비스법(규정 (EU) 2022/2065), EU 일반제품안전규정(규정 (EU) 2023/988), 가격 인하 및 후기에 관한 EU 소비자법, GDPR, 튀르키예 전자상거래법(법률 제6563호) 및 그 규정, 튀르키예 소비자보호법(법률 제6502호), KVKK, 미국 INFORM Consumers Act를 따릅니다. 이 페이지의 어떠한 내용도 강행 법규에 따라 귀하가 가지는 권리를 제한하지 않습니다.",
  'mrules.related': "관련 항목:",
+ 'privacy.thirdparty.siwa': "Apple로 로그인(선택): Apple로 로그인을 선택하면 고정된 Apple 사용자 식별자를 받으며, 공유를 선택한 경우에만 이름과 이메일(Apple 비공개 릴레이 주소일 수 있음)을 받습니다. 계정을 삭제하면 Apple 로그인 토큰을 취소하고 관련 데이터를 삭제합니다.",
  },
  fr: {
  'nav.pricing': "Tarifs",
@@ -8871,6 +8883,7 @@ export const ui = {
  'mrules.law.title': "Règles applicables",
  'mrules.law.desc': "Ces règles suivent, lorsqu’ils s’appliquent, le règlement sur les services numériques de l’UE (règlement (UE) 2022/2065), le règlement de l’UE relatif à la sécurité générale des produits (règlement (UE) 2023/988), le droit de la consommation de l’UE en matière de réductions de prix et d’avis, le RGPD, la loi turque n° 6563 sur le commerce électronique et ses règlements, la loi turque n° 6502 sur la protection des consommateurs, la KVKK et l’INFORM Consumers Act américain. Rien sur cette page ne limite les droits dont vous disposez en vertu du droit impératif.",
  'mrules.related': "À lire aussi :",
+ 'privacy.thirdparty.siwa': "Se connecter avec Apple (facultatif) : si vous choisissez de vous connecter avec Apple, nous recevons un identifiant utilisateur Apple stable et, uniquement si vous les partagez, votre nom et votre adresse e-mail (qui peut être une adresse de relais privé Apple). Lorsque vous supprimez votre compte, nous révoquons le jeton de connexion Apple et supprimons les données associées.",
  },
  it: {
  'nav.pricing': "Prezzi",
@@ -9536,6 +9549,7 @@ export const ui = {
  'mrules.law.title': "Norme applicabili",
  'mrules.law.desc': "Queste regole seguono, ove applicabili, il Regolamento sui servizi digitali (Digital Services Act) dell'UE (Regolamento (UE) 2022/2065), il Regolamento generale sulla sicurezza dei prodotti dell'UE (Regolamento (UE) 2023/988), la normativa UE sui consumatori in materia di riduzioni di prezzo e recensioni, il GDPR, la legge turca sul commercio elettronico n. 6563 e relativi regolamenti, la legge turca sulla tutela dei consumatori n. 6502, il KVKK e l'INFORM Consumers Act degli Stati Uniti. Nulla in questa pagina limita i diritti che ti spettano ai sensi di norme imperative.",
  'mrules.related': "Correlati:",
+ 'privacy.thirdparty.siwa': "Accedi con Apple (facoltativo): se scegli di accedere con Apple, riceviamo un identificativo utente Apple stabile e, solo se decidi di condividerli, il tuo nome e la tua email (che può essere un indirizzo di inoltro privato di Apple). Quando elimini il tuo account, revochiamo il token di accesso Apple ed eliminiamo i dati associati.",
  },
  pl: {
  'nav.pricing': "Cennik",
@@ -10201,6 +10215,7 @@ export const ui = {
  'mrules.law.title': "Obowiązujące przepisy",
  'mrules.law.desc': "Zasady te są zgodne, tam gdzie mają zastosowanie, z unijnym aktem o usługach cyfrowych (Digital Services Act, rozporządzenie (UE) 2022/2065), unijnym rozporządzeniem w sprawie ogólnego bezpieczeństwa produktów (rozporządzenie (UE) 2023/988), unijnym prawem konsumenckim dotyczącym obniżek cen i opinii, RODO, turecką ustawą o handlu elektronicznym nr 6563 i jej przepisami wykonawczymi, turecką ustawą o ochronie konsumenta nr 6502, KVKK oraz amerykańskim INFORM Consumers Act. Nic na tej stronie nie ogranicza praw przysługujących Ci na mocy przepisów bezwzględnie obowiązujących.",
  'mrules.related': "Powiązane:",
+ 'privacy.thirdparty.siwa': "Zaloguj się przez Apple (opcjonalnie): jeśli zdecydujesz się zalogować przez Apple, otrzymujemy stały identyfikator użytkownika Apple, a tylko jeśli je udostępnisz — Twoje imię i nazwisko oraz adres e-mail (który może być prywatnym adresem przekierowania Apple). Gdy usuniesz konto, unieważniamy token logowania Apple i usuwamy powiązane dane.",
  },
 } as const;
 

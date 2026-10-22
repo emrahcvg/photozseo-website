@@ -433,6 +433,18 @@ export function makeFakeD1(): FakeD1 {
       tables.team_activity_log = tables.team_activity_log.filter((r) => (r.created_at as string) >= before);
       return { kind: 'run' as const };
     }
+    // DELETE FROM team_activity_log WHERE company_id = ? (account delete — sole-owner company)
+    if (/DELETE FROM team_activity_log WHERE company_id = \?/i.test(s)) {
+      const [company_id] = args as [string];
+      tables.team_activity_log = tables.team_activity_log.filter((r) => r.company_id !== company_id);
+      return { kind: 'run' as const };
+    }
+    // UPDATE team_activity_log SET actor_email = '' WHERE actor_sub = ? (account delete — PII)
+    if (/UPDATE team_activity_log SET actor_email = '' WHERE actor_sub = \?/i.test(s)) {
+      const [actor_sub] = args as [string];
+      for (const r of tables.team_activity_log) if (r.actor_sub === actor_sub) r.actor_email = '';
+      return { kind: 'run' as const };
+    }
     // store_buyers: INSERT (unique constraint: store_slug + access_code)
     // SQL: INSERT INTO store_buyers (id, store_slug, buyer_name, access_code, is_active, created_at) VALUES (?, ?, ?, ?, 1, ?)
     // bind args: id, store_slug, buyer_name, access_code, created_at  (is_active is a literal 1 in SQL)
