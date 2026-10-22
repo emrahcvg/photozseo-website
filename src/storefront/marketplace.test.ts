@@ -652,3 +652,12 @@ describe('renderProductPage — sepet düğmesi', () => {
     expect(html).toContain(`data-mk-added="${mt('en', 'addedToCart')}"`);
   });
 });
+
+describe('mt() — üretilmiş çeviri yedeği', () => {
+  it('elle tablosu olmayan fr/it/pl, İngilizceye düşmeden üretilmiş çeviriyi kullanır', () => {
+    for (const l of ['fr', 'it', 'pl']) expect(mt(l, 'heroTitle')).not.toBe(mt('en', 'heroTitle'));
+  });
+  it('bilinmeyen dil İngilizceye düşer', () => {
+    expect(mt('xx', 'heroTitle')).toBe(mt('en', 'heroTitle'));
+  });
+});

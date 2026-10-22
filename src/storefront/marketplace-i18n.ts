@@ -229,8 +229,9 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
 export const MK_STRINGS: Readonly<Record<string, Partial<Record<Key, string>>>> = STRINGS;
 
 export function mt(locale: string, key: Key | string): string {
-  const table = STRINGS[locale] ?? STRINGS.en;
-  const fromLocale = (table as Record<string, string>)[key];
+  // Sıra: elle yazılmış tablo → Swarm/ajan üretimi → İngilizce. (Elle tablosu olmayan
+  // fr/it/pl de üretilmiş çeviriye ulaşmalı; doğrudan en tablosuna düşmemeli.)
+  const fromLocale = (STRINGS[locale] as Record<string, string> | undefined)?.[key];
   if (fromLocale != null) return fromLocale;
   // Elle çevrilmemiş anahtar → Translation Swarm (Google) üretimi, o da yoksa İngilizce.
   const generated = (MK_GENERATED[locale] as Record<string, string> | undefined)?.[key];
