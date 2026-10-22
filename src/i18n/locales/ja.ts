@@ -10,7 +10,7 @@ const ja: HomeContent = {
     "getApp": "アプリを入手"
   },
   "hero": {
-    "eyebrow": "iPhone · iPad · Macに対応",
+    "eyebrow": "iPhone · iPadに対応",
     "h1Line1Words": [
       "一度",
       "撮影。"
@@ -22,7 +22,7 @@ const ja: HomeContent = {
       "市場。"
     ],
     "h1A11y": "一度撮影。46マーケットプレイスで販売。",
-    "sub": "7アングルAIカメラ、12言語対応のオンデバイスSEO、4Kまで31サイズプリセット、各プラットフォームに最適なエクスポート — iPhone、iPad、Macから直接。",
+    "sub": "7アングルAIカメラ、12言語対応のオンデバイスSEO、4Kまで31サイズプリセット、各プラットフォームに最適なエクスポート — iPhone、iPadから直接。",
     "btnAppSmall": "早期",
     "btnAppBig": "アクセス",
     "ctaTrial": "早期アクセスを取得",
@@ -105,7 +105,7 @@ const ja: HomeContent = {
       {
         "eyebrow": "iCloud同期 & ゴミ箱復元",
         "h": "どこでも同期。何でも復元。",
-        "sub": "各プロジェクトはご自身のiCloud Drive経由で同期。削除アイテムは完全削除前に30日間待機、iPhone、iPad、Mac間で安全な復元。",
+        "sub": "各プロジェクトはご自身のiCloud Drive経由で同期。削除アイテムは完全削除前に30日間待機、iPhone、iPad間で安全な復元。",
         "bullets": [
           "iCloud Drive同期 — オプトイン、最後の書き込みが勝つ",
           "最近削除フォルダで安全な復元",
@@ -228,7 +228,7 @@ const ja: HomeContent = {
           "マーケットプレイスへの出品プッシュ",
           "在庫とバーコード",
           "1,000画像/月",
-          "iPhone、iPad、Mac ユニバーサル",
+          "iPhone、iPad ユニバーサル",
           "iCloud Drive 同期 + ゴミ箱の回復"
         ],
         "cta": "月次を選ぶ"
@@ -270,7 +270,7 @@ const ja: HomeContent = {
       },
       {
         "q": "iPadとMacで動作しますか、それともiPhoneのみですか？",
-        "a": "3つすべて。photoZseoはユニバーサルアプリ — 同じ購入でiPhone、iPad、Mac（Catalyst、macOS 14+）をカバー。Finderからのドラッグ&ドロップ、⌘N/E/F/Aキーボードショートカット、右クリックメニュー、3ペインインスペクターはiPadとMacで一流です。"
+        "a": "両方に対応。photoZseoはユニバーサルアプリ — 1回の購入でiPhoneとiPadの両方をカバー。ドラッグ&ドロップ、キーボードショートカット、右クリックメニュー、3ペインインスペクターはiPadで一流です。"
       },
       {
         "q": "Proには正確に何が含まれますか？",

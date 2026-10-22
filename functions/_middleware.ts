@@ -1,6 +1,12 @@
 export const onRequest: PagesFunction = async (ctx) => {
+  const url = new URL(ctx.request.url);
+  // www → apex (tek kanonik host)
+  if (url.hostname === 'www.photozseo.com') {
+    url.hostname = 'photozseo.com';
+    return Response.redirect(url.toString(), 301);
+  }
   const response = await ctx.next();
-  const { pathname } = new URL(ctx.request.url);
+  const { pathname } = url;
 
   // Base headers applied to every response
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');

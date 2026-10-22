@@ -10,7 +10,7 @@ const zh: HomeContent = {
     "getApp": "获取应用"
   },
   "hero": {
-    "eyebrow": "现已支持 iPhone · iPad · Mac",
+    "eyebrow": "现已支持 iPhone · iPad",
     "h1Line1Words": [
       "拍一次。",
       "一次。"
@@ -228,7 +228,7 @@ const zh: HomeContent = {
           "市场上市推送",
           "库存和条形码",
           "1,000 张图像/月",
-          "iPhone、iPad 和 Mac 通用",
+          "iPhone 和 iPad 通用",
           "iCloud Drive 同步 + 垃圾恢复"
         ],
         "cta": "选择每月"
@@ -270,7 +270,7 @@ const zh: HomeContent = {
       },
       {
         "q": "它在iPad和Mac上工作还是仅iPhone？",
-        "a": "三者都有。photoZseo是一款通用应用 — 相同的购买涵盖iPhone、iPad和Mac（Catalyst，macOS 14+）。从Finder拖放、⌘N/E/F/A键盘快捷键、右键菜单和3面板检查器在iPad和Mac上是一流的。"
+        "a": "两者都支持。photoZseo 是一款通用应用 — 一次购买即可同时用于 iPhone 和 iPad。拖放、键盘快捷键、右键菜单和三栏检查器在 iPad 上表现一流。"
       },
       {
         "q": "Pro中究竟有什么？",

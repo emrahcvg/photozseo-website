@@ -146,4 +146,4 @@ The format war is over. In 2026 the right answer is **all three in parallel** â€
 
 ---
 
-photoZseo is on the App Store. iPhone, iPad and Mac.
+photoZseo is on the App Store for iPhone and iPad.

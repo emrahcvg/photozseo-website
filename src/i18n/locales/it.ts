@@ -10,7 +10,7 @@ const it: HomeContent = {
     "getApp": "Get the App"
   },
   "hero": {
-    "eyebrow": "Now on iPhone · iPad · Mac",
+    "eyebrow": "Now on iPhone · iPad",
     "h1Line1Words": [
       "Shoot",
       "once."
@@ -22,7 +22,7 @@ const it: HomeContent = {
       "marketplaces."
     ],
     "h1A11y": "Shoot once. Sell on 46 marketplaces.",
-    "sub": "A 7-angle AI camera, on-device SEO in 12 languages, 31 size presets up to 4K and platform-perfect exports — straight from your iPhone, iPad or Mac.",
+    "sub": "A 7-angle AI camera, on-device SEO in 12 languages, 31 size presets up to 4K and platform-perfect exports — straight from your iPhone or iPad.",
     "btnAppSmall": "Get Early",
     "btnAppBig": "Access",
     "ctaTrial": "Get Early Access",
@@ -105,7 +105,7 @@ const it: HomeContent = {
       {
         "eyebrow": "iCloud Sync & Trash Recovery",
         "h": "Sync everywhere. Restore anything.",
-        "sub": "Every project syncs through your own iCloud Drive. Deleted items wait 30 days before purge, with safe restore across iPhone, iPad and Mac.",
+        "sub": "Every project syncs through your own iCloud Drive. Deleted items wait 30 days before purge, with safe restore across iPhone and iPad.",
         "bullets": [
           "iCloud Drive sync — opt-in, last-write-wins",
           "Recently Deleted folder with safe restore",
@@ -228,7 +228,7 @@ const it: HomeContent = {
           "Push dell'elenco del mercato",
           "Inventario e codice a barre",
           "1.000 immagini al mese",
-          "iPhone, iPad e Mac universali",
+          "iPhone e iPad universali",
           "iCloud Drive sincronizzazione + recupero dal cestino"
         ],
         "cta": "Choose Monthly"
@@ -269,8 +269,8 @@ const it: HomeContent = {
         "a": "No. There are zero third-party analytics, zero tracking SDKs and no cloud account. The only outbound network is App Store / RevenueCat for the subscription, and optional iCloud Drive sync that stays inside your own iCloud."
       },
       {
-        "q": "Does it work on iPad and Mac, or only iPhone?",
-        "a": "All three. photoZseo is a universal app — same purchase covers iPhone, iPad and Mac (Catalyst, macOS 14+). Drag-and-drop from Finder, ⌘N/E/F/A keyboard shortcuts, right-click menus and a 3-pane inspector are first-class on iPad and Mac."
+        "q": "Does it work on iPad, or only iPhone?",
+        "a": "Entrambi. photoZseo è un'app universale — un solo acquisto copre iPhone e iPad. Drag-and-drop, scorciatoie da tastiera, menu contestuali e un inspector a 3 pannelli sono di prima classe su iPad."
       },
       {
         "q": "What's actually in Pro?",

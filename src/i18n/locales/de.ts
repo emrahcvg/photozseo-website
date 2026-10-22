@@ -10,7 +10,7 @@ const de: HomeContent = {
     "getApp": "App holen"
   },
   "hero": {
-    "eyebrow": "Jetzt auf iPhone · iPad · Mac",
+    "eyebrow": "Jetzt auf iPhone · iPad",
     "h1Line1Words": [
       "Einmal",
       "fotografieren."
@@ -22,7 +22,7 @@ const de: HomeContent = {
       "verkaufen."
     ],
     "h1A11y": "Einmal fotografieren. Auf 46 Marktplätzen verkaufen.",
-    "sub": "Eine 7-Winkel-KI-Kamera, On-Device SEO in 12 Sprachen, 31 Größen-Presets bis 4K und plattformperfekte Exporte — direkt vom iPhone, iPad oder Mac.",
+    "sub": "Eine 7-Winkel-KI-Kamera, On-Device SEO in 12 Sprachen, 31 Größen-Presets bis 4K und plattformperfekte Exporte — direkt vom iPhone oder iPad.",
     "btnAppSmall": "Frühen",
     "btnAppBig": "Zugang",
     "ctaTrial": "Frühen Zugang sichern",
@@ -105,7 +105,7 @@ const de: HomeContent = {
       {
         "eyebrow": "iCloud-Sync & Papierkorb",
         "h": "Überall synchronisieren. Alles wiederherstellen.",
-        "sub": "Jedes Projekt synchronisiert über dein eigenes iCloud Drive. Gelöschte Elemente warten 30 Tage vor der endgültigen Löschung, mit sicherer Wiederherstellung auf iPhone, iPad und Mac.",
+        "sub": "Jedes Projekt synchronisiert über dein eigenes iCloud Drive. Gelöschte Elemente warten 30 Tage vor der endgültigen Löschung, mit sicherer Wiederherstellung auf iPhone und iPad.",
         "bullets": [
           "iCloud Drive Sync — opt-in, last-write-wins",
           "Zuletzt gelöscht-Ordner mit sicherer Wiederherstellung",
@@ -228,7 +228,7 @@ const de: HomeContent = {
           "Push für den Marktplatzeintrag",
           "Inventar und Barcode",
           "1.000 Bilder/Monat",
-          "Universell für iPhone, iPad und Mac",
+          "Universell für iPhone und iPad",
           "iCloud Drive-Synchronisierung + Papierkorbwiederherstellung"
         ],
         "cta": "Monatlich wählen"
@@ -269,8 +269,8 @@ const de: HomeContent = {
         "a": "Nein. Null Drittanbieter-Analytics, null Tracking-SDKs und kein Cloud-Konto. Die einzige ausgehende Netzwerkverbindung ist App Store / RevenueCat für das Abo, und die optionale iCloud Drive Synchronisation, die in deinem eigenen iCloud bleibt."
       },
       {
-        "q": "Funktioniert es auf iPad und Mac oder nur iPhone?",
-        "a": "Alle drei. photoZseo ist eine universelle App — der gleiche Kauf deckt iPhone, iPad und Mac (Catalyst, macOS 14+). Finder-Drag-and-Drop, ⌘N/E/F/A Tastenkürzel, Rechtsklick-Menüs und ein 3-Pane-Inspektor sind erstklassig auf iPad und Mac."
+        "q": "Funktioniert es auf dem iPad oder nur auf dem iPhone?",
+        "a": "Beides. photoZseo ist eine universelle App — ein Kauf deckt iPhone und iPad ab. Drag-and-drop, Tastenkürzel, Rechtsklick-Menüs und ein 3-Pane-Inspektor sind auf dem iPad erstklassig."
       },
       {
         "q": "Was ist eigentlich in Pro?",

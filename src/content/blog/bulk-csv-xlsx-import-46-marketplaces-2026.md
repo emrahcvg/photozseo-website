@@ -67,7 +67,7 @@ There's a **Wi-Fi only toggle** that's on by default. With it on:
 - No cellular surprise on your phone bill.
 - A 2,000-product import won't drain your data plan.
 
-With it off, photoZseo uses whatever connection is active — useful on a desk with wired internet or a Mac on Ethernet.
+With it off, photoZseo uses whatever connection is active — useful at a desk on office Wi-Fi.
 
 ## A practical workflow
 
@@ -75,7 +75,7 @@ Here's the round-trip most sellers run:
 
 **Step 1 — Export from the source platform.** Shopify, Amazon or Etsy all let you download your catalog as CSV/XLSX. Grab it.
 
-**Step 2 — Drop the file into photoZseo.** On iPhone, hit Import in any project. On Mac, drag from Finder. Auto-detect identifies the platform and starts pulling photo URLs in the background.
+**Step 2 — Drop the file into photoZseo.** On iPhone, hit Import in any project. On iPad, drag it in from Files. Auto-detect identifies the platform and starts pulling photo URLs in the background.
 
 **Step 3 — Let [AI fill the SEO fields](/features/seo-filenames).** photoZseo writes title, slug, meta description, alt text, tags and keywords for each product, in 12 languages if you sell internationally.
 

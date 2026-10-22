@@ -10,7 +10,7 @@ const tr: HomeContent = {
     "getApp": "Uygulamayı İndir"
   },
   "hero": {
-    "eyebrow": "Artık iPhone · iPad · Mac üzerinde",
+    "eyebrow": "Artık iPhone · iPad üzerinde",
     "h1Line1Words": [
       "Bir",
       "kez"
@@ -22,7 +22,7 @@ const tr: HomeContent = {
       "Pazar yerleri."
     ],
     "h1A11y": "Bir kez çek. 46 pazaryerinde sat.",
-    "sub": "7-açılı AI kamera, 12 dilde cihaz üstünde SEO, 4K'ya kadar 31 boyut ön ayarı ve platforma kusursuz dışa aktarımlar — hepsi iPhone, iPad veya Mac'inden.",
+    "sub": "7-açılı AI kamera, 12 dilde cihaz üstünde SEO, 4K'ya kadar 31 boyut ön ayarı ve platforma kusursuz dışa aktarımlar — hepsi iPhone veya iPad'inden.",
     "btnAppSmall": "Erken",
     "btnAppBig": "Erişim",
     "ctaTrial": "Erken Erişim Al",
@@ -105,7 +105,7 @@ const tr: HomeContent = {
       {
         "eyebrow": "iCloud Senkronu ve Çöp Kurtarma",
         "h": "Her yerde senkron. Her şeyi geri yükle.",
-        "sub": "Her proje kendi iCloud Drive'ından senkronlanır. Silinen öğeler kalıcı temizlikten önce 30 gün bekler; iPhone, iPad ve Mac arasında güvenli geri yükleme.",
+        "sub": "Her proje kendi iCloud Drive'ından senkronlanır. Silinen öğeler kalıcı temizlikten önce 30 gün bekler; iPhone ve iPad arasında güvenli geri yükleme.",
         "bullets": [
           "iCloud Drive senkronu — opsiyonel, son-yazan-kazanır",
           "Son Silinenler klasörü ile güvenli geri yükleme",
@@ -228,7 +228,7 @@ const tr: HomeContent = {
           "Pazar yeri listeleme baskısı",
           "Envanter ve barkod",
           "1.000 görsel/ay",
-          "iPhone, iPad ve Mac evrensel",
+          "iPhone ve iPad evrensel",
           "iCloud Drive senkronizasyon + Çöp Kutusu kurtarma"
         ],
         "cta": "Aylığı Seç"
@@ -269,8 +269,8 @@ const tr: HomeContent = {
         "a": "Hayır. Sıfır üçüncü taraf analiz, sıfır takip SDK'sı ve bulut hesabı yok. Tek dış ağ bağlantısı abonelik için App Store / RevenueCat ve seçeneğe bağlı, kendi iCloud'unda kalan iCloud Drive senkronudur."
       },
       {
-        "q": "iPad ve Mac'te çalışır mı yoksa sadece iPhone mu?",
-        "a": "Üçünde de. photoZseo evrensel bir uygulamadır — aynı satın alma iPhone, iPad ve Mac (Catalyst, macOS 14+) kapsar. Finder'dan sürükle-bırak, ⌘N/E/F/A klavye kısayolları, sağ tık menüleri ve 3-panel denetçi iPad ve Mac'te birinci sınıftır."
+        "q": "iPad'de çalışır mı yoksa sadece iPhone'da mı?",
+        "a": "İkisinde de. photoZseo evrensel bir uygulamadır — tek satın alma iPhone ve iPad'i kapsar. Sürükle-bırak, klavye kısayolları, sağ tık menüleri ve 3-panel denetçi iPad'de birinci sınıftır."
       },
       {
         "q": "Pro'da tam olarak ne var?",

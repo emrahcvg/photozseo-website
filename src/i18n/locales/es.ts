@@ -10,7 +10,7 @@ const es: HomeContent = {
     "getApp": "Obtener la App"
   },
   "hero": {
-    "eyebrow": "Ahora en iPhone · iPad · Mac",
+    "eyebrow": "Ahora en iPhone · iPad",
     "h1Line1Words": [
       "Dispara",
       "una"
@@ -22,7 +22,7 @@ const es: HomeContent = {
       "marketplaces."
     ],
     "h1A11y": "Dispara una vez. Vende en 46 marketplaces.",
-    "sub": "Una cámara IA de 7 ángulos, SEO en el dispositivo en 12 idiomas, 31 presets de tamaño hasta 4K y exportaciones perfectas para cada plataforma — directo desde tu iPhone, iPad o Mac.",
+    "sub": "Una cámara IA de 7 ángulos, SEO en el dispositivo en 12 idiomas, 31 presets de tamaño hasta 4K y exportaciones perfectas para cada plataforma — directo desde tu iPhone o iPad.",
     "btnAppSmall": "Acceso",
     "btnAppBig": "Anticipado",
     "ctaTrial": "Obtén acceso anticipado",
@@ -105,7 +105,7 @@ const es: HomeContent = {
       {
         "eyebrow": "Sincronización iCloud y Papelera",
         "h": "Sincroniza todo. Restaura cualquier cosa.",
-        "sub": "Cada proyecto se sincroniza por tu propio iCloud Drive. Los elementos eliminados esperan 30 días antes de la purga, con restauración segura en iPhone, iPad y Mac.",
+        "sub": "Cada proyecto se sincroniza por tu propio iCloud Drive. Los elementos eliminados esperan 30 días antes de la purga, con restauración segura en iPhone y iPad.",
         "bullets": [
           "Sincronización iCloud Drive — opcional, last-write-wins",
           "Carpeta Eliminados recientemente con restauración segura",
@@ -228,7 +228,7 @@ const es: HomeContent = {
           "Empuje de listado del mercado",
           "Inventario y código de barras",
           "1.000 imágenes/mes",
-          "iPhone, iPad y Mac universales",
+          "iPhone y iPad universal",
           "iCloud Drive sincronización + recuperación de papelera"
         ],
         "cta": "Elegir Mensual"
@@ -269,8 +269,8 @@ const es: HomeContent = {
         "a": "No. Cero analíticas de terceros, cero SDKs de tracking y sin cuenta en la nube. La única red saliente es App Store / RevenueCat para la suscripción, y sincronización iCloud Drive opcional que se queda en tu propio iCloud."
       },
       {
-        "q": "¿Funciona en iPad y Mac, o solo iPhone?",
-        "a": "Los tres. photoZseo es una app universal — la misma compra cubre iPhone, iPad y Mac (Catalyst, macOS 14+). Arrastrar-y-soltar desde Finder, atajos ⌘N/E/F/A, menús con clic derecho y un inspector de 3 paneles son de primera clase en iPad y Mac."
+        "q": "¿Funciona en iPad o solo en iPhone?",
+        "a": "Ambos. photoZseo es una app universal — una sola compra cubre iPhone y iPad. Arrastrar y soltar, atajos de teclado, menús con clic derecho y un inspector de 3 paneles son de primera clase en iPad."
       },
       {
         "q": "¿Qué hay exactamente en Pro?",

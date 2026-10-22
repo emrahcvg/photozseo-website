@@ -1,6 +1,7 @@
 ---
 import { defaultLang, type Lang } from '../i18n/ui';
 import { getHomeContent } from '../i18n/home';
+import { APP_STORE_URL } from '../i18n/meta';
 import SmoothScroll from './islands/SmoothScroll.tsx';
 import CursorSpotlight from './islands/CursorSpotlight.tsx';
 import ScrollReveal from './islands/ScrollReveal.tsx';
@@ -28,7 +29,7 @@ const features = c.features.items.map((item, idx) => ({
 <CursorSpotlight client:idle />
 <ScrollReveal client:load />
 
-<Hero client:load content={c.hero} />
+<Hero client:load content={APP_STORE_URL ? { ...c.hero, btnAppSmall: 'Download on the', btnAppBig: 'App Store' } : c.hero} appStoreUrl={APP_STORE_URL} />
 
 <MarqueeRows />
 
@@ -136,13 +137,13 @@ const features = c.features.items.map((item, idx) => ({
       <h2>{c.finalCta.h2}</h2>
       <p>{c.finalCta.p}</p>
       <div class="cta-row cta-row-center">
-        <a href="#download" class="btn-app btn-app-large">
+        <a href={APP_STORE_URL || '#download'} class="btn-app btn-app-large">
           <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true">
             <path d="M16.498 12.43c.02-2.176 1.776-3.221 1.856-3.27-1.013-1.481-2.585-1.683-3.139-1.704-1.319-.134-2.594.78-3.265.78-.685 0-1.713-.766-2.823-.744-1.43.022-2.76.842-3.491 2.131-1.493 2.59-.38 6.415 1.07 8.519.71 1.029 1.541 2.18 2.633 2.14 1.073-.043 1.474-.681 2.766-.681s1.66.681 2.776.659c1.149-.022 1.873-1.034 2.566-2.072.812-1.179 1.143-2.339 1.157-2.398-.026-.011-2.214-.85-2.106-3.36zM14.396 5.879c.575-.722.967-1.713.86-2.722-.831.035-1.866.578-2.466 1.281-.532.612-1.005 1.622-.886 2.588.942.075 1.906-.473 2.492-1.147z"/>
           </svg>
           <span class="btn-app-text">
-            <span class="btn-app-small">{c.hero.btnAppSmall}</span>
-            <span class="btn-app-big">{c.hero.btnAppBig}</span>
+            <span class="btn-app-small">{APP_STORE_URL ? 'Download on the' : c.hero.btnAppSmall}</span>
+            <span class="btn-app-big">{APP_STORE_URL ? 'App Store' : c.hero.btnAppBig}</span>
           </span>
         </a>
       </div>
@@ -158,7 +159,7 @@ const features = c.features.items.map((item, idx) => ({
     {
       "@type": "SoftwareApplication",
       "name": "photoZseo",
-      "operatingSystem": "iOS 17, iPadOS, macOS",
+      "operatingSystem": "iOS 17, iPadOS 17",
       "applicationCategory": "BusinessApplication",
       "description": "Turn one product photo into 46 marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol and more.",
       "url": "https://photozseo.com",
@@ -170,7 +171,7 @@ const features = c.features.items.map((item, idx) => ({
         { "@type": "Offer", "price": "49.99", "priceCurrency": "USD", "category": "Business Monthly" },
         { "@type": "Offer", "price": "359.99", "priceCurrency": "USD", "category": "Business Annual" }
       ],
-      "featureList": ["46 marketplace export presets","AI SEO auto-fill","AI background removal","Pro camera studio","B2B quote builder","EXIF editor","iPhone iPad Mac universal","iCloud Drive sync","On-device AI","Shopify API","Team collaboration"],
+      "featureList": ["46 marketplace export presets","AI SEO auto-fill","AI background removal","Pro camera studio","B2B quote builder","EXIF editor","iPhone & iPad universal","iCloud Drive sync","On-device AI","Shopify API","Team collaboration"],
       "inLanguage": ["en","tr","de","es","it","fr","pt","ja","ko","zh","ar","hi","fa","pl","ur"]
     },
     {

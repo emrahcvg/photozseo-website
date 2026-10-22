@@ -1,6 +1,7 @@
 ---
 import { languages, rtlLanguages, defaultLang, type Lang, useTranslations } from '../i18n/ui';
 import { getHomeContent } from '../i18n/home';
+import { meta, ogLocales, APP_STORE_ID } from '../i18n/meta';
 
 interface Props {
   title: string;
@@ -12,8 +13,8 @@ interface Props {
 
 const {
   title,
-  description = 'photoZseo — Turn one photo into 46 marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol & more. 3-day free trial.',
   lang = defaultLang,
+  description = meta[lang].defaultDesc,
   fullBleed = false,
   ogImage = '/og-image.png',
 } = Astro.props;
@@ -22,6 +23,11 @@ const c = getHomeContent(lang);
 const isRtl = rtlLanguages.includes(lang);
 const prefix = lang === defaultLang ? '' : `/${lang}`;
 const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
+const langCodes = Object.keys(languages);
+const basePath = Astro.url.pathname.replace(new RegExp(`^/(${langCodes.join('|')})(?=/|$)`), '') || '/';
+// Blog ve 404 yalnız İngilizce; diğer tüm sayfaların 15 dilde karşılığı var.
+const hasAlternates = !basePath.startsWith('/blog') && !basePath.startsWith('/404');
+const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
 ---
 
 <!doctype html>
@@ -41,30 +47,34 @@ const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0B0E1A" />
     <link rel="canonical" href={pageUrl} />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
+    {hasAlternates && langCodes.map((code) => (
+      <link rel="alternate" hreflang={code} href={`https://photozseo.com${code === defaultLang ? '' : `/${code}`}${basePath}`} />
+    ))}
+    {hasAlternates && <link rel="alternate" hreflang="x-default" href={`https://photozseo.com${basePath}`} />}
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:site_name" content="photoZseo" />
-    <meta property="og:locale" content={lang} />
+    <meta property="og:locale" content={ogLocales[lang]} />
     <meta property="og:image" content={`https://photozseo.com${ogImage}`} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
+    <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`https://photozseo.com${ogImage}`} />
 
     <!-- SEO extras -->
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="keywords" content="product photo app, marketplace listing tool, Amazon photo size, Shopify product photo, Etsy listing app, AI SEO product description, background removal app, EXIF metadata, B2B quote app, iPhone product photography, ecommerce photo optimizer" />
-    <meta name="apple-itunes-app" content="app-id=APP_STORE_ID_TBD" />
-    <link rel="sitemap" href="/sitemap.xml" />
+    {APP_STORE_ID && <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <slot name="head" />
   </head>
   <body class={fullBleed ? 'full-bleed' : ''}>
@@ -86,9 +96,8 @@ const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
             <select onchange={`window.location.href=this.value`} aria-label="Language">
               {Object.entries(languages).map(([code, name]) => {
                 const langPrefix = code === defaultLang ? '' : `/${code}`;
-                const currentPath = Astro.url.pathname.replace(/^\/(en|zh|tr|es|de|ja|pt|hi|ur|ar|fa|ko)/, '');
                 return (
-                  <option value={`${langPrefix}${currentPath || '/'}`} selected={code === lang}>
+                  <option value={`${langPrefix}${hasAlternates ? basePath : '/'}`} selected={code === lang}>
                     {name}
                   </option>
                 );

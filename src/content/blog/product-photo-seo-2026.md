@@ -134,4 +134,4 @@ The good news: filling them well is no longer a 10-minute-per-SKU task. On-devic
 
 ---
 
-photoZseo is on the App Store. iPhone, iPad and Mac.
+photoZseo is on the App Store for iPhone and iPad.

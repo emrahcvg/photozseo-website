@@ -153,4 +153,4 @@ The sellers who internalize that operate at a different level than the ones stil
 
 ---
 
-photoZseo is on the App Store. iPhone, iPad and Mac.
+photoZseo is on the App Store for iPhone and iPad.

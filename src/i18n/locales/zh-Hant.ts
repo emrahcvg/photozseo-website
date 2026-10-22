@@ -10,7 +10,7 @@ const zhHant: HomeContent = {
     "getApp": "取得應用程式"
   },
   "hero": {
-    "eyebrow": "現已登陸 iPhone · iPad · Mac",
+    "eyebrow": "現已登陸 iPhone · iPad",
     "h1Line1Words": [
       "射擊",
       "一次。"
@@ -228,7 +228,7 @@ const zhHant: HomeContent = {
           "市場上市推送",
           "庫存和條碼",
           "1,000 張圖像/月",
-          "iPhone、iPad 和 Mac 通用",
+          "iPhone 和 iPad 通用",
           "iCloud Drive 同步 + 垃圾恢復"
         ],
         "cta": "取得專業版"
@@ -269,8 +269,8 @@ const zhHant: HomeContent = {
         "a": "不會。第三方分析為零，追蹤 SDK 為零，也沒有雲端帳戶。唯一的出站網路是用於訂閱的 App Store / RevenueCat，以及保留在您自己的 iCloud 中的可選 iCloud Drive 同步。"
       },
       {
-        "q": "它適用於 iPad 和 Mac，還是僅適用於 iPhone？",
-        "a": "全部三個。 photoZseo 是一款通用應用程式 - 相同的購買涵蓋 iPhone、iPad 和 Mac（Catalyst、macOS 14+）。從 Finder 中拖放、⌘N/E/F/A 鍵盤快捷鍵、右鍵選單和 3 窗格檢查器在 iPad 和 Mac 上都是一流的。"
+        "q": "它適用於 iPad，還是僅適用於 iPhone？",
+        "a": "兩者都支援。photoZseo 是一款通用應用程式 — 一次購買即可同時用於 iPhone 和 iPad。拖放、鍵盤快捷鍵、右鍵選單和三欄檢查器在 iPad 上表現一流。"
       },
       {
         "q": "哪個計劃適合我？",

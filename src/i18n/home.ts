@@ -118,7 +118,7 @@ const en: HomeContent = {
     blog: 'Blog', support: 'Support', getApp: 'Get the App',
   },
   hero: {
-    eyebrow: 'Now on iPhone · iPad · Mac',
+    eyebrow: 'Now on iPhone · iPad',
     h1Line1Words: ['Shoot', 'once.'],
     h1Line2Words: ['Sell', 'on', '46', 'marketplaces.'],
     h1A11y: 'Shoot once. Sell on 46 marketplaces.',
@@ -325,7 +325,7 @@ const en: HomeContent = {
           'Marketplace listing push',
           'Inventory & barcode',
           '1,000 images / month',
-          'iPhone, iPad & Mac universal',
+          'iPhone & iPad universal',
           'iCloud Drive sync + Trash recovery',
         ],
         cta: 'Get Pro',
@@ -366,8 +366,8 @@ const en: HomeContent = {
         a: 'No. There are zero third-party analytics, zero tracking SDKs and no cloud account. The only outbound network is App Store / RevenueCat for the subscription, and optional iCloud Drive sync that stays inside your own iCloud.',
       },
       {
-        q: 'Does it work on iPad and Mac, or only iPhone?',
-        a: 'All three. photoZseo is a universal app — same purchase covers iPhone, iPad and Mac (Catalyst, macOS 14+). Drag-and-drop from Finder, ⌘N/E/F/A keyboard shortcuts, right-click menus and a 3-pane inspector are first-class on iPad and Mac.',
+        q: 'Does it work on iPad, or only iPhone?',
+        a: 'Both. photoZseo is a universal app — one purchase covers iPhone and iPad. Drag-and-drop, keyboard shortcuts, right-click menus and a 3-pane inspector are first-class on iPad.',
       },
       {
         q: "Which plan is right for me?",

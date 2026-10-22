@@ -145,4 +145,4 @@ The **five English-friendly platforms** — Temu, SHEIN, DHgate, Made-in-China, 
 
 ---
 
-photoZseo is on the App Store. iPhone, iPad and Mac.
+photoZseo is on the App Store for iPhone and iPad.

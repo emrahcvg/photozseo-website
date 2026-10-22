@@ -139,4 +139,4 @@ The product tools that respect that choice will outlive the ones that try to "au
 
 ---
 
-photoZseo is on the App Store. iPhone, iPad and Mac.
+photoZseo is on the App Store for iPhone and iPad.

@@ -10,7 +10,7 @@ const ko: HomeContent = {
     "getApp": "앱 받기"
   },
   "hero": {
-    "eyebrow": "이제 iPhone · iPad · Mac에서",
+    "eyebrow": "이제 iPhone · iPad에서",
     "h1Line1Words": [
       "한",
       "번"
@@ -22,7 +22,7 @@ const ko: HomeContent = {
       "시장."
     ],
     "h1A11y": "한 번 촬영. 46개 마켓플레이스에서 판매.",
-    "sub": "7각도 AI 카메라, 12개 언어의 온디바이스 SEO, 4K까지 31개 크기 프리셋, 플랫폼에 완벽한 내보내기 — 모두 iPhone, iPad 또는 Mac에서 직접.",
+    "sub": "7각도 AI 카메라, 12개 언어의 온디바이스 SEO, 4K까지 31개 크기 프리셋, 플랫폼에 완벽한 내보내기 — 모두 iPhone 또는 iPad에서 직접.",
     "btnAppSmall": "얼리",
     "btnAppBig": "액세스",
     "ctaTrial": "얼리 액세스 받기",
@@ -105,7 +105,7 @@ const ko: HomeContent = {
       {
         "eyebrow": "iCloud 동기화 및 휴지통 복구",
         "h": "어디서나 동기화. 무엇이든 복원.",
-        "sub": "각 프로젝트는 자신의 iCloud Drive를 통해 동기화. 삭제된 항목은 영구 삭제 전 30일 대기, iPhone, iPad, Mac 전반에 걸쳐 안전한 복원.",
+        "sub": "각 프로젝트는 자신의 iCloud Drive를 통해 동기화. 삭제된 항목은 영구 삭제 전 30일 대기, iPhone, iPad 전반에 걸쳐 안전한 복원.",
         "bullets": [
           "iCloud Drive 동기화 — 옵트인, last-write-wins",
           "최근 삭제 폴더 안전 복원",
@@ -228,7 +228,7 @@ const ko: HomeContent = {
           "마켓플레이스 상장 푸시",
           "재고 및 바코드",
           "이미지 1,000개/월",
-          "iPhone, iPad 및 Mac 범용",
+          "iPhone 및 iPad 범용",
           "iCloud Drive 동기화 + 휴지통 복구"
         ],
         "cta": "월간 선택"
@@ -269,8 +269,8 @@ const ko: HomeContent = {
         "a": "아니요. 타사 분석 0개, 추적 SDK 0개, 클라우드 계정 없음. 유일한 외부 네트워크는 구독을 위한 App Store / RevenueCat과 자신의 iCloud 내에 남는 선택적 iCloud Drive 동기화입니다."
       },
       {
-        "q": "iPad와 Mac에서 작동합니까, 아니면 iPhone만 작동합니까?",
-        "a": "셋 다. photoZseo는 유니버설 앱 — 동일한 구매가 iPhone, iPad, Mac(Catalyst, macOS 14+)을 커버합니다. Finder에서 드래그앤드롭, ⌘N/E/F/A 키보드 단축키, 우클릭 메뉴, 3패널 인스펙터가 iPad와 Mac에서 일류입니다."
+        "q": "iPad에서도 작동합니까, 아니면 iPhone만 작동합니까?",
+        "a": "둘 다. photoZseo는 유니버설 앱 — 한 번의 구매로 iPhone과 iPad를 모두 커버합니다. 드래그앤드롭, 키보드 단축키, 우클릭 메뉴, 3패널 인스펙터가 iPad에서 일류입니다."
       },
       {
         "q": "Pro에는 정확히 무엇이 있습니까?",

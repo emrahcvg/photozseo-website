@@ -1,4 +1,5 @@
 ---
+import { meta } from '../../i18n/meta';
 import Layout from '../../layouts/Layout.astro';
 import HomePage from '../../components/HomePage.astro';
 import { languages, defaultLang, type Lang } from '../../i18n/ui';
@@ -10,8 +11,8 @@ export function getStaticPaths() {
 }
 
 const lang = Astro.params.lang as Lang;
-const title = 'photoZseo — Product Photos & SEO for 46 Marketplaces';
-const description = 'Turn one iPhone photo into 46 marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol & more. B2B quote builder. 3-day free trial.';
+const title = meta[lang].homeTitle;
+const description = meta[lang].homeDesc;
 ---
 
 <Layout title={title} description={description} lang={lang} fullBleed={true}>

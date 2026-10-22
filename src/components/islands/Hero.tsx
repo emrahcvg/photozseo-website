@@ -20,9 +20,9 @@ interface HeroContent {
   bullets: [string, string, string] | string[];
 }
 
-interface HeroProps { content: HeroContent; }
+interface HeroProps { content: HeroContent; appStoreUrl?: string; }
 
-export default function Hero({ content }: HeroProps) {
+export default function Hero({ content, appStoreUrl }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const ipadRef = useRef<HTMLDivElement>(null);
   const iphoneRef = useRef<HTMLDivElement>(null);
@@ -136,7 +136,7 @@ export default function Hero({ content }: HeroProps) {
           </h1>
           <p className="phero-sub">{content.sub}</p>
           <div className="phero-cta">
-            <a href="#download" className="btn-app">
+            <a href={appStoreUrl || '#download'} className="btn-app">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
                 <path d="M16.498 12.43c.02-2.176 1.776-3.221 1.856-3.27-1.013-1.481-2.585-1.683-3.139-1.704-1.319-.134-2.594.78-3.265.78-.685 0-1.713-.766-2.823-.744-1.43.022-2.76.842-3.491 2.131-1.493 2.59-.38 6.415 1.07 8.519.71 1.029 1.541 2.18 2.633 2.14 1.073-.043 1.474-.681 2.766-.681s1.66.681 2.776.659c1.149-.022 1.873-1.034 2.566-2.072.812-1.179 1.143-2.339 1.157-2.398-.026-.011-2.214-.85-2.106-3.36zM14.396 5.879c.575-.722.967-1.713.86-2.722-.831.035-1.866.578-2.466 1.281-.532.612-1.005 1.622-.886 2.588.942.075 1.906-.473 2.492-1.147z"/>
               </svg>

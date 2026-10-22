@@ -1,10 +1,11 @@
 ---
+import { meta } from '../i18n/meta';
 import Layout from '../layouts/Layout.astro';
 import { defaultLang } from '../i18n/ui';
 import '../styles/legal.css';
 
-const title = 'Accessibility Statement | photoZseo';
-const description = 'photoZseo is committed to WCAG 2.1 AA accessibility. VoiceOver, Dynamic Type, color-blind safe palettes, RTL layouts and keyboard navigation across iPhone, iPad, Mac and the web.';
+const title = meta[defaultLang].a11yTitle;
+const description = meta[defaultLang].a11yDesc;
 const updated = 'May 11, 2026';
 ---
 
@@ -25,7 +26,7 @@ const updated = 'May 11, 2026';
     <h2>Our commitment</h2>
     <p>
       We target <strong>WCAG 2.1 Level AA</strong> as the minimum bar for both the
-      photoZseo iOS / iPadOS / macOS app and this website. We treat accessibility
+      photoZseo iOS / iPadOS app and this website. We treat accessibility
       as a product requirement, not a checklist — every new feature ships with
       VoiceOver labels, color-blind safe palettes, and Dynamic Type review.
     </p>
@@ -46,7 +47,7 @@ const updated = 'May 11, 2026';
       <li><strong>Apple Human Interface Guidelines — Accessibility</strong></li>
     </ul>
 
-    <h2>Accessibility features in the iOS / iPadOS / macOS app</h2>
+    <h2>Accessibility features in the iOS / iPadOS app</h2>
     <p>photoZseo is engineered with the iOS accessibility APIs from day one:</p>
     <ul>
       <li><strong>VoiceOver fully supported.</strong> Every button, image, OCR result and product card has a localized accessibility label. OCR and barcode chips can be tapped to copy by VoiceOver users.</li>
@@ -56,7 +57,7 @@ const updated = 'May 11, 2026';
       <li><strong>Color is never the only signal.</strong> Status changes pair color with an icon, shape or text label.</li>
       <li><strong>Reduce Motion respected.</strong> Animations, parallax and the camera preview tilt are dampened when the OS-level setting is on.</li>
       <li><strong>RTL layouts</strong> are first-class for Arabic, Urdu and Persian — not mirrored heuristics, but hand-tuned screens.</li>
-      <li><strong>Keyboard navigation on iPad and Mac.</strong> Tab order, focus rings, keyboard shortcuts and right-click menus throughout.</li>
+      <li><strong>Keyboard navigation on iPad.</strong> Tab order, focus rings, keyboard shortcuts and right-click menus throughout.</li>
       <li><strong>Switch Control</strong> compatible — every actionable element is reachable as a single focusable item.</li>
       <li><strong>Haptic + visual feedback</strong> for critical actions (capture, save, delete) so non-audio users don't miss confirmations.</li>
       <li><strong>Speak Screen and Spoken Content</strong> work with all on-screen text.</li>
@@ -100,7 +101,7 @@ const updated = 'May 11, 2026';
     <ul>
       <li>27 automated tests for color contrast, Dynamic Type clipping and VoiceOver label coverage (CI gated)</li>
       <li>Manual QA against the WCAG 2.1 AA checklist before every App Store release</li>
-      <li>Real-device testing on iPhone, iPad and Mac with VoiceOver and Voice Control</li>
+      <li>Real-device testing on iPhone and iPad with VoiceOver and Voice Control</li>
       <li>Color-vision simulators (protanopia, deuteranopia, tritanopia, achromatopsia)</li>
       <li>Static analysis on every pull request</li>
     </ul>
