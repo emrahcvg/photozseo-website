@@ -55,6 +55,30 @@ import { idToSlug, slugToId } from '../../src/storefront/taxonomy/slug-resolve';
 
 const DEFAULT_LANG = 'en';
 
+/** Arama metni üst sınırı — uzun sorgular AI çevirisi + Orama CPU maliyetini şişirmesin. */
+const MAX_QUERY_LEN = 100;
+/** Autocomplete: 2–64 karakter arası; altı/üstü boş liste döner. */
+const SUGGEST_MIN = 2;
+const SUGGEST_MAX = 64;
+
+const MARKET_CSS = ['/marketplace.css?v=9'];
+const GSI = 'https://accounts.google.com/gsi/client';
+const BASE_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/cart-badge.js?v=1'];
+const PDP_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/marketplace-cart.js?v=2', '/cart-badge.js?v=1'];
+const ACCOUNT_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/market-account.js?v=8', '/cart-badge.js?v=1'];
+
+/** Sonlu ve negatif olmayan sayı; değilse undefined (NaN/"abc"/boş → filtre yok). */
+function parsePrice(raw: string | null): number | undefined {
+  if (raw === null || raw.trim() === '') return undefined;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : undefined;
+}
+
+function clampQuery(raw: string | null): string | undefined {
+  const q = (raw ?? '').trim().slice(0, MAX_QUERY_LEN);
+  return q || undefined;
+}
+
 export interface MarketDeps {
   url: string;
   lang: string;
@@ -175,15 +199,15 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       // Boş pazar yeri ince içerik sayılır; ilk mağaza listelenince otomatik index'e döner.
       ...(stores.items.length === 0 ? { robots: 'noindex, follow' } : {}),
       jsonLd: [buildItemListJsonLd(newP.items, origin), buildWebSiteJsonLd(origin)],
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
+      stylesheets: MARKET_CSS,
+      bodyScripts: BASE_SCRIPTS,
     }));
   }
 
   // /market/api/suggest?q=… — arama kutusu autocomplete (JSON, kısa cache)
   if (parts[0] === 'api' && parts[1] === 'suggest' && parts.length === 2) {
-    const q = u.searchParams.get('q') ?? '';
-    const suggestions = q.trim() && deps.suggestProducts
+    const q = (u.searchParams.get('q') ?? '').trim();
+    const suggestions = q.length >= SUGGEST_MIN && q.length <= SUGGEST_MAX && deps.suggestProducts
       ? await deps.suggestProducts(deps.db, q, 6)
       : [];
     return new Response(JSON.stringify({ suggestions }), {
@@ -200,12 +224,12 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     const sort: SearchQuery['sort'] =
       rawSort === 'price_asc' || rawSort === 'price_desc' ? rawSort : 'new';
     const q: SearchQuery = {
-      q: u.searchParams.get('q') ?? undefined,
+      q: clampQuery(u.searchParams.get('q')),
       sort,
-      categoryId: u.searchParams.get('categoryId') ?? undefined,
-      city: u.searchParams.get('city') ?? undefined,
-      minPrice: u.searchParams.has('minPrice') ? Number(u.searchParams.get('minPrice')) : undefined,
-      maxPrice: u.searchParams.has('maxPrice') ? Number(u.searchParams.get('maxPrice')) : undefined,
+      categoryId: u.searchParams.get('categoryId')?.slice(0, 64) || undefined,
+      city: u.searchParams.get('city')?.slice(0, 80) || undefined,
+      minPrice: parsePrice(u.searchParams.get('minPrice')),
+      maxPrice: parsePrice(u.searchParams.get('maxPrice')),
       inStock: u.searchParams.get('inStock') === '1',
     };
     const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, {
@@ -225,8 +249,8 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       alternates: buildAlternates(origin, '/market/search'),
       ogImage: searchOgImage,
       jsonLd: buildItemListJsonLd(result.items, origin),
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
+      stylesheets: MARKET_CSS,
+      bodyScripts: BASE_SCRIPTS,
       // Faceted/arama sonuç sayfaları indexlenmesin (sonsuz parametre kombinasyonu → crawl israfı/duplicate).
       robots: 'noindex, follow',
     }));
@@ -241,7 +265,7 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       return htmlResponse(renderDocument({
         title: 'Product not found — photoZseo', description: '', lang: locale,
         body: '<div class="mk"><p style="padding:2rem;text-align:center">Product not found</p></div>',
-        stylesheets: ['/marketplace.css?v=8'],
+        stylesheets: MARKET_CSS,
       }), 404);
     }
     const pdpUrl = `/market/p/${encodeURIComponent(product.id)}`;
@@ -254,8 +278,8 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: product.image_url || `${origin}/og-image.png`,
       preloadImage: product.image_url || undefined,
       jsonLd: buildProductJsonLd(product, origin),
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/marketplace-cart.js?v=1', '/cart-badge.js?v=1'],
+      stylesheets: MARKET_CSS,
+      bodyScripts: PDP_SCRIPTS,
     }));
   }
 
@@ -272,8 +296,8 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: `${origin}/og-image.png`,
       ...(stores.items.length === 0 ? { robots: 'noindex, follow' } : {}),
       jsonLd: buildStoreDirectoryJsonLd(stores.items, origin),
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
+      stylesheets: MARKET_CSS,
+      bodyScripts: BASE_SCRIPTS,
     }));
   }
 
@@ -292,7 +316,16 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       });
     }
     // Slug → resolve to numeric ID for DB query; unknown segment stays as-is
-    const categoryId = slugToId(segment) ?? segment;
+    const resolved = slugToId(segment);
+    // Taksonomi yüklüyken bilinmeyen segment → gerçek 404 (soft-404 / sonsuz indexlenebilir URL olmasın).
+    if (!resolved && svc && !svc.node(segment) && segment !== UNCATEGORIZED) {
+      return htmlResponse(renderDocument({
+        title: 'Not found — photoZseo', description: '', lang: locale, robots: 'noindex',
+        body: '<div class="mk"><p style="padding:2rem;text-align:center">Not found</p></div>',
+        stylesheets: MARKET_CSS,
+      }), 404);
+    }
+    const categoryId = resolved ?? segment;
     const slugPath = `/market/c/${idToSlug(categoryId)}`;
     const result = await deps.searchProducts(deps.db, deps.ai as AiBinding, { categoryId, lang: locale, sort: 'new', limit: 40 });
     const breadcrumb = svc ? categoryBreadcrumb(categoryId, locale, svc) : null;
@@ -312,8 +345,8 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       ogImage: categoryOgImage,
       preloadImage: result.items[0]?.image_url,
       jsonLd,
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
+      stylesheets: MARKET_CSS,
+      bodyScripts: BASE_SCRIPTS,
     }));
   }
 
@@ -331,9 +364,9 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
       lang: locale,
       body,
       robots: 'noindex',
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/cart-badge.js?v=1'],
-    }));
+      stylesheets: MARKET_CSS,
+      bodyScripts: BASE_SCRIPTS,
+    }), 200, { private: true });
   }
 
   // /market/favorites — alıcı favorileri (çapraz-mağaza, hesaba/cihaza bağlı)
@@ -345,9 +378,9 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     return htmlResponse(renderDocument({
       title: mt(locale, 'myFavorites') + ' — photoZseo',
       description: '', lang: locale, body, robots: 'noindex',
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/market-account.js?v=8'],
-    }));
+      stylesheets: MARKET_CSS,
+      bodyScripts: ACCOUNT_SCRIPTS,
+    }), 200, { private: true });
   }
 
   // /market/cart — alıcı sepeti (çapraz-mağaza, hesaba/cihaza bağlı)
@@ -359,15 +392,15 @@ export async function handleMarket(parts: string[], deps: MarketDeps): Promise<R
     return htmlResponse(renderDocument({
       title: mt(locale, 'myCart') + ' — photoZseo',
       description: '', lang: locale, body, robots: 'noindex',
-      stylesheets: ['/marketplace.css?v=8'],
-      bodyScripts: ['https://accounts.google.com/gsi/client', '/auth.js?v=11', '/marketplace-enhance.js?v=9', '/market-account.js?v=8'],
-    }));
+      stylesheets: MARKET_CSS,
+      bodyScripts: ACCOUNT_SCRIPTS,
+    }), 200, { private: true });
   }
 
   return htmlResponse(renderDocument({
     title: 'Not found — photoZseo', description: '', lang: locale,
     body: '<div class="mk"><p style="padding:2rem;text-align:center">Not found</p></div>',
-    stylesheets: ['/marketplace.css?v=8'],
+    stylesheets: MARKET_CSS,
   }), 404);
 }
 
@@ -383,10 +416,24 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const parts = rawPath.split('/').filter(Boolean);
   const u = new URL(ctx.request.url);
   const lang = u.searchParams.get('lang') ?? DEFAULT_LANG;
-  return handleMarket(parts, {
-    url: ctx.request.url, lang, db: ctx.env.MARKET_DB, ai: ctx.env.AI,
-    searchProducts: realSearch, listNewProducts: realListNew, listStores: realListStores,
-    suggestProducts: realSuggest, getProductById: realGetProductById,
-    request: ctx.request, storeWriteKey: ctx.env.STORE_WRITE_KEY,
-  });
+  try {
+    return await handleMarket(parts, {
+      url: ctx.request.url, lang, db: ctx.env.MARKET_DB, ai: ctx.env.AI,
+      searchProducts: realSearch, listNewProducts: realListNew, listStores: realListStores,
+      suggestProducts: realSuggest, getProductById: realGetProductById,
+      request: ctx.request, storeWriteKey: ctx.env.STORE_WRITE_KEY,
+    });
+  } catch (err) {
+    // D1/AI geçici hatası: ham 500/1101 yerine markalı 503 + Retry-After.
+    console.error('[market] handler error', err);
+    const res = htmlResponse(renderDocument({
+      title: 'Temporarily unavailable — photoZseo', description: '', lang: SUPPORTED_LOCALES.includes(lang) ? lang : DEFAULT_LANG,
+      robots: 'noindex',
+      body: '<div class="mk"><p style="padding:2rem;text-align:center">The marketplace is temporarily unavailable. Please try again in a minute.</p></div>',
+      stylesheets: MARKET_CSS,
+    }), 503);
+    res.headers.set('retry-after', '60');
+    res.headers.set('cache-control', 'no-store');
+    return res;
+  }
 };

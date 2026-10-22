@@ -81,3 +81,14 @@ describe('renderDocument', () => {
     expect(html).toContain('/storefront.css');
   });
 });
+
+describe('safeJsonLd', () => {
+  it('neutralizes every script-breakout variant while keeping JSON equal', async () => {
+    const { safeJsonLd } = await import('./document');
+    const raw = JSON.stringify({ name: 'x</script >y</SCRIPT/z><!--<script>& ' });
+    const out = safeJsonLd(raw);
+    expect(out).not.toMatch(/</);
+    expect(out).not.toMatch(/>/);
+    expect(JSON.parse(out)).toEqual(JSON.parse(raw));
+  });
+});

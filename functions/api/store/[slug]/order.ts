@@ -10,7 +10,7 @@
  */
 import { isValidSlug, getCart, clearCart, type D1Like } from '../../../_lib/buyer';
 import { resolveOwnerKey } from '../../../_lib/buyer-owner';
-import { createOrder, makeOrderRef } from '../../../_lib/orders';
+import { createOrder, randomOrderRef } from '../../../_lib/orders';
 
 interface Env { MARKET_DB: D1Like; STORE_WRITE_KEY?: string; }
 type Ctx = { request: Request; env: Env; params: { slug: string } };
@@ -41,7 +41,7 @@ export async function onRequestPost(ctx: Ctx): Promise<Response> {
   // Sipariş kalemleri: sepetten oluştur (sadece productSlug + qty; title/price sunucuda yok)
   const orderItems = cartItems.map((c) => ({ productSlug: c.productSlug, qty: c.qty }));
   const itemCount = cartItems.reduce((sum, c) => sum + c.qty, 0);
-  const orderRef = makeOrderRef(Math.floor(Math.random() * 36 ** 5));
+  const orderRef = randomOrderRef();
   const now = new Date().toISOString();
 
   await createOrder(ctx.env.MARKET_DB, {

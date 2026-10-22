@@ -69,6 +69,8 @@ function notFoundHtml(message: string): string {
  * Resolves the original (Drive) URL from the manifest, proxies the bytes, and
  * caches them at the edge for a year (Drive file-IDs are immutable).
  */
+const MAX_PROXY_IMAGE_BYTES = 15 * 1024 * 1024;
+
 async function serveImage(
   ctx: Parameters<PagesFunction<Env>>[0],
   base: Manifest,
@@ -80,7 +82,7 @@ async function serveImage(
   const slugMap = uniqueProductSlugs(base.products, DEFAULT_LANG);
   const product = base.products.find((p) => (slugMap.get(p.id) ?? p.id) === parsed.pslug);
   const original = product?.images?.[parsed.index];
-  if (!original || !/^https?:\/\//i.test(original)) {
+  if (!original || !/^https:\/\//i.test(original)) {
     return new Response('Not found', { status: 404 });
   }
 
@@ -98,9 +100,20 @@ async function serveImage(
   }
   if (!upstream.ok) return new Response('Upstream error', { status: 502 });
 
+  // Yalnız görsel tipleri geçir: upstream text/html/svg dönerse photozseo.com origin'inde
+  // saklı XSS'e dönüşmesin. SVG script taşıyabildiği için hariç.
+  const upstreamType = (upstream.headers.get('Content-Type') ?? '').split(';')[0].trim().toLowerCase();
+  if (!/^image\/(jpeg|png|webp|gif|avif|heic|heif)$/.test(upstreamType)) {
+    return new Response('Unsupported media type', { status: 415 });
+  }
+  const len = Number(upstream.headers.get('Content-Length') ?? '0');
+  if (len > MAX_PROXY_IMAGE_BYTES) return new Response('Image too large', { status: 413 });
+
   const headers = new Headers();
-  headers.set('Content-Type', upstream.headers.get('Content-Type') ?? 'image/jpeg');
+  headers.set('Content-Type', upstreamType);
   headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('Content-Security-Policy', "default-src 'none'; sandbox");
   const resp = new Response(upstream.body, { status: 200, headers });
   ctx.waitUntil(cache.put(cacheKey, resp.clone()));
   return resp;

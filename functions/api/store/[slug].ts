@@ -32,16 +32,18 @@ function json400(msg: string) {
 type OwnedRecord = { ownerSub?: string } | null | undefined;
 
 /**
- * B2 Faz B sahiplik geçidi — SADECE şu üçü birlikteyken 403:
- *   kayıtta owner_sub DOLU  VE  auth kind==='session'  VE  session.sub !== owner_sub.
- * Diğer tüm durumlar (owner_sub null, veya legacy/HMAC yolu) → izin ver (eski davranış).
+ * Sahiplik geçidi — kayıtta owner_sub DOLUYSA yalnız sahibinin oturumu yazabilir:
+ *   legacy/HMAC yolu (oturumsuz) → 403 (IBAN/ödeme bilgisi ezilip dolandırıcılığa açılmasın),
+ *   session.sub !== owner_sub → 403.
+ * owner_sub null (henüz sahiplenilmemiş eski kayıt) → izin ver (geri uyum).
  */
 function ownershipForbidden(
   existing: OwnedRecord,
   auth: { kind: 'session'; session: { sub: string } } | { kind: 'legacy' },
 ): boolean {
   const ownerSub = existing?.ownerSub;
-  return !!ownerSub && auth.kind === 'session' && auth.session.sub !== ownerSub;
+  if (!ownerSub) return false;
+  return auth.kind !== 'session' || auth.session.sub !== ownerSub;
 }
 
 function json403(msg: string) {

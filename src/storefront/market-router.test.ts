@@ -62,11 +62,34 @@ describe('handleMarket', () => {
     expect(html).toContain('/store/s');
   });
 
-  it('renders /market/c/<id>', async () => {
-    const res = await handleMarket(['c', 'c1'], { url: 'https://photozseo.com/market/c/c1', lang: 'en', db: {} as any, ai: undefined, ...deps });
+  it('renders /market/c/<slug> for a real taxonomy category', async () => {
+    const res = await handleMarket(['c', 'electronics'], { url: 'https://photozseo.com/market/c/electronics', lang: 'en', db: {} as any, ai: undefined, ...deps });
     const html = await res.text();
-    expect(html).toContain('c1');
+    expect(res.status).toBe(200);
+    expect(html).toContain('Electronics');
     expect(html).toContain('Mat');
+  });
+
+  it('404s an unknown category segment instead of a soft-404 page', async () => {
+    const res = await handleMarket(['c', 'no-such-category'], { url: 'https://photozseo.com/market/c/no-such-category', lang: 'en', db: {} as any, ai: undefined, ...deps });
+    expect(res.status).toBe(404);
+    expect(await res.text()).toContain('noindex');
+  });
+
+  it('marks personal pages private, no-store', async () => {
+    const res = await handleMarket(['cart'], { url: 'https://photozseo.com/market/cart', lang: 'en', db: {} as any, ai: undefined, ...deps });
+    expect(res.headers.get('cache-control')).toBe('private, no-store');
+  });
+
+  it('ignores non-numeric price filters instead of passing NaN', async () => {
+    let seen: { minPrice?: number; maxPrice?: number } = {};
+    const res = await handleMarket(['search'], {
+      url: 'https://photozseo.com/market/search?minPrice=abc&maxPrice=', lang: 'en', db: {} as any, ai: undefined, ...deps,
+      searchProducts: (async (_db: unknown, _ai: unknown, o: { minPrice?: number; maxPrice?: number }) => { seen = o; return deps.searchProducts(_db as any, _ai as any, o as any); }) as any,
+    });
+    expect(res.status).toBe(200);
+    expect(seen.minPrice).toBeUndefined();
+    expect(seen.maxPrice).toBeUndefined();
   });
 
   it('renders /market/favorites (owner yok → boş durum)', async () => {

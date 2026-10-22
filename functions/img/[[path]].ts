@@ -13,7 +13,14 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   if (!obj) return new Response('Not Found', { status: 404 });
 
   const headers = new Headers();
-  headers.set('Content-Type', obj.httpMetadata?.contentType ?? 'image/jpeg');
+  // Content-Type yükleyen istemciden gelir (presign tipi imzalamaz) → yalnız raster görsel
+  // tiplerine güven; gerisi indirilebilir ikili olarak, origin'de çalışamayacak şekilde döner.
+  const stored = (obj.httpMetadata?.contentType ?? 'image/jpeg').split(';')[0].trim().toLowerCase();
+  const safeImage = /^image\/(jpeg|png|webp|gif|avif|heic|heif)$/.test(stored);
+  headers.set('Content-Type', safeImage ? stored : 'application/octet-stream');
+  if (!safeImage) headers.set('Content-Disposition', 'attachment');
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('Content-Security-Policy', "default-src 'none'; sandbox");
   headers.set('Cache-Control', 'public, max-age=31536000, immutable');
   headers.set('ETag', obj.httpEtag);
 

@@ -400,6 +400,24 @@ function sortRows(rows: JoinedRow[], sort?: SearchOpts['sort']): JoinedRow[] {
   return r;
 }
 
+// Isolate içi çeviri önbelleği: aynı (dil, sorgu) için tekrar AI çağrısı yapılmaz.
+const QUERY_TRANSLATION_CACHE = new Map<string, string>();
+const QUERY_TRANSLATION_CACHE_MAX = 500;
+
+async function cachedTranslateQuery(ai: AiBinding, q: string, from: string, to: string): Promise<string> {
+  if (from === to) return translateQuery(ai, q, from, to);
+  const key = `${from}>${to}:${q.toLowerCase()}`;
+  const hit = QUERY_TRANSLATION_CACHE.get(key);
+  if (hit !== undefined) return hit;
+  const term = await translateQuery(ai, q, from, to);
+  if (QUERY_TRANSLATION_CACHE.size >= QUERY_TRANSLATION_CACHE_MAX) {
+    const oldest = QUERY_TRANSLATION_CACHE.keys().next().value;
+    if (oldest !== undefined) QUERY_TRANSLATION_CACHE.delete(oldest);
+  }
+  QUERY_TRANSLATION_CACHE.set(key, term);
+  return term;
+}
+
 export async function searchProducts(
   db: D1Database,
   ai: AiBinding,
@@ -408,10 +426,12 @@ export async function searchProducts(
   let rows = await joinedRows(db);
 
   // 1) Full-text (Orama) — q varsa eşleşen id'lere indir.
-  if (opts.q && opts.q.trim() !== '') {
+  // Boş pazar yerinde AI çevirisi/Orama kurulumu yapılmaz (maliyet + CPU).
+  const qTrim = (opts.q ?? '').trim().slice(0, 100);
+  if (qTrim !== '' && rows.length > 0) {
     const canonical = await inferCanonicalLang(db);
     const queryLang = opts.lang ?? canonical;
-    const term = await translateQuery(ai, opts.q.trim(), queryLang, canonical);
+    const term = await cachedTranslateQuery(ai, qTrim, queryLang, canonical);
     const orama = await getOrama(db);
     // tolerance: 1 — tek karakterlik yazım hatalarını affet ("yga mat" → "yoga mat")
     const res = await search(orama.db, { term, limit: 1000, tolerance: 1 });

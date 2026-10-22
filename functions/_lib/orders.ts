@@ -31,6 +31,18 @@ export function makeOrderRef(rand: number): string {
   return 'SP-' + Math.abs(Math.floor(rand)).toString(36).toUpperCase();
 }
 
+// Karışmaya açık harfler (0/O, 1/I/L) yok — havale açıklamasına elle yazılır.
+const REF_ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+
+/** Kriptografik rastgele sipariş referansı: SP- + 10 karakter (~49 bit), çakışma pratikte yok. */
+export function randomOrderRef(): string {
+  const bytes = new Uint8Array(10);
+  crypto.getRandomValues(bytes);
+  let out = '';
+  for (const b of bytes) out += REF_ALPHABET[b % REF_ALPHABET.length];
+  return 'SP-' + out;
+}
+
 /** Yeni sipariş kaydı ekler (items → items_json olarak serialize edilir). */
 export async function createOrder(db: D1Like, order: OrderRecord): Promise<void> {
   const items_json = JSON.stringify(order.items);

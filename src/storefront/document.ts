@@ -47,9 +47,17 @@ export interface DocumentOptions {
   preloadImage?: string; // LCP görsel — <link rel="preload" as="image" fetchpriority="high"> enjekte eder
 }
 
-/** Neutralize a closing-script sequence so JSON-LD can't break out of its tag. */
-function safeJsonLd(json: string): string {
-  return json.replace(/<\/script>/gi, '<\\/script>');
+/**
+ * JSON-LD'yi <script> içine güvenle göm: <, >, & ve U+2028/2029 JSON unicode kaçışına çevrilir.
+ * `</script >`, `<!--`, `</script/x>` gibi tüm varyantlar etiketten taşamaz; JSON anlamı değişmez.
+ */
+export function safeJsonLd(json: string): string {
+  return json
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
 }
 
 export function renderDocument(opts: DocumentOptions): string {

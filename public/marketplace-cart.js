@@ -298,16 +298,18 @@
           if (payBox) payBox.hidden = false;
           var refOut = root.querySelector('[data-mk-ref]');
           if (refOut) refOut.textContent = res.order_id;
+          var pay = res.payment || {};
+          var amountText = typeof pay.amount === 'number' ? pay.amount.toFixed(2) + ' ' + (pay.currency || '') : '—';
           var ibanOut = root.querySelector('[data-mk-iban]');
-          if (ibanOut) ibanOut.textContent = res.payment.iban;
+          if (ibanOut) ibanOut.textContent = pay.iban || '—';
           var amtOut = root.querySelector('[data-mk-amount]');
-          if (amtOut) amtOut.textContent = res.payment.amount.toFixed(2) + ' ' + res.payment.currency;
+          if (amtOut) amtOut.textContent = amountText;
           var instrOut = root.querySelector('[data-mk-instructions]');
-          if (instrOut) instrOut.textContent = res.payment.instructions;
+          if (instrOut) instrOut.textContent = pay.instructions || '';
           if (!payBox) {
             var msg = document.createElement('p');
             msg.style.cssText = 'margin-top:8px;padding:8px;background:#f0fdf4;border-radius:4px;';
-            msg.textContent = 'Sipariş alındı: ' + res.order_id + ' — IBAN: ' + res.payment.iban + ' — Tutar: ' + res.payment.amount.toFixed(2) + ' ' + res.payment.currency;
+            msg.textContent = 'Sipariş alındı: ' + res.order_id + (pay.iban ? ' — IBAN: ' + pay.iban : '') + ' — Tutar: ' + amountText;
             root.appendChild(msg);
           }
           checkoutBtn.disabled = false;

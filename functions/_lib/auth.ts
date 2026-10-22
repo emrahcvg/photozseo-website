@@ -159,7 +159,7 @@ export async function requireWriteAuth(
 
   // (A) Legacy fallback: raw shared key (deprecation window).
   const provided = request.headers.get('x-store-write-key');
-  if (provided && provided === expected) {
+  if (provided && timingSafeEqualHex(provided, expected)) {
     return null;
   }
 
