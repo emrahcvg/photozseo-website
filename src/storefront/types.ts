@@ -108,6 +108,22 @@ export interface Product {
   fitment?: ProductFitment[];
   /** true → B2B ürünü; geçerli oturum olmadan web store'da gizlenir */
   b2b?: boolean;
+  /** GPSR (AB 2023/988 md. 19) ürün güvenliği bilgisi — AB tüketicisine satışta ilanda gösterilir. */
+  safety?: ProductSafety;
+}
+
+export interface ProductSafety {
+  manufacturerName?: string;
+  /** Posta adresi (tek satır). */
+  manufacturerAddress?: string;
+  /** E-posta veya web adresi. */
+  manufacturerContact?: string;
+  /** AB'de yerleşik sorumlu kişi (üretici AB dışındaysa zorunlu). */
+  euResponsibleName?: string;
+  euResponsibleAddress?: string;
+  euResponsibleContact?: string;
+  /** Uyarılar / güvenlik bilgileri, alıcının dilinde. */
+  warnings?: Localized;
 }
 
 export interface ProductFitment {

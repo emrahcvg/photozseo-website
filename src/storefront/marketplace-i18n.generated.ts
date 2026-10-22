@@ -58,7 +58,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "السابق",
   "nextPage": "التالي",
   "pageLabel": "صفحة",
-  "marketFooterNote": "يعرض photoZseo Market عروض بائعين مستقلين. كل عملية بيع هي عقد بين المشتري والبائع. photoZseo ليست البائع ولا تتلقى مدفوعات ولا تشحن سلعاً. أبلغ عن أي إدراج مشبوه عبر رابط «إبلاغ» في أي صفحة منتج."
+  "marketFooterNote": "يعرض photoZseo Market عروض بائعين مستقلين. كل عملية بيع هي عقد بين المشتري والبائع. photoZseo ليست البائع ولا تتلقى مدفوعات ولا تشحن سلعاً. أبلغ عن أي إدراج مشبوه عبر رابط «إبلاغ» في أي صفحة منتج.",
+  "safetyHeading": "سلامة المنتج",
+  "safetyManufacturer": "الشركة المصنّعة",
+  "safetyEuResponsible": "الشخص المسؤول في الاتحاد الأوروبي",
+  "safetyProductId": "معرّف المنتج",
+  "safetyWarnings": "التحذيرات ومعلومات السلامة"
  },
  "de": {
   "buyerSafetyTitle": "Hinweise für Käufer",
@@ -117,7 +122,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "Zurück",
   "nextPage": "Weiter",
   "pageLabel": "Seite",
-  "marketFooterNote": "photoZseo Market listet Angebote unabhängiger Verkäufer. Jeder Verkauf ist ein Vertrag zwischen Käufer und Verkäufer. photoZseo ist nicht der Verkäufer, nimmt keine Zahlungen an und versendet keine Waren. Melden Sie ein verdächtiges Angebot über den Link „Melden“ auf jeder Produktseite."
+  "marketFooterNote": "photoZseo Market listet Angebote unabhängiger Verkäufer. Jeder Verkauf ist ein Vertrag zwischen Käufer und Verkäufer. photoZseo ist nicht der Verkäufer, nimmt keine Zahlungen an und versendet keine Waren. Melden Sie ein verdächtiges Angebot über den Link „Melden“ auf jeder Produktseite.",
+  "safetyHeading": "Produktsicherheit",
+  "safetyManufacturer": "Hersteller",
+  "safetyEuResponsible": "Verantwortliche Person in der EU",
+  "safetyProductId": "Produktkennung",
+  "safetyWarnings": "Warn- und Sicherheitshinweise"
  },
  "es": {
   "buyerSafetyTitle": "Información para el comprador",
@@ -176,7 +186,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "Anterior",
   "nextPage": "Siguiente",
   "pageLabel": "Página",
-  "marketFooterNote": "photoZseo Market muestra ofertas de vendedores independientes. Cada venta es un contrato entre el comprador y el vendedor. photoZseo no es el vendedor, no cobra pagos y no envía productos. Denuncie un anuncio sospechoso con el enlace Denunciar de cualquier página de producto."
+  "marketFooterNote": "photoZseo Market muestra ofertas de vendedores independientes. Cada venta es un contrato entre el comprador y el vendedor. photoZseo no es el vendedor, no cobra pagos y no envía productos. Denuncie un anuncio sospechoso con el enlace Denunciar de cualquier página de producto.",
+  "safetyHeading": "Seguridad del producto",
+  "safetyManufacturer": "Fabricante",
+  "safetyEuResponsible": "Persona responsable en la UE",
+  "safetyProductId": "Identificador del producto",
+  "safetyWarnings": "Advertencias e información de seguridad"
  },
  "fa": {
   "buyerSafetyTitle": "اطلاعات خریدار",
@@ -235,7 +250,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "قبلی",
   "nextPage": "بعدی",
   "pageLabel": "صفحه",
-  "marketFooterNote": "photoZseo Market پیشنهادهای فروشندگان مستقل را فهرست می‌کند. هر فروش یک قرارداد میان خریدار و فروشنده است. photoZseo فروشنده نیست، پرداخت دریافت نمی‌کند و کالا ارسال نمی‌کند. آگهی مشکوک را با پیوند «گزارش» در هر صفحه محصول گزارش دهید."
+  "marketFooterNote": "photoZseo Market پیشنهادهای فروشندگان مستقل را فهرست می‌کند. هر فروش یک قرارداد میان خریدار و فروشنده است. photoZseo فروشنده نیست، پرداخت دریافت نمی‌کند و کالا ارسال نمی‌کند. آگهی مشکوک را با پیوند «گزارش» در هر صفحه محصول گزارش دهید.",
+  "safetyHeading": "ایمنی محصول",
+  "safetyManufacturer": "سازنده",
+  "safetyEuResponsible": "شخص مسئول در اتحادیه اروپا",
+  "safetyProductId": "شناسه محصول",
+  "safetyWarnings": "هشدارها و اطلاعات ایمنی"
  },
  "fr": {
   "marketTitle": "Place de marché",
@@ -378,7 +398,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "Précédent",
   "nextPage": "Suivant",
   "pageLabel": "Page",
-  "marketFooterNote": "photoZseo Market répertorie les offres de vendeurs indépendants. Chaque vente est un contrat entre l’acheteur et le vendeur. photoZseo n’est pas le vendeur, n’encaisse pas de paiements et n’expédie pas de produits. Signalez une annonce suspecte via le lien Signaler sur n’importe quelle page produit."
+  "marketFooterNote": "photoZseo Market répertorie les offres de vendeurs indépendants. Chaque vente est un contrat entre l’acheteur et le vendeur. photoZseo n’est pas le vendeur, n’encaisse pas de paiements et n’expédie pas de produits. Signalez une annonce suspecte via le lien Signaler sur n’importe quelle page produit.",
+  "safetyHeading": "Sécurité du produit",
+  "safetyManufacturer": "Fabricant",
+  "safetyEuResponsible": "Personne responsable dans l’UE",
+  "safetyProductId": "Identifiant du produit",
+  "safetyWarnings": "Avertissements et informations de sécurité"
  },
  "hi": {
   "buyerSafetyTitle": "खरीदार की जानकारी",
@@ -437,7 +462,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "पिछला",
   "nextPage": "अगला",
   "pageLabel": "पृष्ठ",
-  "marketFooterNote": "photoZseo Market स्वतंत्र विक्रेताओं के प्रस्ताव सूचीबद्ध करता है। प्रत्येक बिक्री खरीदार और विक्रेता के बीच का अनुबंध है। photoZseo विक्रेता नहीं है, भुगतान नहीं लेता और माल नहीं भेजता। किसी भी उत्पाद पृष्ठ पर Report लिंक से संदिग्ध लिस्टिंग की रिपोर्ट करें।"
+  "marketFooterNote": "photoZseo Market स्वतंत्र विक्रेताओं के प्रस्ताव सूचीबद्ध करता है। प्रत्येक बिक्री खरीदार और विक्रेता के बीच का अनुबंध है। photoZseo विक्रेता नहीं है, भुगतान नहीं लेता और माल नहीं भेजता। किसी भी उत्पाद पृष्ठ पर Report लिंक से संदिग्ध लिस्टिंग की रिपोर्ट करें।",
+  "safetyHeading": "उत्पाद सुरक्षा",
+  "safetyManufacturer": "निर्माता",
+  "safetyEuResponsible": "EU में ज़िम्मेदार व्यक्ति",
+  "safetyProductId": "उत्पाद पहचानकर्ता",
+  "safetyWarnings": "चेतावनियाँ और सुरक्षा जानकारी"
  },
  "it": {
   "marketTitle": "Marketplace",
@@ -580,7 +610,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "Precedente",
   "nextPage": "Successiva",
   "pageLabel": "Pagina",
-  "marketFooterNote": "photoZseo Market elenca le offerte di venditori indipendenti. Ogni vendita è un contratto tra acquirente e venditore. photoZseo non è il venditore, non riceve pagamenti e non spedisce beni. Segnala un'inserzione sospetta con il link Segnala presente in ogni pagina prodotto."
+  "marketFooterNote": "photoZseo Market elenca le offerte di venditori indipendenti. Ogni vendita è un contratto tra acquirente e venditore. photoZseo non è il venditore, non riceve pagamenti e non spedisce beni. Segnala un'inserzione sospetta con il link Segnala presente in ogni pagina prodotto.",
+  "safetyHeading": "Sicurezza del prodotto",
+  "safetyManufacturer": "Fabbricante",
+  "safetyEuResponsible": "Persona responsabile nell’UE",
+  "safetyProductId": "Identificativo del prodotto",
+  "safetyWarnings": "Avvertenze e informazioni sulla sicurezza"
  },
  "ja": {
   "buyerSafetyTitle": "購入者向け情報",
@@ -639,7 +674,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "前へ",
   "nextPage": "次へ",
   "pageLabel": "ページ",
-  "marketFooterNote": "photoZseo Market には、独立した出品者の商品が掲載されています。各販売は購入者と出品者の間の契約です。photoZseo は売り手ではなく、支払いの受領も商品の発送も行いません。不審な出品は、各商品ページの報告リンクから報告してください。"
+  "marketFooterNote": "photoZseo Market には、独立した出品者の商品が掲載されています。各販売は購入者と出品者の間の契約です。photoZseo は売り手ではなく、支払いの受領も商品の発送も行いません。不審な出品は、各商品ページの報告リンクから報告してください。",
+  "safetyHeading": "製品の安全性",
+  "safetyManufacturer": "製造業者",
+  "safetyEuResponsible": "EU域内の責任者",
+  "safetyProductId": "製品識別番号",
+  "safetyWarnings": "警告および安全情報"
  },
  "ko": {
   "buyerSafetyTitle": "구매자 안내",
@@ -698,7 +738,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "이전",
   "nextPage": "다음",
   "pageLabel": "페이지",
-  "marketFooterNote": "photoZseo Market은 독립 판매자의 상품을 나열합니다. 각 판매는 구매자와 판매자 간의 계약입니다. photoZseo는 판매자가 아니며 결제를 받거나 상품을 배송하지 않습니다. 의심스러운 등록 상품은 각 제품 페이지의 신고 링크로 신고해 주세요."
+  "marketFooterNote": "photoZseo Market은 독립 판매자의 상품을 나열합니다. 각 판매는 구매자와 판매자 간의 계약입니다. photoZseo는 판매자가 아니며 결제를 받거나 상품을 배송하지 않습니다. 의심스러운 등록 상품은 각 제품 페이지의 신고 링크로 신고해 주세요.",
+  "safetyHeading": "제품 안전",
+  "safetyManufacturer": "제조업체",
+  "safetyEuResponsible": "EU 내 책임자",
+  "safetyProductId": "제품 식별 번호",
+  "safetyWarnings": "경고 및 안전 정보"
  },
  "pl": {
   "marketTitle": "Marketplace",
@@ -841,7 +886,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "Poprzednia",
   "nextPage": "Następna",
   "pageLabel": "Strona",
-  "marketFooterNote": "photoZseo Market prezentuje oferty niezależnych sprzedawców. Każda sprzedaż jest umową między kupującym a sprzedawcą. photoZseo nie jest sprzedawcą, nie przyjmuje płatności i nie wysyła towarów. Zgłoś podejrzaną ofertę za pomocą linku Zgłoś na dowolnej stronie produktu."
+  "marketFooterNote": "photoZseo Market prezentuje oferty niezależnych sprzedawców. Każda sprzedaż jest umową między kupującym a sprzedawcą. photoZseo nie jest sprzedawcą, nie przyjmuje płatności i nie wysyła towarów. Zgłoś podejrzaną ofertę za pomocą linku Zgłoś na dowolnej stronie produktu.",
+  "safetyHeading": "Bezpieczeństwo produktu",
+  "safetyManufacturer": "Producent",
+  "safetyEuResponsible": "Osoba odpowiedzialna w UE",
+  "safetyProductId": "Identyfikator produktu",
+  "safetyWarnings": "Ostrzeżenia i informacje dotyczące bezpieczeństwa"
  },
  "pt": {
   "buyerSafetyTitle": "Informações para o comprador",
@@ -900,7 +950,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "Anterior",
   "nextPage": "Próxima",
   "pageLabel": "Página",
-  "marketFooterNote": "O photoZseo Market lista ofertas de vendedores independentes. Cada venda é um contrato entre o comprador e o vendedor. A photoZseo não é a vendedora, não recebe pagamentos e não envia produtos. Denuncie um anúncio suspeito pelo link Denunciar em qualquer página de produto."
+  "marketFooterNote": "O photoZseo Market lista ofertas de vendedores independentes. Cada venda é um contrato entre o comprador e o vendedor. A photoZseo não é a vendedora, não recebe pagamentos e não envia produtos. Denuncie um anúncio suspeito pelo link Denunciar em qualquer página de produto.",
+  "safetyHeading": "Segurança do produto",
+  "safetyManufacturer": "Fabricante",
+  "safetyEuResponsible": "Pessoa responsável na UE",
+  "safetyProductId": "Identificador do produto",
+  "safetyWarnings": "Avisos e informações de segurança"
  },
  "ur": {
   "buyerSafetyTitle": "خریدار کی معلومات",
@@ -959,7 +1014,12 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "پچھلا",
   "nextPage": "اگلا",
   "pageLabel": "صفحہ",
-  "marketFooterNote": "photoZseo Market آزاد بیچنے والوں کی پیشکشیں فہرست کرتا ہے۔ ہر فروخت خریدار اور بیچنے والے کے درمیان معاہدہ ہے۔ photoZseo بیچنے والی نہیں، ادائیگیاں نہیں لیتی اور سامان روانہ نہیں کرتی۔ کسی مشکوک لسٹنگ کی رپورٹ کسی بھی پروڈکٹ کے صفحے پر Report لنک سے کریں۔"
+  "marketFooterNote": "photoZseo Market آزاد بیچنے والوں کی پیشکشیں فہرست کرتا ہے۔ ہر فروخت خریدار اور بیچنے والے کے درمیان معاہدہ ہے۔ photoZseo بیچنے والی نہیں، ادائیگیاں نہیں لیتی اور سامان روانہ نہیں کرتی۔ کسی مشکوک لسٹنگ کی رپورٹ کسی بھی پروڈکٹ کے صفحے پر Report لنک سے کریں۔",
+  "safetyHeading": "مصنوعات کی حفاظت",
+  "safetyManufacturer": "مینوفیکچرر",
+  "safetyEuResponsible": "یورپی یونین میں ذمہ دار شخص",
+  "safetyProductId": "مصنوعات کی شناخت",
+  "safetyWarnings": "انتباہات اور حفاظتی معلومات"
  },
  "zh": {
   "buyerSafetyTitle": "买家须知",
@@ -1018,6 +1078,11 @@ export const MK_GENERATED: Record<string, Record<string, string>> = {
   "prevPage": "上一页",
   "nextPage": "下一页",
   "pageLabel": "页",
-  "marketFooterNote": "photoZseo Market 列出独立卖家的商品。每笔销售都是买家与卖家之间的合同。photoZseo 不是卖家,不收款,也不发货。可通过任何商品页面上的“举报”链接举报可疑的商品信息。"
+  "marketFooterNote": "photoZseo Market 列出独立卖家的商品。每笔销售都是买家与卖家之间的合同。photoZseo 不是卖家,不收款,也不发货。可通过任何商品页面上的“举报”链接举报可疑的商品信息。",
+  "safetyHeading": "产品安全",
+  "safetyManufacturer": "制造商",
+  "safetyEuResponsible": "欧盟境内负责人",
+  "safetyProductId": "产品标识",
+  "safetyWarnings": "警告和安全信息"
  }
 };

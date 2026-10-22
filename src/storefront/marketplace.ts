@@ -13,6 +13,7 @@ import { escapeHtml, LANG_NAMES } from './render';
 import { mt, MK_LOCALES } from './marketplace-i18n';
 import type { BreadcrumbSegment } from './taxonomy/category-resolve';
 import { renderAppHeader, renderEmptyState } from './app-shell';
+import { renderSafetyBlock, parseSafetyJson } from './product-safety';
 import { idToSlug } from './taxonomy/slug-resolve';
 
 /** Router'dan inject edilen label çözücü (svc.label sarmalı). */
@@ -1092,6 +1093,9 @@ export function renderProductPage(p: ProductDetail, locale: string): string {
     }
     html += '      </div>\n';
   }
+
+  // GPSR ürün güvenliği (satıcı girdiyse)
+  html += renderSafetyBlock(parseSafetyJson((p as { safety_json?: string | null }).safety_json), locale);
 
   // Satıcı kimliği + bağımsız satıcı açıklaması + şikâyet (CRD 6a, DSA 16 — Pazar Yeri Kuralları vaadi).
   const sellerLoc = [p.city, p.country].filter(Boolean).join(', ');

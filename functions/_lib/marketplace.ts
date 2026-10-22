@@ -37,6 +37,8 @@ export interface ProductRow {
   image_url: string;
   product_path: string;
   updated_at: string;
+  /** GPSR bilgisi (ResolvedSafety JSON) — yalnız ürün sayfası okur. */
+  safety_json?: string | null;
 }
 
 export interface StoreRow {
@@ -129,8 +131,23 @@ export function storeRecordToProductRows(slug: string, record: StoreRecord): Pro
       image_url: p.images?.[0] ?? '',
       product_path: productUrl(slug, pSlug, DEFAULT_LANG, DEFAULT_LANG),
       updated_at: updatedAt,
+      safety_json: safetyJson(p, lang),
     };
   });
+}
+
+/** Manifest product.safety + SKU/barkod → dile çözülmüş JSON; hiçbir alan yoksa null. */
+function safetyJson(p: StoreRecord['manifest']['products'][number], lang: string): string | null {
+  const s = p.safety ?? {};
+  const identifiers = [p.sku, p.attributes?.barcode].filter((x): x is string => typeof x === 'string' && x.trim() !== '');
+  const out = {
+    manufacturerName: s.manufacturerName, manufacturerAddress: s.manufacturerAddress, manufacturerContact: s.manufacturerContact,
+    euResponsibleName: s.euResponsibleName, euResponsibleAddress: s.euResponsibleAddress, euResponsibleContact: s.euResponsibleContact,
+    identifiers: identifiers.length ? identifiers : undefined,
+    // Tüm diller saklanır: ürün sayfası ziyaretçi dilinde gösterir (GPSR: alıcının dili).
+    warnings: s.warnings || undefined,
+  };
+  return Object.values(out).some((v) => v != null && v !== '') ? JSON.stringify(out) : null;
 }
 
 // ── index_version sayacı (meta tablosu) ───────────────────────────────────────
@@ -177,11 +194,11 @@ export async function upsertStoreToD1(db: D1Database, slug: string, record: Stor
   for (const r of rows) {
     await db.prepare(
       `INSERT OR REPLACE INTO products
-         (id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+         (id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at, safety_json)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(
       r.id, r.store_slug, r.title, r.description, r.category_id, r.tags,
-      r.price, r.currency, r.stock, r.image_url, r.product_path, r.updated_at,
+      r.price, r.currency, r.stock, r.image_url, r.product_path, r.updated_at, r.safety_json ?? null,
     ).run();
   }
 }
@@ -530,7 +547,7 @@ export async function getProductById(db: D1Like, id: string): Promise<ProductDet
   return db
     .prepare(
       `SELECT p.id, p.store_slug, p.title, p.description, p.category_id, p.tags,
-              p.price, p.currency, p.stock, p.image_url, p.product_path, p.updated_at,
+              p.price, p.currency, p.stock, p.image_url, p.product_path, p.updated_at, p.safety_json,
               COALESCE(s.name, p.store_slug) AS store_name,
               s.whatsapp, s.city, s.country
        FROM products p

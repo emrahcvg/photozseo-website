@@ -160,7 +160,7 @@ describe('removeStoreFromD1', () => {
   });
 });
 
-import { listStores, listNewProducts, __resetOramaCache } from './marketplace';
+import { listStores, listNewProducts } from './marketplace';
 import { makeSqliteD1 } from './sqliteD1';
 
 // Listeleme/arama sorguları SQL'de → testler gerçek SQLite (node:sqlite) üzerinde koşar.

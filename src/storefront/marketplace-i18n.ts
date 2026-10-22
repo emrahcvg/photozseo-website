@@ -56,7 +56,9 @@ type Key =
   | 'voidEyebrow' | 'voidTitle' | 'voidDesc' | 'statStores' | 'statProducts' | 'statCategories'
   | 'colStore' | 'colLocation'
   | 'themeToggle' | 'themeLight' | 'themeDark'
-  | 'legalPrivacy' | 'legalTerms' | 'legalStoreTerms' | 'legalAup' | 'legalRules' | 'marketFooterNote' | 'addedToCart' | 'prevPage' | 'nextPage' | 'pageLabel';
+  | 'legalPrivacy' | 'legalTerms' | 'legalStoreTerms' | 'legalAup' | 'legalRules' | 'marketFooterNote' | 'addedToCart' | 'prevPage' | 'nextPage' | 'pageLabel'
+  // GPSR ürün güvenliği bloğu
+  | 'safetyHeading' | 'safetyManufacturer' | 'safetyEuResponsible' | 'safetyProductId' | 'safetyWarnings';
 
 const STRINGS: Record<string, Partial<Record<Key, string>>> = {
   en: {
@@ -134,6 +136,7 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     legalPrivacy: 'Privacy', legalTerms: 'Terms of Use', legalStoreTerms: 'Seller terms',
     legalAup: 'Acceptable use', legalRules: 'Marketplace rules',
     addedToCart: 'Added to cart', prevPage: 'Previous', nextPage: 'Next', pageLabel: 'Page',
+    safetyHeading: 'Product safety', safetyManufacturer: 'Manufacturer', safetyEuResponsible: 'Responsible person in the EU', safetyProductId: 'Product identifier', safetyWarnings: 'Warnings and safety information',
     marketFooterNote: 'photoZseo Market lists offers from independent sellers. Each sale is a contract between the buyer and the seller. photoZseo is not the seller, does not take payments and does not ship goods. Report a suspicious listing with the Report link on any product page.',
   },
   tr: {
@@ -211,6 +214,7 @@ const STRINGS: Record<string, Partial<Record<Key, string>>> = {
     legalPrivacy: 'Gizlilik', legalTerms: 'Kullanım şartları', legalStoreTerms: 'Satıcı şartları',
     legalAup: 'Kabul edilebilir kullanım', legalRules: 'Pazar yeri kuralları',
     addedToCart: 'Sepete eklendi', prevPage: 'Önceki', nextPage: 'Sonraki', pageLabel: 'Sayfa',
+    safetyHeading: 'Ürün güvenliği', safetyManufacturer: 'Üretici', safetyEuResponsible: 'AB\'deki sorumlu kişi', safetyProductId: 'Ürün kimliği', safetyWarnings: 'Uyarılar ve güvenlik bilgileri',
     marketFooterNote: 'photoZseo Market bağımsız satıcıların ilanlarını listeler. Her satış alıcı ile satıcı arasında kurulan bir sözleşmedir. photoZseo satıcı değildir, ödeme almaz ve kargo göndermez. Şüpheli bir ilanı her ürün sayfasındaki Şikayet et bağlantısıyla bildirebilirsiniz.',
   },
   de: { marketTitle: 'Marktplatz', searchPlaceholder: 'Produkte suchen…', newProducts: 'Neue Produkte', stores: 'Shops', featured: 'Empfohlen', categories: 'Kategorien', allCategories: 'Alle', noResults: 'Keine Ergebnisse', filters: 'Filter', apply: 'Anwenden', clear: 'Zurücksetzen', price: 'Preis', city: 'Stadt', inStock: 'Nur auf Lager', sortNew: 'Neueste', sortPriceAsc: 'Preis: aufsteigend', sortPriceDesc: 'Preis: absteigend', sortLabel: 'Sortieren', min: 'Min', max: 'Max', results: 'Ergebnisse', visitStore: 'Shop besuchen', trustBadge: 'Unabhängige Verkäufer · Überweisung · keine gefälschten Bewertungen', report: 'Melden', addToCart: 'In den Warenkorb', cart: 'Warenkorb', sendCart: 'Warenkorb senden', emptyCart: 'Ihr Warenkorb ist leer', name: 'Vollständiger Name', phone: 'Telefon', address: 'Adresse', note: 'Notiz', required: 'Dieses Feld ist erforderlich', submitOrder: 'Bestellung per WhatsApp senden', orderRef: 'Bestellreferenz', payByTransfer: 'Zahlung per Überweisung', iban: 'IBAN', ibanName: 'Kontoinhaber', paymentDesc: 'Verwendungszweck', openWhatsapp: 'WhatsApp öffnen', qty: 'Anz.', remove: 'Entfernen', total: 'Gesamt', browseAll: 'Alle ansehen', soldOut: 'Ausverkauft', contactForPrice: 'Preis auf Anfrage', backToStore: 'Zurück zum Shop', backToMarket: '← Marktplatz', currency: 'Währung', language: 'Sprache', rateNote: '≈ ca. · Kurse täglich aktualisiert', contact: 'Kontakt', call: 'Anrufen', other: 'Sonstige', poweredBy: 'Dieser Shop wurde mit photoZseo erstellt', reportStore: 'Diesen Shop melden', productDetails: 'Produktdetails', orderViaWhatsApp: 'Per WhatsApp bestellen', deliveryInfo: 'Lieferdetails', addNote: 'Fügen Sie eine Notiz hinzu (optional)', favorite: 'Zu Favoriten hinzufügen', signIn: 'anmelden', signOut: 'Abmelden', myFavorites: 'Meine Favoriten', myOrders: 'Meine Bestellungen', discover: 'Entdecken', noOrders: 'Noch keine Bestellungen', orderStatus: 'Status', orderItems: 'Artikel', myCart: 'Mein Warenkorb', emptyFavorites: 'Noch keine Favoriten', bankName: 'Bank', swift: 'SWIFT/BIC', fitsVehicle: 'Nach Fahrzeug filtern', allMakes: 'Alle Marken', allModels: 'Alle Modelle', paySafetyTitle: 'Bevor Sie bezahlen', paySafetyTip: 'Banküberweisungen können nicht rückgängig gemacht werden. Stellen Sie sicher, dass Sie diesem Verkäufer vertrauen, zahlen Sie niemals zusätzliche „Gebühren“ und bevorzugen Sie nach Möglichkeit eine Zahlungsmethode mit Käuferschutz. photoZseo veröffentlicht diesen Shop nur – er verarbeitet keine Zahlungen und garantiert keine Bestellungen.', sellerTypeIndividual: 'Einzelverkäufer', sellerTypeManufacturer: 'Hersteller', sellerTypeTradingCompany: 'Handelsunternehmen', sellerTypeManufacturerTrader: 'Hersteller & Händler', sellerTypeBrandOwner: 'Markeninhaber', sellerTypeDistributor: 'Verteiler' },

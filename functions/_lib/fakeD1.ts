@@ -73,8 +73,8 @@ export function makeFakeD1(): FakeD1 {
     }
     // products insert
     if (/INSERT OR REPLACE INTO products/i.test(s)) {
-      const [id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at] = args;
-      tables.products.push({ id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at });
+      const [id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at, safety_json] = args;
+      tables.products.push({ id, store_slug, title, description, category_id, tags, price, currency, stock, image_url, product_path, updated_at, safety_json: safety_json ?? null });
       return { kind: 'run' as const };
     }
     // products select all (filtreler marketplace.ts JS tarafında uygulanır — sahte tüm satırları döner)

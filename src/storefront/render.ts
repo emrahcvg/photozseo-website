@@ -4,6 +4,7 @@
  * All user-provided strings are HTML-escaped to prevent XSS.
  */
 
+import { renderSafetyBlock } from './product-safety';
 import type { Manifest, Product, StoreInfo } from './types';
 import type { FitmentOptions } from './manifest';
 import { mt, sellerTypeLabel } from './marketplace-i18n';
@@ -1060,6 +1061,15 @@ export function renderProductBody(
 
   // Buyer safety section — shown between CTA and description
   html += renderBuyerSafetySection(store, product, locale);
+
+  // GPSR ürün güvenliği (AB 2023/988 md. 19) — satıcı girdiyse; ziyaretçi dilinde uyarılar.
+  const sf = product.safety ?? {};
+  const safetyIds = [product.sku, product.attributes?.barcode].filter((x): x is string => typeof x === 'string' && x.trim() !== '');
+  html += renderSafetyBlock({
+    manufacturerName: sf.manufacturerName, manufacturerAddress: sf.manufacturerAddress, manufacturerContact: sf.manufacturerContact,
+    euResponsibleName: sf.euResponsibleName, euResponsibleAddress: sf.euResponsibleAddress, euResponsibleContact: sf.euResponsibleContact,
+    identifiers: safetyIds, warnings: sf.warnings ? resolveLocalized(sf.warnings, locale) : undefined,
+  }, locale);
 
   // The Narrative (description)
   if (description) {
