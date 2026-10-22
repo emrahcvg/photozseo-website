@@ -803,3 +803,11 @@ body{font-family:var(--mk-font);background:var(--mk-paper);}
 .mk-pager__link[rel="next"]{justify-self:end;}
 .mk-pager__link:hover{color:var(--mk-accent);}
 .mk-pager__state{font-family:var(--mk-mono);font-size:.75rem;color:var(--mk-muted-strong);font-variant-numeric:tabular-nums;}
+/* Ürün sayfası satıcı kimliği + şikâyet */
+.mk-pdp__identity{margin-top:28px;padding-top:16px;border-top:1.5px solid var(--mk-ink);display:grid;gap:6px;}
+.mk-pdp__seller-name{margin:0;font-weight:600;}
+.mk-pdp__seller-name span{font-weight:400;color:var(--mk-muted-strong);margin-inline-start:6px;}
+.mk-pdp__seller-name a:hover,.mk-pdp__seller-links a:hover{color:var(--mk-accent);}
+.mk-pdp__seller-note{margin:0;font-size:.83rem;color:var(--mk-muted-strong);}
+.mk-pdp__seller-links{margin:4px 0 0;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.9rem;font-weight:600;}
+.mk-pdp__report{color:var(--mk-muted-strong);font-weight:500;text-decoration:underline;text-underline-offset:3px;}

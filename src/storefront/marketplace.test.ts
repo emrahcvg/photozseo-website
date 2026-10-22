@@ -661,3 +661,14 @@ describe('mt() — üretilmiş çeviri yedeği', () => {
     expect(mt('xx', 'heroTitle')).toBe(mt('en', 'heroTitle'));
   });
 });
+
+describe('renderProductPage — satıcı kimliği ve şikâyet (Pazar Yeri Kuralları)', () => {
+  it('satıcı adı, konum, mağaza bağlantısı ve şikâyet bağlantısı gösterir', () => {
+    const html = rpp3({ ...sampleProduct, id: 'ahmet-oto:mat', price: 10, stock: 1, store_name: 'Ahmet Oto', whatsapp: '', city: 'Konya', country: 'TR' } as never, 'tr');
+    expect(html).toContain(mt('tr', 'sellerIdentityHeading'));
+    expect(html).toContain('href="/store/ahmet-oto"');
+    expect(html).toContain('Konya, TR');
+    expect(html).toContain('mailto:support@photozseo.com?subject=Report%20listing%3A%20ahmet-oto%3Amat');
+    expect(html).toContain(mt('tr', 'reportProduct'));
+  });
+});

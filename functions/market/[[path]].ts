@@ -62,7 +62,7 @@ const MAX_QUERY_LEN = 100;
 const SUGGEST_MIN = 2;
 const SUGGEST_MAX = 64;
 
-const MARKET_CSS = ['/marketplace.css?v=9'];
+const MARKET_CSS = ['/marketplace.css?v=10'];
 const GSI = 'https://accounts.google.com/gsi/client';
 const BASE_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/cart-badge.js?v=2'];
 const PDP_SCRIPTS = [GSI, '/auth.js?v=11', '/marketplace-enhance.js?v=10', '/marketplace-cart.js?v=3', '/cart-badge.js?v=2'];

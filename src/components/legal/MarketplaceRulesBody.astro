@@ -6,6 +6,8 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const href = (page: string) => (lang === defaultLang ? `/${page}` : `/${lang}/${page}`);
+// trader/safety v2 metinleri (2026-10-22): satıcı türü mağaza sayfasında, GPSR bilgisi ilan açıklamasında.
+const V2 = new Set(['trader', 'safety']);
 const sections = ['intro', 'contact', 'role', 'listing', 'trader', 'ranking', 'reviews', 'prices', 'safety'] as const;
 const after = ['decisions', 'appeal', 'misuse', 'ads', 'law'] as const;
 ---
@@ -13,7 +15,7 @@ const after = ['decisions', 'appeal', 'misuse', 'ads', 'law'] as const;
   {sections.map((s) => (
     <>
       <h2 id={s}>{t(`mrules.${s}.title`)}</h2>
-      <p>{t(`mrules.${s}.desc`)}</p>
+      <p>{t(V2.has(s) ? `mrules.${s}2.desc` : `mrules.${s}.desc`)}</p>
     </>
   ))}
 

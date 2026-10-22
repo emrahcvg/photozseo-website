@@ -1093,6 +1093,17 @@ export function renderProductPage(p: ProductDetail, locale: string): string {
     html += '      </div>\n';
   }
 
+  // Satıcı kimliği + bağımsız satıcı açıklaması + şikâyet (CRD 6a, DSA 16 — Pazar Yeri Kuralları vaadi).
+  const sellerLoc = [p.city, p.country].filter(Boolean).join(', ');
+  const productUrl = `https://photozseo.com/market/p/${encodeURIComponent(p.id)}`;
+  const reportHref = `mailto:support@photozseo.com?subject=${encodeURIComponent('Report listing: ' + p.id)}&body=${encodeURIComponent('Listing: ' + productUrl + '\nReason: ')}`;
+  html += '      <section class="mk-pdp__identity" aria-labelledby="mk-pdp-seller">\n';
+  html += `        <h2 class="mk-eyebrow" id="mk-pdp-seller">${escapeHtml(mt(locale, 'sellerIdentityHeading'))}</h2>\n`;
+  html += `        <p class="mk-pdp__seller-name"><a href="${escapeAttr(storeHref)}">${escapeHtml(sellerName)}</a>${sellerLoc ? ` <span>${escapeHtml(sellerLoc)}</span>` : ''}</p>\n`;
+  html += `        <p class="mk-pdp__seller-note">${escapeHtml(mt(locale, 'publisherNote'))}</p>\n`;
+  html += `        <p class="mk-pdp__seller-links"><a href="${escapeAttr(storeHref)}">${escapeHtml(mt(locale, 'visitStore'))} →</a> <a class="mk-pdp__report" href="${escapeAttr(reportHref)}">${escapeHtml(mt(locale, 'reportProduct'))}</a></p>\n`;
+  html += '      </section>\n';
+
   html += '    </div>\n'; // .mk-pdp__info
   html += '  </div>\n'; // .mk-pdp__layout
   html += '</main>\n';
