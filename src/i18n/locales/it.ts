@@ -2,228 +2,229 @@ import type { HomeContent } from '../home';
 
 const it: HomeContent = {
   "nav": {
-    "features": "Features",
-    "pricing": "Pricing",
+    "features": "Funzionalità",
+    "pricing": "Prezzi",
     "faq": "FAQ",
     "blog": "Blog",
-    "support": "Support",
-    "getApp": "Get the App"
+    "support": "Supporto",
+    "getApp": "Scarica l'app"
   },
   "hero": {
-    "eyebrow": "Now on iPhone · iPad",
+    "eyebrow": "Ora su iPhone · iPad",
     "h1Line1Words": [
-      "Shoot",
-      "once."
+      "Scatta",
+      "una",
+      "volta."
     ],
     "h1Line2Words": [
-      "Sell",
-      "on",
+      "Vendi",
+      "su",
       "46",
-      "marketplaces."
+      "marketplace."
     ],
-    "h1A11y": "Shoot once. Sell on 46 marketplaces.",
-    "sub": "A 7-angle AI camera, on-device SEO in 12 languages, 31 size presets up to 4K and platform-perfect exports — straight from your iPhone or iPad.",
-    "btnAppSmall": "Get Early",
-    "btnAppBig": "Access",
-    "ctaTrial": "Get Early Access",
-    "ctaCard": "Early access · No card needed",
+    "h1A11y": "Scatta una volta. Vendi su 46 marketplace.",
+    "sub": "Una fotocamera AI a 7 angolazioni, SEO on-device in 12 lingue, 31 preset di dimensioni fino al 4K ed esportazioni perfette per ogni piattaforma — direttamente dal tuo iPhone o iPad.",
+    "btnAppSmall": "Accesso",
+    "btnAppBig": "anticipato",
+    "ctaTrial": "Ottieni l'accesso anticipato",
+    "ctaCard": "Accesso anticipato · Nessuna carta richiesta",
     "bullets": [
-      "7-angle template camera — Front, Back, Side, Detail, Top, Label, Lifestyle",
-      "AI fills 13 SEO fields in 12 languages from a single photo",
-      "46 marketplaces, one tap · 100% on-device · works offline"
+      "Fotocamera con 7 modelli di angolazione — Fronte, Retro, Lato, Dettaglio, Alto, Etichetta, Lifestyle",
+      "L'AI compila 13 campi SEO in 12 lingue da una sola foto",
+      "46 marketplace, un solo tocco · 100% on-device · funziona offline"
     ]
   },
   "pain": {
-    "kicker": "Why this exists",
-    "title": "Selling on every marketplace is broken.",
-    "sub": "You're a seller, not a Photoshop technician. photoZseo gives the hours back.",
+    "kicker": "Perché esiste",
+    "title": "Vendere su ogni marketplace è un incubo.",
+    "sub": "Sei un venditore, non un tecnico di Photoshop. photoZseo ti restituisce ore preziose.",
     "cards": [
       {
-        "bad": "\"Editing photos for every platform takes my whole evening.\"",
-        "goodTitle": "AI does it in 2 seconds.",
-        "goodDesc": "Saliency crop, white-balance, 31 export sizes — every platform, automatically."
+        "bad": "\"Modificare le foto per ogni piattaforma mi porta via l'intera serata.\"",
+        "goodTitle": "L'AI lo fa in 2 secondi.",
+        "goodDesc": "Ritaglio per salienza, bilanciamento del bianco, 31 dimensioni di esportazione — per ogni piattaforma, in automatico."
       },
       {
-        "bad": "\"I re-type the title, tags and description for every marketplace.\"",
-        "goodTitle": "One photo. 13 SEO fields. Filled.",
-        "goodDesc": "Title, slug, meta, alt text, keywords — written by on-device AI in 12 languages."
+        "bad": "\"Riscrivo titolo, tag e descrizione per ogni marketplace.\"",
+        "goodTitle": "Una foto. 13 campi SEO. Compilati.",
+        "goodDesc": "Titolo, slug, meta, testo alternativo, parole chiave — scritti dall'AI on-device in 12 lingue."
       },
       {
-        "bad": "\"My B2B quotes are an embarrassing Word document.\"",
-        "goodTitle": "Branded PDFs in 3 steps.",
-        "goodDesc": "VAT, IBAN, HS codes, e-signature, amount-in-words — looks like a Fortune 500 invoice."
+        "bad": "\"I miei preventivi B2B sono un imbarazzante documento Word.\"",
+        "goodTitle": "PDF con il tuo brand in 3 passaggi.",
+        "goodDesc": "IVA, IBAN, codici HS, firma elettronica, importo in lettere — sembra una fattura da Fortune 500."
       }
     ]
   },
   "features": {
-    "sectionKicker": "Every feature, in one place",
-    "sectionTitle": "Ten reasons to switch.",
-    "sectionSub": "Marketplaces, 7-angle AI camera, SEO auto-fill, bulk import, B2B quotes, iCloud sync and more — built for indie sellers who ship every day.",
-    "seeInAction": "See it in action →",
+    "sectionKicker": "Tutte le funzionalità, in un unico posto",
+    "sectionTitle": "Dieci motivi per cambiare.",
+    "sectionSub": "Marketplace, fotocamera AI a 7 angolazioni, compilazione SEO automatica, importazione in blocco, preventivi B2B, sincronizzazione iCloud e molto altro — pensato per i venditori indipendenti che spediscono ogni giorno.",
+    "seeInAction": "Guardalo in azione →",
     "items": [
       {
-        "eyebrow": "46 Marketplaces",
-        "h": "List once. Sell everywhere.",
-        "sub": "One photo becomes 46 marketplace-ready listings — sized, named and SEO-tagged for every platform.",
+        "eyebrow": "46 Marketplace",
+        "h": "Pubblica una volta. Vendi ovunque.",
+        "sub": "Una foto diventa 46 inserzioni pronte per i marketplace — dimensionate, rinominate e con tag SEO per ogni piattaforma.",
         "bullets": [
           "Amazon · Shopify · Etsy · Walmart · eBay · Trendyol",
           "Cross-border: Temu · SHEIN · DHgate · Made-in-China · Global Sources",
-          "CSV / XLSX / JSON — separate per product or combined"
+          "CSV / XLSX / JSON — separati per prodotto o combinati"
         ]
       },
       {
-        "eyebrow": "AI Camera · 7 Angles, One Shutter",
-        "h": "Front, Back, Side, Detail, Top, Label, Lifestyle.",
-        "sub": "A template-driven camera that walks you through the 7 angles every marketplace wants. Saliency-based auto-zoom (4×), HDR, anti-flicker and live OCR in 12 languages — every shot exported as JPEG, PNG and WebP at once.",
+        "eyebrow": "Fotocamera AI · 7 angolazioni, un solo scatto",
+        "h": "Fronte, Retro, Lato, Dettaglio, Alto, Etichetta, Lifestyle.",
+        "sub": "Una fotocamera guidata da modelli che ti accompagna attraverso le 7 angolazioni richieste da ogni marketplace. Zoom automatico basato sulla salienza (4×), HDR, anti-flicker e OCR live in 12 lingue — ogni scatto esportato in JPEG, PNG e WebP in un colpo solo.",
         "bullets": [
-          "7-angle templates with direction auto-advance",
-          "Smart auto-zoom (25% subject fill, max 4×) · AE Lock · WB Auto",
-          "On-device Vision: saliency, classification, barcode, live OCR",
-          "Volume-button shutter · 4K capture · 100% offline"
+          "Modelli a 7 angolazioni con avanzamento automatico",
+          "Zoom automatico intelligente (soggetto al 25%, max 4×) · Blocco AE · Bilanciamento del bianco automatico",
+          "Vision on-device: salienza, classificazione, codici a barre, OCR live",
+          "Scatto con i tasti del volume · acquisizione 4K · 100% offline"
         ]
       },
       {
-        "eyebrow": "AI SEO Auto-Fill",
-        "h": "Auto-fill 13 fields in seconds.",
-        "sub": "Drop in one photo. photoZseo writes title, slug, category, meta, full description, alt text, tags, keywords and barcode — search-optimized, instantly, in 12 languages.",
+        "eyebrow": "Compilazione SEO automatica con AI",
+        "h": "Compila 13 campi in pochi secondi.",
+        "sub": "Carica una foto. photoZseo scrive titolo, slug, categoria, meta, descrizione completa, testo alternativo, tag, parole chiave e codice a barre — ottimizzati per i motori di ricerca, all'istante, in 12 lingue.",
         "bullets": [
-          "On-device OCR + Vision: barcode, brand, material, color",
-          "SEO title, slug, category, meta, long description, alt & long-tail keywords",
-          "12 languages — locale-correct outputs, RTL aware"
+          "OCR + Vision on-device: codice a barre, marchio, materiale, colore",
+          "Titolo SEO, slug, categoria, meta, descrizione lunga, alt e parole chiave long-tail",
+          "12 lingue — risultati corretti per ogni locale, compatibili con l'RTL"
         ]
       },
       {
-        "eyebrow": "B2B Quote Builder",
-        "h": "Branded PDF quotes in 3 steps.",
-        "sub": "Pick products, add the buyer, share. A4 PDFs in 12 languages with VAT, IBAN, Incoterms, HS codes and an e-signature — beautifully branded.",
+        "eyebrow": "Quote Builder B2B",
+        "h": "Preventivi PDF col tuo brand in 3 passaggi.",
+        "sub": "Scegli i prodotti, aggiungi l'acquirente, condividi. PDF in formato A4 in 12 lingue con IVA, IBAN, Incoterms, codici HS e firma elettronica — con un'immagine di brand impeccabile.",
         "bullets": [
-          "Per-line VAT · unit · HS code · country of origin",
-          "Sender profile with logo, IBAN, Incoterms — saved once",
-          "Business card scan (Vision OCR) auto-populates buyer details"
+          "IVA per riga · unità · codice HS · paese di origine",
+          "Profilo mittente con logo, IBAN, Incoterms — salvato una volta sola",
+          "La scansione del biglietto da visita (Vision OCR) compila in automatico i dati dell'acquirente"
         ]
       },
       {
-        "eyebrow": "iCloud Sync & Trash Recovery",
-        "h": "Sync everywhere. Restore anything.",
-        "sub": "Every project syncs through your own iCloud Drive. Deleted items wait 30 days before purge, with safe restore across iPhone and iPad.",
+        "eyebrow": "Sincronizzazione iCloud e recupero dal cestino",
+        "h": "Sincronizza ovunque. Ripristina tutto.",
+        "sub": "Ogni progetto si sincronizza tramite il tuo iCloud Drive. Gli elementi eliminati restano 30 giorni prima dell'eliminazione definitiva, con ripristino sicuro tra iPhone e iPad.",
         "bullets": [
-          "iCloud Drive sync — opt-in, last-write-wins",
-          "Recently Deleted folder with safe restore",
-          "30-day auto-purge with retention preset (7 / 14 / 30 / 60 days)",
-          "Cross-device hard-delete propagation"
+          "Sincronizzazione iCloud Drive — su richiesta, vince l'ultima modifica",
+          "Cartella Eliminati di recente con ripristino sicuro",
+          "Eliminazione automatica dopo 30 giorni con periodo di conservazione impostabile (7 / 14 / 30 / 60 giorni)",
+          "Propagazione dell'eliminazione definitiva tra i dispositivi"
         ]
       },
       {
-        "eyebrow": "Product Detail",
-        "h": "Manage like a pro.",
-        "sub": "One product, every channel. Photos, prices, SEO, EXIF and stories live inside a single, beautifully organized record — with a 13-color contact palette for B2B.",
+        "eyebrow": "Dettaglio prodotto",
+        "h": "Gestisci come un professionista.",
+        "sub": "Un prodotto, ogni canale. Foto, prezzi, SEO, EXIF e storie in un'unica scheda, splendidamente organizzata — con una palette di 13 colori per i contatti B2B.",
         "bullets": [
-          "Photo carousel, media inspector, EXIF inline editor",
-          "Per-product markup, MSRP, B2B price, VAT mode",
-          "Quick share to Quote, Catalog or Marketplace",
+          "Carosello di foto, ispettore dei media, editor EXIF integrato",
+          "Ricarico per prodotto, prezzo consigliato, prezzo B2B, modalità IVA",
+          "Condivisione rapida su Preventivo, Catalogo o Marketplace",
           "Dati GPS rimossi durante l'esportazione · tag software conservato"
         ]
       }
     ]
   },
   "bento": {
-    "headKicker": "More than screenshots",
-    "headTitle": "Built like a power tool, priced like an app.",
-    "headSub": "Every section below is a feature that ships today — no roadmap, no waitlist.",
+    "headKicker": "Molto più di semplici screenshot",
+    "headTitle": "Costruito come un utensile professionale, al prezzo di un'app.",
+    "headSub": "Ogni sezione qui sotto è una funzionalità disponibile oggi — niente roadmap, niente lista d'attesa.",
     "csv": {
       "label": "CSV · XLSX · JSON",
-      "sub": "46 marketplace formats — type the title once, every column fills."
+      "sub": "46 formati di marketplace — scrivi il titolo una volta, ogni colonna si compila."
     },
     "exif": {
-      "label": "Camera-grade EXIF",
-      "gpsStripped": "— STRIPPED —"
+      "label": "EXIF di livello professionale",
+      "gpsStripped": "— RIMOSSO —"
     },
     "langs": {
-      "label": "12 Languages · 3 RTL",
+      "label": "12 lingue · 3 RTL",
       "sublabel": "EN · TR · DE · ES · FR · PT · JA · KO · ZH · AR · HI · FA"
     },
     "stats": {
-      "label": "Built for indie sellers",
-      "marketplaces": "marketplaces",
-      "seoFields": "SEO fields per photo",
-      "devices": "devices · one app",
-      "noTrackers": "trackers · ads · clouds"
+      "label": "Pensato per i venditori indipendenti",
+      "marketplaces": "marketplace",
+      "seoFields": "campi SEO per foto",
+      "devices": "dispositivi · un'unica app",
+      "noTrackers": "tracker · pubblicità · cloud"
     }
   },
   "seoDemo": {
-    "kicker": "Interactive · Live",
-    "title": "Watch the AI fill 13 SEO fields.",
-    "sub": "Pick a product. Watch photoZseo write every field your marketplace needs — title, slug, filename, category, meta, full description, alt text, tags, keywords and barcode. Tap any field to copy.",
-    "inputLabel": "Product name",
-    "inputPlaceholder": "Type a product name…",
-    "btnIdle": "✨ Auto-fill 13 SEO fields",
-    "btnBusy": "Generating…",
-    "note": "On-device · 100% private · 12 languages",
-    "copyHint": "Copy",
-    "copiedToast": "Copied",
+    "kicker": "Interattivo · Live",
+    "title": "Guarda l'AI compilare 13 campi SEO.",
+    "sub": "Scegli un prodotto. Guarda photoZseo scrivere ogni campo di cui il tuo marketplace ha bisogno — titolo, slug, nome file, categoria, meta, descrizione completa, testo alternativo, tag, parole chiave e codice a barre. Tocca un campo qualsiasi per copiarlo.",
+    "inputLabel": "Nome del prodotto",
+    "inputPlaceholder": "Scrivi il nome di un prodotto…",
+    "btnIdle": "✨ Compila 13 campi SEO",
+    "btnBusy": "Generazione in corso…",
+    "note": "On-device · 100% privato · 12 lingue",
+    "copyHint": "Copia",
+    "copiedToast": "Copiato",
     "fieldLabels": {
-      "title": "SEO Title",
+      "title": "Titolo SEO",
       "slug": "Slug",
-      "filename": "Filename (URL)",
-      "category": "Category",
-      "meta": "Meta Desc",
-      "description": "Description",
-      "alt": "Alt Text",
+      "filename": "Nome file (URL)",
+      "category": "Categoria",
+      "meta": "Meta description",
+      "description": "Descrizione",
+      "alt": "Testo alternativo",
       "tag1": "Tag 1",
       "tag2": "Tag 2",
       "tag3": "Tag 3",
       "tag4": "Tag 4",
-      "keywords": "Keywords",
-      "barcode": "Barcode"
+      "keywords": "Parole chiave",
+      "barcode": "Codice a barre"
     }
   },
   "stats": {
-    "kicker": "Numbers that move product",
-    "title": "Designed by an indie seller.\nTested by buyers in 12 countries.",
+    "kicker": "Numeri che fanno vendere",
+    "title": "Progettato da un venditore indipendente.\nTestato da acquirenti in 12 paesi.",
     "labels": {
-      "marketplaces": "Marketplaces & channels",
-      "seoFields": "SEO fields per photo",
-      "languages": "Languages — 3 RTL",
-      "zero": "Ads. Trackers. Data harvested."
+      "marketplaces": "Marketplace e canali",
+      "seoFields": "Campi SEO per foto",
+      "languages": "Lingue — 3 RTL",
+      "zero": "Pubblicità. Tracker. Dati raccolti."
     },
     "pills": {
       "gdpr": "GDPR",
       "kvkk": "KVKK",
       "ccpa": "CCPA",
       "wcag": "WCAG 2.1 AA",
-      "noTracking": "No tracking, ever"
+      "noTracking": "Nessun tracciamento, mai"
     }
   },
   "pricing": {
-    "kicker": "Pricing",
-    "title": "Sell faster — no watermarks, no limits.",
-    "sub": "Three plans, one Pro experience. The annual plan is the best value at $3.33/month — cancel anytime in Settings.",
-    "badge": "Best value · Save 52%",
+    "kicker": "Prezzi",
+    "title": "Vendi più in fretta — senza filigrane, senza limiti.",
+    "sub": "Tre piani, un'unica esperienza Pro. Il piano annuale è il più conveniente a $3.33/mese — disdici quando vuoi dalle Impostazioni.",
+    "badge": "Il più conveniente · Risparmia il 52%",
     "plans": [
       {
-        "name": "Weekly",
-        "pricePer": "$2.99/week",
+        "name": "Settimanale",
+        "pricePer": "$2.99/settimana",
         "trial": "o $ 71,99/anno · risparmia il 40%",
         "features": [
-          "Full Pro access",
-          "Try it for a week",
-          "Cancel any time in Settings",
-          "— No long-term commitment",
+          "Accesso Pro completo",
+          "Provalo per una settimana",
+          "Disdici quando vuoi dalle Impostazioni",
+          "— Nessun vincolo a lungo termine",
           "Nomi file SEO e conversione WebP",
           "100 immagini/mese"
         ],
-        "cta": "Start Weekly"
+        "cta": "Inizia con il settimanale"
       },
       {
-        "name": "Monthly",
-        "pricePer": "$6.99/month",
+        "name": "Mensile",
+        "pricePer": "$6.99/mese",
         "trial": "o $ 143,99/anno · risparmia il 40%",
         "featured": true,
         "features": [
-          "Full Pro access",
-          "Billed monthly, cancel anytime",
-          "Same features as annual",
-          "— Save 52% with annual",
+          "Accesso Pro completo",
+          "Fatturazione mensile, disdici quando vuoi",
+          "Stesse funzionalità del piano annuale",
+          "— Risparmia il 52% con il piano annuale",
           "Negozio online (photozseo.com)",
           "Push dell'elenco del mercato",
           "Inventario e codice a barre",
@@ -231,71 +232,71 @@ const it: HomeContent = {
           "iPhone e iPad universali",
           "iCloud Drive sincronizzazione + recupero dal cestino"
         ],
-        "cta": "Choose Monthly"
+        "cta": "Scegli il mensile"
       },
       {
-        "name": "Annual",
-        "pricePer": "$39.99/year",
-        "trial": "Just $3.33/mo · save 52%",
+        "name": "Annuale",
+        "pricePer": "$39.99/anno",
+        "trial": "Solo $3.33/mese · risparmia il 52%",
         "features": [
-          "**Remove watermark** on all exports",
-          "**Batch export** every photo at once",
-          "**CSV + XLSX** for 46 marketplaces",
-          "**7-angle template camera** + Pro Tools",
-          "AI SEO auto-fill (13 fields, 12 languages)",
-          "B2B quote builder (VAT, IBAN, HS, e-sign)",
-          "Bulk CSV / XLSX / JSON catalog import",
-          "EXIF editor & metadata pipeline (GPS stripped)"
+          "**Rimuovi la filigrana** da tutte le esportazioni",
+          "**Esportazione in blocco** di tutte le foto in una volta",
+          "**CSV + XLSX** per 46 marketplace",
+          "**Fotocamera a 7 modelli di angolazione** + strumenti Pro",
+          "Compilazione SEO automatica con AI (13 campi, 12 lingue)",
+          "Quote Builder B2B (IVA, IBAN, HS, firma elettronica)",
+          "Importazione in blocco di cataloghi CSV / XLSX / JSON",
+          "Editor EXIF e pipeline dei metadati (GPS rimosso)"
         ],
-        "cta": "Get Annual"
+        "cta": "Scegli l'annuale"
       }
     ],
-    "note": "Prices in USD. Local pricing in the App Store (e.g. ₺39.99/yr in Turkey). Family Sharing supported. Subscriptions auto-renew unless cancelled at least 24h before period end — manage in Settings → Apple ID → Subscriptions."
+    "note": "Prezzi in USD. Prezzi locali nell'App Store (ad es. ₺39.99/anno in Turchia). Family Sharing supportata. Gli abbonamenti si rinnovano automaticamente se non vengono annullati almeno 24 ore prima della fine del periodo — gestiscili in Impostazioni → ID Apple → Abbonamenti."
   },
   "faq": {
-    "kicker": "Questions",
-    "title": "Everything you wanted to ask.",
+    "kicker": "Domande",
+    "title": "Tutto quello che volevi chiedere.",
     "items": [
       {
-        "q": "Does photoZseo work without internet?",
-        "a": "Yes. Photo capture, editing, AI SEO auto-fill, EXIF and exports all run 100% on-device using Apple Foundation Models and Vision. Internet is only needed when you actively push to a remote marketplace."
+        "q": "photoZseo funziona senza internet?",
+        "a": "Sì. Scatto, modifica, compilazione SEO con AI, EXIF ed esportazioni funzionano al 100% on-device grazie ad Apple Foundation Models e Vision. La connessione serve solo quando invii attivamente i dati a un marketplace remoto."
       },
       {
-        "q": "Can I export to Amazon, Shopify and Etsy at the same time?",
-        "a": "Yes. Pick the products, pick the platforms, hit Export. photoZseo writes CSV/XLSX/JSON in each platform's exact column order, plus per-platform image sizes — separate per product or one combined file."
+        "q": "Posso esportare su Amazon, Shopify ed Etsy contemporaneamente?",
+        "a": "Sì. Scegli i prodotti, scegli le piattaforme e tocca Esporta. photoZseo scrive CSV/XLSX/JSON con l'esatto ordine delle colonne di ogni piattaforma, più le dimensioni delle immagini specifiche per ciascuna — separati per prodotto o in un unico file."
       },
       {
-        "q": "Is my photo or product data uploaded anywhere?",
-        "a": "No. There are zero third-party analytics, zero tracking SDKs and no cloud account. The only outbound network is App Store / RevenueCat for the subscription, and optional iCloud Drive sync that stays inside your own iCloud."
+        "q": "Le mie foto o i dati dei prodotti vengono caricati da qualche parte?",
+        "a": "No. Nessuna analitica di terze parti, nessun SDK di tracciamento e nessun account cloud. L'unico traffico in uscita riguarda App Store / RevenueCat per l'abbonamento e la sincronizzazione facoltativa con iCloud Drive, che resta all'interno del tuo iCloud."
       },
       {
-        "q": "Does it work on iPad, or only iPhone?",
+        "q": "Funziona su iPad o solo su iPhone?",
         "a": "Entrambi. photoZseo è un'app universale — un solo acquisto copre iPhone e iPad. Drag-and-drop, scorciatoie da tastiera, menu contestuali e un inspector a 3 pannelli sono di prima classe su iPad."
       },
       {
-        "q": "What's actually in Pro?",
-        "a": "Everything: all 46 marketplace formats, AI SEO auto-fill (13 fields, 12 languages), B2B quote builder, 7-angle template camera, bulk CSV/XLSX import, watermark removal and iCloud sync with Trash recovery."
+        "q": "Cosa include davvero Pro?",
+        "a": "Tutto: tutti i 46 formati di marketplace, compilazione SEO automatica con AI (13 campi, 12 lingue), Quote Builder B2B, fotocamera a 7 modelli di angolazione, importazione in blocco CSV/XLSX, rimozione della filigrana e sincronizzazione iCloud con recupero dal cestino."
       },
       {
-        "q": "How many platforms is \"46\" exactly?",
-        "a": "At launch: 46 marketplace presets (Amazon, Shopify, Etsy, eBay, Walmart, WooCommerce, Trendyol, AliExpress, Mercado Libre, Coupang, Lazada, Shopee, Temu, SHEIN, DHgate, Made-in-China, Global Sources…) plus social/messaging formats (Instagram Shopping, TikTok Shop, Pinterest, WeChat, RED, Stories). New presets ship in updates."
+        "q": "Quante piattaforme sono esattamente \"46\"?",
+        "a": "Al lancio: 46 preset di marketplace (Amazon, Shopify, Etsy, eBay, Walmart, WooCommerce, Trendyol, AliExpress, Mercado Libre, Coupang, Lazada, Shopee, Temu, SHEIN, DHgate, Made-in-China, Global Sources…) più formati social e di messaggistica (Instagram Shopping, TikTok Shop, Pinterest, WeChat, RED, Stories). Nuovi preset arrivano con gli aggiornamenti."
       }
     ]
   },
   "finalCta": {
-    "h2": "Your next sale starts with one photo.",
-    "p": "Free to start. No tracking. No ads. Cancel anytime. Built for indie sellers.",
-    "note": "Coming soon to the App Store.",
-    "notify": "Notify me at launch"
+    "h2": "La tua prossima vendita inizia con una foto.",
+    "p": "Gratis per iniziare. Nessun tracciamento. Nessuna pubblicità. Disdici quando vuoi. Pensato per i venditori indipendenti.",
+    "note": "Presto disponibile sull'App Store.",
+    "notify": "Avvisami al lancio"
   },
   "footer": {
-    "tag": "Sell on 46 marketplaces from one photo.",
+    "tag": "Vendi su 46 marketplace da una sola foto.",
     "privacy": "Privacy",
-    "terms": "Terms",
-    "support": "Support",
-    "accessibility": "Accessibility",
-    "deleteAccount": "Delete Account",
-    "rights": "All rights reserved. Built for independent sellers."
+    "terms": "Termini",
+    "support": "Supporto",
+    "accessibility": "Accessibilità",
+    "deleteAccount": "Elimina account",
+    "rights": "Tutti i diritti riservati. Pensato per i venditori indipendenti."
   }
 };
 
