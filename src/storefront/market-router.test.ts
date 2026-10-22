@@ -92,6 +92,14 @@ describe('handleMarket', () => {
     expect(await res.text()).not.toMatch(/TR\d{24}/);
   });
 
+  it('fr/it/pl: category index uses localized taxonomy labels', async () => {
+    const fr = await (await handleMarket([], { url: 'https://photozseo.com/market?lang=fr', lang: 'fr', db: {} as any, ai: undefined, ...deps })).text();
+    expect(fr).toContain('Appareils électroniques');
+    expect(fr).toContain('<html lang="fr"');
+    const pl = await (await handleMarket([], { url: 'https://photozseo.com/market?lang=pl', lang: 'pl', db: {} as any, ai: undefined, ...deps })).text();
+    expect(pl).toContain('Elektronika');
+  });
+
   it('marks personal pages private, no-store', async () => {
     const res = await handleMarket(['cart'], { url: 'https://photozseo.com/market/cart', lang: 'en', db: {} as any, ai: undefined, ...deps });
     expect(res.headers.get('cache-control')).toBe('private, no-store');

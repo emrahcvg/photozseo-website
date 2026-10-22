@@ -23,6 +23,9 @@ const LABEL_LOADERS: Record<string, () => Promise<{ default: Record<string, stri
   fa: () => import('./labels.fa.json'),
   hi: () => import('./labels.hi.json'),
   ur: () => import('./labels.ur.json'),
+  fr: () => import('./labels.fr.json'),
+  it: () => import('./labels.it.json'),
+  pl: () => import('./labels.pl.json'),
 };
 
 async function loadLabels(lang: string): Promise<Record<string, string>> {
@@ -39,7 +42,19 @@ async function loadLabels(lang: string): Promise<Record<string, string>> {
   }
 }
 
-export async function getTaxonomyService(lang: string): Promise<TaxonomyService> {
+// Dil başına tek servis (isolate ömrü boyunca): ağaç Map'leri her istekte yeniden kurulmasın.
+const serviceCache = new Map<string, Promise<TaxonomyService>>();
+
+export function getTaxonomyService(lang: string): Promise<TaxonomyService> {
+  const hit = serviceCache.get(lang);
+  if (hit) return hit;
+  const p = buildService(lang);
+  serviceCache.set(lang, p);
+  p.catch(() => serviceCache.delete(lang)); // hata kalıcı önbelleğe girmesin
+  return p;
+}
+
+async function buildService(lang: string): Promise<TaxonomyService> {
   const langs = lang === 'en' ? ['en'] : [lang, 'en'];
   const labels: Record<string, Record<string, string>> = {};
   for (const l of langs) labels[l] = await loadLabels(l);
