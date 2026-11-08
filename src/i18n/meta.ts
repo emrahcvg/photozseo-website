@@ -4,6 +4,10 @@ import type { Lang } from './ui';
 export const APP_STORE_ID = '';
 export const APP_STORE_URL = APP_STORE_ID ? `https://apps.apple.com/app/id${APP_STORE_ID}` : '';
 
+// App Store yayını öncesi herkese açık TestFlight bağlantısı. APP_STORE_URL doluyken kullanılmaz.
+export const TESTFLIGHT_URL = 'https://testflight.apple.com/join/6ujdVUE4';
+export const DOWNLOAD_URL = APP_STORE_URL || TESTFLIGHT_URL;
+
 export interface PageMeta {
   homeTitle: string;
   homeDesc: string;
