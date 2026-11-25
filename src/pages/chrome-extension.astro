@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ExtensionPage from '../components/ExtensionPage.astro';
+import { defaultLang } from '../i18n/ui';
+import { getExt } from '../i18n/extension';
+
+const c = getExt(defaultLang);
+---
+
+<Layout title={c.title} description={c.desc} lang={defaultLang} fullBleed={true}>
+  <ExtensionPage lang={defaultLang} />
+</Layout>

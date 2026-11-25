@@ -4,6 +4,22 @@
 
 photoZseo optimizes images for 60+ export targets including Amazon, eBay, Etsy, Shopify, WooCommerce, Walmart, Trendyol, Hepsiburada, AliExpress, and social/ad platforms (Instagram, TikTok, Pinterest, Google Shopping, Meta Catalog). Features include SEO filenames, AI alt-text, AI background removal, B2B quote builder, Avery labels, and iCloud sync. Available in 12 languages.
 
+## Chrome extension
+photoZseo for Chrome is a separate product from the iPhone & iPad app: a Chrome side-panel extension that collects product photos and details (name, brand, category, price, color variants) from the product page the user is viewing, resizes and compresses the photos to marketplace image requirements, gives them SEO-friendly file names and exports a folder-organized ZIP plus CSV or Excel files.
+
+- [photoZseo Chrome extension](https://photozseo.com/chrome-extension): Features, pricing, privacy and FAQ (15 languages, e.g. [Turkish](https://photozseo.com/tr/chrome-extension)).
+- [Extension privacy policy](https://photozseo.com/privacy#chrome-extension): Data stays in the browser; no photoZseo server.
+
+Key facts:
+- Browser: Google Chrome 116+ on Windows, macOS, Linux and ChromeOS (uses the Chrome side panel; not available on mobile).
+- Image sizes: 82 resize and compression profiles for 67 platforms in 10 regions (Amazon, eBay, Etsy, Shopify, Walmart, Trendyol, Hepsiburada, AliExpress, Temu, SHEIN, Instagram, TikTok Shop, Pinterest and more).
+- Exports: ZIP organized by category / product / platform, 50 platform CSV formats, Shopify, Trendyol and Hepsiburada spreadsheets, and filling a template file downloaded from the seller's own marketplace panel.
+- Other features: SEO file names, per-image alt text (Chrome on-device AI when available, otherwise templates), color variant grouping, cost/sale price with profit and margin, the seller's own photos.
+- Measured speed: 8 products with 3 photos each exported to 5 image profiles (Amazon, eBay, Etsy, Shopify) produced 120 files plus a CSV in about 5 seconds.
+- Privacy: no account and no photoZseo backend; the product library is stored locally in IndexedDB. Pages are read only when the user opens the panel or scans; access to all sites is optional. The only outside call besides product images is the Pro license check with Dodo Payments.
+- Not included: background removal (that is in the iPhone & iPad app), translation of product titles, currency conversion.
+- Pricing: Free plan with up to 5 products, 10 new images per day and 4 image sizes. Pro $7.99/month or $59/year (3 devices); Team $129/year (10 devices). Subscriptions through Dodo Payments; cancel any time, Pro stays active until the end of the paid period.
+
 ## Core pages
 - [Home](https://photozseo.com/): App overview, features, and download links.
 - [Support](https://photozseo.com/support): Help and contact for users and sellers.

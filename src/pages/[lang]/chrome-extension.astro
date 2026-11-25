@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ExtensionPage from '../../components/ExtensionPage.astro';
+import { defaultLang, type Lang } from '../../i18n/ui';
+import { getExt, extLangs } from '../../i18n/extension';
+
+export function getStaticPaths() {
+  return extLangs.filter((l) => l !== defaultLang).map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const c = getExt(lang);
+---
+
+<Layout title={c.title} description={c.desc} lang={lang} fullBleed={true}>
+  <ExtensionPage lang={lang} />
+</Layout>
