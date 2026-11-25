@@ -87,6 +87,27 @@ const href = (page: string) => (lang === defaultLang ? `/${page}` : `/${lang}/${
   <h2>{t('privacy.camera.title')}</h2>
   <p>{t('privacy.camera.desc')}</p>
 
+  <h2 id="chrome-extension">{t('privacy.extension.title')}</h2>
+  <p>{t('privacy.extension.intro')}</p>
+  <p>{t('privacy.extension.local')}</p>
+  <p>{t('privacy.extension.reading')}</p>
+  <p>{t('privacy.extension.optional')}</p>
+  <p>{t('privacy.extension.processing')}</p>
+  <p>{t('privacy.extension.payments')} {t('privacy.extension.dodoLabel')}: <a href="https://dodopayments.com/privacy-policy" rel="noopener">dodopayments.com/privacy-policy</a></p>
+  <p>{t('privacy.extension.noTracking')}</p>
+  <p>{t('privacy.extension.permTitle')}</p>
+  <ul>
+    <li><code>sidePanel</code>: {t('privacy.extension.sidePanel')}</li>
+    <li><code>storage</code> / <code>unlimitedStorage</code>: {t('privacy.extension.storage')}</li>
+    <li><code>downloads</code>: {t('privacy.extension.downloads')}</li>
+    <li><code>contextMenus</code>: {t('privacy.extension.contextMenus')}</li>
+    <li><code>scripting</code> / <code>activeTab</code>: {t('privacy.extension.scripting')}</li>
+    <li>{t('privacy.extension.hosts')}</li>
+  </ul>
+  <p>{t('privacy.extension.delete')}</p>
+  <p>{t('privacy.extension.limitedUse')}</p>
+  <p>{t('privacy.extension.imageRights')}</p>
+
   <h2>{t('privacy.biometric.title')}</h2>
   <p>{t('privacy.biometric.desc')}</p>
 
