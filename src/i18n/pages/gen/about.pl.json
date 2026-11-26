@@ -1,0 +1,80 @@
+{
+ "title": "Informacje o photoZseo: narzędzia do zdjęć i wystawiania produktów dla sprzedawców internetowych",
+ "desc": "photoZseo udostępnia narzędzia do tworzenia zdjęć i list produktów dla niezależnych sprzedawców internetowych: aplikacje iPhone i iPad, rozszerzenie Chrome oraz sklepy internetowe na photozseo.com.",
+ "crumb": "O nas",
+ "kicker": "O nas",
+ "h1": "O photoZseo",
+ "answer": "photoZseo tworzy narzędzia, które zamieniają zdjęcia produktów w oferty gotowe do umieszczenia na rynku. Głównym produktem jest aplikacja photoZseo: SEO Product Photo dla iPhone i iPad (App Store, 2026). Istnieje również osobne rozszerzenie photoZseo dla Google Chrome i prostych sklepów internetowych hostowanych na photozseo.com.",
+ "facts": [
+  {
+   "k": "Założony dla",
+   "v": ""
+  },
+  {
+   "k": "Główny produkt",
+   "v": "Aplikacja iPhone i iPad"
+  },
+  {
+   "k": "Strona internetowa",
+   "v": "photozseo.com"
+  },
+  {
+   "k": "Wsparcie",
+   "v": "[support@photozseo.com](mailto:support@photozseo.com)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "why",
+   "h2": "Dlaczego photoZseo istnieje",
+   "body": [
+    "Na każdym rynku wymagane są różne rozmiary zdjęć, zasady tła, nazwy plików i kolumny aukcji. Sprzedawca na Amazon, Etsy i Trendyol często edytuje to samo zdjęcie trzy razy i trzykrotnie wpisuje ten sam tytuł.",
+    "photoZseo został stworzony przez niezależnego sprzedawcę-programistę, aby usunąć tę powtarzalną pracę: zrób zdjęcie raz i pozwól aplikacji przygotować zdjęcia, nazwy plików i tekst aukcji dla każdego rynku."
+   ]
+  },
+  {
+   "id": "products",
+   "h2": "Produkty",
+   "bullets": [
+    "[](/pl/download) — kamera, zmiana rozmiaru dla 46 rynków, usuwanie tła, tekst aukcji, eksport CSV/XLSX, wyceny B2B i push Shopify.",
+    "[photoZseo dla Chrome](/pl/chrome-extension) — rozszerzenie panelu bocznego komputera stacjonarnego, które zbiera zdjęcia produktów i szczegóły ze stron internetowych oraz eksportuje gotowe do użycia na rynku pliki ZIP i CSV. It is a separate product with its own plans.",
+    "Sklepy internetowe — sprzedawcy korzystający z planów Pro i Business mogą publikować prostą witrynę sklepową na photozseo.com."
+   ]
+  },
+  {
+   "id": "principles",
+   "h2": "Jak budujemy",
+   "bullets": [
+    "Najpierw na urządzeniu. Przetwarzanie zdjęć i usuwanie tła uruchamiane są na urządzeniu użytkownika.",
+    "Brak reklam. Za aplikacje płaci się z subskrypcji, a nie z reklam.",
+    "Built for global sellers. Aplikacja jest dostępna w 15 językach, w tym w trzech językach pisanych od prawej do lewej (arabski, perski, urdu).",
+    "Accurate marketplace specs. Presety są zgodne z dokumentacją sprzedawców zawieraną na platformach handlowych; zobacz [](/pl/marketplace-image-sizes)."
+   ]
+  },
+  {
+   "id": "contact",
+   "h2": "Kontakt",
+   "bullets": [
+    "Wsparcie: [support@photozseo.com](mailto:support@photozseo.com)",
+    "Ogólne i naciśnij: [hello@photozseo.com](mailto:hello@photozseo.com)",
+    "Centrum pomocy: [photozseo.com/support](/pl/support)"
+   ]
+  }
+ ],
+ "related": [
+  {
+   "label": "Pobierz dla iPhone i iPad",
+   "href": "/pl/download"
+  },
+  {
+   "label": "Wycena",
+   "href": "/pl/pricing"
+  },
+  {
+   "label": "Polityka prywatności",
+   "href": "/pl/privacy"
+  }
+ ],
+ "relatedTitle": "Powiązany",
+ "updatedLabel": "Zaktualizowano"
+}

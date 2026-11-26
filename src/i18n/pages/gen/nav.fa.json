@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "برنامه iPhone و iPad",
+   "href": "/fa/download"
+  },
+  {
+   "label": "قیمت گذاری",
+   "href": "/fa/pricing"
+  },
+  {
+   "label": "اندازه های تصویر بازار",
+   "href": "/fa/marketplace-image-sizes"
+  },
+  {
+   "label": "جایگزین ها",
+   "href": "/fa/alternatives"
+  },
+  {
+   "label": "درباره ما",
+   "href": "/fa/about"
+  }
+ ]
+}

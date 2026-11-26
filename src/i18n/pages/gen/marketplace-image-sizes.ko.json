@@ -1,0 +1,208 @@
+{
+ "title": "마켓플레이스 제품 이미지 크기 2026: Amazon, eBay, Etsy, Shopify, Walmart, Trendyol",
+ "desc": "Amazon, eBay, Etsy, Shopify, Walmart, Google Shopping, TikTok Shop, Trendyol 및 Hepsiburada의 제품 사진 크기, 형식 및 배경 규칙(각 공식 판매자 가이드 링크 포함)",
+ "crumb": "마켓플레이스 이미지 크기",
+ "kicker": "안내 · 상품 사진 사양",
+ "h1": "모든 마켓플레이스의 제품 이미지 크기(2026)",
+ "answer": "순백색 배경(RGB 255, 255, 255)의 정사각형 2000 × 2000픽셀 JPEG는 대부분의 마켓플레이스의 기본 이미지 규칙을 통과합니다. 최소값은 다릅니다. eBay는 가장 긴 면에 500px가 필요하며 약 1600px를 권장합니다. Amazon는 확대/축소를 위해 가장 긴 면에 최소 1000px가 필요합니다. Etsy는 2000px를 권장합니다. Shopify는 정사각형 제품 사진의 경우 2048 × 2048 픽셀을 권장합니다. Google Shopping에는 2027년 1월 31일부터 모든 제품에 500 × 500픽셀이 필요합니다.",
+ "sections": [
+  {
+   "id": "table",
+   "h2": "이미지 크기 치트 시트",
+   "table": {
+    "caption": "2026년 11월 26일에 공식 판매자 문서를 확인했습니다. 규칙 변경 — 항상 링크된 가이드에서 확인하세요.",
+    "head": [
+     "시장",
+     "최저한의",
+     "추천",
+     "메인 이미지 배경",
+     "공식 가이드"
+    ],
+    "rows": [
+     [
+      "Amazon",
+      "가장 긴 면 1000px(확대/축소)",
+      "2000 × 2000px, 정사각형",
+      "순백색 RGB 255, 255, 255; 제품이 프레임의 약 85%를 채웁니다.",
+      "[셀러 센트럴](https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7)"
+     ],
+     [
+      "eBay",
+      "가장 긴 면 500px",
+      "≒ 1600 × 1600픽셀",
+      "규칙 없음; 테두리, 워터마크 또는 텍스트 추가 없음",
+      "[사진 정책](https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370)"
+     ],
+     [
+      "Etsy",
+      "—",
+      "2000px 이상",
+      "규칙 없음; 첫 번째 사진은 썸네일이에요",
+      "[Etsy 도움말](https://help.etsy.com/hc/articles/115015663347)"
+     ],
+     [
+      "Shopify",
+      "—",
+      "2048 × 2048px(정사각형)",
+      "테마에 따라 다릅니다. 일관된 배경 권장",
+      "[Shopify 도움말](https://help.shopify.com/manual/using-themes/images)"
+     ],
+     [
+      "Walmart Marketplace",
+      "가이드 보기",
+      "정사각형, 고해상도",
+      "원활한 흰색 RGB 255, 255, 255",
+      "[마켓플레이스 알아보기](https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements)"
+     ],
+     [
+      "Google Shopping (Merchant Center)",
+      "2027년 1월 31일부터 500 × 500px",
+      "1500×1500px 이상",
+      "실제 제품을 보여주세요. 일반 그래픽 없음",
+      "[판매자 센터](https://support.google.com/merchants/answer/6324350?hl=en)"
+     ],
+     [
+      "TikTok Shop",
+      "600 × 600px(자주 인용되는 크기)",
+      "800×800px 이상",
+      "깨끗한 배경; 워터마크나 프로모션 텍스트가 없습니다.",
+      "셀러센터 (로그인 필요)"
+     ],
+     [
+      "Trendyol",
+      "판매자 패널에서",
+      "photoZseo 사전 설정: 1000 × 1000px(600 × 800, 3:4도 가능)",
+      "흰색 배경 권장",
+      "Trendyol Partner 패널(로그인 필요)"
+     ],
+     [
+      "Hepsiburada",
+      "판매자 패널에서",
+      "photoZseo 사전 설정: 800 × 800px(750 × 1000, 3:4도 가능)",
+      "흰색 배경 권장",
+      "Hepsiburada Merchant 패널(로그인 필요)"
+     ]
+    ]
+   },
+   "note": "마켓플레이스가 판매자 패널 내부에만 규칙을 게시하는 경우 기본적으로 제3자 수치 대신 photoZseo 수출 크기가 표시됩니다."
+  },
+  {
+   "id": "rules",
+   "h2": "거의 모든 곳에 적용되는 규칙",
+   "bullets": [
+    "정사각형(1:1) 메인 이미지입니다. 대부분의 검색 그리드는 정사각형으로 잘립니다. 패션 시장에서는 3:4 세로 비율을 선호하는 경우가 많습니다.",
+    "순백의 메인 이미지입니다. Amazon 및 Walmart에는 RGB 255, 255, 255가 필요합니다. 흰색에 가까운 색상(예: 250, 250, 250)은 표시가 금지되는 일반적인 이유입니다.",
+    "메인 이미지(Amazon, eBay, Walmart, TikTok Shop)에는 텍스트, 로고, 테두리 또는 워터마크가 없습니다.",
+    "sRGB의 JPEG는 가장 안전한 형식입니다. PNG는 투명한 컷아웃에 유용합니다. 업로드하기 전에 iPhone HEIC 사진을 변환하세요.",
+    "파일을 가볍게 유지하세요. 큰 원본은 시장에서 다시 압축됩니다. 이미지당 200~600KB는 빠른 페이지를 위한 실용적인 목표입니다.",
+    "설명이 포함된 파일 이름과 대체 텍스트(예: `red-leather-wallet-front.jpg`)를 사용하세요. 이는 Google Images와 마켓플레이스 검색이 사진을 이해하는 데 도움이 됩니다."
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "하나의 사진을 모든 시장에 맞게 만드는 방법",
+   "steps": [
+    {
+     "t": "필요한 것보다 더 큰 사진을 찍으세요.",
+     "d": "모든 마켓플레이스가 축소되어 제공될 수 있도록 가장 짧은 쪽에서 최소 2000px부터 시작하세요."
+    },
+    {
+     "t": "배경을 제거하거나 흰색으로 만듭니다.",
+     "d": "메인 이미지를 순백색으로 만듭니다. 보조 이미지로 라이프스타일 사진을 보관하세요."
+    },
+    {
+     "t": "제품에 맞춰 자릅니다.",
+     "d": "제품을 중앙에 놓고 프레임의 대부분을 채우도록 합니다(Amazon: 약 85%)."
+    },
+    {
+     "t": "마켓플레이스당 하나의 버전을 내보냅니다.",
+     "d": "각 플랫폼의 크기를 조정하고 압축하고 이름을 바꿉니다."
+    }
+   ],
+   "note": "[사진Zseo](/ko/download)는 iPhone 및 iPad에서 자동으로 2~4단계를 수행합니다. 하나의 마스터 사진을 유지하고 선택한 각 마켓플레이스에 대해 올바른 크기, 압축 및 SEO 이름의 사본을 내보냅니다."
+  }
+ ],
+ "faqTitle": "이미지 크기 FAQ",
+ "faq": [
+  {
+   "q": "마켓플레이스에 가장 적합한 이미지 크기는 무엇입니까?",
+   "a": "메인 이미지의 경우 2000 × 2000px, 정사각형, JPEG, 순백색 배경입니다. Amazon, Etsy 및 대부분의 다른 마켓플레이스의 권장 크기를 충족하거나 초과하며 나머지는 축소될 수 있습니다."
+  },
+  {
+   "q": "eBay의 최소 이미지 크기는 얼마입니까?",
+   "a": "eBay는 가장 긴 쪽이 최소 500픽셀 이상 필요하며 약 1600×1600픽셀을 권장합니다."
+  },
+  {
+   "q": "Amazon에는 흰색 배경이 필요합니까?",
+   "a": "예, 메인 이미지의 경우 순백색(RGB 255, 255, 255)이며 제품이 프레임의 약 85%를 차지합니다. 보조 이미지에는 상황 및 라이프스타일 장면이 표시될 수 있습니다."
+  },
+  {
+   "q": "Shopify는 어떤 이미지 크기를 권장합니까?",
+   "a": "Shopify에서는 정사각형 제품 사진의 경우 2048×2048px를 권장합니다."
+  },
+  {
+   "q": "Google Shopping가 이미지 크기 요구 사항을 변경합니까?",
+   "a": "예. Google는 2027년 1월 31일부터 Merchant Center의 제품 이미지가 모든 제품에 대해 최소 500 × 500 픽셀이어야 한다고 발표했습니다."
+  }
+ ],
+ "sourcesTitle": "공식 출처",
+ "sources": [
+  {
+   "label": "Amazon Seller Central — 기술 이미지 파일 요구 사항",
+   "url": "https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7"
+  },
+  {
+   "label": "eBay — 사진 정책",
+   "url": "https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370"
+  },
+  {
+   "label": "eBay — 목록에 사진 추가하기",
+   "url": "https://www.ebay.com/help/selling/listings/adding-pictures-listings?id=4148"
+  },
+  {
+   "label": "Etsy 도움말 — 이미지 요구 사항 및 모범 사례",
+   "url": "https://help.etsy.com/hc/articles/115015663347"
+  },
+  {
+   "label": "Shopify 도움말 — 이미지 업로드",
+   "url": "https://help.shopify.com/manual/using-themes/images"
+  },
+  {
+   "label": "Walmart Marketplace Learn — 이미지 지침 및 요구 사항",
+   "url": "https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements"
+  },
+  {
+   "label": "Google Merchant Center — 이미지 링크 [image_link]",
+   "url": "https://support.google.com/merchants/answer/6324350?hl=en"
+  },
+  {
+   "label": "Google Merchant Center — 제품 데이터 사양 업데이트 2026",
+   "url": "https://support.google.com/merchants/answer/16989427?hl=en"
+  }
+ ],
+ "related": [
+  {
+   "label": "Amazon 제품 사진 요구 사항",
+   "href": "/ko/blog/amazon-product-photo-specs-2026"
+  },
+  {
+   "label": "TikTok Shop 사진 크기",
+   "href": "/ko/blog/tiktok-shop-photo-sizes"
+  },
+  {
+   "label": "WebP 대 JPEG 대 PNG",
+   "href": "/ko/blog/webp-jpeg-png-product-photos-2026"
+  },
+  {
+   "label": "iPhone 및 iPad용 photoZseo",
+   "href": "/ko/download"
+  }
+ ],
+ "relatedTitle": "관련 가이드",
+ "cta": {
+  "h": "모든 마켓플레이스에 맞게 자동으로 크기 조정",
+  "p": "photoZseo는 하나의 사진에서 각 마켓플레이스에 적합한 크기, 형식 및 파일 이름을 내보냅니다. 무료로 다운로드할 수 있습니다.",
+  "btn": "App Store에서 다운로드"
+ },
+ "updatedLabel": "체크됨"
+}

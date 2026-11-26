@@ -1,0 +1,215 @@
+{
+ "title": "Tarif photoZseo 2026 : un forfait gratuit plus les abonnements Starter, Pro et Business",
+ "desc": "photoZseo est téléchargeable gratuitement avec un forfait gratuit. Forfaits payants : Starter $9.99/mois, Pro $19.99/mois, Business $49.99/mois. Les forfaits annuels permettent d'économiser 40 % et incluent un essai gratuit de 7 jours.",
+ "crumb": "Tarifs",
+ "kicker": "Tarifs · iPhone et iPad",
+ "h1": "Tarifs photoZseo",
+ "answer": "photoZseo est téléchargeable gratuitement sur le App Store et dispose d'un forfait gratuit (les exportations portent un petit filigrane photoZseo). Les forfaits payants suppriment le filigrane et augmentent les limites : Starter $9.99/mois ($71.99/an), Pro $19.99/mois ($143.99/an) et Business $49.99/mois ($359.99/an). Les forfaits annuels coûtent 40 % de moins que les forfaits mensuels et commencent par un essai gratuit de 7 jours.",
+ "facts": [
+  {
+   "k": "Télécharger",
+   "v": "Gratuit sur le App Store"
+  },
+  {
+   "k": "Forfait gratuit",
+   "v": "Oui, exportations filigranées"
+  },
+  {
+   "k": "Forfaits payants à partir de",
+   "v": "$9.99/mois"
+  },
+  {
+   "k": "Essai gratuit",
+   "v": "7 jours (forfaits annuels)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "compare",
+   "h2": "Comparaison des forfaits",
+   "table": {
+    "caption": "Prix ​​en USD. Le App Store affiche le prix local pour votre pays.",
+    "head": [
+     "",
+     "Gratuit",
+     "Starter",
+     "Pro",
+     "Business"
+    ],
+    "rows": [
+     [
+      "Prix ​​mensuel",
+      "$0",
+      "$9.99",
+      "$19.99",
+      "$49.99"
+     ],
+     [
+      "Prix ​​annuel",
+      "$0",
+      "$71.99",
+      "$143.99",
+      "$359.99"
+     ],
+     [
+      "Importations de photos depuis Photos/Fichiers par mois",
+      "3",
+      "100",
+      "1,000",
+      "Illimité"
+     ],
+     [
+      "Plateformes de marché actives",
+      "5",
+      "15",
+      "Tous",
+      "Tous"
+     ],
+     [
+      "Filigrane sur les exportations",
+      "Oui",
+      "Non",
+      "Non",
+      "Non"
+     ],
+     [
+      "Toutes tailles et formats d'images (JPEG, PNG, WebP)",
+      "✓",
+      "✓",
+      "✓",
+      "✓"
+     ],
+     [
+      "Caméra modèle (7 angles)",
+      "✓",
+      "✓",
+      "✓",
+      "✓"
+     ],
+     [
+      "Exportation et partage par lots",
+      "—",
+      "✓",
+      "✓",
+      "✓"
+     ],
+     [
+      "Enregistrement vidéo",
+      "—",
+      "✓",
+      "✓",
+      "✓"
+     ],
+     [
+      "Texte alternatif de l'IA",
+      "—",
+      "—",
+      "✓",
+      "✓"
+     ],
+     [
+      "Suppression de l'arrière-plan de l'IA",
+      "—",
+      "—",
+      "100 / mois",
+      "Illimité"
+     ],
+     [
+      "Boutique en ligne sur photozseo.com",
+      "—",
+      "—",
+      "✓",
+      "✓"
+     ],
+     [
+      "Intégration Shopify (push direct du produit)",
+      "—",
+      "—",
+      "—",
+      "✓"
+     ],
+     [
+      "Générateur de devis B2B (PDF)",
+      "—",
+      "—",
+      "—",
+      "✓"
+     ],
+     [
+      "Créer une équipe (jusqu'à 3 membres)",
+      "—",
+      "—",
+      "—",
+      "✓"
+     ]
+    ]
+   },
+   "note": "Les photos prises avec l'appareil photo intégré à l'application ne sont pas prises en compte dans la limite d'importation mensuelle. Rejoindre une équipe existante avec un code d'invitation est gratuit sur tous les forfaits."
+  },
+  {
+   "id": "which",
+   "h2": "Quel forfait dois-je choisir ?",
+   "bullets": [
+    "Gratuit : essayez le flux de travail complet : photographiez avec l'appareil photo modèle, redimensionnez jusqu'à 5 places de marché et exportez dans tous les formats. Les exportations portent un filigrane.",
+    "Starter ($9.99/mois) — pour les vendeurs qui répertorient quelques produits par semaine : pas de filigrane, exportation par lots, vidéo, 100 importations par mois et 15 plateformes.",
+    "Pro ($19.99/mois) — pour les vendeurs sur plusieurs places de marché : chaque plateforme, texte alternatif IA, 100 suppressions d'arrière-plan IA par mois et une boutique en ligne sur photozseo.com.",
+    "Business ($49.99/mois) — pour les marques, les grossistes et les équipes : importations et suppression d'arrière-plan illimitées, poussée de produits Shopify, devis PDF B2B de marque et équipe partagée."
+   ]
+  },
+  {
+   "id": "billing",
+   "h2": "Facturation, essai et annulation",
+   "bullets": [
+    "L'essai gratuit de 7 jours s'applique aux forfaits annuels. Apple décide de l'éligibilité ; le App Store l'affiche avant de confirmer.",
+    "Les abonnements sont facturés par Apple et se renouvellent automatiquement sauf annulation au moins 24 heures avant la fin de la période.",
+    "Annulez à tout moment dans Paramètres iPhone → [votre nom] → Abonnements. Votre forfait reste actif jusqu'à la fin de la période payée.",
+    "Un abonnement couvre l'application sur vos iPhone et iPad avec le même compte Apple.",
+    "Les remboursements sont traités par Apple à [rapportaproblem.apple.com](https://reportaproblem.apple.com)."
+   ]
+  }
+ ],
+ "faqTitle": "FAQ sur les tarifs",
+ "faq": [
+  {
+   "q": "Le photoZseo est-il gratuit ?",
+   "a": "Oui. photoZseo est téléchargeable gratuitement et propose un forfait gratuit avec des exportations en filigrane, 3 importations de photos par mois et jusqu'à 5 plateformes actives. Les forfaits payants commencent à $9.99 par mois."
+  },
+  {
+   "q": "Combien coûte le photoZseo Pro ?",
+   "a": "Pro coûte $19.99 par mois ou $143.99 par an aux États-Unis. Le forfait annuel comprend un essai gratuit de 7 jours."
+  },
+  {
+   "q": "Existe-t-il un essai gratuit ?",
+   "a": "Oui, les forfaits annuels Starter, Pro et Business commencent par un essai gratuit de 7 jours pour les comptes Apple éligibles."
+  },
+  {
+   "q": "Les prix diffèrent-ils selon les pays ?",
+   "a": "Oui. Les prix sur cette page sont en dollars américains. Le App Store les convertit en prix locaux, taxes comprises, pour chaque pays."
+  },
+  {
+   "q": "Existe-t-il une version Android ou Mac ?",
+   "a": "Pas encore. photoZseo est actuellement disponible pour iPhone et iPad uniquement. Une extension photoZseo distincte est disponible pour Google Chrome sur ordinateur."
+  }
+ ],
+ "related": [
+  {
+   "label": "Télécharger pour iPhone et iPad",
+   "href": "/fr/download"
+  },
+  {
+   "label": "Tailles des images du marché",
+   "href": "/fr/marketplace-image-sizes"
+  },
+  {
+   "label": "Alternatives à photoZseo",
+   "href": "/fr/alternatives"
+  }
+ ],
+ "relatedTitle": "En rapport",
+ "cta": {
+  "h": "Démarrez gratuitement sur iPhone ou iPad",
+  "p": "Téléchargez photoZseo, essayez le forfait gratuit et effectuez une mise à niveau uniquement lorsque vous en avez besoin de plus.",
+  "btn": "Télécharger sur le App Store"
+ },
+ "updatedLabel": "Prix ​​vérifiés"
+}

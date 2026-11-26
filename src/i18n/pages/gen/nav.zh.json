@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "iPhone 和 iPad 应用程序",
+   "href": "/zh/download"
+  },
+  {
+   "label": "定价",
+   "href": "/zh/pricing"
+  },
+  {
+   "label": "市场图像尺寸",
+   "href": "/zh/marketplace-image-sizes"
+  },
+  {
+   "label": "替代方案",
+   "href": "/zh/alternatives"
+  },
+  {
+   "label": "关于我们",
+   "href": "/zh/about"
+  }
+ ]
+}

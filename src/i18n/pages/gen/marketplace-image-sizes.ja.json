@@ -1,0 +1,208 @@
+{
+ "title": "マーケットプレイスの商品画像サイズ 2026: Amazon、eBay、Etsy、Shopify、Walmart、Trendyol",
+ "desc": "Amazon、eBay、Etsy、Shopify、Walmart、Google Shopping、TikTok Shop、Trendyol、Hepsiburada の製品写真のサイズ、形式、背景ルールと、各公式販売者ガイドへのリンク。",
+ "crumb": "マーケットプレイスの画像サイズ",
+ "kicker": "ガイド・製品写真仕様",
+ "h1": "すべてのマーケットプレイスの商品画像サイズ (2026)",
+ "answer": "純粋な白の背景 (RGB 255、255、255) 上の正方形の 2000 × 2000 ピクセル JPEG は、ほとんどのマーケットプレイスのメイン画像ルールに合格します。最小値は異なります。eBay は最長辺で 500 ピクセルを必要とし、約 1600 ピクセルを推奨します。 Amazon では、ズームするには最長辺で少なくとも 1000 ピクセルが必要です。 Etsy は 2000 ピクセルを推奨します。 Shopify では、正方形の製品写真には 2048 × 2048 ピクセルを推奨します。 Google Shopping では、2027 年 1 月 31 日以降、すべての製品で 500 × 500 ピクセルが必要になります。",
+ "sections": [
+  {
+   "id": "table",
+   "h2": "画像サイズのチートシート",
+   "table": {
+    "caption": "2026 年 11 月 26 日に販売者の公式ドキュメントと照合して確認。ルールの変更 - リンクされたガイドで常に確認してください。",
+    "head": [
+     "市場",
+     "最小",
+     "推奨",
+     "メイン画像の背景",
+     "公式ガイド"
+    ],
+    "rows": [
+     [
+      "Amazon",
+      "最長辺 1000 ピクセル (ズーム)",
+      "2000 × 2000 ピクセル、正方形",
+      "ピュアホワイト RGB 255、255、255;製品がフレームの約 85% を占める",
+      "[セラーセントラル](https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7)"
+     ],
+     [
+      "eBay",
+      "最長辺500ピクセル",
+      "≈ 1600 × 1600 ピクセル",
+      "ルールはありません。枠線、透かし、テキストの追加はありません",
+      "[映像ポリシー](https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370)"
+     ],
+     [
+      "Etsy",
+      "—",
+      "2000ピクセル以上",
+      "ルールはありません。最初の写真はサムネイルです",
+      "[Etsy ヘルプ](https://help.etsy.com/hc/articles/115015663347)"
+     ],
+     [
+      "Shopify",
+      "—",
+      "2048 × 2048 ピクセル (正方形)",
+      "テーマに応じて;一貫した背景を推奨",
+      "[Shopify ヘルプ](https://help.shopify.com/manual/using-themes/images)"
+     ],
+     [
+      "Walmart Marketplace",
+      "ガイドを参照",
+      "正方形、高解像度",
+      "シームレスホワイトRGB 255、255、255",
+      "[マーケットプレイスで学ぶ](https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements)"
+     ],
+     [
+      "Google Shopping (Merchant Center)",
+      "2027 年 1 月 31 日から 500 × 500 ピクセル",
+      "1500×1500ピクセル以上",
+      "実際の製品を見せてください。一般的なグラフィックスはありません",
+      "[マーチャントセンター](https://support.google.com/merchants/answer/6324350?hl=en)"
+     ],
+     [
+      "TikTok Shop",
+      "600 × 600 ピクセル (一般的に引用)",
+      "800×800ピクセル以上",
+      "きれいな背景。透かしやプロモーションテキストはありません",
+      "セラーセンター（ログインが必要）"
+     ],
+     [
+      "Trendyol",
+      "セラーパネル内",
+      "photoZseo プリセット: 1000 × 1000 ピクセル (600 × 800、3:4 も)",
+      "白背景推奨",
+      "Trendyol Partnerパネル（要ログイン）"
+     ],
+     [
+      "Hepsiburada",
+      "セラーパネル内",
+      "photoZseo プリセット: 800 × 800 ピクセル (750 × 1000、3:4 も)",
+      "白背景推奨",
+      "Hepsiburada Merchantパネル（要ログイン）"
+     ]
+    ]
+   },
+   "note": "マーケットプレイスが販売者パネル内でのみルールを公開している場合、サードパーティの数値ではなく、photoZseo がエクスポートするサイズがデフォルトで表示されます。"
+  },
+  {
+   "id": "rules",
+   "h2": "ほぼどこにでも適用されるルール",
+   "bullets": [
+    "正方形 (1:1) のメイン画像。ほとんどの検索グリッドは正方形にトリミングされます。ファッション市場では 3:4 のポートレートが好まれることがよくあります。",
+    "純白のメインイメージ。 Amazon および Walmart には RGB 255、255、255 が必要です。白に近い色（例: 250、250、250）は、リストが抑制される一般的な理由です。",
+    "メイン画像 (Amazon、eBay、Walmart、TikTok Shop) にはテキスト、ロゴ、境界線、透かしはありません。",
+    "sRGB の JPEG が最も安全な形式です。 PNGは透明な切り抜きに便利です。アップロードする前に iPhone HEIC 写真を変換してください。",
+    "ファイルを軽く保ちます。大きなオリジナルはマーケットプレイスによって再圧縮されます。高速ページの実際的な目標は、画像あたり 200 ～ 600 KB です。",
+    "わかりやすいファイル名と代替テキスト (例: `red-leather-wallet-front.jpg`) を使用します。これらは、Google Images とマーケットプレイス検索が写真を理解するのに役立ちます。"
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "1 枚の写真をあらゆる市場に適合させる方法",
+   "steps": [
+    {
+     "t": "必要以上に大きな写真を撮ります。",
+     "d": "ダウンスケーリングによってすべてのマーケットプレイスを提供できるように、最短辺で少なくとも 2000 ピクセルから開始します。"
+    },
+    {
+     "t": "背景を削除または白くします。",
+     "d": "メイン画像を真っ白にします。ライフスタイルの写真を二次画像として保存します。"
+    },
+    {
+     "t": "製品に合わせて切り抜きます。",
+     "d": "製品を中央に配置し、フレームの大部分 (Amazon: 約 85%) を埋めるようにします。"
+    },
+    {
+     "t": "マーケットプレイスごとに 1 つのバージョンをエクスポートします。",
+     "d": "プラットフォームごとにサイズ変更、圧縮、名前変更を行います。"
+    }
+   ],
+   "note": "[フォトゼオ](/ja/download) は、iPhone および iPad でステップ 2 ～ 4 を自動的に実行します。マスター写真を 1 枚保持し、選択したマーケットプレイスごとに、正しいサイズで圧縮され、SEO 名が付けられたコピーをエクスポートします。"
+  }
+ ],
+ "faqTitle": "画像サイズに関するよくある質問",
+ "faq": [
+  {
+   "q": "マーケットプレイスに最適な画像サイズはどれくらいですか?",
+   "a": "2000 × 2000 px、正方形、JPEG、メイン画像の純白の背景。 Amazon、Etsy、およびその他のほとんどのマーケットプレイスの推奨サイズを満たすかそれを超えており、残りのサイズは縮小できます。"
+  },
+  {
+   "q": "eBay の最小画像サイズはどれくらいですか?",
+   "a": "eBay は最長辺で少なくとも 500 ピクセルが必要で、約 1600 × 1600 ピクセルを推奨します。"
+  },
+  {
+   "q": "Amazon には白の背景が必要ですか?",
+   "a": "はい、メイン画像の場合: 純白 (RGB 255、255、255)、製品がフレームの約 85% を占めています。二次画像には、背景やライフスタイルのシーンが表示される場合があります。"
+  },
+  {
+   "q": "Shopify が推奨する画像サイズはどれくらいですか?",
+   "a": "Shopify では、正方形の商品写真には 2048 × 2048 ピクセルを推奨します。"
+  },
+  {
+   "q": "Google Shopping の画像サイズ要件は変更されていますか?",
+   "a": "はい。 Google は、2027 年 1 月 31 日以降、Merchant Center 内の製品画像はすべての製品で少なくとも 500 × 500 ピクセルでなければならないと発表しました。"
+  }
+ ],
+ "sourcesTitle": "公式情報源",
+ "sources": [
+  {
+   "label": "Amazon Seller Central — テクニカル イメージ ファイルの要件",
+   "url": "https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7"
+  },
+  {
+   "label": "eBay — 画像ポリシー",
+   "url": "https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370"
+  },
+  {
+   "label": "eBay — リストに写真を追加する",
+   "url": "https://www.ebay.com/help/selling/listings/adding-pictures-listings?id=4148"
+  },
+  {
+   "label": "Etsy ヘルプ — イメージの要件とベスト プラクティス",
+   "url": "https://help.etsy.com/hc/articles/115015663347"
+  },
+  {
+   "label": "Shopify ヘルプ — 画像のアップロード",
+   "url": "https://help.shopify.com/manual/using-themes/images"
+  },
+  {
+   "label": "Walmart Marketplace Learn — 画像のガイドラインと要件",
+   "url": "https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements"
+  },
+  {
+   "label": "Google Merchant Center — 画像リンク [image_link]",
+   "url": "https://support.google.com/merchants/answer/6324350?hl=en"
+  },
+  {
+   "label": "Google Merchant Center — 製品データ仕様更新 2026",
+   "url": "https://support.google.com/merchants/answer/16989427?hl=en"
+  }
+ ],
+ "related": [
+  {
+   "label": "Amazon 製品写真の要件",
+   "href": "/ja/blog/amazon-product-photo-specs-2026"
+  },
+  {
+   "label": "TikTok Shopの写真サイズ",
+   "href": "/ja/blog/tiktok-shop-photo-sizes"
+  },
+  {
+   "label": "WebP 対 JPEG 対 PNG",
+   "href": "/ja/blog/webp-jpeg-png-product-photos-2026"
+  },
+  {
+   "label": "iPhoneおよびiPad用photoZseo",
+   "href": "/ja/download"
+  }
+ ],
+ "relatedTitle": "関連ガイド",
+ "cta": {
+  "h": "すべてのマーケットプレイスのサイズを自動的に変更する",
+  "p": "photoZseo は、1 枚の写真から各マーケットプレイスに適切なサイズ、形式、ファイル名をエクスポートします。無料でダウンロードできます。",
+  "btn": "App Storeでダウンロード"
+ },
+ "updatedLabel": "チェック済み"
+}

@@ -1,0 +1,157 @@
+{
+ "title": "photoZseo 适用于 iPhone 和 iPad：SEO 产品照片应用程序 (App Store)",
+ "desc": "在 App Store 上免费下载 photoZseo：SEO 产品照片。拍摄产品照片，调整其大小以适应 46 个市场，删除背景并自动填充 SEO 标题、描述和替代文本。 iOS 17+。",
+ "crumb": "iPhone 和 iPad 应用程序",
+ "kicker": "现在在App Store上",
+ "h1": "photoZseo：iPhone 和 iPad 的 SEO 产品照片",
+ "answer": "photoZseo 是一款面向在线卖家的 iPhone 和 iPad 应用程序。您拍摄一次产品后，应用程序会调整 46 个市场（Amazon、eBay、Etsy、Shopify、Walmart、Trendyol、Hepsiburada 等）的照片大小、压缩和 SEO 重命名，删除设备上的背景并填写标题、描述、标签和替代文本。它可以在 App Store 上免费下载，并适用于 iOS 17 或更高版本。",
+ "facts": [
+  {
+   "k": "价格",
+   "v": "免费 · $9.99/月起的计划"
+  },
+  {
+   "k": "设备",
+   "v": "iPhone & iPad"
+  },
+  {
+   "k": "需要",
+   "v": "iOS / iPadOS 17.0+"
+  },
+  {
+   "k": "语言",
+   "v": "15种语言"
+  }
+ ],
+ "sections": [
+  {
+   "id": "what",
+   "h2": "photoZseo 可以做什么",
+   "bullets": [
+    "使用模板相机拍摄照片，引导您通过市场要求的 7 个角度：正面、背面、侧面、细节、顶部、标签和生活方式。",
+    "针对每个渠道调整大小和压缩 — 60 多个导出目标，包括 46 个市场以及社交和广告平台（Instagram、TikTok Shop、Pinterest、Facebook Shops、WhatsApp Catalog）。导出 JPEG、PNG 和 WebP。",
+    "SEO 文件名和元数据 — 每张照片都有一个基于关键字的文件名、替代文本和干净的 EXIF 数据；默认情况下，导出时会删除 GPS 位置。",
+    "设备上的 AI 背景去除：透明 PNG、纯白色或自定义颜色、一张照片或整批照片。",
+    "列表文本自动填充 - 来自您的照片和产品详细信息的标题、slug、类别、元描述、详细描述、标签、关键字和条形码（13 个字段）。",
+    "列表文件 - 每个市场的列布局中的 CSV / XLSX / JSON（49 种平台格式），每个产品单独或组合。",
+    "B2B 报价生成器 — 带有增值税、IBAN、国际贸易术语解释通则、HS 代码和电子签名的品牌 A4 PDF 报价。",
+    "Shopify 集成 — 将产品直接推送到您的 Shopify 商店（Business 计划）。"
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "它是如何运作的",
+   "steps": [
+    {
+     "t": "拍照或导入。",
+     "d": "使用模板相机或从照片和文件导入照片。"
+    },
+    {
+     "t": "选择您的市场。",
+     "d": "选择您的销售地点，例如Amazon、Etsy 和 Trendyol。"
+    },
+    {
+     "t": "让应用程序准备好一切。",
+     "d": "每张照片都会针对每个市场进行裁剪、调整大小、压缩和重命名；列表文本已填写。"
+    },
+    {
+     "t": "导出或发布。",
+     "d": "保存准备好的图像和 CSV/XLSX 列表文件的文件夹，共享它们，或推送到 Shopify。"
+    }
+   ]
+  },
+  {
+   "id": "ai",
+   "h2": "设备上的人工智能和隐私",
+   "body": [
+    "照片处理、背景去除 (Apple Vision) 和文本识别在 iPhone 或 iPad 上运行；您的产品照片不会上传到 photoZseo 服务器进行处理。",
+    "在带有 Apple Intelligence 的 iOS 26 上，列表文本由 Apple 的设备上 Foundation Models 编写。在 iOS 17-25 上，该应用程序通过设备上的图像分析和模板填充相同的字段。",
+    "photoZseo 不显示广告，也不会在其他应用程序中跟踪您。可以在应用程序的“设置”中关闭匿名使用情况分析。详细信息：[隐私政策](/zh/privacy)。"
+   ]
+  },
+  {
+   "id": "requirements",
+   "h2": "要求和可用性",
+   "table": {
+    "head": [
+     "",
+     ""
+    ],
+    "rows": [
+     [
+      "App Store名称",
+      "photoZseo：SEO 产品照片"
+     ],
+     [
+      "兼容性",
+      "iPhone 与 iOS 17.0 或更高版本 · iPad 与 iPadOS 17.0 或更高版本"
+     ],
+     [
+      "Apple Intelligence特点",
+      "支持的设备上的 iOS 26（可选）"
+     ],
+     [
+      "价格",
+      "免费下载并提供免费计划； Starter、Pro 和 Business 订阅 — 请参阅 [定价](/zh/pricing)"
+     ],
+     [
+      "免费试用",
+      "年度计划7天"
+     ],
+     [
+      "语言",
+      "英语、土耳其语、德语、西班牙语、法语、意大利语、葡萄牙语、波兰语、日语、韩语、中文、阿拉伯语、印地语、波斯语、乌尔都语"
+     ],
+     [
+      "安卓/苹果机",
+      "尚不可用"
+     ],
+     [
+      "桌面替代品",
+      "[Chrome 版 photoZseo](/zh/chrome-extension)（独立分机）"
+     ]
+    ]
+   }
+  }
+ ],
+ "faqTitle": "下载常见问题",
+ "faq": [
+  {
+   "q": "哪里可以下载photoZseo？",
+   "a": "在 Apple App Store 上，搜索“photoZseo”或在 iPhone 或 iPad 上打开 apps.apple.com/app/id6762639768。"
+  },
+  {
+   "q": "photoZseo 适用于 Android 吗？",
+   "a": "还没有。 photoZseo 适用于 iPhone 和 iPad。在计算机上，您可以使用 Google Chrome 的 photoZseo 扩展。"
+  },
+  {
+   "q": "photoZseo可以离线使用吗？",
+   "a": "是的。无需互联网连接即可进行拍照、调整大小、去除背景和导出。您只需要连接即可发布到在线商店或 Shopify、与 iCloud 同步或购买订阅。"
+  },
+  {
+   "q": "photoZseo支持哪些市场？",
+   "a": "Amazon、eBay、Etsy、Shopify、Walmart、WooCommerce、Trendyol、Hepsiburada、N11、AliExpress、Temu、SHEIN、Mercado Libre、Allegro、Zalando、Otto、Kaufland、 Noon、Shopee、Lazada、Coupang、Flipkart 等，以及 Instagram、TikTok Shop、Pinterest、Facebook Shops 和 WhatsApp Catalog。"
+  }
+ ],
+ "related": [
+  {
+   "label": "定价和免费计划",
+   "href": "/zh/pricing"
+  },
+  {
+   "label": "市场图像尺寸",
+   "href": "/zh/marketplace-image-sizes"
+  },
+  {
+   "label": "关于photoZseo",
+   "href": "/zh/about"
+  }
+ ],
+ "relatedTitle": "有关的",
+ "cta": {
+  "h": "在 App Store 上获取 photoZseo",
+  "p": "免费下载。适用于 iPhone 和 iPad。",
+  "btn": "在App Store上下载"
+ },
+ "updatedLabel": "已更新"
+}

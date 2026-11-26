@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "iPhone 및 iPad 앱",
+   "href": "/ko/download"
+  },
+  {
+   "label": "가격",
+   "href": "/ko/pricing"
+  },
+  {
+   "label": "마켓플레이스 이미지 크기",
+   "href": "/ko/marketplace-image-sizes"
+  },
+  {
+   "label": "대안",
+   "href": "/ko/alternatives"
+  },
+  {
+   "label": "소개",
+   "href": "/ko/about"
+  }
+ ]
+}

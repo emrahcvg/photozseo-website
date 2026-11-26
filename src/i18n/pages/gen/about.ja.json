@@ -1,0 +1,80 @@
+{
+ "title": "photoZseo について: オンライン販売者向けの製品写真および出品ツール",
+ "desc": "photoZseo は、独立系オンライン販売者向けの製品写真および出品ツール (iPhone および iPad アプリ、Chrome 拡張機能、photozseo.com のオンライン ストア) を作成します。",
+ "crumb": "会社概要",
+ "kicker": "私たちについて",
+ "h1": "photoZseoについて",
+ "answer": "photoZseo は、製品の写真をマーケットプレイスに対応したリストに変換するツールを構築します。主な製品は photoZseo: iPhone および iPad (App Store、2026) 用の SEO 製品写真アプリです。 Google Chrome 用の別の photoZseo 拡張機能や、photozseo.com でホストされているシンプルなオンライン ストアもあります。",
+ "facts": [
+  {
+   "k": "設立目的",
+   "v": "独立したオンライン販売者"
+  },
+  {
+   "k": "主な製品",
+   "v": "iPhone & iPad アプリ"
+  },
+  {
+   "k": "Webサイト",
+   "v": "photozseo.com"
+  },
+  {
+   "k": "サポート",
+   "v": "[support@photozseo.com](mailto:support@photozseo.com)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "why",
+   "h2": "photoZseoが存在する理由",
+   "body": [
+    "各マーケットプレイスでは、さまざまな写真サイズ、背景ルール、ファイル名、リスト列が求められます。 Amazon、Etsy、Trendyol の販売者は、同じ写真を 3 回編集し、同じタイトルを 3 回入力することがよくあります。",
+    "photoZseo は、一度写真を撮るだけで、アプリが各マーケットプレイスの写真、ファイル名、リスト テキストを準備できるようにするという繰り返しの作業を排除するために、独立した販売者兼開発者によって開始されました。"
+   ]
+  },
+  {
+   "id": "products",
+   "h2": "製品",
+   "bullets": [
+    "[iPhone および iPad 用 photoZseo](/ja/download) — カメラ、46 マーケットプレイスのサイズ変更、背景削除、リストテキスト、CSV/XLSX エクスポート、B2B 見積、Shopify プッシュ。",
+    "[Chrome 用 photoZseo](/ja/chrome-extension) — Web ページから製品の写真と詳細を収集し、マーケットプレイスで使用できる ZIP および CSV ファイルをエクスポートするデスクトップのサイドパネル拡張機能。独自のプランを持つ別の製品です。",
+    "オンライン ストア — Pro および Business プランの販売者は、photozseo.com でシンプルなストアフロントを公開できます。"
+   ]
+  },
+  {
+   "id": "principles",
+   "h2": "構築方法",
+   "bullets": [
+    "まずデバイス上で。写真の処理と背景の除去はユーザーのデバイス上で実行されます。",
+    "広告はありません。アプリの料金は広告ではなくサブスクリプションによって支払われます。",
+    "世界中の販売者向けに構築されています。このアプリは、右から左に記述する 3 つの言語 (アラビア語、ペルシア語、ウルドゥー語) を含む 15 の言語で利用できます。",
+    "正確なマーケットプレイスの仕様。プリセットは、マーケットプレイス独自の販売者のドキュメントに従います。 [マーケットプレイスの画像サイズガイド](/ja/marketplace-image-sizes)を参照してください。"
+   ]
+  },
+  {
+   "id": "contact",
+   "h2": "接触",
+   "bullets": [
+    "サポート: [support@photozseo.com](mailto:support@photozseo.com)",
+    "一般およびプレス: [hello@photozseo.com](mailto:hello@photozseo.com)",
+    "ヘルプセンター: [photozseo.com/support](/ja/support)"
+   ]
+  }
+ ],
+ "related": [
+  {
+   "label": "iPhone および iPad 用のダウンロード",
+   "href": "/ja/download"
+  },
+  {
+   "label": "価格設定",
+   "href": "/ja/pricing"
+  },
+  {
+   "label": "プライバシーポリシー",
+   "href": "/ja/privacy"
+  }
+ ],
+ "relatedTitle": "関連している",
+ "updatedLabel": "更新されました"
+}

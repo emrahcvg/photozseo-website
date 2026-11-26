@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "iPhone اور iPad ایپ",
+   "href": "/ur/download"
+  },
+  {
+   "label": "قیمتوں کا تعین",
+   "href": "/ur/pricing"
+  },
+  {
+   "label": "بازار کی تصویر کے سائز",
+   "href": "/ur/marketplace-image-sizes"
+  },
+  {
+   "label": "متبادل",
+   "href": "/ur/alternatives"
+  },
+  {
+   "label": "ہمارے بارے میں",
+   "href": "/ur/about"
+  }
+ ]
+}

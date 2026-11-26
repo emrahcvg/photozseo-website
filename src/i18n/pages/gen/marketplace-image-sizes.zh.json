@@ -1,0 +1,208 @@
+{
+ "title": "2026 年市场产品图像尺寸：Amazon、eBay、Etsy、Shopify、Walmart、Trendyol",
+ "desc": "Amazon、eBay、Etsy、Shopify、Walmart、Google Shopping、TikTok Shop、Trendyol 和 Hepsiburada 的产品照片尺寸、格式和背景规则，以及每个官方卖家指南的链接。",
+ "crumb": "市场图像尺寸",
+ "kicker": "指南·产品照片规格",
+ "h1": "每个市场的产品图片尺寸 (2026)",
+ "answer": "纯白色背景（RGB 255、255、255）上的方形 2000 × 2000 像素 JPEG 通过了大多数市场的主图像规则。最小值不同：eBay 要求最长边为 500 px，建议约为 1600 px； Amazon最长边至少需要1000px才能缩放； Etsy建议2000像素； Shopify建议方形产品照片使用2048×2048像素；从 2027 年 1 月 31 日起，Google Shopping 所有产品都需要 500 × 500 像素。",
+ "sections": [
+  {
+   "id": "table",
+   "h2": "图像尺寸备忘单",
+   "table": {
+    "caption": "已于 2026 年 11 月 26 日对照官方卖家文件进行检查。规则变更 — 请务必在链接指南中确认。",
+    "head": [
+     "市场",
+     "最低限度",
+     "受到推崇的",
+     "主图像背景",
+     "官方指南"
+    ],
+    "rows": [
+     [
+      "Amazon",
+      "最长边 1000 像素（缩放）",
+      "2000 × 2000 像素，正方形",
+      "纯白RGB 255、255、255；产品填充约 85% 的框架",
+      "[卖家中心](https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7)"
+     ],
+     [
+      "eBay",
+      "最长边 500 像素",
+      "约 1600 × 1600 像素",
+      "没有规则；无边框、水印或添加文本",
+      "[图片政策](https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370)"
+     ],
+     [
+      "Etsy",
+      "—",
+      "2000 像素或更大",
+      "没有规则；第一张照片是缩略图",
+      "[Etsy 帮助](https://help.etsy.com/hc/articles/115015663347)"
+     ],
+     [
+      "Shopify",
+      "—",
+      "2048 × 2048 像素（正方形）",
+      "取决于主题；建议使用一致的背景",
+      "[Shopify 帮助](https://help.shopify.com/manual/using-themes/images)"
+     ],
+     [
+      "Walmart Marketplace",
+      "查看指南",
+      "正方形，高分辨率",
+      "无缝白色 RGB 255, 255, 255",
+      "[市场学习](https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements)"
+     ],
+     [
+      "Google Shopping (Merchant Center)",
+      "2027 年 1 月 31 日起 500 × 500 像素",
+      "1500 × 1500 像素或更大",
+      "展示实际产品；没有通用图形",
+      "[商户中心](https://support.google.com/merchants/answer/6324350?hl=en)"
+     ],
+     [
+      "TikTok Shop",
+      "600 × 600 像素（常用）",
+      "800 × 800 像素或更大",
+      "干净的背景；无水印或促销文字",
+      "卖家中心（需登录）"
+     ],
+     [
+      "Trendyol",
+      "在卖家面板中",
+      "photoZseo 预设：1000 × 1000 像素（也可 600 × 800、3:4）",
+      "推荐白色背景",
+      "Trendyol Partner面板（需要登录）"
+     ],
+     [
+      "Hepsiburada",
+      "在卖家面板中",
+      "photoZseo 预设：800 × 800 像素（也可 750 × 1000、3:4）",
+      "推荐白色背景",
+      "Hepsiburada Merchant面板（需要登录）"
+     ]
+    ]
+   },
+   "note": "如果市场仅在卖家面板内发布其规则，则我们默认显示 photoZseo 导出的大小，而不是第三方数字。"
+  },
+  {
+   "id": "rules",
+   "h2": "几乎所有地方都适用的规则",
+   "bullets": [
+    "方形 (1:1) 主图像。大多数搜索网格都会裁剪成正方形；时尚市场通常更喜欢 3:4 肖像。",
+    "纯白色主图。 Amazon和Walmart需要RGB 255、255、255；近白色（例如 250、250、250）是被抑制列表的常见原因。",
+    "主图像（Amazon、eBay、Walmart、TikTok Shop）上没有文字、徽标、边框或水印。",
+    "sRGB 中的 JPEG 是最安全的格式； PNG 对于透明剪切很有用。上传前转换 iPhone HEIC 照片。",
+    "保持文件轻便。大型原件由市场重新压缩；每个图像 200–600 KB 是快速页面的实际目标。",
+    "使用描述性文件名和替代文本（例如 `red-leather-wallet-front.jpg`）——它们有助于 Google Images 和市场搜索理解照片。"
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "如何使一张照片适合每个市场",
+   "steps": [
+    {
+     "t": "照片比您需要的大。",
+     "d": "从最短边至少 2000 像素开始，这样每个市场都可以通过缩小尺寸来提供服务。"
+    },
+    {
+     "t": "删除或美化背景。",
+     "d": "使主图像纯白色；保留生活方式照片作为辅助图像。"
+    },
+    {
+     "t": "裁剪到产品。",
+     "d": "将产品居中并让它填充大部分框架（Amazon：约85％）。"
+    },
+    {
+     "t": "每个市场导出一个版本。",
+     "d": "针对每个平台调整大小、压缩和重命名。"
+    }
+   ],
+   "note": "[照片搜索引擎优化](/zh/download) 在 iPhone 和 iPad 上自动执行步骤 2-4：它保留一张主照片，并为您选择的每个市场导出正确尺寸、压缩和 SEO 命名的副本。"
+  }
+ ],
+ "faqTitle": "图像尺寸常见问题解答",
+ "faq": [
+  {
+   "q": "市场的最佳图像尺寸是多少？",
+   "a": "2000 × 2000 像素，方形，JPEG，主图像纯白色背景。它满足或超过 Amazon、Etsy 和大多数其他市场的建议大小，并且可以针对其余市场缩小规模。"
+  },
+  {
+   "q": "eBay 上的最小图像尺寸是多少？",
+   "a": "eBay 要求最长边至少 500 像素，建议约 1600 × 1600 像素。"
+  },
+  {
+   "q": "Amazon需要白色背景吗？",
+   "a": "是的，对于主图像：纯白色（RGB 255、255、255），产品填充画面约 85%。辅助图像可以显示背景和生活方式场景。"
+  },
+  {
+   "q": "Shopify 推荐什么图像尺寸？",
+   "a": "Shopify 建议方形产品照片使用 2048 × 2048 像素。"
+  },
+  {
+   "q": "Google Shopping 是否改变其图像尺寸要求？",
+   "a": "是的。 Google 宣布，自 2027 年 1 月 31 日起，所有产品的 Merchant Center 中的产品图像必须至少为 500 × 500 像素。"
+  }
+ ],
+ "sourcesTitle": "官方消息来源",
+ "sources": [
+  {
+   "label": "Amazon Seller Central — 技术图像文件要求",
+   "url": "https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7"
+  },
+  {
+   "label": "eBay — 图片政策",
+   "url": "https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370"
+  },
+  {
+   "label": "eBay — 将图片添加到您的列表中",
+   "url": "https://www.ebay.com/help/selling/listings/adding-pictures-listings?id=4148"
+  },
+  {
+   "label": "Etsy 帮助 — 镜像的要求和最佳实践",
+   "url": "https://help.etsy.com/hc/articles/115015663347"
+  },
+  {
+   "label": "Shopify帮助-上传图片",
+   "url": "https://help.shopify.com/manual/using-themes/images"
+  },
+  {
+   "label": "Walmart Marketplace Learn — 图像指南和要求",
+   "url": "https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements"
+  },
+  {
+   "label": "Google Merchant Center — 图片链接 [image_link]",
+   "url": "https://support.google.com/merchants/answer/6324350?hl=en"
+  },
+  {
+   "label": "Google Merchant Center — 产品数据规范更新 2026 年",
+   "url": "https://support.google.com/merchants/answer/16989427?hl=en"
+  }
+ ],
+ "related": [
+  {
+   "label": "Amazon产品照片要求",
+   "href": "/zh/blog/amazon-product-photo-specs-2026"
+  },
+  {
+   "label": "TikTok Shop 照片尺寸",
+   "href": "/zh/blog/tiktok-shop-photo-sizes"
+  },
+  {
+   "label": "WebP、JPEG、PNG",
+   "href": "/zh/blog/webp-jpeg-png-product-photos-2026"
+  },
+  {
+   "label": "photoZseo 适用于 iPhone 和 iPad",
+   "href": "/zh/download"
+  }
+ ],
+ "relatedTitle": "相关指南",
+ "cta": {
+  "h": "自动调整每个市场的大小",
+  "p": "photoZseo 从一张照片导出每个市场的正确尺寸、格式和文件名。免费下载。",
+  "btn": "在App Store上下载"
+ },
+ "updatedLabel": "已检查"
+}

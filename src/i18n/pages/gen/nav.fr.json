@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "Application iPhone et iPad",
+   "href": "/fr/download"
+  },
+  {
+   "label": "Tarifs",
+   "href": "/fr/pricing"
+  },
+  {
+   "label": "Tailles des images du marché",
+   "href": "/fr/marketplace-image-sizes"
+  },
+  {
+   "label": "Alternatives",
+   "href": "/fr/alternatives"
+  },
+  {
+   "label": "À propos de",
+   "href": "/fr/about"
+  }
+ ]
+}

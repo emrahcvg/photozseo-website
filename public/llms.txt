@@ -1,39 +1,86 @@
 # photoZseo
 
-> photoZseo is a mobile app (iOS & Android) that turns product photos into marketplace-ready images. Sellers shoot, resize, compress, SEO-rename, and publish product photos — replacing 5–6 separate tools with one app. It also hosts lightweight online stores at photozseo.com/<store-slug>.
+> photoZseo (App Store name: "photoZseo: SEO Product Photo") is an iPhone and iPad app for online sellers. It turns one product photo into marketplace-ready images and listing text for 46 marketplaces: it resizes, compresses and SEO-renames photos, removes backgrounds on the device, fills in titles, descriptions, tags and alt text, and exports CSV/XLSX listing files. Free to download on the App Store with a free plan; paid plans from $9.99/month. Requires iOS / iPadOS 17 or later. Not available for Android or Mac.
 
-photoZseo optimizes images for 60+ export targets including Amazon, eBay, Etsy, Shopify, WooCommerce, Walmart, Trendyol, Hepsiburada, AliExpress, and social/ad platforms (Instagram, TikTok, Pinterest, Google Shopping, Meta Catalog). Features include SEO filenames, AI alt-text, AI background removal, B2B quote builder, Avery labels, and iCloud sync. Available in 12 languages.
+Last updated: 2026-11-26. All prices in USD; the App Store shows local prices.
 
-## Chrome extension
-photoZseo for Chrome is a separate product from the iPhone & iPad app: a Chrome side-panel extension that collects product photos and details (name, brand, category, price, color variants) from the product page the user is viewing, resizes and compresses the photos to marketplace image requirements, gives them SEO-friendly file names and exports a folder-organized ZIP plus CSV or Excel files.
+## Key facts
 
-- [photoZseo Chrome extension](https://photozseo.com/chrome-extension): Features, pricing, privacy and FAQ (15 languages, e.g. [Turkish](https://photozseo.com/tr/chrome-extension)).
-- [Extension privacy policy](https://photozseo.com/privacy#chrome-extension): Data stays in the browser; no photoZseo server.
+- App Store: https://apps.apple.com/app/id6762639768 (app ID 6762639768, category Business).
+- Devices: iPhone (iOS 17.0+) and iPad (iPadOS 17.0+). One subscription covers both with the same Apple Account. No Android, no Mac version yet.
+- Languages (15): English, Turkish, German, Spanish, French, Italian, Portuguese, Polish, Japanese, Korean, Chinese, Arabic, Hindi, Persian, Urdu.
+- Marketplaces: image presets for 46 marketplaces and 60+ export targets in total including social and ad channels. Examples: Amazon, eBay, Etsy, Shopify, Walmart, WooCommerce, Trendyol, Hepsiburada, N11, Çiçeksepeti, AliExpress, Temu, SHEIN, DHgate, Mercado Libre, Allegro, Zalando, Otto, Kaufland, Noon, Shopee, Lazada, Coupang, Flipkart; Instagram, TikTok Shop, Pinterest, Facebook Shops, WhatsApp Catalog.
+- Listing files: CSV / XLSX / JSON in each platform's column layout (49 platform formats), per product or combined; import from CSV, TSV, XLSX, JSON or photo URLs.
+- Camera: template camera for 7 angles (front, back, side, detail, top, label, lifestyle), auto-zoom, HDR, live text recognition, 4K, volume-button shutter.
+- SEO: 13 fields (SEO title, slug, file name, category, meta description, description, alt text, 4 tags, keywords, barcode) in 15 languages. On iOS 26 with Apple Intelligence the text is written by Apple's on-device Foundation Models; on iOS 17–25 by on-device image analysis and templates.
+- Background removal: on-device (Apple Vision); transparent PNG, white or custom color; batch.
+- Other: EXIF editor (GPS removed on export by default), JPEG/PNG/WebP, B2B PDF quote builder (VAT, IBAN, Incoterms, HS codes, e-signature), Shopify product push, online store on photozseo.com, iCloud Drive sync, teams.
+- Privacy: photos are processed on the device, no ads, no advertising ID; anonymous usage analytics (Firebase) can be turned off in Settings. Subscriptions via App Store / RevenueCat.
+- Works offline except publishing (Shopify, online store), iCloud sync and purchases.
 
-Key facts:
-- Browser: Google Chrome 116+ on Windows, macOS, Linux and ChromeOS (uses the Chrome side panel; not available on mobile).
-- Image sizes: 82 resize and compression profiles for 67 platforms in 10 regions (Amazon, eBay, Etsy, Shopify, Walmart, Trendyol, Hepsiburada, AliExpress, Temu, SHEIN, Instagram, TikTok Shop, Pinterest and more).
-- Exports: ZIP organized by category / product / platform, 50 platform CSV formats, Shopify, Trendyol and Hepsiburada spreadsheets, and filling a template file downloaded from the seller's own marketplace panel.
-- Other features: SEO file names, per-image alt text (Chrome on-device AI when available, otherwise templates), color variant grouping, cost/sale price with profit and margin, the seller's own photos.
-- Measured speed: 8 products with 3 photos each exported to 5 image profiles (Amazon, eBay, Etsy, Shopify) produced 120 files plus a CSV in about 5 seconds.
-- Privacy: no account and no photoZseo backend; the product library is stored locally in IndexedDB. Pages are read only when the user opens the panel or scans; access to all sites is optional. The only outside call besides product images is the Pro license check with Dodo Payments.
-- Not included: background removal (that is in the iPhone & iPad app), translation of product titles, currency conversion.
-- Pricing: Free plan with up to 5 products, 10 new images per day and 4 image sizes. Pro $7.99/month or $59/year (3 devices); Team $129/year (10 devices). Subscriptions through Dodo Payments; cancel any time, Pro stays active until the end of the paid period.
+## Pricing
 
-## Core pages
-- [Home](https://photozseo.com/): App overview, features, and download links.
-- [Support](https://photozseo.com/support): Help and contact for users and sellers.
-- [Accessibility](https://photozseo.com/accessibility): Accessibility commitments and features.
+- Free ($0): template camera, all image sizes and formats, 5 active platforms, 3 photo imports per month from Photos/Files (camera shots unlimited); exports carry a watermark.
+- Starter: $9.99/month or $71.99/year. No watermark, batch export and sharing, video recording, 15 active platforms, 100 imports per month.
+- Pro: $19.99/month or $143.99/year. Everything in Starter plus all platforms, AI background removal (100/month), AI alt text, online store on photozseo.com, 1,000 imports per month.
+- Business: $49.99/month or $359.99/year. Everything in Pro plus unlimited imports and background removal, B2B quote builder, Shopify integration, create a team (up to 3 members).
+- Annual plans cost 40% less than monthly and include a 7-day free trial. Cancel any time in iPhone Settings → [name] → Subscriptions.
 
-## Legal
-- [Privacy Policy](https://photozseo.com/privacy): What data the app collects and how it is used.
-- [Terms of Service](https://photozseo.com/terms): Terms governing use of the app and stores.
-- [Delete Account](https://photozseo.com/delete-account): How to request account and data deletion.
+## Main pages
+
+- [Home](https://photozseo.com/): Overview, features, plans and FAQ.
+- [iPhone & iPad app](https://photozseo.com/download): What the app does, requirements, languages and App Store link.
+- [Pricing](https://photozseo.com/pricing): Free, Starter, Pro and Business compared in a table, trial and billing FAQ.
+- [Marketplace image size guide](https://photozseo.com/marketplace-image-sizes): Product photo sizes, formats and background rules for Amazon, eBay, Etsy, Shopify, Walmart, TikTok Shop, Temu, Trendyol, Hepsiburada and more, with links to each marketplace's official seller documentation.
+- [photoZseo alternatives](https://photozseo.com/alternatives): How photoZseo compares with general photo editors and AI background tools, and when each is the better choice.
+- [About](https://photozseo.com/about): Who builds photoZseo, products and contact.
+- [Support](https://photozseo.com/support): Help and contact (support@photozseo.com).
+- Other languages: every page above (and the blog) is also available under a language prefix — /tr/ (Turkish; main pages written natively, blog machine-translated) and machine-translated /de/, /es/, /fr/, /it/, /pt/, /pl/, /ja/, /ko/, /zh/, /ar/, /hi/, /fa/, /ur/ — e.g. [/tr/pricing](https://photozseo.com/tr/pricing), [/de/pricing](https://photozseo.com/de/pricing). The English pages are the reference version.
+
+## Guides (blog)
+
+- [photoZseo is now on the App Store](https://photozseo.com/blog/photozseo-now-on-app-store): Launch announcement, features, pricing and requirements (26 November 2026).
+- [eBay photo requirements 2026](https://photozseo.com/blog/ebay-product-photo-requirements-2026)
+- [Shopify product image size 2026](https://photozseo.com/blog/shopify-product-image-size-2026)
+- [Google Shopping 500 × 500 px image minimum from January 2027](https://photozseo.com/blog/google-merchant-center-500px-image-requirement-2027)
+- [How to name product photos for SEO](https://photozseo.com/blog/how-to-name-product-photos-for-seo)
+- [Alt text for product images: 12 examples](https://photozseo.com/blog/product-image-alt-text-examples)
+- [How to remove the background from product photos on iPhone](https://photozseo.com/blog/remove-background-product-photos-iphone)
+- [How to resize product photos for multiple marketplaces at once](https://photozseo.com/blog/resize-product-photos-multiple-marketplaces)
+- [White background product photos: the RGB 255 rule](https://photozseo.com/blog/white-background-product-photos)
+- [Product photo tips for Trendyol and Hepsiburada](https://photozseo.com/blog/trendyol-hepsiburada-product-photos)
+- [Amazon product photo requirements in 2026](https://photozseo.com/blog/amazon-product-photo-specs-2026)
+- [Etsy SEO: how product photography moves rankings](https://photozseo.com/blog/etsy-seo-product-photography)
+- [TikTok Shop photo sizes: the complete 2026 guide](https://photozseo.com/blog/tiktok-shop-photo-sizes)
+- [WebP vs JPEG vs PNG for product photos](https://photozseo.com/blog/webp-jpeg-png-product-photos-2026)
+- [Product photo SEO 2026: the 13 fields](https://photozseo.com/blog/product-photo-seo-2026)
+- [Shopify CSV upload vs direct API](https://photozseo.com/blog/shopify-csv-vs-api-2026)
+- [Bulk CSV/XLSX import to 46 marketplaces](https://photozseo.com/blog/bulk-csv-xlsx-import-46-marketplaces-2026)
+- [B2B quote builder for e-commerce](https://photozseo.com/blog/b2b-quote-builder-2026)
+- [Cross-border selling to China](https://photozseo.com/blog/cross-border-selling-china-2026)
+
+## Chrome extension (separate product)
+
+photoZseo for Chrome is a separate desktop product, not the iPhone & iPad app: a Chrome side-panel extension that collects product photos and details from the product page you are viewing, resizes and compresses photos to marketplace requirements, gives them SEO file names and exports a ZIP plus CSV or Excel files.
+
+- [photoZseo Chrome extension](https://photozseo.com/chrome-extension): Features, pricing, privacy and FAQ (15 languages).
+- Browser: Google Chrome 116+ on Windows, macOS, Linux and ChromeOS (uses the side panel; not on mobile).
+- 82 resize and compression profiles for 67 platforms; ZIP by category / product / platform; 50 platform CSV formats plus Shopify, Trendyol and Hepsiburada spreadsheets.
+- No account and no photoZseo backend; library stored locally in IndexedDB. Background removal is not included (it is in the iPhone & iPad app).
+- Pricing: Free (5 products, 10 new images per day, 4 image sizes). Pro $7.99/month or $59/year (3 devices); Team $129/year (10 devices). Billed by Dodo Payments.
 
 ## Online stores
-- Seller storefronts live at `https://photozseo.com/store/<slug>` and a marketplace index at `https://photozseo.com/market`.
-- Store and product pages expose schema.org structured data (Product, Store, Organization, BreadcrumbList) for accurate citation.
+
+- Seller storefronts live at `https://photozseo.com/store/<slug>`, with a marketplace index at `https://photozseo.com/market`. Store and product pages include schema.org Product, Store, Organization and BreadcrumbList data.
+
+## Legal
+
+- [Privacy Policy](https://photozseo.com/privacy)
+- [Terms of Service](https://photozseo.com/terms)
+- [Delete account](https://photozseo.com/delete-account)
+- [Accessibility](https://photozseo.com/accessibility)
 
 ## Sitemaps
-- [Sitemap](https://photozseo.com/sitemap.xml)
+
+- [Sitemap index](https://photozseo.com/sitemap-index.xml)
 - [Marketplace sitemap](https://photozseo.com/marketplace-sitemap)

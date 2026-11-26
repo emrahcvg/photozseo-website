@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "iPhone और iPad ऐप",
+   "href": "/hi/download"
+  },
+  {
+   "label": "मूल्य निर्धारण",
+   "href": "/hi/pricing"
+  },
+  {
+   "label": "बाज़ार छवि आकार",
+   "href": "/hi/marketplace-image-sizes"
+  },
+  {
+   "label": "वैकल्पिक",
+   "href": "/hi/alternatives"
+  },
+  {
+   "label": "हमारे बारे में",
+   "href": "/hi/about"
+  }
+ ]
+}

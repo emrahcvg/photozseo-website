@@ -1,0 +1,157 @@
+{
+ "title": "photoZseo dla iPhone i iPad: aplikacja do zdjęć produktów SEO (App Store)",
+ "desc": "Pobierz photoZseo: Zdjęcie produktu SEO bezpłatnie na App Store. Wykonuj zdjęcia produktów, zmieniaj ich rozmiar dla 46 rynków, usuwaj tła i automatycznie uzupełniaj tytuły, opisy i tekst alternatywny SEO. iOS 17+.",
+ "crumb": "Aplikacja iPhone i iPad",
+ "kicker": "Teraz na App Store",
+ "h1": "photoZseo: Zdjęcie produktu SEO dla iPhone i iPad",
+ "answer": "photoZseo to aplikacja iPhone i iPad dla sprzedawców internetowych. Fotografujesz produkt raz, a aplikacja zmienia rozmiar, kompresuje i zmienia nazwę zdjęć dla 46 rynków (Amazon, eBay, Etsy, Shopify, Walmart, Trendyol, Hepsiburada i więcej), usuwa tła z urządzenia i wypełnia tytuły, opisy, tagi i tekst alternatywny. Można go pobrać bezpłatnie na App Store i działa na iOS 17 lub nowszym.",
+ "facts": [
+  {
+   "k": "Cena",
+   "v": "Bezpłatnie · plany od $9.99/mies"
+  },
+  {
+   "k": "Urządzenia",
+   "v": "iPhone i iPad"
+  },
+  {
+   "k": "Wymaga",
+   "v": "iOS / iPadOS 17.0+"
+  },
+  {
+   "k": "Języki",
+   "v": "15 języków"
+  }
+ ],
+ "sections": [
+  {
+   "id": "what",
+   "h2": "Co możesz zrobić z photoZseo",
+   "bullets": [
+    "Zrób zdjęcie za pomocą aparatu szablonowego, który poprowadzi Cię przez 7 kątów, o które pytają rynki: przód, tył, bok, detale, góra, etykieta i styl życia.",
+    "Zmiana rozmiaru i kompresja dla każdego kanału — ponad 60 celów eksportowych, w tym 46 rynków oraz platformy społecznościowe i reklamowe (Instagram, TikTok Shop, Pinterest, Facebook Shops, WhatsApp Catalog). Eksportuj JPEG, PNG i WebP.",
+    "Nazwy plików i metadane SEO — każde zdjęcie otrzymuje nazwę pliku opartą na słowach kluczowych, tekst alternatywny i czyste dane EXIF; Lokalizacja GPS jest domyślnie usuwana podczas eksportu.",
+    "Usuwanie tła AI na urządzeniu: przezroczysty PNG, czysta biel lub niestandardowy kolor, jedno zdjęcie lub cała partia.",
+    "Automatyczne uzupełnianie tekstu aukcji — tytuł, informacja, kategoria, metaopis, długi opis, tagi, słowa kluczowe i kod kreskowy (13 pól) ze zdjęcia i szczegółów produktu.",
+    "Pliki z listami — CSV / XLSX / JSON w układzie kolumnowym każdego marketplace (49 formatów platform), osobno dla każdego produktu lub połączone.",
+    "Kreator ofert B2B — markowe wyceny w formacie A4 PDF z VAT, IBAN, Incoterms, kodami HS i podpisem elektronicznym.",
+    "Integracja Shopify — przesyłaj produkty bezpośrednio do sklepu Shopify (plan Business)."
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "Jak to działa",
+   "steps": [
+    {
+     "t": "Zdjęcie lub import.",
+     "d": "Użyj aparatu szablonowego lub importuj zdjęcia ze Zdjęć i Plików."
+    },
+    {
+     "t": "Wybierz swoje rynki.",
+     "d": "Wybierz, gdzie sprzedajesz, np. Amazon, Etsy i Trendyol."
+    },
+    {
+     "t": "Pozwól aplikacji przygotować wszystko.",
+     "d": "Każde zdjęcie jest przycinane, zmieniane jego rozmiar, kompresowane i zmieniana nazwa dla każdego rynku; tekst aukcji jest wypełniony."
+    },
+    {
+     "t": "Eksportuj lub publikuj.",
+     "d": "Zapisz folder z gotowymi obrazami oraz plik z listą CSV/XLSX, udostępnij je lub prześlij do Shopify."
+    }
+   ]
+  },
+  {
+   "id": "ai",
+   "h2": "Sztuczna inteligencja na urządzeniu i prywatność",
+   "body": [
+    "Przetwarzanie zdjęć, usuwanie tła (Apple Vision) i rozpoznawanie tekstu uruchamiane na Twoim iPhone lub iPad; Twoje zdjęcia produktów nie są przesyłane na serwer photoZseo w celu przetworzenia.",
+    "W iOS 26 z Apple Intelligence tekst listy jest pisany przez Foundation Models na urządzeniu Apple. W modelach iOS 17–25 aplikacja wypełnia te same pola z analizy obrazu i szablonów na urządzeniu.",
+    "photoZseo nie wyświetla reklam i nie śledzi Cię w innych aplikacjach. Anonimową analizę użytkowania można wyłączyć w ustawieniach aplikacji. Szczegóły: [Polityka prywatności](/pl/privacy)."
+   ]
+  },
+  {
+   "id": "requirements",
+   "h2": "Wymagania i dostępność",
+   "table": {
+    "head": [
+     "",
+     ""
+    ],
+    "rows": [
+     [
+      "Nazwa App Store",
+      "photoZseo: Zdjęcie produktu SEO"
+     ],
+     [
+      "Zgodność",
+      "iPhone z iOS 17.0 lub nowszą wersją · iPad z iPadOS 17.0 lub nowszą wersją"
+     ],
+     [
+      "Funkcje Apple Intelligence",
+      "iOS 26 na obsługiwanym urządzeniu (opcjonalnie)"
+     ],
+     [
+      "Cena",
+      "Bezpłatne pobieranie z bezpłatnym planem; Subskrypcje Starter, Pro i Business — patrz [wycena](/pl/pricing)"
+     ],
+     [
+      "Bezpłatny okres próbny",
+      "7 dni w planach rocznych"
+     ],
+     [
+      "Języki",
+      "Angielski, turecki, niemiecki, hiszpański, francuski, włoski, portugalski, polski, japoński, koreański, chiński, arabski, hindi, perski, urdu"
+     ],
+     [
+      "Androida/Maca",
+      "Jeszcze niedostępne"
+     ],
+     [
+      "Alternatywa dla komputerów stacjonarnych",
+      "[photoZseo dla Chrome](/pl/chrome-extension) (oddzielne rozszerzenie)"
+     ]
+    ]
+   }
+  }
+ ],
+ "faqTitle": "Pobierz często zadawane pytania",
+ "faq": [
+  {
+   "q": "Gdzie mogę pobrać photoZseo?",
+   "a": "Na Apple App Store wyszukaj „photoZseo” lub otwórz apps.apple.com/app/id6762639768 na swoim iPhone lub iPad."
+  },
+  {
+   "q": "Czy photoZseo jest dostępny na Androida?",
+   "a": "Jeszcze nie. photoZseo jest dostępny dla iPhone i iPad. Na komputerze możesz użyć rozszerzenia photoZseo dla Google Chrome."
+  },
+  {
+   "q": "Czy photoZseo działa w trybie offline?",
+   "a": "Tak. Fotografowanie, zmiana rozmiaru, usuwanie tła i eksportowanie działają bez połączenia z Internetem. Potrzebujesz jedynie połączenia, aby opublikować w sklepie internetowym lub Shopify, zsynchronizować się z iCloud lub kupić subskrypcję."
+  },
+  {
+   "q": "Jakie rynki obsługuje photoZseo?",
+   "a": "Amazon, eBay, Etsy, Shopify, Walmart, WooCommerce, Trendyol, Hepsiburada, N11, AliExpress, Temu, SHEIN, Mercado Libre, Allegro, Zalando, Otto, Kaufland, Noon, Shopee, Lazada, Coupang, Flipkart i więcej, a także Instagram, TikTok Shop, Pinterest, Facebook Shops i WhatsApp Catalog."
+  }
+ ],
+ "related": [
+  {
+   "label": "Ceny i bezpłatny plan",
+   "href": "/pl/pricing"
+  },
+  {
+   "label": "Rozmiary obrazów na rynku",
+   "href": "/pl/marketplace-image-sizes"
+  },
+  {
+   "label": "O photoZseo",
+   "href": "/pl/about"
+  }
+ ],
+ "relatedTitle": "Powiązany",
+ "cta": {
+  "h": "Zdobądź photoZseo na App Store",
+  "p": "Do pobrania bezpłatnie. Działa na iPhone i iPad.",
+  "btn": "Pobierz na App Store"
+ },
+ "updatedLabel": "Zaktualizowano"
+}

@@ -1,0 +1,80 @@
+{
+ "title": "À propos de photoZseo : outils de photos et de listing de produits pour les vendeurs en ligne",
+ "desc": "photoZseo propose des outils de photo et de référencement de produits pour les vendeurs en ligne indépendants : une application iPhone et iPad, une extension Chrome et des boutiques en ligne sur photozseo.com.",
+ "crumb": "À propos de",
+ "kicker": "À propos de nous",
+ "h1": "À propos de photoZseo",
+ "answer": "photoZseo crée des outils qui transforment les photos de produits en listes prêtes à être mises sur le marché. Le produit principal est photoZseo : application SEO Product Photo pour iPhone et iPad (App Store, 2026). Il existe également une extension photoZseo distincte pour Google Chrome et de simples boutiques en ligne hébergées sur photozseo.com.",
+ "facts": [
+  {
+   "k": "Fondée pour",
+   "v": "Vendeurs en ligne indépendants"
+  },
+  {
+   "k": "Produit principal",
+   "v": "Application iPhone et iPad"
+  },
+  {
+   "k": "Site web",
+   "v": "photozseo.com"
+  },
+  {
+   "k": "Soutien",
+   "v": "[support@photozseo.com](mailto:support@photozseo.com)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "why",
+   "h2": "Pourquoi photoZseo existe",
+   "body": [
+    "Chaque marché demande des tailles de photo, des règles d'arrière-plan, des noms de fichiers et des colonnes de liste différentes. Un vendeur sur Amazon, Etsy et Trendyol édite souvent la même photo trois fois et tape trois fois le même titre.",
+    "photoZseo a été lancé par un vendeur-développeur indépendant pour supprimer ce travail répétitif : photographiez une fois et laissez l'application préparer les photos, les noms de fichiers et le texte de la liste pour chaque marché."
+   ]
+  },
+  {
+   "id": "products",
+   "h2": "Produits",
+   "bullets": [
+    "[photoZseo pour iPhone et iPad](/fr/download) — caméra, redimensionnement pour 46 places de marché, suppression de l'arrière-plan, texte de liste, exportation CSV/XLSX, devis B2B et push Shopify.",
+    "[photoZseo pour Chrome](/fr/chrome-extension) — une extension du panneau latéral de bureau qui collecte des photos et des détails de produits à partir de pages Web et exporte des fichiers ZIP et CSV prêts pour le marché. Il s'agit d'un produit distinct avec ses propres plans.",
+    "Boutiques en ligne – les vendeurs des forfaits Pro et Business peuvent publier une simple vitrine sur photozseo.com."
+   ]
+  },
+  {
+   "id": "principles",
+   "h2": "Comment nous construisons",
+   "bullets": [
+    "Sur l'appareil d'abord. Le traitement des photos et la suppression de l'arrière-plan s'exécutent sur l'appareil de l'utilisateur.",
+    "Aucune publicité. Les applications sont payées par des abonnements et non par de la publicité.",
+    "Conçu pour les vendeurs internationaux. L'application est disponible en 15 langues, dont trois langues s'écrivant de droite à gauche (arabe, persan, ourdou).",
+    "Spécifications précises du marché. Les préréglages suivent la propre documentation du vendeur des places de marché ; voir le [guide des tailles d'image du marché](/fr/marketplace-image-sizes)."
+   ]
+  },
+  {
+   "id": "contact",
+   "h2": "Contact",
+   "bullets": [
+    "Prise en charge : [support@photozseo.com](mailto:support@photozseo.com)",
+    "Général et presse : [bonjour@photozseo.com](mailto:hello@photozseo.com)",
+    "Centre d'aide : [photozseo.com/support](/fr/support)"
+   ]
+  }
+ ],
+ "related": [
+  {
+   "label": "Télécharger pour iPhone et iPad",
+   "href": "/fr/download"
+  },
+  {
+   "label": "Tarifs",
+   "href": "/fr/pricing"
+  },
+  {
+   "label": "politique de confidentialité",
+   "href": "/fr/privacy"
+  }
+ ],
+ "relatedTitle": "En rapport",
+ "updatedLabel": "Mis à jour"
+}

@@ -1,0 +1,414 @@
+---
+import Layout from '../layouts/Layout.astro';
+import type { Lang } from '../i18n/ui';
+import { defaultLang } from '../i18n/ui';
+import { BLOG_UI } from '../i18n/blog-ui';
+import { APP_STORE_URL } from '../i18n/meta';
+
+interface Props {
+  data: {
+    title: string; description: string; pubDate: Date; readingMinutes: number; tags: string[];
+    tldr?: string[]; faqs?: { q: string; a: string }[];
+  };
+  Content: any;
+  slug: string;
+  lang: Lang;
+  altLangs: Lang[];
+}
+
+const { data, Content, slug, lang, altLangs } = Astro.props;
+const ui = BLOG_UI[lang] ?? BLOG_UI.en;
+const prefix = lang === defaultLang ? '' : `/${lang}`;
+const site = 'https://photozseo.com';
+const url = `${site}${prefix}/blog/${slug}`;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.pubDate.toISOString(),
+  dateModified: data.pubDate.toISOString(),
+  author: { '@type': 'Organization', name: 'photoZseo', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'photoZseo',
+    logo: { '@type': 'ImageObject', url: `${site}/icon-512.png` },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  keywords: data.tags.join(', '),
+  inLanguage: lang,
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: ui.home, item: `${site}${prefix}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}${prefix}/blog` },
+    { '@type': 'ListItem', position: 3, name: data.title, item: url },
+  ],
+};
+
+const faqSchema = data.faqs && data.faqs.length > 0
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: data.faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
+---
+
+<Layout title={data.title} description={data.description} lang={lang} altLangs={altLangs}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+  <article class="post">
+    <nav class="post-crumbs" aria-label="Breadcrumb">
+      <a href={`${prefix}/`}>{ui.home}</a>
+      <span aria-hidden="true">/</span>
+      <a href={`${prefix}/blog`}>Blog</a>
+      <span aria-hidden="true">/</span>
+      <span class="current">{data.title}</span>
+    </nav>
+
+    <a href={`${prefix}/blog`} class="post-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>{ui.allPosts}</span>
+    </a>
+
+    <header class="post-header" data-reveal>
+      <div class="post-meta">
+        <time datetime={data.pubDate.toISOString()}>
+          {data.pubDate.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+        <span>·</span>
+        <span>{data.readingMinutes} {ui.minRead}</span>
+      </div>
+      <h1>{data.title}</h1>
+      <p class="post-lead">{data.description}</p>
+      <div class="post-tags">
+        {data.tags.map((tag) => <span class="post-tag">{tag}</span>)}
+      </div>
+    </header>
+
+    {data.tldr && data.tldr.length > 0 && (
+      <aside class="post-tldr" data-reveal aria-label={ui.summary}>
+        <span class="tldr-label">TL;DR</span>
+        <ul>
+          {data.tldr.map((item) => <li>{item}</li>)}
+        </ul>
+      </aside>
+    )}
+
+    <div class="post-body" data-reveal>
+      <Content />
+    </div>
+
+    {data.faqs && data.faqs.length > 0 && (
+      <section class="post-faq" data-reveal aria-label={ui.faq}>
+        <h2>{ui.faq}</h2>
+        <div class="post-faq-list">
+          {data.faqs.map((faq) => (
+            <details>
+              <summary>{faq.q}</summary>
+              <p>{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <footer class="post-footer" data-reveal>
+      <span class="kicker">{ui.ctaKicker}</span>
+      <h3>{ui.ctaTitle}</h3>
+      <p>{ui.ctaText}</p>
+      <a href={APP_STORE_URL || `${prefix}/#download`} rel="noopener" class="post-cta">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.498 12.43c.02-2.176 1.776-3.221 1.856-3.27-1.013-1.481-2.585-1.683-3.139-1.704-1.319-.134-2.594.78-3.265.78-.685 0-1.713-.766-2.823-.744-1.43.022-2.76.842-3.491 2.131-1.493 2.59-.38 6.415 1.07 8.519.71 1.029 1.541 2.18 2.633 2.14 1.073-.043 1.474-.681 2.766-.681s1.66.681 2.776.659c1.149-.022 1.873-1.034 2.566-2.072.812-1.179 1.143-2.339 1.157-2.398-.026-.011-2.214-.85-2.106-3.36zM14.396 5.879c.575-.722.967-1.713.86-2.722-.831.035-1.866.578-2.466 1.281-.532.612-1.005 1.622-.886 2.588.942.075 1.906-.473 2.492-1.147z"/></svg>
+        <span class="post-cta-text">
+          <span class="post-cta-small">Download on the</span>
+          <span class="post-cta-big">App Store</span>
+        </span>
+      </a>
+    </footer>
+  </article>
+
+  <style>
+    .post { max-width: 760px; margin: 0 auto; padding: 16px 0 80px; }
+
+    .post-crumbs {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      font-size: 13px; color: var(--text-dim);
+      margin-bottom: 18px;
+    }
+    .post-crumbs a { color: var(--text-muted); text-decoration: none; }
+    .post-crumbs a:hover { color: var(--accent); }
+    .post-crumbs .current { color: var(--text-dim); }
+
+    .post-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text-dim); font-size: 13px; font-weight: 500;
+      letter-spacing: 0.02em; margin-bottom: 32px;
+      padding: 8px 14px 8px 10px; border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      transition: color .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .post-back:hover {
+      color: var(--accent);
+      border-color: rgba(79,209,197,0.40);
+      background: rgba(79,209,197,0.06);
+    }
+
+    .kicker {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+      padding: 7px 12px; border-radius: 999px;
+      background: rgba(79,209,197,0.10); border: 1px solid rgba(79,209,197,0.28);
+    }
+
+    .post-header {
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .post-meta {
+      display: flex; gap: 8px;
+      font-family: var(--font-mono, 'SF Mono', ui-monospace, Menlo, monospace);
+      font-size: 12px; color: var(--text-dim);
+      letter-spacing: 0.04em; margin-bottom: 18px;
+    }
+    .post-header h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.05; font-weight: 600;
+      letter-spacing: -0.025em; color: var(--text);
+      margin: 0 0 18px;
+    }
+    .post-lead {
+      font-size: clamp(17px, 1.9vw, 21px);
+      color: var(--text-muted); line-height: 1.5;
+      margin: 0 0 22px;
+    }
+    .post-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .post-tag {
+      font-size: 11px; font-weight: 600;
+      color: var(--text-muted); letter-spacing: 0.04em;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 999px;
+    }
+
+    .post-tldr {
+      margin: 0 0 40px;
+      padding: 24px 28px;
+      border-radius: 18px;
+      background:
+        linear-gradient(160deg, rgba(79,209,197,0.10), rgba(108,140,255,0.06));
+      border: 1px solid rgba(79,209,197,0.22);
+      backdrop-filter: blur(12px);
+    }
+    .tldr-label {
+      display: inline-block;
+      font-family: var(--font-mono, 'SF Mono', ui-monospace, Menlo, monospace);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .post-tldr ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    .post-tldr li {
+      position: relative; padding-left: 22px;
+      color: var(--text); font-size: 15.5px; line-height: 1.55;
+    }
+    .post-tldr li::before {
+      content: '';
+      position: absolute; left: 0; top: 9px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .post-body {
+      font-size: 17px; line-height: 1.7;
+      color: var(--text-muted);
+    }
+    .post-body :global(h2) {
+      font-size: clamp(22px, 2.6vw, 30px);
+      font-weight: 600; color: var(--text);
+      letter-spacing: -0.015em; line-height: 1.2;
+      margin: 48px 0 16px;
+    }
+    .post-body :global(h3) {
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 600; color: var(--text);
+      margin: 32px 0 12px;
+    }
+    .post-body :global(p) { margin: 0 0 18px; }
+    .post-body :global(strong) { color: var(--text); font-weight: 600; }
+    .post-body :global(ul),
+    .post-body :global(ol) {
+      padding-left: 20px; margin: 0 0 18px;
+    }
+    .post-body :global(li) { margin: 0 0 8px; }
+    .post-body :global(li::marker) { color: var(--accent); }
+    .post-body :global(code) {
+      font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+      font-size: 0.9em;
+      background: rgba(79,209,197,0.10);
+      border: 1px solid rgba(79,209,197,0.20);
+      padding: 2px 6px; border-radius: 6px;
+      color: var(--accent);
+    }
+    .post-body :global(pre) {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-size: 14px; line-height: 1.5;
+      margin: 0 0 18px;
+    }
+    .post-body :global(pre code) {
+      background: transparent; border: 0; padding: 0;
+      color: var(--text);
+    }
+    .post-body :global(blockquote) {
+      border-left: 3px solid var(--accent);
+      padding: 4px 0 4px 20px;
+      margin: 24px 0;
+      color: var(--text);
+      font-style: italic;
+      background: rgba(79,209,197,0.04);
+      border-radius: 0 12px 12px 0;
+    }
+    .post-body :global(blockquote p) { margin: 0; }
+    .post-body :global(table) {
+      width: 100%; border-collapse: collapse;
+      margin: 24px 0; font-size: 14.5px;
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .post-body :global(th) {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      font-weight: 600; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      text-align: left; padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .post-body :global(td) {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .post-body :global(tr:last-child td) { border-bottom: 0; }
+    .post-body :global(a) {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-color: rgba(79,209,197,0.40);
+      text-underline-offset: 3px;
+      transition: text-decoration-color .15s ease;
+    }
+    .post-body :global(a:hover) { text-decoration-color: var(--accent); }
+    .post-body :global(hr) {
+      border: 0; border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+    .post-body :global(img) {
+      max-width: 100%; height: auto;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    .post-faq {
+      margin: 48px 0 0;
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    }
+    .post-faq h2 {
+      font-size: clamp(20px, 2.4vw, 26px);
+      font-weight: 600; color: var(--text);
+      letter-spacing: -0.015em;
+      margin: 0 0 18px;
+    }
+    .post-faq-list { display: flex; flex-direction: column; gap: 8px; }
+    .post-faq details {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      transition: border-color .15s ease;
+    }
+    .post-faq details[open] { border-color: rgba(79,209,197,0.30); }
+    .post-faq summary {
+      cursor: pointer; list-style: none;
+      font-weight: 600; font-size: 15.5px; color: var(--text);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      line-height: 1.4;
+    }
+    .post-faq summary::-webkit-details-marker { display: none; }
+    .post-faq summary::after {
+      content: '+'; color: var(--accent);
+      font-size: 22px; line-height: 1; flex-shrink: 0;
+      transition: transform .15s ease;
+    }
+    .post-faq details[open] summary::after { content: '−'; }
+    .post-faq details p {
+      color: var(--text-muted); font-size: 15px;
+      line-height: 1.65; margin: 12px 0 0;
+    }
+
+    .post-footer {
+      margin-top: 64px;
+      padding: 48px 32px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        radial-gradient(ellipse 600px 320px at 50% 0%, rgba(79,209,197,0.18), transparent 70%),
+        linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      backdrop-filter: blur(20px);
+      text-align: center;
+    }
+    .post-footer .kicker { margin-bottom: 16px; }
+    .post-footer h3 {
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 600; color: var(--text);
+      letter-spacing: -0.02em; line-height: 1.15;
+      margin: 0 0 12px;
+    }
+    .post-footer > p {
+      color: var(--text-muted);
+      font-size: 16px; line-height: 1.6;
+      max-width: 480px; margin: 0 auto 28px;
+    }
+    .post-cta {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 14px 22px;
+      border-radius: 14px;
+      background: #000; color: #fff;
+      border: 1px solid #2a2a2a;
+      text-decoration: none;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .post-cta:hover {
+      transform: translateY(-2px);
+      background: #1a1a1a; color: #fff;
+      box-shadow: 0 8px 28px rgba(79,209,197,0.25);
+    }
+    .post-cta-text { display: flex; flex-direction: column; line-height: 1.05; text-align: left; }
+    .post-cta-small { font-size: 11px; opacity: 0.85; }
+    .post-cta-big { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+
+    @media (max-width: 640px) {
+      .post-footer { padding: 36px 22px; }
+    }
+  </style>
+</Layout>

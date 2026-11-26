@@ -1,16 +1,17 @@
 import type { HomeContent } from '../home';
 
-const de: HomeContent = {
+// Otomatik çeviri (scratchpad/i18n/site.py), kaynak: İngilizce içerik.
+const c: HomeContent = {
   "nav": {
-    "features": "Funktionen",
+    "features": "Merkmale",
     "pricing": "Preise",
     "faq": "FAQ",
     "blog": "Blog",
-    "support": "Support",
-    "getApp": "App holen"
+    "support": "Unterstützung",
+    "getApp": "Holen Sie sich die App"
   },
   "hero": {
-    "eyebrow": "Jetzt auf iPhone · iPad",
+    "eyebrow": "Jetzt auf dem App Store · iPhone & iPad",
     "h1Line1Words": [
       "Einmal",
       "fotografieren."
@@ -22,148 +23,148 @@ const de: HomeContent = {
       "verkaufen."
     ],
     "h1A11y": "Einmal fotografieren. Auf 46 Marktplätzen verkaufen.",
-    "sub": "Eine 7-Winkel-KI-Kamera, On-Device SEO in 12 Sprachen, 31 Größen-Presets bis 4K und plattformperfekte Exporte — direkt vom iPhone oder iPad.",
-    "btnAppSmall": "Frühen",
-    "btnAppBig": "Zugang",
-    "ctaTrial": "Frühen Zugang sichern",
-    "ctaCard": "Früher Zugang · Keine Kreditkarte",
+    "sub": "Fotografieren Sie ein Produktfoto. photoZseo ändert die Größe, benennt es um und füllt es mit SEO für 46 Marktplätze in Sekundenschnelle – verarbeitet auf Ihrem Gerät, funktioniert offline.",
+    "btnAppSmall": "Download on the",
+    "btnAppBig": "App Store",
+    "ctaTrial": "Kostenloser Download",
+    "ctaCard": "Kostenloser Plan · 7-tägige Testversion für Jahrespläne",
     "bullets": [
-      "7-Winkel-Vorlagenkamera — Vorne, Hinten, Seite, Detail, Oben, Etikett, Lifestyle",
-      "KI füllt 13 SEO-Felder in 12 Sprachen aus einem einzigen Foto",
-      "46 Marktplätze, ein Tipp · 100% On-Device · funktioniert offline"
+      "7-Winkel-Vorlagenkamera – Vorne, Hinten, Seite, Detail, Oben, Etikett, Lifestyle",
+      "Füllt 13 SEO-Felder in 15 Sprachen anhand Ihrer Foto- und Produktdetails",
+      "46 Marktplätze, ein Fingertipp · Fotos werden auf dem Gerät verarbeitet · Funktioniert offline"
     ]
   },
   "pain": {
     "kicker": "Warum es das gibt",
-    "title": "Auf jedem Marktplatz zu verkaufen ist kaputt.",
-    "sub": "Du bist Verkäufer, kein Photoshop-Techniker. photoZseo gibt dir die Stunden zurück.",
+    "title": "Der Verkauf auf jedem Marktplatz ist kaputt.",
+    "sub": "Sie sind ein Verkäufer, kein Photoshop-Techniker. photoZseo gibt die Stunden zurück.",
     "cards": [
       {
-        "bad": "\"Fotos für jede Plattform zu bearbeiten kostet mich den ganzen Abend.\"",
-        "goodTitle": "KI macht es in 2 Sekunden.",
-        "goodDesc": "Saliency-Crop, Weißabgleich, 31 Exportgrößen — jede Plattform, automatisch."
+        "bad": "„Das Bearbeiten von Fotos für jede Plattform nimmt meinen ganzen Abend in Anspruch.“",
+        "goodTitle": "Die App erledigt das für Sie.",
+        "goodDesc": "Motivbezogener Zuschnitt, Weißabgleich und die richtige Größe für jeden Markt – automatisch."
       },
       {
-        "bad": "\"Ich tippe Titel, Tags und Beschreibung für jeden Marktplatz neu.\"",
-        "goodTitle": "Ein Foto. 13 SEO-Felder. Ausgefüllt.",
-        "goodDesc": "Titel, Slug, Meta, Alt-Text, Keywords — geschrieben von On-Device-KI in 12 Sprachen."
+        "bad": "„Ich gebe den Titel, die Tags und die Beschreibung für jeden Marktplatz neu ein.“",
+        "goodTitle": "Ein Foto. 13 SEO-Felder. Gefüllt.",
+        "goodDesc": "Titel, Slug, Meta, Alternativtext, Schlüsselwörter – auf Ihrem Gerät in 15 Sprachen geschrieben."
       },
       {
-        "bad": "\"Meine B2B-Angebote sind ein peinliches Word-Dokument.\"",
-        "goodTitle": "Markenrechte PDFs in 3 Schritten.",
-        "goodDesc": "USt, IBAN, HS-Codes, E-Signatur, Betrag in Worten — sieht aus wie eine Fortune-500-Rechnung."
+        "bad": "„Meine B2B-Angebote sind ein peinliches Word-Dokument.“",
+        "goodTitle": "Gebrandete PDFs in 3 Schritten.",
+        "goodDesc": "Mehrwertsteuer, IBAN, HS-Codes, elektronische Signatur, Betrag in Worten – sauber, gebrandet und versandbereit."
       }
     ]
   },
   "features": {
-    "sectionKicker": "Alle Funktionen, an einem Ort",
-    "sectionTitle": "Zehn Gründe zu wechseln.",
-    "sectionSub": "Marktplätze, 7-Winkel-KI-Kamera, SEO-Auto-Fill, Bulk-Import, B2B-Angebote, iCloud-Sync und mehr — gebaut für Indie-Verkäufer.",
-    "seeInAction": "In Aktion sehen →",
+    "sectionKicker": "Alle Funktionen an einem Ort",
+    "sectionTitle": "Sechs Werkzeuge. Jeder Marktplatz abgedeckt.",
+    "sectionSub": "Marktplätze, 7-Winkel-KI-Kamera, SEO-Autofill, Massenimport, B2B-Angebote, iCloud-Synchronisierung und mehr – entwickelt für unabhängige Verkäufer, die jeden Tag versenden.",
+    "seeInAction": "Sehen Sie es in Aktion →",
     "items": [
       {
         "eyebrow": "46 Marktplätze",
-        "h": "Einmal listen. Überall verkaufen.",
-        "sub": "Ein Foto wird zu 46 marktplatzfertigen Listings — dimensioniert, benannt und SEO-getaggt für jede Plattform.",
+        "h": "Einmal auflisten. Überall verkaufen.",
+        "sub": "Aus einem Foto werden 46 marktfähige Einträge – Größe, Name und SEO-Tags für jede Plattform.",
         "bullets": [
           "Amazon · Shopify · Etsy · Walmart · eBay · Trendyol",
           "Grenzüberschreitend: Temu · SHEIN · DHgate · Made-in-China · Global Sources",
-          "CSV / XLSX / JSON — pro Produkt einzeln oder kombiniert"
+          "CSV / XLSX / JSON – getrennt pro Produkt oder kombiniert"
         ]
       },
       {
-        "eyebrow": "KI-Kamera · 7 Winkel, ein Auslöser",
-        "h": "Vorne, Hinten, Seite, Detail, Oben, Etikett, Lifestyle.",
-        "sub": "Eine vorlagengesteuerte Kamera, die dich durch die 7 Winkel führt, die jeder Marktplatz braucht. Saliency-basierter Auto-Zoom (4×), HDR, Anti-Flimmer und Live-OCR in 12 Sprachen — jede Aufnahme gleichzeitig als JPEG, PNG und WebP exportiert.",
+        "eyebrow": "KI-Kamera · 7 Winkel, ein Verschluss",
+        "h": "Vorne, Hinten, Seite, Detail, Oben, Etikett, Lebensstil.",
+        "sub": "Eine vorlagengesteuerte Kamera, die Sie durch die sieben Blickwinkel führt, die sich jeder Markt wünscht. Auffallender automatischer Zoom (4×), HDR, Anti-Flimmern und Live-Texterkennung – jedes Foto wird gleichzeitig als JPEG, PNG und WebP exportiert.",
         "bullets": [
-          "7-Winkel-Vorlagen mit automatischem Richtungswechsel",
-          "Smart-Auto-Zoom (25% Motiv-Füllung, max 4×) · AE Lock · WB Auto",
-          "On-Device Vision: Saliency, Klassifizierung, Barcode, Live-OCR",
-          "Lautstärketasten-Auslöser · 4K-Aufnahme · 100% offline"
+          "7-Winkel-Vorlagen mit Richtungsautomatik",
+          "Intelligenter automatischer Zoom (25 % Motivfüllung, max. 4×) · AE-Speicherung · WB Auto",
+          "Vision auf dem Gerät: Ausprägung, Klassifizierung, Barcode, Live-OCR",
+          "Auslöser mit Lautstärketaste · 4K-Aufnahme · 100 % offline"
         ]
       },
       {
-        "eyebrow": "KI SEO Auto-Fill",
-        "h": "13 Felder in Sekunden ausfüllen.",
-        "sub": "Lege ein Foto ein. photoZseo schreibt Titel, Slug, Kategorie, Meta, vollständige Beschreibung, Alt-Text, Tags, Keywords und Barcode — suchoptimiert, sofort, in 12 Sprachen.",
+        "eyebrow": "AI SEO Auto-Fill",
+        "h": "Füllen Sie 13 Felder automatisch in Sekunden aus.",
+        "sub": "Fügen Sie ein Foto hinzu. photoZseo schreibt Titel, Slug, Kategorie, Meta, vollständige Beschreibung, Alternativtext, Tags, Schlüsselwörter und Barcode – suchoptimiert, sofort, in 15 Sprachen.",
         "bullets": [
-          "On-Device OCR + Vision: Barcode, Marke, Material, Farbe",
-          "SEO-Titel, Slug, Kategorie, Meta, lange Beschreibung, Alt & Long-Tail-Keywords",
-          "12 Sprachen — gebietskorrekte Ausgaben, RTL-fähig"
+          "OCR + Vision auf dem Gerät: Barcode, Marke, Material, Farbe",
+          "SEO-Titel, Slug, Kategorie, Meta, lange Beschreibung, Alt- und Long-Tail-Keywords",
+          "15 Sprachen – gebietsschemakorrekte Ausgaben, RTL-fähig"
         ]
       },
       {
         "eyebrow": "B2B-Angebotsersteller",
-        "h": "Markenrechte PDF-Angebote in 3 Schritten.",
-        "sub": "Produkte wählen, Käufer hinzufügen, teilen. A4-PDFs in 12 Sprachen mit USt, IBAN, Incoterms, HS-Codes und E-Signatur — schön gebrandet.",
+        "h": "Gebrandete PDF-Angebote in 3 Schritten.",
+        "sub": "Produkte auswählen, Käufer hinzufügen, teilen. A4-PDFs in 12 Sprachen mit Mehrwertsteuer, IBAN, Incoterms, HS-Codes und einer elektronischen Signatur – wunderschön gebrandet.",
         "bullets": [
-          "Pro Zeile USt · Einheit · HS-Code · Ursprungsland",
-          "Absenderprofil mit Logo, IBAN, Incoterms — einmal speichern",
-          "Visitenkarten-Scan (Vision OCR) füllt Käuferdaten automatisch aus"
+          "Pro-Zeilen-Mehrwertsteuer · Einheit · HS-Code · Herkunftsland",
+          "Absenderprofil mit Logo, IBAN, Incoterms – einmalig gespeichert",
+          "Der Business-Kartenscan (Vision OCR) füllt die Käuferdaten automatisch aus"
         ]
       },
       {
-        "eyebrow": "iCloud-Sync & Papierkorb",
-        "h": "Überall synchronisieren. Alles wiederherstellen.",
-        "sub": "Jedes Projekt synchronisiert über dein eigenes iCloud Drive. Gelöschte Elemente warten 30 Tage vor der endgültigen Löschung, mit sicherer Wiederherstellung auf iPhone und iPad.",
+        "eyebrow": "AI-Hintergrundentfernung",
+        "h": "Bereinigen Sie Produktfotos mit einem Fingertipp.",
+        "sub": "Die KI auf dem Gerät entfernt Hintergründe sofort – keine Cloud, kein Abonnement pro Foto. Exportieren Sie transparentes PNG, weißen Hintergrund oder benutzerdefinierte Farben für jede Plattform.",
         "bullets": [
-          "iCloud Drive Sync — opt-in, last-write-wins",
-          "Zuletzt gelöscht-Ordner mit sicherer Wiederherstellung",
-          "30-Tage Auto-Löschung mit Aufbewahrungs-Preset (7 / 14 / 30 / 60 Tage)",
-          "Geräteübergreifende Hard-Delete-Propagation"
+          "Stapelentfernung aller Fotos auf einmal",
+          "Transparentes PNG · weißer Hintergrund · benutzerdefinierte Farbe",
+          "100 % auf dem Gerät – Fotos verlassen nie Ihr Gerät",
+          "Pro: 100 Umzüge/Monat · Business: unbegrenzt"
         ]
       },
       {
-        "eyebrow": "Produktdetail",
-        "h": "Verwalte wie ein Profi.",
-        "sub": "Ein Produkt, jeder Kanal. Fotos, Preise, SEO, EXIF und Stories leben in einem einzigen, schön organisierten Datensatz — mit 13-Farben-Kontaktpalette für B2B.",
+        "eyebrow": "Datenschutz zuerst",
+        "h": "Keine Werbung. Kein Ad-Tracking. Fotos bleiben auf Ihrem Gerät.",
+        "sub": "Entwickelt für Verkäufer, denen ihre Daten am Herzen liegen. Entwickelt nach DSGVO, KVKK und CCPA. 15 Sprachen, darunter 3 Rechts-nach-Links-Schriftarten. GPS wird beim Export standardmäßig entfernt.",
         "bullets": [
-          "Foto-Karussell, Medien-Inspektor, EXIF-Inline-Editor",
-          "Pro Produkt Markup, MSRP, B2B-Preis, USt-Modus",
-          "Schnell teilen zu Angebot, Katalog oder Marktplatz",
+          "Keine Werbung, keine Werbe-ID · Anonyme Nutzungsanalysen können deaktiviert werden",
+          "EN · TR · DE · ES · IT · FR · PT · JA · KO · ZH · AR · HI · FA · PL · UR",
+          "Die Fotoverarbeitung und Hintergrundentfernung erfolgt auf dem Gerät",
           "GPS-Daten werden beim Export entfernt · Software-Tag bleibt erhalten"
         ]
       }
     ]
   },
   "bento": {
-    "headKicker": "Mehr als Screenshots",
-    "headTitle": "Wie ein Power-Tool gebaut, wie eine App bepreist.",
-    "headSub": "Jeder Abschnitt unten ist eine Funktion, die heute schon da ist — keine Roadmap, keine Warteliste.",
+    "headKicker": "Mehr als nur Screenshots",
+    "headTitle": "Gebaut wie ein Elektrowerkzeug, preislich wie eine App.",
+    "headSub": "Jeder Abschnitt unten ist eine Funktion, die heute verfügbar ist – keine Roadmap, keine Warteliste.",
     "csv": {
       "label": "CSV · XLSX · JSON",
-      "sub": "46 Marktplatz-Formate — Titel einmal tippen, jede Spalte füllt sich."
+      "sub": "46 Marktplatzformate – geben Sie den Titel einmal ein, jede Spalte ist gefüllt."
     },
     "exif": {
       "label": "EXIF in Kameraqualität",
-      "gpsStripped": "— ENTFERNT —"
+      "gpsStripped": "– GESTREIFT –"
     },
     "langs": {
-      "label": "12 Sprachen · 3 RTL",
-      "sublabel": "EN · TR · DE · ES · FR · PT · JA · KO · ZH · AR · HI · FA"
+      "label": "15 Sprachen · 3 RTL",
+      "sublabel": "EN · TR · DE · ES · IT · FR · PT · JA · KO · ZH · AR · HI · FA · PL · UR"
     },
     "stats": {
-      "label": "Gebaut für Indie-Verkäufer",
+      "label": "Entwickelt für Indie-Verkäufer",
       "marketplaces": "Marktplätze",
       "seoFields": "SEO-Felder pro Foto",
       "devices": "Geräte · eine App",
-      "noTrackers": "Tracker · Ads · Clouds"
+      "noTrackers": "Anzeigen · Anzeigen-Tracker"
     }
   },
   "seoDemo": {
     "kicker": "Interaktiv · Live",
-    "title": "Schau zu, wie die KI 13 SEO-Felder ausfüllt.",
-    "sub": "Wähle ein Produkt. Schau zu, wie photoZseo jedes Feld schreibt, das dein Marktplatz braucht — Titel, Slug, Dateiname, Kategorie, Meta, vollständige Beschreibung, Alt-Text, Tags, Keywords und Barcode. Tippe auf ein Feld, um es zu kopieren.",
+    "title": "Beobachten Sie, wie die KI 13 SEO-Felder ausfüllt.",
+    "sub": "Wählen Sie ein Produkt. Sehen Sie zu, wie photoZseo jedes Feld schreibt, das Ihr Marktplatz benötigt – Titel, Slug, Dateiname, Kategorie, Meta, vollständige Beschreibung, Alternativtext, Tags, Schlüsselwörter und Barcode. Tippen Sie auf ein beliebiges Feld, um es zu kopieren.",
     "inputLabel": "Produktname",
-    "inputPlaceholder": "Tippe einen Produktnamen…",
+    "inputPlaceholder": "Geben Sie einen Produktnamen ein…",
     "btnIdle": "✨ 13 SEO-Felder automatisch ausfüllen",
-    "btnBusy": "Generiere…",
-    "note": "On-Device · 100% privat · 12 Sprachen",
+    "btnBusy": "Generieren…",
+    "note": "Auf dem Gerät · privat · 15 Sprachen",
     "copyHint": "Kopie",
     "copiedToast": "Kopiert",
     "fieldLabels": {
       "title": "SEO-Titel",
-      "slug": "Slug",
+      "slug": "Schnecke",
       "filename": "Dateiname (URL)",
       "category": "Kategorie",
       "meta": "Meta-Beschreibung",
@@ -173,130 +174,145 @@ const de: HomeContent = {
       "tag2": "Tag 2",
       "tag3": "Tag 3",
       "tag4": "Tag 4",
-      "keywords": "Keywords",
+      "keywords": "Schlüsselwörter",
       "barcode": "Barcode"
     }
   },
   "stats": {
     "kicker": "Zahlen, die Produkte bewegen",
-    "title": "Designed von einem Indie-Verkäufer.\nGetestet von Käufern in 12 Ländern.",
+    "title": "Entworfen von einem unabhängigen Verkäufer.\nEntwickelt für Verkäufer in 15 Sprachen.",
     "labels": {
-      "marketplaces": "Marktplätze & Kanäle",
+      "marketplaces": "Marktplätze und Kanäle",
       "seoFields": "SEO-Felder pro Foto",
-      "languages": "Sprachen — 3 RTL",
-      "zero": "Ads. Tracker. Gesammelte Daten."
+      "languages": "Sprachen – 3 RTL",
+      "zero": "Anzeigen. Werbetracker. Daten verkauft."
     },
     "pills": {
       "gdpr": "DSGVO",
       "kvkk": "KVKK",
       "ccpa": "CCPA",
       "wcag": "WCAG 2.1 AA",
-      "noTracking": "Niemals Tracking"
+      "noTracking": "Kein Ad-Tracking"
     }
   },
   "pricing": {
     "kicker": "Preise",
-    "title": "Schneller verkaufen — kein Wasserzeichen, keine Limits.",
-    "sub": "Drei Pläne, eine Pro-Erfahrung. Der Jahresplan ist das beste Angebot mit $3.33/Monat — jederzeit in den Einstellungen kündbar.",
-    "badge": "Beste Wahl · 52% sparen",
+    "title": "Kostenlos starten. Wachsen Sie in Ihrem Tempo.",
+    "sub": "Ein kostenloser Plan für den Einstieg und drei kostenpflichtige Pläne für jede Phase – vom Einzelverkäufer bis zum kompletten Team. Jahrespläne sparen 40 % und beinhalten eine 7-tägige kostenlose Testversion.",
+    "badge": "Am beliebtesten",
     "plans": [
       {
-        "name": "Wöchentlich",
-        "pricePer": "$2.99/Woche",
-        "trial": "oder 71,99 $/Jahr · 40 % sparen",
+        "name": "Kostenlos",
+        "pricePer": "$0/Mo",
+        "trial": "Für immer kostenlos · Keine Karte erforderlich",
         "features": [
-          "Voller Pro-Zugang",
-          "Probiere es eine Woche",
-          "Jederzeit in den Einstellungen kündbar",
-          "— Keine langfristige Bindung",
-          "SEO-Dateinamen und WebP-Konvertierung",
-          "100 Bilder/Monat"
+          "Vorlagenkamera – 7 Winkel",
+          "Alle Bildgrößen und -formate (JPEG, PNG, WebP)",
+          "5 aktive Marktplatzplattformen",
+          "3 Fotoimporte / Monat (Kamerafotos unbegrenzt)",
+          "iPhone & iPad · iCloud-Synchronisierung",
+          "— Exporte enthalten ein Wasserzeichen"
         ],
-        "cta": "Wöchentlich starten"
+        "cta": "Kostenlos herunterladen"
       },
       {
-        "name": "Monatlich",
-        "pricePer": "$6.99/Monat",
-        "trial": "oder 143,99 $/Jahr · 40 % sparen",
+        "name": "Starter",
+        "pricePer": "$9.99/Mo",
+        "trial": "oder $71.99/Jahr · 40 % sparen",
+        "features": [
+          "Wasserzeichenfreie Exporte",
+          "Batch-Export und -Freigabe",
+          "Videoaufzeichnung",
+          "15 aktive Plattformen",
+          "SEO-Dateinamen und WebP-Konvertierung",
+          "100 Fotoimporte / Monat"
+        ],
+        "cta": "Holen Sie sich Starter"
+      },
+      {
+        "name": "Pro",
+        "pricePer": "$19.99/Mo",
+        "trial": "oder $143.99/Jahr · 40 % sparen",
         "featured": true,
         "features": [
-          "Voller Pro-Zugang",
-          "Monatlich abgerechnet, jederzeit kündbar",
-          "Gleiche Funktionen wie Jahresplan",
-          "— 52% sparen mit Jahresplan",
-          "Online-Shop (photozseo.com)",
-          "Push für den Marktplatzeintrag",
-          "Inventar und Barcode",
-          "1.000 Bilder/Monat",
-          "Universell für iPhone und iPad",
-          "iCloud Drive-Synchronisierung + Papierkorbwiederherstellung"
+          "Alles in Starter",
+          "Alle Plattformen – 46 Marktplätze + soziale Netzwerke",
+          "KI-Hintergrundentfernung – 100/Monat",
+          "KI-Alttextgenerierung",
+          "Online-Shop auf photozseo.com",
+          "Listung auf dem photoZseo-Marktplatz",
+          "1.000 Fotoimporte / Monat"
         ],
-        "cta": "Monatlich wählen"
+        "cta": "Holen Sie sich Pro"
       },
       {
-        "name": "Jährlich",
-        "pricePer": "$39.99/Jahr",
-        "trial": "Nur $3.33/Monat · 52% sparen",
+        "name": "Business",
+        "pricePer": "$49.99/Mo",
+        "trial": "oder $359.99/Jahr · 40 % sparen",
         "features": [
-          "**Wasserzeichen entfernen** bei allen Exporten",
-          "**Bulk-Export** jedes Foto auf einmal",
-          "**CSV + XLSX** für 46 Marktplätze",
-          "**7-Winkel-Vorlagenkamera** + Pro Tools",
-          "KI SEO Auto-Fill (13 Felder, 12 Sprachen)",
-          "B2B-Angebotsersteller (USt, IBAN, HS, E-Sign)",
-          "Bulk CSV / XLSX / JSON Katalog-Import",
-          "EXIF-Editor & Metadata-Pipeline (GPS entfernt)"
+          "Alles in Pro",
+          "Unbegrenzte Fotoimporte",
+          "Unbegrenzte Hintergrundentfernung",
+          "B2B-Angebotsersteller (Mehrwertsteuer, IBAN, HS, E-Signatur)",
+          "Shopify-Integration – direkter Produkt-Push",
+          "Erstellen Sie ein Team (bis zu 3 Mitglieder)",
+          "— Jährliche Einsparungen $240/Jahr"
         ],
-        "cta": "Jährlich holen"
+        "cta": "Holen Sie sich Business"
       }
     ],
-    "note": "Preise in USD. Lokale Preise im App Store (z.B. ₺39,99/Jahr in der Türkei). Familienfreigabe unterstützt. Abos verlängern sich automatisch, sofern nicht mindestens 24 Std. vor Periodenende gekündigt — verwalte in Einstellungen → Apple ID → Abos."
+    "note": "Preise in USD; Der App Store zeigt Ihren lokalen Preis an. 7-tägige kostenlose Testversion für Jahrespläne. Abonnements verlängern sich automatisch – Sie können sie jederzeit unter Einstellungen → [Ihr Name] → Abonnements kündigen.",
+    "compareLink": "Vergleichen Sie alle Pläne →"
   },
   "faq": {
     "kicker": "Fragen",
-    "title": "Alles, was du fragen wolltest.",
+    "title": "Alles, was Sie fragen wollten.",
     "items": [
       {
         "q": "Funktioniert photoZseo ohne Internet?",
-        "a": "Ja. Fotoaufnahme, Bearbeitung, KI-SEO-Auto-Fill, EXIF und Exporte laufen alle 100% On-Device mit Apple Foundation Models und Vision. Internet ist nur nötig, wenn du aktiv zu einem Remote-Marktplatz pushst."
+        "a": "Ja. Fotoaufnahme, Bearbeitung, Hintergrundentfernung, SEO-Autofill, EXIF ​​und Exporte laufen auf Ihrem Gerät (Apple Vision; Apple Intelligence auf iOS 26). Das Internet ist nur erforderlich, um auf Shopify oder Ihrem Online-Shop zu veröffentlichen, mit iCloud zu synchronisieren oder ein Abonnement zu kaufen."
       },
       {
-        "q": "Kann ich gleichzeitig zu Amazon, Shopify und Etsy exportieren?",
-        "a": "Ja. Wähle die Produkte, wähle die Plattformen, drücke Export. photoZseo schreibt CSV/XLSX/JSON in der exakten Spaltenreihenfolge jeder Plattform, plus plattformspezifische Bildgrößen — pro Produkt einzeln oder eine kombinierte Datei."
+        "q": "Kann ich gleichzeitig nach Amazon, Shopify und Etsy exportieren?",
+        "a": "Ja. Wählen Sie die Produkte aus, wählen Sie die Plattformen aus und klicken Sie auf „Exportieren“. photoZseo schreibt CSV/XLSX/JSON in der genauen Spaltenreihenfolge jeder Plattform, plus Bildgrößen pro Plattform – getrennt pro Produkt oder eine kombinierte Datei."
       },
       {
-        "q": "Werden meine Fotos oder Produktdaten irgendwo hochgeladen?",
-        "a": "Nein. Null Drittanbieter-Analytics, null Tracking-SDKs und kein Cloud-Konto. Die einzige ausgehende Netzwerkverbindung ist App Store / RevenueCat für das Abo, und die optionale iCloud Drive Synchronisation, die in deinem eigenen iCloud bleibt."
+        "q": "Werden meine Foto- oder Produktdaten irgendwo hochgeladen?",
+        "a": "Ihre Fotos werden nicht zur Verarbeitung hochgeladen, sondern auf Ihrem Gerät verarbeitet. photoZseo zeigt keine Werbung und verwendet keine Werbe-ID. Die Netzwerknutzung ist auf Abonnements (App Store / RevenueCat), optionale iCloud-Laufwerkssynchronisierung innerhalb Ihres eigenen iCloud, optionale Veröffentlichung (Shopify, Online-Shop) und anonyme Nutzungsanalysen beschränkt, die Sie in den Einstellungen deaktivieren können."
       },
       {
-        "q": "Funktioniert es auf dem iPad oder nur auf dem iPhone?",
-        "a": "Beides. photoZseo ist eine universelle App — ein Kauf deckt iPhone und iPad ab. Drag-and-drop, Tastenkürzel, Rechtsklick-Menüs und ein 3-Pane-Inspektor sind auf dem iPad erstklassig."
+        "q": "Funktioniert es auf iPad oder nur auf iPhone?",
+        "a": "Beide. photoZseo ist eine universelle App – ein Kauf deckt iPhone und iPad ab. Drag-and-Drop, Tastaturkürzel, Rechtsklick-Menüs und ein 3-Fenster-Inspektor sind bei iPad erstklassig."
       },
       {
-        "q": "Was ist eigentlich in Pro?",
-        "a": "Alles: alle 46 Marktplatz-Formate, KI-SEO-Auto-Fill (13 Felder, 12 Sprachen), B2B-Angebotsersteller, 7-Winkel-Vorlagenkamera, Bulk CSV/XLSX-Import, Wasserzeichenentfernung und iCloud-Sync mit Papierkorb-Wiederherstellung."
+        "q": "Ist photoZseo kostenlos?",
+        "a": "Ja. photoZseo kann kostenlos heruntergeladen werden und verfügt über einen kostenlosen Plan: die Vorlagenkamera, alle Bildgrößen und -formate, 5 aktive Plattformen und 3 Fotoimporte pro Monat, mit einem Wasserzeichen für Exporte. Starter ($9.99/mo) entfernt das Wasserzeichen und fügt den Batch-Export hinzu. Pro ($19.99/mo) fügt alle Plattformen, KI-Hintergrundentfernung, KI-Alttext und einen Online-Shop hinzu. Business ($49.99/mo) bietet Shopify-Integration, den B2B-Angebotsersteller, unbegrenzte Nutzung und Teams."
       },
       {
-        "q": "Welche 46 Plattformen genau?",
-        "a": "Zum Start: 46 Marktplatz-Presets (Amazon, Shopify, Etsy, eBay, Walmart, WooCommerce, Trendyol, AliExpress, Mercado Libre, Coupang, Lazada, Shopee, Temu, SHEIN, DHgate, Made-in-China, Global Sources…) plus Social/Messaging-Formate (Instagram Shopping, TikTok Shop, Pinterest, WeChat, RED, Stories). Neue Presets kommen in Updates."
+        "q": "Ist photoZseo für Android oder Mac verfügbar?",
+        "a": "Noch nicht – photoZseo ist für iPhone und iPad (iOS / iPadOS 17 oder höher) verfügbar. Auf einem Computer können Sie die separate photoZseo-Erweiterung für Google Chrome verwenden."
+      },
+      {
+        "q": "Kann ich meine bestehende Produktliste importieren?",
+        "a": "Ja. CSV-, TSV-, XLSX-, JSON- und Foto-URLs werden unterstützt, mit Importvorlagen für die wichtigsten Marktplätze und automatischer Erkennung anhand der Dateikopfzeilen – fügen Sie einen vorhandenen Shopify- oder Amazon-Export ein und photoZseo ordnet die Spalten zu."
       }
     ]
   },
   "finalCta": {
-    "h2": "Dein nächster Verkauf beginnt mit einem Foto.",
-    "p": "Kostenlos starten. Kein Tracking. Keine Ads. Jederzeit kündbar. Gebaut für Indie-Verkäufer.",
-    "note": "Bald im App Store.",
-    "notify": "Beim Launch benachrichtigen"
+    "h2": "Ihr nächster Verkauf beginnt mit einem Foto.",
+    "p": "Kostenloser Download mit einem kostenlosen Plan. Keine Werbung. Jederzeit kündbar. Entwickelt für Indie-Verkäufer.",
+    "note": "Ab sofort für App Store, iPhone und iPad verfügbar.",
+    "notify": "App-Details und Anforderungen →"
   },
   "footer": {
-    "tag": "Auf 46 Marktplätzen verkaufen aus einem Foto.",
-    "privacy": "Datenschutz",
-    "terms": "AGB",
-    "support": "Support",
-    "accessibility": "Barrierefreiheit",
+    "tag": "Verkaufen Sie auf 46 Marktplätzen von einem Foto aus.",
+    "privacy": "Privatsphäre",
+    "terms": "Bedingungen",
+    "support": "Unterstützung",
+    "accessibility": "Zugänglichkeit",
     "deleteAccount": "Konto löschen",
     "rights": "Alle Rechte vorbehalten. Gebaut für unabhängige Verkäufer."
   }
 };
 
-export default de;
+export default c;

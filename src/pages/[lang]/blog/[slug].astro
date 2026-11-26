@@ -1,0 +1,20 @@
+---
+import { render } from 'astro:content';
+import BlogPost from '../../../components/BlogPost.astro';
+import { blogEntries } from '../../../lib/blog';
+import type { Lang } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const { items, langsBySlug } = await blogEntries();
+  return items.filter((i) => i.lang !== 'en').map((i) => ({
+    params: { lang: i.lang, slug: i.slug },
+    props: { entry: i.entry, slug: i.slug, altLangs: langsBySlug.get(i.slug) ?? [i.lang] },
+  }));
+}
+
+const { entry, slug, altLangs } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const { Content } = await render(entry);
+---
+
+<BlogPost data={entry.data} Content={Content} slug={slug} lang={lang} altLangs={altLangs} />

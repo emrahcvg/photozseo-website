@@ -1,0 +1,208 @@
+{
+ "title": "Rozmiary obrazów produktów na rynku 2026: Amazon, eBay, Etsy, Shopify, Walmart, Trendyol",
+ "desc": "Rozmiary, formaty i zasady dotyczące zdjęć produktów dla Amazon, eBay, Etsy, Shopify, Walmart, Google Shopping, TikTok Shop, Trendyol i Hepsiburada, z linkami do każdego oficjalnego przewodnika sprzedawcy.",
+ "crumb": "Rozmiary obrazów na rynku",
+ "kicker": "",
+ "h1": "Rozmiary zdjęć produktów dla każdego rynku (2026)",
+ "answer": "Kwadratowy plik JPEG o wymiarach 2000 × 2000 pikseli na czysto białym tle (RGB 255, 255, 255) spełnia zasady dotyczące obrazu głównego obowiązujące na większości rynków. Minimalne wartości są różne: eBay wymaga 500 pikseli na najdłuższym boku i zaleca około 1600 pikseli; Amazon potrzebuje co najmniej 1000 pikseli na najdłuższym boku, aby powiększyć; Etsy recommends 2000 px; Shopify zaleca 2048 × 2048 px dla kwadratowych zdjęć produktów; Od 31 stycznia 2027 r. Google Shopping będzie wymagał rozmiaru 500 × 500 pikseli dla wszystkich produktów.",
+ "sections": [
+  {
+   "id": "table",
+   "h2": "",
+   "table": {
+    "caption": "Sprawdzono z oficjalną dokumentacją sprzedawcy w dniu 26 listopada 2026 r. Zmiana zasad — zawsze potwierdzaj w połączonym przewodniku.",
+    "head": [
+     "Rynek",
+     "Minimum",
+     "Zalecony",
+     "",
+     ""
+    ],
+    "rows": [
+     [
+      "Amazon",
+      "1000 px najdłuższy bok (zoom)",
+      "2000 × 2000 px, kwadrat",
+      "Czysta biel RGB 255, 255, 255; produkt wypełnia ~85% kadru",
+      "[Sprzedawca Centralny](https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7)"
+     ],
+     [
+      "eBay",
+      "",
+      "",
+      "No rule; bez obramowań, znaków wodnych i dodanego tekstu",
+      "[](https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370)"
+     ],
+     [
+      "Etsy",
+      "—",
+      "",
+      "No rule; pierwsze zdjęcie to miniaturka",
+      "[](https://help.etsy.com/hc/articles/115015663347)"
+     ],
+     [
+      "Shopify",
+      "—",
+      "",
+      "Zależne od tematu; consistent backgrounds recommended",
+      "[](https://help.shopify.com/manual/using-themes/images)"
+     ],
+     [
+      "Walmart Marketplace",
+      "Zobacz przewodnik",
+      "",
+      "Bezszwowe białe RGB 255, 255, 255",
+      "[Rynek Dowiedz się](https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements)"
+     ],
+     [
+      "Google Shopping (Merchant Center)",
+      "",
+      "1500 × 1500 pikseli lub większy",
+      "Pokaż rzeczywisty produkt; brak ogólnej grafiki",
+      "[Centrum handlowe](https://support.google.com/merchants/answer/6324350?hl=en)"
+     ],
+     [
+      "TikTok Shop",
+      "",
+      "800 × 800 pikseli lub większy",
+      "Czyste tło; no watermarks or promo text",
+      ""
+     ],
+     [
+      "Trendyol",
+      "W panelu sprzedawcy",
+      "Ustawienie wstępne photoZseo: 1000 × 1000 px (również 600 × 800, 3:4)",
+      "",
+      "Trendyol Partner panel (wymagane logowanie)"
+     ],
+     [
+      "Hepsiburada",
+      "W panelu sprzedawcy",
+      "Ustawienie wstępne photoZseo: 800 × 800 px (również 750 × 1000, 3:4)",
+      "",
+      "Hepsiburada Merchant panel (wymagane logowanie)"
+     ]
+    ]
+   },
+   "note": "Tam, gdzie rynek publikuje swoje zasady tylko w panelu sprzedawcy, domyślnie wyświetlamy rozmiar eksportu photoZseo, a nie liczbę osób trzecich."
+  },
+  {
+   "id": "rules",
+   "h2": "Zasady obowiązujące niemal wszędzie",
+   "bullets": [
+    "Kwadratowy (1:1) obraz główny. Większość siatek wyszukiwania przycina się do kwadratu; rynki mody często preferują portret 3:4.",
+    "Czysto biały obraz główny. Amazon and Walmart require RGB 255, 255, 255; prawie biały (np. 250, 250, 250) jest częstą przyczyną ukrywania wpisów.",
+    "Brak tekstu, logo, obramowań i znaków wodnych na obrazie głównym (Amazon, eBay, Walmart, TikTok Shop).",
+    "JPEG w sRGB to najbezpieczniejszy format; PNG is useful for transparent cut-outs. Konwertuj zdjęcia iPhone HEIC przed przesłaniem.",
+    "Zachowaj lekkość plików. Duże oryginały są ponownie kompresowane przez rynek; 200–600 KB na obraz to praktyczny cel w przypadku szybkich stron.",
+    "Używaj opisowych nazw plików i tekstu alternatywnego (np. `red-leather-wallet-front.jpg`) — pomagają one Google Images i wyszukiwarce na rynku zrozumieć zdjęcie."
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "",
+   "steps": [
+    {
+     "t": "Zdjęcie większe niż potrzebujesz.",
+     "d": "Zacznij od co najmniej 2000 pikseli na najkrótszym boku, aby każdy rynek mógł być obsługiwany przez zmniejszenie skali."
+    },
+    {
+     "t": "",
+     "d": "Spraw, aby główny obraz był czysty biały; przechowuj zdjęcia lifestylowe jako obrazy dodatkowe."
+    },
+    {
+     "t": "Przytnij do produktu.",
+     "d": "Wyśrodkuj produkt i pozwól mu wypełnić większą część kadru (Amazon: około 85%)."
+    },
+    {
+     "t": "Eksportuj jedną wersję na każdy rynek.",
+     "d": "Zmieniaj rozmiar, kompresuj i zmieniaj nazwę dla każdej platformy."
+    }
+   ],
+   "note": "[zdjęcieZseo](/pl/download) automatycznie wykonuje kroki 2–4 na iPhone i iPad: zatrzymuje jedno zdjęcie główne i eksportuje kopię o odpowiednim rozmiarze, skompresowaną i nazwaną SEO dla każdego wybranego portalu handlowego."
+  }
+ ],
+ "faqTitle": "Często zadawane pytania dotyczące rozmiaru obrazu",
+ "faq": [
+  {
+   "q": "Jaki jest najlepszy rozmiar obrazu dla platform handlowych?",
+   "a": "2000 × 2000 px, kwadrat, JPEG, czyste białe tło głównego obrazu. Spełnia lub przekracza zalecany rozmiar Amazon, Etsy i większości innych rynków, a w pozostałych przypadkach można go zmniejszyć."
+  },
+  {
+   "q": "Jaki jest minimalny rozmiar obrazu w eBay?",
+   "a": "eBay wymaga co najmniej 500 pikseli na najdłuższym boku i zaleca około 1600 × 1600 pikseli."
+  },
+  {
+   "q": "Czy Amazon wymaga białego tła?",
+   "a": "Tak, dla głównego obrazu: czysta biel (RGB 255, 255, 255), przy czym produkt zajmuje około 85% kadru. Obrazy wtórne mogą przedstawiać kontekst i sceny związane ze stylem życia."
+  },
+  {
+   "q": "Jaki rozmiar obrazu zaleca Shopify?",
+   "a": "Shopify zaleca 2048 × 2048 px dla kwadratowych zdjęć produktów."
+  },
+  {
+   "q": "Czy Google Shopping zmienia wymagania dotyczące rozmiaru obrazu?",
+   "a": "Tak. Google ogłosiło, że od 31 stycznia 2027 r. zdjęcia produktów w Merchant Center muszą mieć co najmniej 500 × 500 pikseli dla wszystkich produktów."
+  }
+ ],
+ "sourcesTitle": "Oficjalne źródła",
+ "sources": [
+  {
+   "label": "Amazon Seller Central — Wymagania dotyczące pliku obrazu technicznego",
+   "url": "https://sellercentral.amazon.com/gp/help/external/G9FUUH87RBNXGKB7"
+  },
+  {
+   "label": "eBay — Polityka dotycząca zdjęć",
+   "url": "https://www.ebay.com/help/policies/listing-policies/picture-policy?id=4370"
+  },
+  {
+   "label": "eBay — Dodawanie zdjęć do Twoich ofert",
+   "url": "https://www.ebay.com/help/selling/listings/adding-pictures-listings?id=4148"
+  },
+  {
+   "label": "Pomoc Etsy — Wymagania i najlepsze praktyki dotyczące obrazów",
+   "url": "https://help.etsy.com/hc/articles/115015663347"
+  },
+  {
+   "label": "Pomoc Shopify — Przesyłanie obrazów",
+   "url": "https://help.shopify.com/manual/using-themes/images"
+  },
+  {
+   "label": "Walmart Marketplace Learn — Wytyczne i wymagania dotyczące obrazu",
+   "url": "https://marketplacelearn.walmart.com/guides/Item%20setup/Item%20content%2C%20imagery%2C%20and%20media/Product-detail-page:-Image-guidelines-&-requirements"
+  },
+  {
+   "label": "Google Merchant Center — Link do zdjęcia [link_do_zdjęcia]",
+   "url": "https://support.google.com/merchants/answer/6324350?hl=en"
+  },
+  {
+   "label": "Google Merchant Center — Aktualizacja specyfikacji danych produktu 2026",
+   "url": "https://support.google.com/merchants/answer/16989427?hl=en"
+  }
+ ],
+ "related": [
+  {
+   "label": "Wymagania dotyczące zdjęć produktu Amazon",
+   "href": "/pl/blog/amazon-product-photo-specs-2026"
+  },
+  {
+   "label": "Rozmiary zdjęć TikTok Shop",
+   "href": "/pl/blog/tiktok-shop-photo-sizes"
+  },
+  {
+   "label": "WebP vs JPEG vs PNG",
+   "href": "/pl/blog/webp-jpeg-png-product-photos-2026"
+  },
+  {
+   "label": "photoZseo dla iPhone i iPad",
+   "href": "/pl/download"
+  }
+ ],
+ "relatedTitle": "Powiązane przewodniki",
+ "cta": {
+  "h": "Automatycznie zmieniaj rozmiar dla każdego rynku",
+  "p": "photoZseo eksportuje odpowiedni rozmiar, format i nazwę pliku dla każdego marketplace z jednego zdjęcia. Do pobrania bezpłatnie.",
+  "btn": "Pobierz na App Store"
+ },
+ "updatedLabel": "Sprawdzony"
+}

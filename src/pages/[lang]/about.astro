@@ -1,0 +1,14 @@
+---
+import InfoRoute from '../../components/InfoRoute.astro';
+import type { Lang } from '../../i18n/ui';
+import { INFO_PAGES } from '../../i18n/pages';
+import { pageLangs } from '../../i18n/pages/types';
+
+export function getStaticPaths() {
+  return pageLangs(INFO_PAGES['about'].set).filter((l) => l !== 'en').map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+---
+
+<InfoRoute slug="about" lang={lang} />

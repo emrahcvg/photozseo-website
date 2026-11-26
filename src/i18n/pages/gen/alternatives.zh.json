@@ -1,0 +1,125 @@
+{
+ "title": "photoZseo替代品：Photoroom、Canva、Pixelcut和其他产品照片应用程序比较",
+ "desc": "对于市场卖家来说，photoZseo 与 Photoroom、Pixelcut、Picsart、Canva 和 Claid.ai 的比较：背景去除、市场规模、SEO 文本和 CSV 列表文件。",
+ "crumb": "替代方案",
+ "kicker": "比较",
+ "h1": "photoZseo 与其他产品照片应用程序对比",
+ "answer": "大多数产品照片应用程序（Photoroom、Pixelcut、Picsart）专注于使单张照片看起来不错（背景去除、AI 背景、模板）。 Canva是通用设计工具，Claid.ai是目录图像API。 photoZseo 专注于编辑后的步骤：在 iPhone 和 iPad 上以正确的尺寸、格式和文件名导出 46 个市场的每张照片，编写 SEO 标题、描述和替代文本，并生成 CSV/XLSX 列表文件，并在设备上进行处理。",
+ "sections": [
+  {
+   "id": "matrix",
+   "h2": "比较一目了然",
+   "table": {
+    "caption": "截至 2026 年 11 月的产品重点。检查每个供应商的网站以了解当前的功能和价格。",
+    "head": [
+     "工具",
+     "类型",
+     "最擅长",
+     "市场规模预设",
+     "SEO文本+列表文件"
+    ],
+    "rows": [
+     [
+      "photoZseo",
+      "iPhone 和 iPad 应用程序",
+      "适用于 46 个市场的市场就绪照片、文件名、SEO 文本和 CSV/XLSX",
+      "✓ 46 个市场 + 社交",
+      "✓ 13 个 SEO 字段 · CSV/XLSX/JSON"
+     ],
+     [
+      "Photoroom",
+      "移动和网络应用程序",
+      "AI背景去除、AI背景、批量编辑",
+      "一些模板",
+      "—"
+     ],
+     [
+      "Pixelcut",
+      "移动和网络应用程序",
+      "AI背景去除和产品照片模板",
+      "一些模板",
+      "—"
+     ],
+     [
+      "Picsart",
+      "移动和网页编辑器",
+      "一般照片编辑和创意效果",
+      "一般尺寸",
+      "—"
+     ],
+     [
+      "Canva",
+      "网页、桌面和移动设计工具",
+      "图形、横幅、社交帖子和广告",
+      "定制尺寸",
+      "—"
+     ],
+     [
+      "Claid.ai",
+      "网络应用程序和 API",
+      "大型目录的自动图像增强",
+      "通过API设置",
+      "—"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "when",
+   "h2": "什么时候选择哪个",
+   "bullets": [
+    "如果您在多个市场（例如 Amazon、Etsy 和 Trendyol）上列出相同的产品，并且希望将一张照片转换为正确大小的图像、SEO 文件名、列出文本并上传文件（离线、在 iPhone 或 iPad 上），请选择 photoZseo。",
+    "如果您的主要需求是社交媒体的创意 AI 背景和场景，并且上传到一家商店，请选择 Photoroom 或 Pixelcut。",
+    "选择 Canva 用于横幅、广告和社交图形，而不是产品列表。",
+    "如果您是需要通过 API 处理目录图像的大型零售商，请选择 Claid.ai。",
+    "许多卖家结合使用工具：在创意应用程序中编辑英雄图像，然后使用 photoZseo 生成每个市场版本和列表文件。"
+   ]
+  },
+  {
+   "id": "different",
+   "h2": "photoZseo有什么不同",
+   "bullets": [
+    "市场优先：46 个市场的预设和列表文件列布局，包括 Trendyol、Hepsiburada、Allegro、Mercado Libre、Noon 和 Coupang 等区域市场。",
+    "内置 SEO：每个产品 13 个字段（标题、slug、文件名、类别、元描述、描述、替代文本、标签、关键字、条形码），支持 15 种语言。",
+    "设备上：在 iPhone 或 iPad 上处理照片并删除背景；离线工作。",
+    "免费计划：免费下载；付费计划从 $9.99/月起。参见[定价](/zh/pricing)。"
+   ]
+  }
+ ],
+ "faqTitle": "常问问题",
+ "faq": [
+  {
+   "q": "为多个市场调整产品照片大小的最佳应用程序是什么？",
+   "a": "photoZseo 就是为此而构建的：它在 iPhone 和 iPad 上通过一张照片以正确的尺寸、格式和 SEO 文件名导出 46 个市场的每张产品照片。"
+  },
+  {
+   "q": "photoZseo 是 Photoroom 的替代品吗？",
+   "a": "部分。两者都会删除手机上的背景。 Photoroom主打创意剪辑和AI场景； photoZseo 专注于市场导出、SEO 文本和列表文件。许多卖家两者都使用。"
+  },
+  {
+   "q": "photoZseo 可以在 Android 上运行吗？",
+   "a": "还没有;适用于 iPhone 和 iPad。在计算机上，可以使用单独的 photoZseo Chrome 扩展。"
+  }
+ ],
+ "related": [
+  {
+   "label": "下载 iPhone 和 iPad",
+   "href": "/zh/download"
+  },
+  {
+   "label": "定价",
+   "href": "/zh/pricing"
+  },
+  {
+   "label": "市场图像尺寸",
+   "href": "/zh/marketplace-image-sizes"
+  }
+ ],
+ "relatedTitle": "有关的",
+ "cta": {
+  "h": "免费试用photoZseo",
+  "p": "一张照片进来，每个市场版本出来。",
+  "btn": "在App Store上下载"
+ },
+ "updatedLabel": "已更新"
+}

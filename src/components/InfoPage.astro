@@ -1,0 +1,226 @@
+---
+import type { Lang } from '../i18n/ui';
+import { defaultLang } from '../i18n/ui';
+import type { PageDoc } from '../i18n/pages/types';
+import { inlineMd, plainMd } from '../lib/inline-md';
+import { APP_STORE_URL } from '../i18n/meta';
+import { FACTS_UPDATED } from '../i18n/facts';
+
+interface Props {
+  doc: PageDoc;
+  lang: Lang;
+  path: string; // dil öneki olmadan, ör. "/pricing"
+  extraJsonLd?: Record<string, unknown>[];
+  pageType?: 'WebPage' | 'AboutPage' | 'CollectionPage' | 'ItemPage';
+  updated?: string;
+}
+
+const { doc, lang, path, extraJsonLd = [], pageType = 'WebPage', updated = FACTS_UPDATED } = Astro.props;
+const prefix = lang === defaultLang ? '' : `/${lang}`;
+const pageUrl = `https://photozseo.com${prefix}${path}`;
+const updatedText = new Intl.DateTimeFormat(lang, { dateStyle: 'long' }).format(new Date(updated));
+
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': pageType,
+    '@id': `${pageUrl}#page`,
+    url: pageUrl,
+    name: doc.title,
+    description: doc.desc,
+    inLanguage: lang,
+    isPartOf: { '@id': 'https://photozseo.com/#website' },
+    about: { '@id': 'https://photozseo.com/#app' },
+    publisher: { '@id': 'https://photozseo.com/#org' },
+    author: { '@id': 'https://photozseo.com/#org' },
+    dateModified: updated,
+    abstract: plainMd(doc.answer),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'photoZseo', item: `https://photozseo.com${prefix}/` },
+      { '@type': 'ListItem', position: 2, name: doc.crumb, item: pageUrl },
+    ],
+  },
+  ...extraJsonLd,
+];
+if (doc.faq?.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${pageUrl}#faq`,
+    mainEntity: doc.faq.map((f) => ({ '@type': 'Question', name: plainMd(f.q), acceptedAnswer: { '@type': 'Answer', text: plainMd(f.a) } })),
+  });
+}
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+---
+
+<article class="info">
+  <header class="info-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={`${prefix}/`}>photoZseo</a><span aria-hidden="true">/</span><span>{doc.crumb}</span>
+      </nav>
+      <span class="kicker">{doc.kicker}</span>
+      <h1>{doc.h1}</h1>
+      <p class="answer" set:html={inlineMd(doc.answer)} />
+      <p class="updated"><time datetime={updated}>{doc.updatedLabel} {updatedText}</time></p>
+      {APP_STORE_URL && (
+        <div class="cta-row">
+          <a class="btn-store" href={APP_STORE_URL} rel="noopener">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M16.498 12.43c.02-2.176 1.776-3.221 1.856-3.27-1.013-1.481-2.585-1.683-3.139-1.704-1.319-.134-2.594.78-3.265.78-.685 0-1.713-.766-2.823-.744-1.43.022-2.76.842-3.491 2.131-1.493 2.59-.38 6.415 1.07 8.519.71 1.029 1.541 2.18 2.633 2.14 1.073-.043 1.474-.681 2.766-.681s1.66.681 2.776.659c1.149-.022 1.873-1.034 2.566-2.072.812-1.179 1.143-2.339 1.157-2.398-.026-.011-2.214-.85-2.106-3.36zM14.396 5.879c.575-.722.967-1.713.86-2.722-.831.035-1.866.578-2.466 1.281-.532.612-1.005 1.622-.886 2.588.942.075 1.906-.473 2.492-1.147z"/></svg>
+            <span><small>Download on the</small>App Store</span>
+          </a>
+        </div>
+      )}
+    </div>
+  </header>
+
+  {doc.facts && (
+    <section class="wrap facts" aria-label="Key facts">
+      <dl>
+        {doc.facts.map((f) => (
+          <div><dt>{f.k}</dt><dd set:html={inlineMd(f.v)} /></div>
+        ))}
+      </dl>
+    </section>
+  )}
+
+  <div class="wrap body">
+    {doc.sections.map((s) => (
+      <section id={s.id}>
+        <h2>{s.h2}</h2>
+        {s.body?.map((p) => <p set:html={inlineMd(p)} />)}
+        {s.bullets && (
+          <ul>{s.bullets.map((b) => <li set:html={inlineMd(b)} />)}</ul>
+        )}
+        {s.steps && (
+          <ol class="steps">{s.steps.map((st) => <li><strong>{st.t}</strong> <span set:html={inlineMd(st.d)} /></li>)}</ol>
+        )}
+        {s.table && (
+          <div class="table-wrap" role="region" aria-label={s.table.caption ?? s.h2} tabindex="0">
+            <table>
+              {s.table.caption && <caption>{s.table.caption}</caption>}
+              <thead><tr>{s.table.head.map((h) => <th scope="col" lang={/^(Starter|Pro|Business)$/.test(h) ? 'en' : undefined}>{h}</th>)}</tr></thead>
+              <tbody>
+                {s.table.rows.map((r) => (
+                  <tr>{r.map((cell, i) => i === 0 ? <th scope="row" set:html={inlineMd(cell)} /> : <td set:html={inlineMd(cell)} />)}</tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {s.note && <p class="note" set:html={inlineMd(s.note)} />}
+      </section>
+    ))}
+
+    {doc.faq && doc.faq.length > 0 && (
+      <section id="faq">
+        <h2>{doc.faqTitle ?? 'FAQ'}</h2>
+        <div class="faq">
+          {doc.faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p set:html={inlineMd(f.a)} />
+            </details>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {doc.sources && doc.sources.length > 0 && (
+      <section id="sources">
+        <h2>{doc.sourcesTitle ?? 'Sources'}</h2>
+        <ol class="sources">
+          {doc.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.label}</a></li>)}
+        </ol>
+      </section>
+    )}
+
+    {doc.related && doc.related.length > 0 && (
+      <nav class="related" aria-label={doc.relatedTitle ?? 'Related'}>
+        <h2>{doc.relatedTitle ?? 'Related'}</h2>
+        <ul>{doc.related.map((r) => <li><a href={r.href}>{r.label} →</a></li>)}</ul>
+      </nav>
+    )}
+  </div>
+
+  {doc.cta && (
+    <section class="info-cta">
+      <div class="wrap center">
+        <h2>{doc.cta.h}</h2>
+        <p>{doc.cta.p}</p>
+        {APP_STORE_URL && <a class="btn-store" href={APP_STORE_URL} rel="noopener"><span>{doc.cta.btn}</span></a>}
+      </div>
+    </section>
+  )}
+</article>
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+<style>
+  .info { color: var(--text); }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .center { text-align: center; }
+  .info-hero { padding: 64px 0 40px; }
+  .crumbs { display: flex; gap: 8px; font-size: 13px; color: var(--text-dim); margin-bottom: 20px; flex-wrap: wrap; }
+  .crumbs a { color: var(--text-muted); }
+  .kicker {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); padding: 7px 12px; border-radius: 999px;
+    background: rgba(79,209,197,.10); border: 1px solid rgba(79,209,197,.28);
+  }
+  h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.06; letter-spacing: -.03em; font-weight: 700; margin: 18px 0 18px; overflow-wrap: anywhere; }
+  .answer { font-size: clamp(17px, 1.7vw, 20px); line-height: 1.6; color: var(--text); border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; }
+  [dir="rtl"] .answer { border-left: 0; border-right: 3px solid var(--accent); padding: 4px 18px 4px 0; }
+  .updated { color: var(--text-dim); font-size: 13px; margin-top: 14px; }
+  .cta-row { margin-top: 26px; }
+  .btn-store {
+    display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 14px;
+    background: #fff; color: #0B0E1A; font-weight: 600; font-size: 17px; line-height: 1.1;
+    box-shadow: 0 8px 28px rgba(79,209,197,.25); transition: transform .15s ease;
+  }
+  .btn-store small { display: block; font-size: 11px; font-weight: 500; }
+  .btn-store:hover { transform: translateY(-2px); color: #0B0E1A; }
+
+  .facts dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 8px 0 24px; }
+  .facts dl > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; min-width: 0; }
+  .facts dt { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); }
+  .facts dd { font-size: 16px; font-weight: 600; margin-top: 4px; overflow-wrap: anywhere; }
+
+  .body section { padding: 28px 0; border-top: 1px solid var(--border); }
+  .body h2 { font-size: clamp(22px, 2.6vw, 30px); letter-spacing: -.02em; line-height: 1.2; margin-bottom: 14px; }
+  .body p, .body li { color: var(--text-muted); font-size: 16.5px; line-height: 1.7; }
+  .body p + p { margin-top: 12px; }
+  .body ul, .body ol { margin: 12px 0 0 22px; display: flex; flex-direction: column; gap: 8px; }
+  [dir="rtl"] .body ul, [dir="rtl"] .body ol { margin: 12px 22px 0 0; }
+  .body :global(strong) { color: var(--text); }
+  .body :global(code) { font-family: var(--font-mono); font-size: .9em; background: rgba(255,255,255,.06); padding: 1px 6px; border-radius: 6px; }
+  .steps li strong { color: var(--text); }
+  .note { font-size: 14px !important; color: var(--text-dim) !important; margin-top: 12px; }
+
+  .table-wrap { overflow-x: auto; margin-top: 14px; border: 1px solid var(--border); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 560px; }
+  caption { text-align: start; padding: 12px 14px; color: var(--text-dim); font-size: 13px; }
+  th, td { padding: 11px 14px; text-align: start; border-bottom: 1px solid var(--border); vertical-align: top; }
+  thead th { background: rgba(255,255,255,.05); font-size: 12.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-dim); }
+  tbody th { color: var(--text); font-weight: 600; }
+  td { color: var(--text-muted); }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+
+  .faq details { border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; background: var(--bg-card); margin-top: 10px; }
+  .faq summary { cursor: pointer; font-weight: 600; color: var(--text); }
+  .faq details p { margin-top: 10px; }
+  .sources li { font-size: 14px; }
+  .related ul { list-style: none; margin: 12px 0 0 !important; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .related { padding: 28px 0; border-top: 1px solid var(--border); }
+  .related li a { display: block; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); color: var(--text); font-weight: 600; }
+  .related li a:hover { border-color: var(--accent); }
+
+  .info-cta { padding: 56px 0 88px; }
+  .info-cta h2 { font-size: clamp(26px, 3.6vw, 40px); letter-spacing: -.025em; }
+  .info-cta p { color: var(--text-muted); margin: 12px auto 24px; max-width: 560px; }
+  @media (max-width: 600px) {
+    .info-hero { padding: 40px 0 28px; }
+    .wrap { padding: 0 16px; }
+  }
+</style>

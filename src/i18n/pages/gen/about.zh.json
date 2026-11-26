@@ -1,0 +1,80 @@
+{
+ "title": "关于photoZseo：在线卖家的产品照片和列表工具",
+ "desc": "photoZseo 为独立在线卖家制作产品照片和列表工具：iPhone 和 iPad 应用程序、Chrome 扩展程序以及 photozseo.com 上的在线商店。",
+ "crumb": "关于我们",
+ "kicker": "关于我们",
+ "h1": "关于photoZseo",
+ "answer": "photoZseo 构建的工具可将产品照片转换为市场就绪的列表。主要产品是 photoZseo：iPhone 和 iPad 的 SEO 产品照片应用程序（App Store，2026）。还有一个针对 Google Chrome 的单独的 photoZseo 扩展以及在 photozseo.com 上托管的简单在线商店。",
+ "facts": [
+  {
+   "k": "成立于",
+   "v": "独立在线卖家"
+  },
+  {
+   "k": "主要产品",
+   "v": "iPhone 和 iPad 应用程序"
+  },
+  {
+   "k": "网站",
+   "v": "照片搜索引擎优化网站"
+  },
+  {
+   "k": "支持",
+   "v": "[support@photozseo.com](mailto:support@photozseo.com)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "why",
+   "h2": "为什么photoZseo存在",
+   "body": [
+    "每个市场都要求不同的照片尺寸、背景规则、文件名和列表栏。 Amazon、Etsy 和 Trendyol 上的卖家经常会编辑同一张照片 3 次，并输入相同的标题 3 次。",
+    "photoZseo 是由一家独立的卖家兼开发商发起的，目的是消除重复性工作：拍摄一次，然后让应用程序为每个市场准备照片、文件名和列表文本。"
+   ]
+  },
+  {
+   "id": "products",
+   "h2": "产品",
+   "bullets": [
+    "[iPhone 和 iPad 版 photoZseo](/zh/download) — 相机、针对 46 个市场调整大小、背景删除、列表文本、CSV/XLSX 导出、B2B 报价和 Shopify 推送。",
+    "[Chrome 版 photoZseo](/zh/chrome-extension) — 桌面侧面板扩展程序，可从网页收集产品照片和详细信息，并导出可用于市场的 ZIP 和 CSV 文件。它是一个独立的产品，有自己的计划。",
+    "在线商店 - Pro 和 Business 计划的卖家可以在 photozseo.com 上发布一个简单的店面。"
+   ]
+  },
+  {
+   "id": "principles",
+   "h2": "我们如何构建",
+   "bullets": [
+    "首先在设备上。照片处理和背景去除在用户的设备上运行。",
+    "没有广告。这些应用程序通过订阅付费，而不是广告。",
+    "专为全球卖家打造。该应用程序支持 15 种语言，包括三种从右到左的语言（阿拉伯语、波斯语、乌尔都语）。",
+    "准确的市场规格。预设遵循市场自己的卖家文档；参见[市场图像尺寸指南](/zh/marketplace-image-sizes)。"
+   ]
+  },
+  {
+   "id": "contact",
+   "h2": "接触",
+   "bullets": [
+    "支持：[support@photozseo.com](mailto:support@photozseo.com)",
+    "一般并按：[你好@photozseo.com](mailto:hello@photozseo.com)",
+    "帮助中心：[photozseo.com/support](/zh/support)"
+   ]
+  }
+ ],
+ "related": [
+  {
+   "label": "下载 iPhone 和 iPad",
+   "href": "/zh/download"
+  },
+  {
+   "label": "定价",
+   "href": "/zh/pricing"
+  },
+  {
+   "label": "隐私政策",
+   "href": "/zh/privacy"
+  }
+ ],
+ "relatedTitle": "有关的",
+ "updatedLabel": "已更新"
+}

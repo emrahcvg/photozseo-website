@@ -1,7 +1,10 @@
 ---
 import { languages, rtlLanguages, defaultLang, type Lang, useTranslations } from '../i18n/ui';
 import { getHomeContent } from '../i18n/home';
-import { meta, ogLocales, APP_STORE_ID } from '../i18n/meta';
+import { meta, ogLocales, APP_STORE_ID, APP_STORE_URL } from '../i18n/meta';
+import { ORG_JSONLD, WEBSITE_JSONLD } from '../i18n/facts';
+import { NAV_EXTRA } from '../i18n/pages/nav';
+import { FOOTER_UI } from '../i18n/footer-ui';
 import { EXT_NAV, CHROME_ICON } from '../i18n/extension';
 
 interface Props {
@@ -10,6 +13,8 @@ interface Props {
   lang?: Lang;
   fullBleed?: boolean;
   ogImage?: string;
+  /** Sayfanın var olduğu diller (hreflang + dil seçici). Verilmezse 15 dilin hepsi. */
+  altLangs?: Lang[];
 }
 
 const {
@@ -18,6 +23,7 @@ const {
   description = meta[lang].defaultDesc,
   fullBleed = false,
   ogImage = '/og-image.png',
+  altLangs,
 } = Astro.props;
 const t = useTranslations(lang);
 const c = getHomeContent(lang);
@@ -25,9 +31,17 @@ const isRtl = rtlLanguages.includes(lang);
 const prefix = lang === defaultLang ? '' : `/${lang}`;
 const pageUrl = `https://photozseo.com${Astro.url.pathname}`;
 const langCodes = Object.keys(languages);
+const alternateCodes = altLangs ?? (langCodes as Lang[]);
+const nx = NAV_EXTRA[lang] ?? NAV_EXTRA.en;
+const fu = FOOTER_UI[lang] ?? FOOTER_UI.en;
+const [lnApp, lnPricing, lnSizes, lnAlt, lnAbout] = nx.links;
+const APPLE_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M16.498 12.43c.02-2.176 1.776-3.221 1.856-3.27-1.013-1.481-2.585-1.683-3.139-1.704-1.319-.134-2.594.78-3.265.78-.685 0-1.713-.766-2.823-.744-1.43.022-2.76.842-3.491 2.131-1.493 2.59-.38 6.415 1.07 8.519.71 1.029 1.541 2.18 2.633 2.14 1.073-.043 1.474-.681 2.766-.681s1.66.681 2.776.659c1.149-.022 1.873-1.034 2.566-2.072.812-1.179 1.143-2.339 1.157-2.398-.026-.011-2.214-.85-2.106-3.36zM14.396 5.879c.575-.722.967-1.713.86-2.722-.831.035-1.866.578-2.466 1.281-.532.612-1.005 1.622-.886 2.588.942.075 1.906-.473 2.492-1.147z"/></svg>';
+const siteJsonLd = { '@context': 'https://schema.org', '@graph': [ORG_JSONLD, WEBSITE_JSONLD] };
 const basePath = Astro.url.pathname.replace(new RegExp(`^/(${langCodes.join('|')})(?=/|$)`), '') || '/';
 // Blog ve 404 yalnız İngilizce; diğer tüm sayfaların 15 dilde karşılığı var.
-const hasAlternates = !basePath.startsWith('/blog') && !basePath.startsWith('/404');
+const hasAlternates = altLangs ? true : !basePath.startsWith('/blog') && !basePath.startsWith('/404');
+// Çevrilmiş blog yazısı olan diller (blog-i18n/<dil>/...).
+const blogLangs = new Set(['en', ...Object.keys(import.meta.glob('../content/blog-i18n/*/*.md')).map((k) => k.split('/')[3])]);
 const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
 ---
 
@@ -49,7 +63,7 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
     <meta name="theme-color" content="#0B0E1A" />
     <link rel="canonical" href={pageUrl} />
     <title>{fullTitle}</title>
-    {hasAlternates && langCodes.map((code) => (
+    {hasAlternates && alternateCodes.map((code) => (
       <link rel="alternate" hreflang={code} href={`https://photozseo.com${code === defaultLang ? '' : `/${code}`}${basePath}`} />
     ))}
     {hasAlternates && <link rel="alternate" hreflang="x-default" href={`https://photozseo.com${basePath}`} />}
@@ -76,6 +90,9 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
     <meta name="keywords" content="product photo app, marketplace listing tool, Amazon photo size, Shopify product photo, Etsy listing app, AI SEO product description, background removal app, EXIF metadata, B2B quote app, iPhone product photography, ecommerce photo optimizer" />
     {APP_STORE_ID && <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />}
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
+    <link rel="alternate" type="application/rss+xml" title="photoZseo Blog" href="/rss.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
     <slot name="head" />
   </head>
   <body class={fullBleed ? 'full-bleed' : ''}>
@@ -87,9 +104,9 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
         </a>
         <div class="nav-links">
           <a href={`${prefix}/#features`}>{c.nav.features}</a>
-          <a href={`${prefix}/#pricing`}>{c.nav.pricing}</a>
-          <a href={`${prefix}/#faq`}>{c.nav.faq}</a>
-          {lang === defaultLang && <a href="/blog">{c.nav.blog}</a>}
+          <a href={NAV_EXTRA[lang]?.has.pricing ? `${prefix}/pricing` : `${prefix}/#pricing`}>{c.nav.pricing}</a>
+          <a href={lnSizes.href}>{fu.guides}</a>
+          {blogLangs.has(lang) && <a href={`${prefix}/blog`}>{c.nav.blog}</a>}
           <a href={`${prefix}/support`}>{c.nav.support}</a>
         </div>
         <div class="nav-right">
@@ -97,8 +114,9 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
             <select onchange={`window.location.href=this.value`} aria-label="Language">
               {Object.entries(languages).map(([code, name]) => {
                 const langPrefix = code === defaultLang ? '' : `/${code}`;
+                const target = hasAlternates && alternateCodes.includes(code as Lang) ? basePath : '/';
                 return (
-                  <option value={`${langPrefix}${hasAlternates ? basePath : '/'}`} selected={code === lang}>
+                  <option value={`${langPrefix}${target}`} selected={code === lang}>
                     {name}
                   </option>
                 );
@@ -106,7 +124,7 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
             </select>
           </div>
           <a href={`${prefix}/chrome-extension`} class="nav-ext" title={EXT_NAV[lang]}><span class="nav-ext-ico" set:html={CHROME_ICON} /><span class="nav-ext-txt">{EXT_NAV[lang]}</span></a>
-          <a href={`${prefix}/#download`} class="nav-cta">{c.nav.getApp}</a>
+          <a href={APP_STORE_URL || `${prefix}/#download`} class="nav-cta" rel="noopener"><span class="nav-cta-ico" set:html={APPLE_ICON} /><span class="nav-cta-long">{c.nav.getApp}</span><span class="nav-cta-short">App Store</span></a>
         </div>
       </div>
     </nav>
@@ -121,15 +139,42 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
             photoZseo
           </div>
           <p class="footer-tag">{c.footer.tag}</p>
+          {APP_STORE_URL && (
+            <a class="footer-store" href={APP_STORE_URL} rel="noopener">
+              <span set:html={APPLE_ICON.replace(/15/g, '22')} />
+              <span><small>Download on the</small>App Store</span>
+            </a>
+          )}
         </div>
-        <div class="footer-links">
-          <a href={`${prefix}/chrome-extension`}>{EXT_NAV[lang]}</a>
-          <a href={`${prefix}/privacy`}>{c.footer.privacy}</a>
-          <a href={`${prefix}/terms`}>{c.footer.terms}</a>
-          <a href={`${prefix}/support`}>{c.footer.support}</a>
-          <a href={`${prefix}/accessibility`}>{c.footer.accessibility}</a>
-          <a href={`${prefix}/delete-account`}>{c.footer.deleteAccount}</a>
-          <a href="mailto:support@photozseo.com">support@photozseo.com</a>
+        <nav class="footer-cols" aria-label="Footer">
+          <div class="footer-col">
+            <h2>{fu.product}</h2>
+            <a href={lnApp.href}>{lnApp.label}</a>
+            <a href={lnPricing.href}>{lnPricing.label}</a>
+            <a href={`${prefix}/chrome-extension`}>{EXT_NAV[lang]}</a>
+          </div>
+          <div class="footer-col">
+            <h2>{fu.resources}</h2>
+            {blogLangs.has(lang) ? <a href={`${prefix}/blog`}>{c.nav.blog}</a> : <a href="/blog">Blog</a>}
+            <a href={lnSizes.href}>{lnSizes.label}</a>
+            <a href={lnAlt.href}>{lnAlt.label}</a>
+          </div>
+          <div class="footer-col">
+            <h2>{fu.company}</h2>
+            <a href={lnAbout.href}>{lnAbout.label}</a>
+            <a href={`${prefix}/support`}>{c.footer.support}</a>
+            <a href="mailto:support@photozseo.com">support@photozseo.com</a>
+          </div>
+          <div class="footer-col">
+            <h2>{fu.legal}</h2>
+            <a href={`${prefix}/privacy`}>{c.footer.privacy}</a>
+            <a href={`${prefix}/terms`}>{c.footer.terms}</a>
+            <a href={`${prefix}/store-terms`}>{t('storeterms.title')}</a>
+            <a href={`${prefix}/aup`}>{t('aup.title')}</a>
+            <a href={`${prefix}/accessibility`}>{c.footer.accessibility}</a>
+            <a href={`${prefix}/delete-account`}>{c.footer.deleteAccount}</a>
+          </div>
+        </nav>
         </div>
       </div>
       <p class="footer-copy">&copy; {new Date().getFullYear()} photoZseo. {c.footer.rights}</p>
@@ -198,11 +243,11 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
       .nav-links a:hover { color: var(--text); }
       .nav-right { display: flex; align-items: center; gap: 12px; }
       .nav-ext {
-        display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px;
-        border: 1px solid rgba(79,209,197,0.45); color: var(--accent); font-size: 14px; font-weight: 600;
-        white-space: nowrap; transition: background .15s ease;
+        display: inline-flex; align-items: center; gap: 7px; padding: 8px 6px;
+        color: var(--text-muted); font-size: 14px; font-weight: 500;
+        white-space: nowrap; transition: color .15s ease;
       }
-      .nav-ext:hover { background: rgba(79,209,197,0.10); color: var(--accent); }
+      .nav-ext:hover { color: var(--text); }
       .nav-ext-ico { display: inline-flex; }
       .lang-picker select {
         padding: 7px 10px; border-radius: 8px; font-size: 13px;
@@ -210,6 +255,7 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
         border: 1px solid var(--border-strong); cursor: pointer;
       }
       .nav-cta {
+        display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
         padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
         background: var(--text); color: #0B0E1A;
         transition: transform .15s ease, background .15s ease;
@@ -236,9 +282,21 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
       }
       .footer-brand { max-width: 320px; }
       .footer-tag { color: var(--text-muted); font-size: 14px; margin-top: 10px; }
-      .footer-links { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
-      .footer-links a { color: var(--text-muted); font-size: 14px; }
-      .footer-links a:hover { color: var(--text); }
+      .nav-cta-ico { display: inline-flex; }
+      .nav-cta-short { display: none; }
+      .footer-store {
+        display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; padding: 10px 16px;
+        border-radius: 12px; background: #000; color: #fff; border: 1px solid #2a2a2a; line-height: 1.1;
+        font-size: 17px; font-weight: 600;
+      }
+      .footer-store small { display: block; font-size: 10px; font-weight: 500; opacity: .85; }
+      .footer-store:hover { color: #fff; border-color: rgba(79,209,197,0.5); }
+      .footer-cols { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: 28px 40px; flex: 1; max-width: 820px; }
+      .footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+      .footer-col h2 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); margin: 0 0 4px; }
+      .footer-col a { color: var(--text-muted); font-size: 14px; overflow-wrap: anywhere; }
+      .footer-col a:hover { color: var(--text); }
+      .footer-col a[href^="mailto:"] { white-space: nowrap; overflow-wrap: normal; }
       .footer-copy {
         max-width: 1200px; margin: 32px auto 0; padding-top: 24px;
         border-top: 1px solid var(--border);
@@ -248,12 +306,19 @@ const fullTitle = title.includes('photoZseo') ? title : `${title} | photoZseo`;
       @media (max-width: 800px) {
         .nav-inner { flex-wrap: wrap; padding: 12px 16px; }
         .nav-links { order: 3; width: 100%; justify-content: center; gap: 18px; font-size: 13px; }
-        .footer-inner { flex-direction: column; gap: 20px; }
+        .footer-inner { flex-direction: column; gap: 28px; }
+        .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
       }
       @media (max-width: 500px) {
-        .nav-cta { display: none; }
-        .nav-ext { padding: 8px 10px; }
-        .nav-ext-txt { display: none; }
+        .nav-ext { display: none; }
+        .nav-cta { padding: 7px 12px; }
+        .nav-cta-long { display: none; }
+        .nav-cta-short { display: inline; }
+        .lang-picker select { max-width: 78px; padding: 6px 6px; font-size: 12px; }
+        .nav-inner { gap: 10px; }
+        .nav-right { gap: 8px; }
+        .logo { font-size: 17px; gap: 8px; }
+        .logo-mark { width: 32px; height: 32px; }
         .nav-links a { font-size: 12px; }
       }
     </style>

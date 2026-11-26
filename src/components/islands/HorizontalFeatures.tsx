@@ -35,8 +35,8 @@ export default function HorizontalFeatures({ features, head, seeInAction }: Prop
               </ul>
             </div>
             <div className="hpanel-art">
-              <div className="hpanel-ipad"><img src={f.ipad} alt="" loading="lazy"/></div>
-              <div className="hpanel-iphone"><img src={f.iphone} alt="" loading="lazy"/></div>
+              <div className="hpanel-ipad"><img src={f.ipad} alt={`photoZseo on iPad: ${f.eyebrow}`} loading="lazy"/></div>
+              <div className="hpanel-iphone"><img src={f.iphone} alt={`photoZseo on iPhone: ${f.eyebrow}`} loading="lazy"/></div>
               <div className="hpanel-glow"/>
             </div>
           </article>

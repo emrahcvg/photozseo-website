@@ -1,6 +1,7 @@
 ---
 import { defaultLang, type Lang } from '../i18n/ui';
-import { getHomeContent } from '../i18n/home';
+import { getHomeContent, enHomeContent, HOME_UPDATED_LANGS } from '../i18n/home';
+import { PLANS, usd, appJsonLd, TRIAL_DAYS } from '../i18n/facts';
 import { APP_STORE_URL, DOWNLOAD_URL } from '../i18n/meta';
 import { EXT_NAV, CHROME_ICON } from '../i18n/extension';
 import SmoothScroll from './islands/SmoothScroll.tsx';
@@ -17,6 +18,10 @@ interface Props { lang?: Lang }
 const { lang = defaultLang } = Astro.props;
 const extHref = `${lang === defaultLang ? '' : `/${lang}`}/chrome-extension`;
 const c = getHomeContent(lang);
+// Güncellenmemiş dillerde eski fiyat/plan metni görünmesin: fiyat bloğu İngilizceye düşer.
+const isUpdated = HOME_UPDATED_LANGS.includes(lang);
+const pr = isUpdated && c.pricing.plans.length === PLANS.length ? c.pricing : enHomeContent.pricing;
+const prefix = lang === defaultLang ? '' : `/${lang}`;
 
 const features = c.features.items.map((item, idx) => ({
   n: String(idx + 1).padStart(2, '0'),
@@ -31,7 +36,7 @@ const features = c.features.items.map((item, idx) => ({
 <CursorSpotlight client:idle />
 <ScrollReveal client:load />
 
-<Hero client:load content={APP_STORE_URL ? { ...c.hero, btnAppSmall: 'Download on the', btnAppBig: 'App Store' } : c.hero} appStoreUrl={DOWNLOAD_URL} />
+<Hero client:load content={APP_STORE_URL ? { ...c.hero, btnAppSmall: 'Download on the', btnAppBig: 'App Store', ...(isUpdated ? {} : { ctaTrial: enHomeContent.hero.ctaTrial, ctaCard: enHomeContent.hero.ctaCard }) } : c.hero} appStoreUrl={DOWNLOAD_URL} />
 
 <MarqueeRows />
 
@@ -78,18 +83,20 @@ const features = c.features.items.map((item, idx) => ({
   <div class="container">
     <div class="pricing-head" data-reveal>
       <span class="kicker">{c.pricing.kicker}</span>
-      <h2 class="section-title">{c.pricing.title}</h2>
-      <p class="section-sub">{c.pricing.sub}</p>
+      <h2 class="section-title">{pr.title}</h2>
+      <p class="section-sub">{pr.sub}</p>
     </div>
     <div class="pricing-grid">
-      {c.pricing.plans.map((plan, idx) => {
+      {pr.plans.map((plan, idx) => {
         const isFeatured = plan.featured === true;
-        const [price, per] = plan.pricePer.split('/');
+        const fact = PLANS[idx];
+        const per = plan.pricePer.split('/')[1] ?? 'mo';
+        const price = fact.monthly === 0 ? '$0' : usd(fact.monthly!);
         return (
           <div class={`plan ${isFeatured ? 'plan-featured' : ''}`} data-reveal style={`transition-delay: ${idx * 80}ms`}>
-            {isFeatured && <span class="plan-badge">{c.pricing.badge}</span>}
+            {isFeatured && <span class="plan-badge">{pr.badge}</span>}
             <div class="plan-head">
-              <span class="plan-name">{plan.name}</span>
+              <span class="plan-name" lang={fact.id === 'free' ? undefined : 'en'}>{plan.name}</span>
               <div class="plan-price">{price}<span>/{per}</span></div>
               {plan.trial && <div class="plan-trial">{plan.trial}</div>}
             </div>
@@ -104,12 +111,12 @@ const features = c.features.items.map((item, idx) => ({
                 );
               })}
             </ul>
-            <a href="#download" class={`plan-cta ${!isFeatured ? 'plan-cta-secondary' : ''}`}>{plan.cta}</a>
+            <a href={APP_STORE_URL || '#download'} rel="noopener" class={`plan-cta ${!isFeatured ? 'plan-cta-secondary' : ''}`}>{plan.cta}</a>
           </div>
         );
       })}
     </div>
-    <p class="pricing-note">{c.pricing.note}</p>
+    <p class="pricing-note">{pr.note} {isUpdated && <a href={`${prefix}/pricing`}>{c.pricing.compareLink}</a>}</p>
   </div>
 </section>
 
@@ -150,7 +157,11 @@ const features = c.features.items.map((item, idx) => ({
         </a>
       </div>
       <p class="final-ext"><a href={extHref}><span set:html={CHROME_ICON} />{EXT_NAV[lang]} →</a></p>
-      <p class="final-note">{c.finalCta.note} <a href="mailto:hello@photozseo.com?subject=Notify%20me%20at%20launch">{c.finalCta.notify}</a>.</p>
+      {isUpdated ? (
+        <p class="final-note">{c.finalCta.note} <a href={`${prefix}/download`}>{c.finalCta.notify}</a></p>
+      ) : !APP_STORE_URL && (
+        <p class="final-note">{c.finalCta.note} <a href="mailto:hello@photozseo.com?subject=Notify%20me%20at%20launch">{c.finalCta.notify}</a>.</p>
+      )}
     </div>
   </div>
 </section>
@@ -159,24 +170,7 @@ const features = c.features.items.map((item, idx) => ({
 <script type="application/ld+json" set:html={JSON.stringify({
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "photoZseo",
-      "operatingSystem": "iOS 17, iPadOS 17",
-      "applicationCategory": "BusinessApplication",
-      "description": "Turn one product photo into 46 marketplace-ready listings. AI auto-fills SEO, exports to Amazon, Shopify, Etsy, Trendyol and more.",
-      "url": "https://photozseo.com",
-      "offers": [
-        { "@type": "Offer", "price": "9.99", "priceCurrency": "USD", "category": "Starter Monthly" },
-        { "@type": "Offer", "price": "71.99", "priceCurrency": "USD", "category": "Starter Annual" },
-        { "@type": "Offer", "price": "19.99", "priceCurrency": "USD", "category": "Pro Monthly" },
-        { "@type": "Offer", "price": "143.99", "priceCurrency": "USD", "category": "Pro Annual" },
-        { "@type": "Offer", "price": "49.99", "priceCurrency": "USD", "category": "Business Monthly" },
-        { "@type": "Offer", "price": "359.99", "priceCurrency": "USD", "category": "Business Annual" }
-      ],
-      "featureList": ["46 marketplace export presets","AI SEO auto-fill","AI background removal","Pro camera studio","B2B quote builder","EXIF editor","iPhone & iPad universal","iCloud Drive sync","On-device AI","Shopify API","Team collaboration"],
-      "inLanguage": ["en","tr","de","es","it","fr","pt","ja","ko","zh","ar","hi","fa","pl","ur"]
-    },
+    appJsonLd(`https://photozseo.com${prefix}/`, c.hero.sub, c.features.items.map((it) => it.eyebrow)),
     {
       "@type": "FAQPage",
       "mainEntity": c.faq.items.map((it) => ({
@@ -192,7 +186,7 @@ const features = c.features.items.map((item, idx) => ({
   .final-ext a { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(79,209,197,0.45); color: var(--accent); font-weight: 600; font-size: 15px; }
   .final-ext a:hover { background: rgba(79,209,197,0.10); }
   /* ====== Shared section primitives ====== */
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  :global(.container) { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
   .kicker {
     display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--accent);
@@ -218,19 +212,19 @@ const features = c.features.items.map((item, idx) => ({
   }
 
   /* ====== CTA primitives ====== */
-  .btn-app {
+  :global(.btn-app) {
     display: inline-flex; align-items: center; gap: 12px;
     padding: 14px 22px; border-radius: 14px;
     background: #000; color: #fff; border: 1px solid #2a2a2a;
     transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   }
-  .btn-app:hover { transform: translateY(-2px); background: #1a1a1a; color: #fff; box-shadow: 0 8px 28px rgba(79,209,197,0.25); }
-  .btn-app-text { display: flex; flex-direction: column; line-height: 1.05; text-align: left; }
-  .btn-app-small { font-size: 11px; opacity: 0.85; }
-  .btn-app-big { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
-  .btn-app-large { padding: 18px 28px; }
-  .btn-app-large .btn-app-big { font-size: 24px; }
+  :global(.btn-app:hover) { transform: translateY(-2px); background: #1a1a1a; color: #fff; box-shadow: 0 8px 28px rgba(79,209,197,0.25); }
+  :global(.btn-app-text) { display: flex; flex-direction: column; line-height: 1.05; text-align: left; }
+  :global(.btn-app-small) { font-size: 11px; opacity: 0.85; }
+  :global(.btn-app-big) { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  :global(.btn-app-large) { padding: 18px 28px; }
+  :global(.btn-app-large .btn-app-big) { font-size: 24px; }
   .cta-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
   .cta-row-center { justify-content: center; margin: 32px 0 16px; }
 
@@ -296,7 +290,7 @@ const features = c.features.items.map((item, idx) => ({
   .pricing { padding: 120px 0; }
   .pricing-head { text-align: center; max-width: 720px; margin: 0 auto 48px; }
   .pricing-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
     align-items: stretch;
   }
   .plan {
@@ -399,6 +393,9 @@ const features = c.features.items.map((item, idx) => ({
   .final-note { margin-top: 18px !important; font-size: 14px; color: var(--text-dim); }
 
   /* ====== Responsive ====== */
+  @media (max-width: 1180px) {
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 960px) {
     .pain-grid { grid-template-columns: 1fr; }
     .stat-grid { grid-template-columns: repeat(2, 1fr); }

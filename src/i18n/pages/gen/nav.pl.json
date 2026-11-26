@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "Aplikacja iPhone i iPad",
+   "href": "/pl/download"
+  },
+  {
+   "label": "Wycena",
+   "href": "/pl/pricing"
+  },
+  {
+   "label": "Rozmiary obrazów na rynku",
+   "href": "/pl/marketplace-image-sizes"
+  },
+  {
+   "label": "Alternatywy",
+   "href": "/pl/alternatives"
+  },
+  {
+   "label": "O nas",
+   "href": "/pl/about"
+  }
+ ]
+}

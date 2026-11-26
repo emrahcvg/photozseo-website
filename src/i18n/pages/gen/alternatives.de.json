@@ -1,0 +1,125 @@
+{
+ "title": "photoZseo-Alternativen: Photoroom, Canva, Pixelcut und andere Produktfoto-Apps im Vergleich",
+ "desc": "Wie photoZseo im Vergleich zu Photoroom, Pixelcut, Picsart, Canva und Claid.ai für Marktplatzverkäufer abschneidet: Hintergrundentfernung, Marktplatzgrößen, SEO-Text und CSV-Listing-Dateien.",
+ "crumb": "Alternativen",
+ "kicker": "Vergleich",
+ "h1": "photoZseo im Vergleich zu anderen Produktfoto-Apps",
+ "answer": "Die meisten Produktfoto-Apps – Photoroom, Pixelcut, Picsart – konzentrieren sich darauf, ein einzelnes Foto gut aussehen zu lassen (Hintergrundentfernung, KI-Hintergründe, Vorlagen). Canva ist ein allgemeines Designtool und Claid.ai ist eine Bild-API für Kataloge. photoZseo konzentriert sich auf den Schritt nach der Bearbeitung: jedes Foto in der richtigen Größe, im richtigen Format und mit dem richtigen Dateinamen für 46 Marktplätze zu exportieren, SEO-Titel, Beschreibungen und Alternativtexte zu schreiben und CSV/XLSX-Listendateien zu erstellen – auf iPhone und iPad, mit Verarbeitung auf dem Gerät.",
+ "sections": [
+  {
+   "id": "matrix",
+   "h2": "Vergleich auf einen Blick",
+   "table": {
+    "caption": "Produktschwerpunkt ab November 2026. Aktuelle Funktionen und Preise finden Sie auf der Website jedes Anbieters.",
+    "head": [
+     "Werkzeug",
+     "Typ",
+     "Am besten bei",
+     "Voreinstellungen für Marktplatzgrößen",
+     "SEO-Text + Listing-Dateien"
+    ],
+    "rows": [
+     [
+      "photoZseo",
+      "iPhone- und iPad-App",
+      "Marktplatzfertige Fotos, Dateinamen, SEO-Text und CSV/XLSX für 46 Marktplätze",
+      "✓ 46 Marktplätze + soziale Netzwerke",
+      "✓ 13 SEO-Felder · CSV/XLSX/JSON"
+     ],
+     [
+      "Photoroom",
+      "Mobile- und Web-App",
+      "KI-Hintergrundentfernung, KI-Hintergründe, Stapelbearbeitung",
+      "Einige Vorlagen",
+      "—"
+     ],
+     [
+      "Pixelcut",
+      "Mobile- und Web-App",
+      "KI-Hintergrundentfernung und Produktfotovorlagen",
+      "Einige Vorlagen",
+      "—"
+     ],
+     [
+      "Picsart",
+      "Mobile- und Web-Editor",
+      "Allgemeine Fotobearbeitung und kreative Effekte",
+      "Allgemeine Größen",
+      "—"
+     ],
+     [
+      "Canva",
+      "Web-, Desktop- und Mobildesign-Tool",
+      "Grafiken, Banner, soziale Beiträge und Anzeigen",
+      "Sondergrößen",
+      "—"
+     ],
+     [
+      "Claid.ai",
+      "Web-App und API",
+      "Automatisierte Bildverbesserung für große Kataloge",
+      "Über API-Einstellungen",
+      "—"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "when",
+   "h2": "Wann man welches wählt",
+   "bullets": [
+    "Wählen Sie photoZseo, wenn Sie dieselben Produkte auf mehreren Marktplätzen anbieten (z. B. Amazon, Etsy und Trendyol) und möchten, dass ein Foto in Bilder mit der richtigen Größe, SEO-Dateinamen, Listentext und Upload-Dateien umgewandelt wird – offline, auf iPhone oder iPad.",
+    "Wählen Sie Photoroom oder Pixelcut, wenn Sie vor allem kreative KI-Hintergründe und Szenen für soziale Medien benötigen und diese in einen Store hochladen.",
+    "Wählen Sie Canva für Banner, Anzeigen und soziale Grafiken anstelle von Produktlisten.",
+    "Wählen Sie Claid.ai, wenn Sie ein großer Einzelhändler sind, der Katalogbilder über eine API verarbeiten muss.",
+    "Viele Verkäufer kombinieren Tools: Bearbeiten Sie ein Heldenbild in einer Kreativ-App und verwenden Sie dann photoZseo, um jede Marktplatzversion und die Angebotsdatei zu erstellen."
+   ]
+  },
+  {
+   "id": "different",
+   "h2": "Was ist bei photoZseo anders?",
+   "bullets": [
+    "Marktplatz zuerst: Voreinstellungen und Spaltenlayouts für Listendateien für 46 Marktplätze, einschließlich regionaler Marktplätze wie Trendyol, Hepsiburada, Allegro, Mercado Libre, Noon und Coupang.",
+    "Integrierte SEO: 13 Felder pro Produkt (Titel, Slug, Dateiname, Kategorie, Meta-Beschreibung, Beschreibung, Alternativtext, Tags, Schlüsselwörter, Barcode) in 15 Sprachen.",
+    "Auf dem Gerät: Fotos werden auf dem iPhone oder iPad verarbeitet und Hintergründe entfernt; Funktioniert offline.",
+    "Kostenloser Plan: kostenlos herunterladen; Bezahlte Pläne ab $9.99/Monat. Siehe [Preisgestaltung](/de/pricing)."
+   ]
+  }
+ ],
+ "faqTitle": "FAQ",
+ "faq": [
+  {
+   "q": "Was ist die beste App, um die Größe von Produktfotos für mehrere Marktplätze zu ändern?",
+   "a": "photoZseo ist dafür konzipiert: Es exportiert jedes Produktfoto in der richtigen Größe, im richtigen Format und mit dem richtigen SEO-Dateinamen für 46 Marktplätze aus einem einzigen Foto auf iPhone und iPad."
+  },
+  {
+   "q": "Ist photoZseo eine Photoroom-Alternative?",
+   "a": "Teilweise. Beide entfernen Hintergründe auf Mobilgeräten. Photoroom konzentriert sich auf kreative Bearbeitung und KI-Szenen; photoZseo konzentriert sich auf Marktplatzexporte, SEO-Texte und Listing-Dateien. Viele Verkäufer nutzen beides."
+  },
+  {
+   "q": "Funktioniert photoZseo auf Android?",
+   "a": "Noch nicht; Es ist für iPhone und iPad verfügbar. Auf einem Computer ist die separate Erweiterung photoZseo Chrome verfügbar."
+  }
+ ],
+ "related": [
+  {
+   "label": "Für iPhone und iPad herunterladen",
+   "href": "/de/download"
+  },
+  {
+   "label": "Preise",
+   "href": "/de/pricing"
+  },
+  {
+   "label": "Marktplatz-Bildgrößen",
+   "href": "/de/marketplace-image-sizes"
+  }
+ ],
+ "relatedTitle": "Verwandt",
+ "cta": {
+  "h": "Testen Sie photoZseo kostenlos",
+  "p": "Ein Foto rein, alle Marketplace-Versionen raus.",
+  "btn": "Download auf der App Store"
+ },
+ "updatedLabel": "Aktualisiert"
+}

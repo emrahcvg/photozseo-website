@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "التطبيق iPhone وiPad",
+   "href": "/ar/download"
+  },
+  {
+   "label": "التسعير",
+   "href": "/ar/pricing"
+  },
+  {
+   "label": "أحجام الصور في السوق",
+   "href": "/ar/marketplace-image-sizes"
+  },
+  {
+   "label": "البدائل",
+   "href": "/ar/alternatives"
+  },
+  {
+   "label": "من نحن",
+   "href": "/ar/about"
+  }
+ ]
+}

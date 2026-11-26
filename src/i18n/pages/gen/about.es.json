@@ -1,0 +1,80 @@
+{
+ "title": "Acerca de photoZseo: herramientas de listado y fotografía de productos para vendedores en línea",
+ "desc": "photoZseo crea herramientas de listado y fotografías de productos para vendedores en línea independientes: una aplicación iPhone y iPad, una extensión Chrome y tiendas en línea en photozseo.com.",
+ "crumb": "acerca de",
+ "kicker": "Sobre nosotros",
+ "h1": "Acerca de photoZseo",
+ "answer": "photoZseo crea herramientas que convierten fotografías de productos en listados listos para el mercado. El producto principal es photoZseo: aplicación SEO Product Photo para iPhone y iPad (App Store, 2026). También hay una extensión photoZseo separada para Google Chrome y tiendas en línea simples alojadas en photozseo.com.",
+ "facts": [
+  {
+   "k": "Fundado para",
+   "v": "Vendedores independientes en línea"
+  },
+  {
+   "k": "Producto principal",
+   "v": "Aplicación iPhone y iPad"
+  },
+  {
+   "k": "Sitio web",
+   "v": "fotozseo.com"
+  },
+  {
+   "k": "Apoyo",
+   "v": "[soporte@photozseo.com](mailto:support@photozseo.com)"
+  }
+ ],
+ "sections": [
+  {
+   "id": "why",
+   "h2": "Por qué existe photoZseo",
+   "body": [
+    "Cada mercado solicita diferentes tamaños de fotografías, reglas de fondo, nombres de archivos y columnas de listado. Un vendedor de Amazon, Etsy y Trendyol suele editar la misma foto tres veces y escribe el mismo título tres veces.",
+    "photoZseo fue iniciado por un vendedor-desarrollador independiente para eliminar ese trabajo repetitivo: fotografiar una vez y dejar que la aplicación prepare las fotos, los nombres de los archivos y el texto del listado para cada mercado."
+   ]
+  },
+  {
+   "id": "products",
+   "h2": "Productos",
+   "bullets": [
+    "[fotoZseo para iPhone y iPad](/es/download): cámara, cambio de tamaño para 46 mercados, eliminación de fondo, texto de listado, exportación CSV/XLSX, cotizaciones B2B y envío Shopify.",
+    "[fotoZseo para Chrome](/es/chrome-extension): una extensión del panel lateral de escritorio que recopila fotografías y detalles de productos de páginas web y exporta archivos ZIP y CSV listos para el mercado. Es un producto independiente con sus propios planes.",
+    "Tiendas en línea: los vendedores de los planes Pro y Business pueden publicar un escaparate simple en photozseo.com."
+   ]
+  },
+  {
+   "id": "principles",
+   "h2": "como construimos",
+   "bullets": [
+    "Primero en el dispositivo. El procesamiento de fotografías y la eliminación del fondo se ejecutan en el dispositivo del usuario.",
+    "Sin anuncios. Las aplicaciones se pagan mediante suscripciones, no con publicidad.",
+    "Creado para vendedores globales. La aplicación está disponible en 15 idiomas, incluidos tres idiomas que se escriben de derecha a izquierda (árabe, persa y urdu).",
+    "Especificaciones precisas del mercado. Los ajustes preestablecidos siguen la documentación del vendedor del propio mercado; ver el [guía de tamaño de imagen del mercado](/es/marketplace-image-sizes)."
+   ]
+  },
+  {
+   "id": "contact",
+   "h2": "Contacto",
+   "bullets": [
+    "Soporte: [soporte@photozseo.com](mailto:support@photozseo.com)",
+    "General y prensa: [hola@photozseo.com](mailto:hello@photozseo.com)",
+    "Centro de ayuda: [fotozseo.com/support](/es/support)"
+   ]
+  }
+ ],
+ "related": [
+  {
+   "label": "Descargar para iPhone y iPad",
+   "href": "/es/download"
+  },
+  {
+   "label": "Precios",
+   "href": "/es/pricing"
+  },
+  {
+   "label": "política de privacidad",
+   "href": "/es/privacy"
+  }
+ ],
+ "relatedTitle": "Relacionado",
+ "updatedLabel": "Actualizado"
+}

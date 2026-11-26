@@ -1,0 +1,157 @@
+{
+ "title": "iPhone 및 iPad용 photoZseo: SEO 제품 사진 앱(App Store)",
+ "desc": "photoZseo를 다운로드하세요: SEO 제품 사진을 App Store에서 무료로 다운로드하세요. 제품 사진을 촬영하고, 46개 마켓플레이스에 맞게 크기를 조정하고, 배경을 제거하고, SEO 제목, 설명 및 대체 텍스트를 자동으로 채웁니다. iOS 17+.",
+ "crumb": "iPhone 및 iPad 앱",
+ "kicker": "이제 App Store에서",
+ "h1": "photoZseo: iPhone 및 iPad용 SEO 제품 사진",
+ "answer": "photoZseo는 온라인 판매자를 위한 iPhone 및 iPad 앱입니다. 제품 사진을 한 번 찍으면 앱이 46개 마켓플레이스(Amazon, eBay, Etsy, Shopify, Walmart, Trendyol, Hepsiburada 등)에 대해 사진의 크기를 조정하고 압축하고 SEO 이름을 바꾸고 장치의 배경을 제거하고 제목, 설명, 태그 및 대체 텍스트를 채웁니다. App Store에서 무료로 다운로드할 수 있으며 iOS 17 이상에서 작동합니다.",
+ "facts": [
+  {
+   "k": "가격",
+   "v": "무료 · $9.99/월 요금제"
+  },
+  {
+   "k": "장치",
+   "v": "iPhone & iPad"
+  },
+  {
+   "k": "필요하다",
+   "v": "iOS / iPadOS 17.0+"
+  },
+  {
+   "k": "언어",
+   "v": "15개 언어"
+  }
+ ],
+ "sections": [
+  {
+   "id": "what",
+   "h2": "photoZseo로 할 수 있는 일",
+   "bullets": [
+    "시장에서 요구하는 7가지 각도(앞면, 뒷면, 옆면, 디테일, 윗면, 라벨 및 라이프스타일)를 안내하는 템플릿 카메라로 사진을 찍으세요.",
+    "모든 채널에 대한 크기 조정 및 압축 — 46개 마켓플레이스와 소셜 및 광고 플랫폼(Instagram, TikTok Shop, Pinterest, Facebook Shops, WhatsApp Catalog)을 포함하여 60개 이상의 내보내기 대상. JPEG, PNG 및 WebP를 내보냅니다.",
+    "SEO 파일 이름 및 메타데이터 — 각 사진에는 키워드 기반 파일 이름, 대체 텍스트 및 깨끗한 EXIF ​​데이터가 포함됩니다. 기본적으로 내보내기 시 GPS 위치가 제거됩니다.",
+    "장치의 AI 배경 제거: 투명 PNG, 순백색 또는 사용자 정의 색상, 사진 한 장 또는 전체 배치.",
+    "목록 텍스트 자동 채우기 — 사진 및 제품 세부 정보의 제목, 슬러그, 카테고리, 메타 설명, 자세한 설명, 태그, 키워드 및 바코드(13개 필드).",
+    "목록 파일 — 각 마켓플레이스의 열 레이아웃(49개 플랫폼 형식)의 CSV/XLSX/JSON(제품별로 개별적으로 또는 결합).",
+    "B2B 견적 작성기 — VAT, IBAN, 인코텀즈, HS 코드 및 전자 서명이 포함된 브랜드 A4 PDF 견적입니다.",
+    "Shopify 통합 — 제품을 Shopify 매장에 직접 푸시합니다(Business 계획)."
+   ]
+  },
+  {
+   "id": "how",
+   "h2": "작동 원리",
+   "steps": [
+    {
+     "t": "사진을 찍거나 가져옵니다.",
+     "d": "템플릿 카메라를 사용하거나 사진 및 파일에서 사진을 가져옵니다."
+    },
+    {
+     "t": "마켓플레이스를 선택하세요.",
+     "d": "판매처를 선택하세요. Amazon, Etsy 및 Trendyol."
+    },
+    {
+     "t": "앱이 모든 것을 준비하게 하세요.",
+     "d": "각 사진은 모든 마켓플레이스에 맞게 잘리고, 크기가 조정되고, 압축되고, 이름이 변경됩니다. 목록 텍스트가 채워졌습니다."
+    },
+    {
+     "t": "내보내기 또는 게시.",
+     "d": "준비된 이미지 폴더와 CSV/XLSX 목록 파일을 저장하고, 공유하거나, Shopify로 푸시하세요."
+    }
+   ]
+  },
+  {
+   "id": "ai",
+   "h2": "온디바이스 AI 및 개인 정보 보호",
+   "body": [
+    "사진 처리, 배경 제거(Apple Vision) 및 텍스트 인식은 iPhone 또는 iPad에서 실행됩니다. 귀하의 제품 사진은 처리를 위해 photoZseo 서버에 업로드되지 않습니다.",
+    "Apple Intelligence가 포함된 iOS 26에서 목록 텍스트는 Apple의 온디바이스 Foundation Models에 의해 작성됩니다. iOS 17-25에서 앱은 기기 내 이미지 분석 및 템플릿과 동일한 필드를 채웁니다.",
+    "photoZseo는 광고를 표시하지 않으며 다른 앱에서 사용자를 추적하지 않습니다. 익명 사용 분석은 앱 설정에서 끌 수 있습니다. 세부사항: [개인 정보 보호 정책](/ko/privacy)."
+   ]
+  },
+  {
+   "id": "requirements",
+   "h2": "요구 사항 및 가용성",
+   "table": {
+    "head": [
+     "",
+     ""
+    ],
+    "rows": [
+     [
+      "App Store 이름",
+      "photoZseo: SEO 제품 사진"
+     ],
+     [
+      "호환성",
+      "iOS 17.0 이상이 탑재된 iPhone · iPadOS 17.0 이상이 탑재된 iPad"
+     ],
+     [
+      "Apple Intelligence 기능",
+      "지원되는 장치의 iOS 26(옵션)"
+     ],
+     [
+      "가격",
+      "무료 플랜으로 무료 다운로드; Starter, Pro 및 Business 구독 - [가격](/ko/pricing) 참조"
+     ],
+     [
+      "무료 평가판",
+      "연간 요금제 7일"
+     ],
+     [
+      "언어",
+      "영어, 터키어, 독일어, 스페인어, 프랑스어, 이탈리아어, 포르투갈어, 폴란드어, 일본어, 한국어, 중국어, 아랍어, 힌디어, 페르시아어, 우르두어"
+     ],
+     [
+      "안드로이드 / 맥",
+      "아직 사용할 수 없음"
+     ],
+     [
+      "데스크탑 대안",
+      "[Chrome용 photoZseo](/ko/chrome-extension) (별도 확장)"
+     ]
+    ]
+   }
+  }
+ ],
+ "faqTitle": "FAQ 다운로드",
+ "faq": [
+  {
+   "q": "photoZseo는 어디서 다운로드할 수 있나요?",
+   "a": "Apple App Store에서 \"photoZseo\"를 검색하거나 iPhone 또는 iPad에서 apps.apple.com/app/id6762639768을 엽니다."
+  },
+  {
+   "q": "photoZseo를 Android에서 사용할 수 있나요?",
+   "a": "아직 아님. photoZseo는 iPhone 및 iPad에 사용할 수 있습니다. 컴퓨터에서는 Google Chrome용 photoZseo 확장을 사용할 수 있습니다."
+  },
+  {
+   "q": "photoZseo는 오프라인에서 작동하나요?",
+   "a": "예. 사진 촬영, 크기 조정, 배경 제거 및 내보내기는 인터넷 연결 없이도 가능합니다. 온라인 상점이나 Shopify에 게시하거나, iCloud와 동기화하거나, 구독을 구매하려면 연결만 필요합니다."
+  },
+  {
+   "q": "photoZseo는 어떤 마켓플레이스를 지원합니까?",
+   "a": "Amazon, eBay, Etsy, Shopify, Walmart, WooCommerce, Trendyol, Hepsiburada, N11, AliExpress, Temu, SHEIN, Mercado Libre, Allegro, Zalando, Otto, Kaufland, Noon, Shopee, Lazada, Coupang, Flipkart 등, Instagram, TikTok Shop, Pinterest, Facebook Shops 및 WhatsApp Catalog."
+  }
+ ],
+ "related": [
+  {
+   "label": "가격 및 무료 요금제",
+   "href": "/ko/pricing"
+  },
+  {
+   "label": "마켓플레이스 이미지 크기",
+   "href": "/ko/marketplace-image-sizes"
+  },
+  {
+   "label": "photoZseo 소개",
+   "href": "/ko/about"
+  }
+ ],
+ "relatedTitle": "관련된",
+ "cta": {
+  "h": "App Store에서 photoZseo 구입",
+  "p": "무료로 다운로드할 수 있습니다. iPhone 및 iPad에서 작동합니다.",
+  "btn": "App Store에서 다운로드"
+ },
+ "updatedLabel": "업데이트됨"
+}

@@ -159,10 +159,10 @@ export default function Hero({ content, appStoreUrl }: HeroProps) {
 
         <div className="phero-stage" aria-hidden="true">
           <div ref={ipadRef} className="phero-ipad">
-            <img src="/screenshots/ipad/slot-01.png" alt="" loading="eager" fetchPriority="high"/>
+            <img src="/screenshots/ipad/slot-01.png" alt="photoZseo on iPad: product photo resized for multiple marketplaces" loading="eager" fetchPriority="high"/>
           </div>
           <div ref={iphoneRef} className="phero-iphone">
-            <img src="/screenshots/iphone/slot-01.png" alt="" loading="eager" fetchPriority="high"/>
+            <img src="/screenshots/iphone/slot-01.png" alt="photoZseo on iPhone: marketplace-ready product photo export" loading="eager" fetchPriority="high"/>
           </div>
           <div className="phero-orbit phero-orbit-1"/>
         </div>

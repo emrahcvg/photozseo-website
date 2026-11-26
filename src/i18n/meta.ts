@@ -1,7 +1,7 @@
 import type { Lang } from './ui';
 
 // App Store Connect → App Information → Apple ID. Boşken smart banner ve rozet basılmaz.
-export const APP_STORE_ID = '';
+export const APP_STORE_ID = '6762639768';
 export const APP_STORE_URL = APP_STORE_ID ? `https://apps.apple.com/app/id${APP_STORE_ID}` : '';
 
 // App Store yayını öncesi herkese açık TestFlight bağlantısı. APP_STORE_URL doluyken kullanılmaz.
@@ -23,15 +23,15 @@ export const ogLocales: Record<Lang, string> = {
 
 export const meta: Record<Lang, PageMeta> = {
   en: {
-    homeTitle: 'photoZseo — Product Photos & SEO for 46 Marketplaces',
-    homeDesc: 'Turn one iPhone photo into 46 marketplace-ready listings. AI fills SEO, exports to Amazon, Shopify, Etsy, Trendyol & more. 7-day free trial on annual plans.',
+    homeTitle: 'photoZseo: SEO Product Photo App for iPhone & iPad (46 Marketplaces)',
+    homeDesc: 'Free iPhone & iPad app that resizes product photos for 46 marketplaces, removes backgrounds and fills SEO titles, descriptions and alt text. Amazon, Etsy, Shopify, Trendyol and more.',
     a11yTitle: 'Accessibility Statement | photoZseo',
     a11yDesc: 'photoZseo follows WCAG 2.1 AA: VoiceOver, Dynamic Type, color-blind safe palettes, RTL layouts and keyboard navigation on iPhone, iPad and the web.',
     defaultDesc: 'photoZseo turns iPhone product photos into marketplace-ready listings with AI SEO for Amazon, Shopify, Etsy, Trendyol and 40+ more marketplaces.',
   },
   tr: {
-    homeTitle: 'photoZseo — 46 Pazaryeri için Ürün Fotoğrafı ve SEO',
-    homeDesc: "Tek iPhone fotoğrafını 46 pazaryerine hazır ilana dönüştürün. Yapay zekâ SEO'yu doldurur; Amazon, Shopify, Etsy, Trendyol'a aktarır. Yıllık planda 7 gün ücretsiz.",
+    homeTitle: 'photoZseo: iPhone ve iPad için SEO Ürün Fotoğrafı Uygulaması (46 Pazaryeri)',
+    homeDesc: 'Ürün fotoğraflarını 46 pazaryerine göre boyutlandıran, arka planı kaldıran ve SEO başlık, açıklama, alt metni dolduran ücretsiz iPhone ve iPad uygulaması. Trendyol, Hepsiburada, Amazon, Etsy.',
     a11yTitle: 'Erişilebilirlik Beyanı | photoZseo',
     a11yDesc: "photoZseo WCAG 2.1 AA'yı izler: VoiceOver, Dinamik Yazı, renk körlüğüne uygun paletler, RTL düzenler ve iPhone, iPad ile web'de klavye gezintisi.",
     defaultDesc: "photoZseo, iPhone ürün fotoğraflarını yapay zekâ SEO'suyla Amazon, Shopify, Etsy, Trendyol ve 40'tan fazla pazaryeri için hazır ilanlara dönüştürür.",

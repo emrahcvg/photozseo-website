@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import InfoPage from './InfoPage.astro';
+import type { Lang } from '../i18n/ui';
+import { INFO_PAGES, type InfoSlug } from '../i18n/pages';
+import { pageLangs } from '../i18n/pages/types';
+import { appJsonLd } from '../i18n/facts';
+import { plainMd } from '../lib/inline-md';
+
+interface Props { slug: InfoSlug; lang: Lang }
+const { slug, lang } = Astro.props;
+const entry = INFO_PAGES[slug];
+const doc = entry.set[lang] ?? entry.set.en;
+const path = `/${slug}`;
+const prefix = lang === 'en' ? '' : `/${lang}`;
+const extra = entry.app ? [appJsonLd(`https://photozseo.com${prefix}${path}`, plainMd(entry.set.en.answer))] : [];
+---
+
+<Layout title={doc.title} description={doc.desc} lang={lang} altLangs={pageLangs(entry.set)}>
+  <InfoPage doc={doc} lang={lang} path={path} pageType={entry.pageType} extraJsonLd={extra} />
+</Layout>

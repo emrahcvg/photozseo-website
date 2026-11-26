@@ -1,0 +1,27 @@
+{
+ "has": {
+  "pricing": true
+ },
+ "links": [
+  {
+   "label": "iPhone & iPad アプリ",
+   "href": "/ja/download"
+  },
+  {
+   "label": "価格設定",
+   "href": "/ja/pricing"
+  },
+  {
+   "label": "マーケットプレイスの画像サイズ",
+   "href": "/ja/marketplace-image-sizes"
+  },
+  {
+   "label": "代替案",
+   "href": "/ja/alternatives"
+  },
+  {
+   "label": "会社概要",
+   "href": "/ja/about"
+  }
+ ]
+}
