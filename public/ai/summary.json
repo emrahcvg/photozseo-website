@@ -1,0 +1,40 @@
+{
+  "name": "photoZseo",
+  "type": "product photo and listing tools for online sellers",
+  "url": "https://photozseo.com",
+  "description": "photoZseo turns product photos into marketplace-ready images and listing data. An iPhone & iPad app (46 marketplaces, SEO fields in 15 languages, CSV/XLSX/JSON export, B2B PDF quotes, Shopify push) and a separate Chrome extension that collects product photos from product pages.",
+  "products": [
+    {
+      "name": "photoZseo: SEO Product Photo",
+      "platform": "iOS 17+ / iPadOS 17+",
+      "url": "https://apps.apple.com/app/id6762639768",
+      "pricing": "Free plan; Starter $9.99/month, Pro $19.99/month, Business $49.99/month; annual plans save 40% with a 7-day free trial"
+    },
+    {
+      "name": "photoZseo for Chrome",
+      "platform": "Google Chrome 116+ (desktop)",
+      "url": "https://chromewebstore.google.com/detail/photozseo/hmmeomfepgjaplheiolbibfkdbooioce",
+      "pricing": "Free (5 products, 10 new images per day); Pro $7.99/month or $59/year; Team $129/year"
+    }
+  ],
+  "languages": [
+    "en",
+    "tr",
+    "de",
+    "es",
+    "fr",
+    "it",
+    "pt",
+    "pl",
+    "ja",
+    "ko",
+    "zh",
+    "ar",
+    "hi",
+    "fa",
+    "ur"
+  ],
+  "contact": "support@photozseo.com",
+  "docs": "https://photozseo.com/llms.txt",
+  "updated": "2026-11-27"
+}

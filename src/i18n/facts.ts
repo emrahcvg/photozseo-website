@@ -100,7 +100,11 @@ export const ORG_JSONLD = {
   contactPoint: [
     { '@type': 'ContactPoint', contactType: 'customer support', email: 'support@photozseo.com', availableLanguage: ['English', 'Turkish'] },
   ],
-  ...(APP_STORE_URL ? { sameAs: [APP_STORE_URL] } : {}),
+  description: 'photoZseo makes product photo and listing tools for independent online sellers: an iPhone & iPad app and a Chrome extension.',
+  sameAs: [
+    ...(APP_STORE_URL ? [APP_STORE_URL] : []),
+    'https://chromewebstore.google.com/detail/photozseo/hmmeomfepgjaplheiolbibfkdbooioce',
+  ],
 };
 
 export const WEBSITE_JSONLD = {

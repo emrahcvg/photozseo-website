@@ -1,0 +1,30 @@
+{
+  "name": "photoZseo",
+  "updated": "2026-11-27",
+  "faqs": [
+    {
+      "question": "What is photoZseo?",
+      "answer": "photoZseo is a set of tools for online sellers: an iPhone and iPad app that prepares product photos and listing data for 46 marketplaces, and a separate Chrome extension that collects product photos from product pages."
+    },
+    {
+      "question": "Which platforms does photoZseo run on?",
+      "answer": "The app runs on iPhone and iPad (iOS/iPadOS 17 or later). The Chrome extension runs on desktop Google Chrome 116 or later. There is no Android or Mac app."
+    },
+    {
+      "question": "How much does photoZseo cost?",
+      "answer": "The iPhone and iPad app has a free plan; paid plans are Starter $9.99/month, Pro $19.99/month and Business $49.99/month, with annual plans 40% cheaper and a 7-day free trial. The Chrome extension is free for up to 5 products and 10 new images per day; Pro is $7.99/month or $59/year and Team is $129/year."
+    },
+    {
+      "question": "Where is my data stored?",
+      "answer": "App photos are processed on the device. The Chrome extension stores its library in the browser and has no photoZseo server or account."
+    },
+    {
+      "question": "Which marketplaces are supported?",
+      "answer": "The app includes image presets and listing templates for 46 marketplaces plus social and ad platforms, including Amazon, eBay, Etsy, Shopify, Walmart, Trendyol, Hepsiburada and AliExpress. Names describe compatibility only; photoZseo is not affiliated with any marketplace."
+    },
+    {
+      "question": "How can I contact photoZseo?",
+      "answer": "Email support@photozseo.com."
+    }
+  ]
+}

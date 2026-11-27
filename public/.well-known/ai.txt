@@ -1,0 +1,12 @@
+# AI crawler policy for photoZseo (https://photozseo.com)
+# Public marketing, documentation and blog content may be read, summarized and cited with attribution.
+User-Agent: *
+Allow: /
+Disallow: /market
+Disallow: /store/
+Disallow: /api/
+Summary: https://photozseo.com/ai/summary.json
+FAQ: https://photozseo.com/ai/faq.json
+Service: https://photozseo.com/ai/service.json
+LLMs: https://photozseo.com/llms.txt
+Contact: support@photozseo.com

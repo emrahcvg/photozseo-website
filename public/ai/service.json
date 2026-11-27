@@ -1,0 +1,27 @@
+{
+  "name": "photoZseo",
+  "services": [
+    {
+      "name": "Marketplace image presets",
+      "description": "Resize, compress and rename product photos to each marketplace's requirements."
+    },
+    {
+      "name": "SEO listing fields",
+      "description": "13 SEO fields (title, slug, file name, category, meta description, description, alt text, tags, keywords, barcode and more) in 15 languages."
+    },
+    {
+      "name": "Listing exports",
+      "description": "CSV, XLSX and JSON in marketplace column layouts; Shopify product push."
+    },
+    {
+      "name": "B2B PDF quotes",
+      "description": "Branded quotes with VAT, IBAN, Incoterms and HS codes."
+    },
+    {
+      "name": "Chrome extension",
+      "description": "Collects product photos and details from product pages and exports ZIP, CSV or Excel."
+    }
+  ],
+  "url": "https://photozseo.com",
+  "contact": "support@photozseo.com"
+}

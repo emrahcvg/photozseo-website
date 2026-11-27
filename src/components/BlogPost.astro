@@ -29,7 +29,7 @@ const articleSchema = {
   description: data.description,
   datePublished: data.pubDate.toISOString(),
   dateModified: data.pubDate.toISOString(),
-  author: { '@type': 'Organization', name: 'photoZseo', url: site },
+  author: { '@type': 'Organization', name: 'photoZseo', url: `${site}${prefix}/about`, sameAs: [site] },
   publisher: {
     '@type': 'Organization',
     name: 'photoZseo',
@@ -87,6 +87,8 @@ const faqSchema = data.faqs && data.faqs.length > 0
         <time datetime={data.pubDate.toISOString()}>
           {data.pubDate.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' })}
         </time>
+        <span>·</span>
+        <a rel="author" class="post-author" href={`${prefix}/about`}>photoZseo</a>
         <span>·</span>
         <span>{data.readingMinutes} {ui.minRead}</span>
       </div>
@@ -177,6 +179,7 @@ const faqSchema = data.faqs && data.faqs.length > 0
       border-bottom: 1px solid var(--border);
       margin-bottom: 40px;
     }
+    .post-meta a.post-author { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
     .post-meta {
       display: flex; gap: 8px;
       font-family: var(--font-mono, 'SF Mono', ui-monospace, Menlo, monospace);
