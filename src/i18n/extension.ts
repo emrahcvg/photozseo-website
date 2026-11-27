@@ -13,8 +13,7 @@ import ur from './ext-locales/ur';
 import fa from './ext-locales/fa';
 import pl from './ext-locales/pl';
 
-// Chrome Web Store adresi yayın onayından sonra yazılır; boşken düğme "yakında" gösterir.
-export const CHROME_STORE_URL = '';
+export const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/photozseo/hmmeomfepgjaplheiolbibfkdbooioce';
 export const EXT_VERSION = '2.1.1';
 export const EXT_UPDATED = '2026-11-25';
 

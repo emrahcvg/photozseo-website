@@ -27,3 +27,7 @@
 # Mac sürümü 1.0'da yok — yazı kaldırıldı
 /blog/photozseo-mac-product-photo-editor-2026   /blog/   301
 /blog/photozseo-mac-product-photo-editor-2026/  /blog/   301
+
+# Kısa Chrome eklentisi bağlantısı → Chrome Web Store
+/chrome   https://chromewebstore.google.com/detail/photozseo/hmmeomfepgjaplheiolbibfkdbooioce   302
+/chrome/  https://chromewebstore.google.com/detail/photozseo/hmmeomfepgjaplheiolbibfkdbooioce   302

@@ -4,6 +4,7 @@ import { getHomeContent, enHomeContent, HOME_UPDATED_LANGS } from '../i18n/home'
 import { PLANS, usd, appJsonLd, TRIAL_DAYS } from '../i18n/facts';
 import { APP_STORE_URL, DOWNLOAD_URL } from '../i18n/meta';
 import { EXT_NAV, CHROME_ICON } from '../i18n/extension';
+import ExtensionCallout from './ExtensionCallout.astro';
 import SmoothScroll from './islands/SmoothScroll.tsx';
 import CursorSpotlight from './islands/CursorSpotlight.tsx';
 import ScrollReveal from './islands/ScrollReveal.tsx';
@@ -119,6 +120,9 @@ const features = c.features.items.map((item, idx) => ({
     <p class="pricing-note">{pr.note} {isUpdated && <a href={`${prefix}/pricing`}>{c.pricing.compareLink}</a>}</p>
   </div>
 </section>
+
+<!-- Chrome extension -->
+<ExtensionCallout lang={lang} variant="home" />
 
 <!-- FAQ -->
 <section id="faq" class="faq">

@@ -52,6 +52,7 @@ Last updated: 2026-11-26. All prices in USD; the App Store shows local prices.
 - [Amazon product photo requirements in 2026](https://photozseo.com/blog/amazon-product-photo-specs-2026)
 - [Etsy SEO: how product photography moves rankings](https://photozseo.com/blog/etsy-seo-product-photography)
 - [TikTok Shop photo sizes: the complete 2026 guide](https://photozseo.com/blog/tiktok-shop-photo-sizes)
+- [photoZseo for Chrome is live](https://photozseo.com/blog/photozseo-chrome-extension-live)
 - [WebP vs JPEG vs PNG for product photos](https://photozseo.com/blog/webp-jpeg-png-product-photos-2026)
 - [Product photo SEO 2026: the 13 fields](https://photozseo.com/blog/product-photo-seo-2026)
 - [Shopify CSV upload vs direct API](https://photozseo.com/blog/shopify-csv-vs-api-2026)
@@ -63,6 +64,7 @@ Last updated: 2026-11-26. All prices in USD; the App Store shows local prices.
 
 photoZseo for Chrome is a separate desktop product, not the iPhone & iPad app: a Chrome side-panel extension that collects product photos and details from the product page you are viewing, resizes and compresses photos to marketplace requirements, gives them SEO file names and exports a ZIP plus CSV or Excel files.
 
+- [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/photozseo/hmmeomfepgjaplheiolbibfkdbooioce): the extension is live.
 - [photoZseo Chrome extension](https://photozseo.com/chrome-extension): Features, pricing, privacy and FAQ (15 languages).
 - Browser: Google Chrome 116+ on Windows, macOS, Linux and ChromeOS (uses the side panel; not on mobile).
 - 82 resize and compression profiles for 67 platforms; ZIP by category / product / platform; 50 platform CSV formats plus Shopify, Trendyol and Hepsiburada spreadsheets.

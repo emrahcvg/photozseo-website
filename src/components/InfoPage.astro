@@ -5,6 +5,7 @@ import type { PageDoc } from '../i18n/pages/types';
 import { inlineMd, plainMd } from '../lib/inline-md';
 import { APP_STORE_URL } from '../i18n/meta';
 import { FACTS_UPDATED } from '../i18n/facts';
+import ExtensionCallout from './ExtensionCallout.astro';
 
 interface Props {
   doc: PageDoc;
@@ -112,6 +113,10 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
         {s.note && <p class="note" set:html={inlineMd(s.note)} />}
       </section>
     ))}
+
+    {(path === '/download' || path === '/pricing') && (
+      <ExtensionCallout lang={lang} variant={path === '/pricing' ? 'pricing' : 'download'} />
+    )}
 
     {doc.faq && doc.faq.length > 0 && (
       <section id="faq">
