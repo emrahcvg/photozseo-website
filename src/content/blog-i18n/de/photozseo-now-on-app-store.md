@@ -49,7 +49,7 @@ Die Preise sind in US-Dollar angegeben; Der App Store zeigt Ihren lokalen Preis 
 
 - iPhone mit iOS 17.0 oder höher oder iPad mit iPadOS 17.0 oder höher
 - Verfügbar in 15 Sprachen: Englisch, Türkisch, Deutsch, Spanisch, Französisch, Italienisch, Portugiesisch, Polnisch, Japanisch, Koreanisch, Chinesisch, Arabisch, Hindi, Persisch und Urdu
-- Noch nicht für Android oder Mac verfügbar
+- Noch nicht für Android oder Mac verfügbar. Verwenden Sie auf einem Computer das separate [photoZseo Chrome-Erweiterung](/de/chrome-extension)
 
 ## Fangen Sie an
 

@@ -43,4 +43,4 @@ Głównie katalogi ze starszymi obrazami lub obrazami w formacie miniatur: impor
 
 ## Robi to masowo
 
-[zdjęcieZseo](/pl/download) może wyeksportować wersję Google Shopping każdego zdjęcia produktu wraz z wersjami z rynku, z opisowymi nazwami plików i tekstem alternatywnym. Aby zapoznać się z zasadami dotyczącymi rozmiarów obowiązującymi na innych rynkach, zobacz nasz [](/pl/marketplace-image-sizes).
+[zdjęcieZseo](/pl/download) może wyeksportować wersję Google Shopping każdego zdjęcia produktu wraz z wersjami z rynku, z opisowymi nazwami plików i tekstem alternatywnym. Aby zapoznać się z zasadami dotyczącymi rozmiarów obowiązującymi na innych rynkach, zobacz nasz [przewodnik po rozmiarach obrazów na rynku](/pl/marketplace-image-sizes).

@@ -36,11 +36,11 @@ Sprzedaż na kilku rynkach zwykle oznacza wielokrotną edycję tego samego zdję
 |---|---|
 | Amazon | 2000 × 2000 pikseli, białe tło |
 | eBay | ≈ 1600 × 1600 pikseli (min. 500 pikseli) |
-| Etsy |  |
+| Etsy | 2000 pikseli lub większy |
 | Shopify | 2048 × 2048 pikseli |
 | Trendyol / Hepsiburada | Sprawdź panel sprzedawcy; kwadrat lub 3:4 |
 
-Oficjalne źródła każdego z nich znajdują się w naszym [](/pl/marketplace-image-sizes).
+Oficjalne źródła każdego z nich znajdują się w naszym [przewodnik po rozmiarach obrazów na rynku](/pl/marketplace-image-sizes).
 
 ## Krok 4: Wyeksportuj poprawnie każdą wersję
 

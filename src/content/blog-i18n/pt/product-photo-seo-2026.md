@@ -69,7 +69,7 @@ Aqui está o que acontece quando um cliente digita “a melhor tábua de corte d
 
 Uma página que tenha `<title>Walnut Cutting Board – 12" Compact</title>`, um texto alternativo como `walnut cutting board for small apartments, 12 inch` e uma descrição que diz “projetado para cozinhas de estúdio e 1 quarto” vence. Uma página com `<title>Cutting Board</title>` e texto alternativo `image1.jpg` perde, mesmo que a foto seja melhor.
 
-ChatGPT's behavior is nearly identical, with one difference: ChatGPT also reads the filename and uses it as a fallback caption when alt text is missing. Isso torna o nome do arquivo um segundo espaço de texto alternativo – a maioria dos vendedores o desperdiça.
+O comportamento do ChatGPT é quase idêntico, com uma diferença: o ChatGPT também lê o nome do arquivo e o usa como legenda substituta quando falta texto alternativo. Isso torna o nome do arquivo um segundo espaço de texto alternativo – a maioria dos vendedores o desperdiça.
 
 ## O pipeline no dispositivo
 

@@ -44,4 +44,4 @@ Są to wbudowane ustawienia wstępne photoZseo, a nie oficjalne minimalne warto�
 
 ## Notowania zarówno w internecie, jak i za granicą
 
-Wielu tureckich sprzedawców wystawia ten sam produkt na modelach Trendyol, Hepsiburada, N11, Amazon.com.tr i Etsy. [zdjęcieZseo](/pl/download) eksportuje wersję każdego zdjęcia w odpowiednim rozmiarze z jednego zdjęcia, zapisuje tekst SEO w języku tureckim (i 14 innych językach) i tworzy pliki z listami w układzie kolumn każdej platformy. Informacje dotyczące rozmiarów międzynarodowych można znaleźć w artykule [](/pl/marketplace-image-sizes).
+Wielu tureckich sprzedawców wystawia ten sam produkt na modelach Trendyol, Hepsiburada, N11, Amazon.com.tr i Etsy. [zdjęcieZseo](/pl/download) eksportuje wersję każdego zdjęcia w odpowiednim rozmiarze z jednego zdjęcia, zapisuje tekst SEO w języku tureckim (i 14 innych językach) i tworzy pliki z listami w układzie kolumn każdej platformy. Informacje dotyczące rozmiarów międzynarodowych można znaleźć w artykule [przewodnik po rozmiarach obrazów na rynku](/pl/marketplace-image-sizes).

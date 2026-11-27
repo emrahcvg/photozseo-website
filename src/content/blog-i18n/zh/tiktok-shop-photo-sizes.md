@@ -1,6 +1,6 @@
 ---
 title: "TikTok Shop 照片尺寸：完整的 2026 年指南"
-description: "每个图像尺寸、长宽比和格式 TikTok Shop 要求——涵盖产品照片、主横幅和直播销售图块。"
+description: "TikTok Shop 所需的每个图像尺寸、长宽比和格式 - 涵盖产品照片、主横幅和实时销售图块。"
 pubDate: 2026-05-10
 readingMinutes: 4
 tags: [tiktok-shop, product-photos, social-commerce]
@@ -14,14 +14,14 @@ faqs:
   - q: "为什么 TikTok Shop 拒绝我的徽标？"
     a: "TikTok Shop 的自动审核器期望透明背景上有纯色徽标 — 800×800、PNG、小于 500 KB。渐变、摄影标志和光栅化文本标志是最常见的拒绝标志。重新导出为平面 PNG 并重新提交。"
   - q: "现场销售板块有何不同？"
-    a: "1080×1080 1:1，JPEG。 The product must occupy at least 60% of the tile because TikTok's LIVE overlay hides up to 30% of the edges with UI (product name, price, add-to-cart).此处重复使用 Amazon 主图像会导致产品部分隐藏。"
+    a: "1080×1080 1:1，JPEG。产品必须占据至少 60% 的图块，因为 TikTok 的 LIVE 叠加层隐藏了高达 30% 的 UI 边缘（产品名称、价格、添加到购物车）。此处重复使用 Amazon 主图像会导致产品部分隐藏。"
   - q: "我可以批量导出单张照片中的每个 TikTok Shop 尺寸吗？"
     a: "是的 - 这正是 photoZseo 的 TikTok Shop 预设的作用。拍摄一次后，应用程序会输出 1340×1340 主图像和 JPEG 和 WebP 格式的 1080×1920 垂直副图像，尺寸符合规格并经过 EXIF 清理。导出发生在设备上 — 无需云端，无需上传。"
   - q: "TikTok Shop接受WebP产品照片吗？"
     a: "JPEG 和 PNG 是已记录的格式。 WebP 不在官方接受的列表中，因此请坚持使用 JPEG 作为主要图像。为您自己的网站或 Shopify 导出保留 WebP — TikTok 将在卖家仪表板上传中拒绝它。"
 ---
 
-TikTok Shop grew faster than any social commerce platform in 2025, and it ships its own image rules that differ from Instagram, Facebook, and the rest of ByteDance's ecosystem.如果它们出错，您的列表要么在“为您推荐”页面上看起来模糊，要么被自动裁剪，从而切断您的产品。
+到 2025 年，TikTok Shop 的增长速度比任何社交商务平台都快​​，并且它有自己的图像规则，与 Instagram、Facebook 和字节跳动生态系统的其他成员不同。如果它们出错，您的列表要么在“为您推荐”页面上看起来模糊，要么被自动裁剪，从而切断您的产品。
 
 这是完整的规格表。
 

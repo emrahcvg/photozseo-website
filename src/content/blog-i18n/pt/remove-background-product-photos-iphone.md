@@ -21,7 +21,7 @@ Um fundo limpo é a maior atualização para a maioria das fotos de produtos. Vo
 
 ## 1. O recorte de fotos integrado (gratuito)
 
-O aplicativo Fotos do Apple pode separar um objeto de seu plano de fundo ([Suporte Apple](https://support.apple.com/guide/iphone/lift-a-subject-from-the-photo-background-iphfe4809658/ios)):
+O aplicativo Fotos do Apple pode separar um objeto de seu plano de fundo ([Suporte da Apple](https://support.apple.com/guide/iphone/lift-a-subject-from-the-photo-background-iphfe4809658/ios)):
 
 1. Abra a foto em tela cheia.
 2. Toque e segure o produto até que um contorno apareça.

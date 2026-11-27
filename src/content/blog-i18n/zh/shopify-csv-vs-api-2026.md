@@ -49,28 +49,28 @@ faqs:
 | 可恢复性 | 重新上传之前的 CSV | 每个资源的自定义回滚逻辑 |
 | 认证风险 | None — 没有令牌可泄露 | 令牌必须被存储、轮换和审核 |
 | 所需技能 | 电子表格技能 | 软件工程 |
-| 失败成本 |  | 错误的 API 循环可能会达到速率限制并在运行中失败 |
+| 失败成本 | 错误的 CSV 添加了 500 个可以批量删除的产品 | 错误的 API 循环可能会达到速率限制并在运行中失败 |
 
 对于拥有 Shopify 商店、充满产品照片的 iPhone 以及要推出的 200 个 SKU 的独立卖家来说，CSV 路径更快、更便宜、更安全且更可逆。
 
 ## 当 CSV 获胜时
 
 - 您的产品少于 1,000 种。 CSV 干净地处理了这个批量大小。
-- You run periodic launches, not continuous inventory sync.季度目录刷新采用 CSV 形式。
+- 您运行定期启动，而不是连续库存同步。季度目录刷新采用 CSV 形式。
 - 您想要在不编写代码的情况下进行审计跟踪。每个上传的 CSV 都是一个可以保存在 Dropbox/iCloud/Google Drive 中的文件。
 - 您不想管理 API 令牌。无需安装应用程序，无需轮换令牌。
-- 您希望在更改生效之前对其进行预览。 Shopify's CSV import shows the affected products before the change applies if you uncheck "Publish products to all sales channels".
+- 您希望在更改生效之前对其进行预览。如果取消选中“将产品发布到所有销售渠道”，Shopify 的 CSV 导入会显示更改应用之前受影响的产品。
 - 您经营多家商店。相同的 CSV 适用于任何 Shopify 商店。相同的 API 客户端每个商店都需要一个令牌。
 
 ## 当 API 获胜时
 
 - 您拥有 10,000 多种产品并且每晚运行。
-- 
-- 
-- 
-- 
+- 您需要来自仓库系统或 ERP 的实时库存更新。
+- 您连接必须往返数据的自定义 POS、3PL 或 ERP。
+- 您拥有工程资源来维持集成。
+- 您从事 B2B 业务，价格变动频繁，需要亚分钟传播。
 
-For most indie sellers in 2026, the inflection point sits around 2,000–3,000 SKUs with weekly turnover.下面是 CSV。 Above that, API or a managed iPaaS like Make, Zapier, Shopify Flow or n8n.
+对于大多数独立卖家来说，2026 年的拐点是每周营业额在 2,000-3,000 个 SKU 左右。下面是 CSV。除此之外，还有 API 或托管 iPaaS，如 Make、Zapier、Shopify Flow 或 n8n。
 
 ## Shopify CSV 列参考
 
@@ -78,7 +78,7 @@ For most indie sellers in 2026, the inflection point sits around 2,000–3,000 S
 
 | 柱子 | 必需的 | 笔记 |
 |--------|----------|-------|
-| 处理 | 是的 | 网址段。 Deterministic dedupe key — same handle = same product. |
+| 处理 | 是的 | 网址段。确定性重复数据删除关键 — 相同的句柄 = 相同的产品。 |
 | 标题 | 是的 | 产品标题，纯文本。 |
 | 正文 (HTML) | 受到推崇的 | 完整描述，允许使用 HTML。 |
 | 小贩 | 是的 | 品牌或制造商。 |
@@ -95,10 +95,10 @@ For most indie sellers in 2026, the inflection point sits around 2,000–3,000 S
 
 ## CSV 内的图像 SEO
 
-
+决定照片排名的两列是“图像源”和“图像替代文本”。
 
 - 图片源必须是公共 URL。当 Shopify 摄取 CSV 时，图像必须可访问 - 如果文件位于私有 CDN 或受令牌保护的存储桶后面，则导入会默默失败。
-- Image Alt Text is the field Google Image Search, Pinterest and AI Overview citations read.保持在 100 个字符以内。以产品而非品牌为主导。
+- 图像替代文本是 Google 图像搜索、Pinterest 和 AI 概述引文读取的字段。保持在 100 个字符以内。以产品而非品牌为主导。
 
 独立卖家常见的失败：通过 CSV 上传 200 个产品，其中“图像源”列已填充，但“图像替代文本”列为空。 Shopify高兴地导入照片。商店失去了整个形象 SEO 表面。
 
@@ -106,16 +106,16 @@ For most indie sellers in 2026, the inflection point sits around 2,000–3,000 S
 
 photoZseo 以三种格式导出 Shopify 就绪文件：
 
-1. CSV — the canonical Shopify product import format with the 53 columns.卖家将其放入Shopify管理→产品→导入。
+1. CSV — 规范的 Shopify 产品导入格式，包含 53 列。卖家将其放入Shopify管理→产品→导入。
 2. XLSX (Excel) — 适用于在上传之前在电子表格中进行编辑的卖家，带有嵌入的图像缩略图，以便可以直观地预览该行。
-3. 
+3. DOCX — 用于文档、供应商建议或打印目录。
 
 该工具不直接连接到 Shopify 管理 API。没有“连接Shopify”按钮，没有代币存储，没有实时推送。卖家随时了解情况：他们在 Excel/Numbers 中审核 CSV，通过 Shopify 管理员上传，保留文件作为审核跟踪。
 
 这是一个设计选择。功能标志 `shopifyAPIEnabled` 在 2026 版本中作为 `false` 提供。推理：
 
 - 卖方保留对变更内容的完全控制权。没有自动化作业会推送格式错误的批次。
-- 审计跟踪就是文件。 Every import is a CSV the seller can re-upload, archive or revert.
+- 审计跟踪就是文件。每次导入都是 CSV，卖家可以重新上传、存档或恢复。
 - 没有令牌攻击面。该应用程序从不持有 Shopify 凭据。
 - 跨平台一致性。相同的 CSV 上传到 Shopify，相同的 XLSX 提供 Amazon 和 Etsy，相同的 DOCX 打印到目录。一个工作流程，十个目的地。
 

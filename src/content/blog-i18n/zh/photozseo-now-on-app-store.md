@@ -49,7 +49,7 @@ photoZseo：SEO 产品照片现已在 iPhone 和 iPad 的 [应用商店](https:/
 
 - iPhone 与 iOS 17.0 或更高版本，或 iPad 与 iPadOS 17.0 或更高版本
 - 提供 15 种语言版本：英语、土耳其语、德语、西班牙语、法语、意大利语、葡萄牙语、波兰语、日语、韩语、中文、阿拉伯语、印地语、波斯语和乌尔都语
-- 尚不支持 Android 或 Mac
+- 尚不适用于 Android 或 Mac。在计算机上，使用单独的 [photoZseo Chrome 扩展程序](/zh/chrome-extension)
 
 ## 开始使用
 

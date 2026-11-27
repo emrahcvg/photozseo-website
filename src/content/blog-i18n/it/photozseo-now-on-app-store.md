@@ -49,7 +49,7 @@ I prezzi sono in dollari USA; lo App Store mostra il prezzo locale. I piani annu
 
 - iPhone con iOS 17.0 o successivo oppure iPad con iPadOS 17.0 o successivo
 - Disponibile in 15 lingue: inglese, turco, tedesco, spagnolo, francese, italiano, portoghese, polacco, giapponese, coreano, cinese, arabo, hindi, persiano e urdu
-- Non ancora disponibile per Android o Mac
+- Non ancora disponibile per Android o Mac. Su un computer, utilizzare il [estensione photoZseo per Chrome](/it/chrome-extension) separato
 
 ## Inizia
 

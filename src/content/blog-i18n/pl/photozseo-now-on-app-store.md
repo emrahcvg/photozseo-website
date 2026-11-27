@@ -49,8 +49,8 @@ Ceny podane są w dolarach amerykańskich; App Store pokazuje lokalną cenę. Pl
 
 - iPhone z iOS 17.0 lub nowszym lub iPad z iPadOS 17.0 lub nowszym
 - Dostępny w 15 językach: angielskim, tureckim, niemieckim, hiszpańskim, francuskim, włoskim, portugalskim, polskim, japońskim, koreańskim, chińskim, arabskim, hindi, perskim i urdu
-- Jeszcze niedostępna na Androida i Maca
+- Jeszcze niedostępna na Androida i Maca. Na komputerze użyj osobnego [rozszerzenie photoZseo do Chrome](/pl/chrome-extension)
 
 ## Zacznij
 
-Pobierz photoZseo z [Sklep z aplikacjami](https://apps.apple.com/app/id6762639768), sfotografuj swój pierwszy produkt i wybierz rynki, na których sprzedajesz. Nie wiesz, jakiego rozmiaru chce każdy rynek? Zacznij od naszego [](/pl/marketplace-image-sizes).
+Pobierz photoZseo z [Sklep z aplikacjami](https://apps.apple.com/app/id6762639768), sfotografuj swój pierwszy produkt i wybierz rynki, na których sprzedajesz. Nie wiesz, jakiego rozmiaru chce każdy rynek? Zacznij od naszego [przewodnik po rozmiarach obrazów na rynku](/pl/marketplace-image-sizes).

@@ -49,7 +49,7 @@ photoZseo: 이제 iPhone 및 iPad용 [앱스토어](https://apps.apple.com/app/i
 
 - iOS 17.0 이상이 탑재된 iPhone 또는 iPadOS 17.0 이상이 탑재된 iPad
 - 15개 언어로 제공됩니다: 영어, 터키어, 독일어, 스페인어, 프랑스어, 이탈리아어, 포르투갈어, 폴란드어, 일본어, 한국어, 중국어, 아랍어, 힌디어, 페르시아어, 우르두어
-- Android 또는 Mac에서는 아직 사용할 수 없습니다.
+- Android 또는 Mac에서는 아직 사용할 수 없습니다. 컴퓨터에서는 별도의 [photoZseo Chrome 확장 프로그램](/ko/chrome-extension)를 사용하세요.
 
 ## 시작하기
 
