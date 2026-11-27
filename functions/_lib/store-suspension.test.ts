@@ -16,14 +16,20 @@ describe('store suspension', () => {
       expect(isSuspendedPath(p)).toBe(false);
     }
   });
+  it('lets a seller delete their own store while suspended', () => {
+    expect(isSuspendedPath('/api/store/acme', 'DELETE')).toBe(false);
+    expect(isSuspendedPath('/api/store/acme', 'POST')).toBe(true);
+    expect(isSuspendedPath('/api/store/claim', 'POST')).toBe(true);
+  });
   it('returns 503 + noindex, JSON for api and HTML otherwise', async () => {
     const page = suspendedResponse('/market');
     expect(page.status).toBe(503);
     expect(page.headers.get('X-Robots-Tag')).toContain('noindex');
     expect(page.headers.get('Retry-After')).toBe('86400');
     expect(page.headers.get('Content-Type')).toContain('text/html');
-    const api = suspendedResponse('/api/orders');
+    const api = suspendedResponse('/api/store/claim');
     expect(api.status).toBe(503);
-    expect((await api.json()).error).toBe('store_suspended');
+    expect(api.headers.get('Content-Type')).toContain('text/plain');
+    expect(await api.text()).toContain('temporarily unavailable');
   });
 });

@@ -1,14 +1,17 @@
 /**
  * Online mağaza / pazar yeri geçici askı anahtarı.
  * Varsayılan: ASKIDA. Yeniden açmak için Cloudflare Pages ortam değişkeni STORE_SUSPENDED=false.
- * Yasal kanallar (/api/report, /api/admin/takedown, /api/account/delete, /api/auth/*) ve B2B teklif (/q) açık kalır.
+ * Açık kalanlar: /api/report, /api/admin/takedown, /api/account/delete, /api/auth/*, B2B teklif (/q) ve
+ * satıcının kendi mağazasını silmesi (DELETE /api/store/<slug>).
  * Veritabanına (D1) dokunulmaz.
  */
 export function isStoreSuspended(env: { STORE_SUSPENDED?: string } | undefined): boolean {
   return (env?.STORE_SUSPENDED ?? '').toLowerCase() !== 'false';
 }
 
-export function isSuspendedPath(pathname: string): boolean {
+export function isSuspendedPath(pathname: string, method = 'GET'): boolean {
+  // Satıcı kendi mağazasını kaldırabilsin (uygulama DELETE /api/store/<slug> çağırır) — askıda da açık kalır.
+  if (method.toUpperCase() === 'DELETE' && pathname.startsWith('/api/store/')) return false;
   return (
     pathname === '/market' ||
     pathname.startsWith('/market/') ||
@@ -30,9 +33,10 @@ export function suspendedResponse(pathname: string): Response {
     'Cache-Control': 'no-store',
   };
   if (pathname.startsWith('/api/')) {
-    return new Response(JSON.stringify({ error: 'store_suspended', message: 'Online stores are temporarily unavailable.' }), {
+    // iOS uygulaması hata gövdesini olduğu gibi kullanıcıya gösteriyor → kısa, okunur düz metin (JSON/HTML değil).
+    return new Response('Online store is temporarily unavailable. Your products and data are safe.', {
       status: 503,
-      headers: { ...headers, 'Content-Type': 'application/json; charset=utf-8' },
+      headers: { ...headers, 'Content-Type': 'text/plain; charset=utf-8' },
     });
   }
   return new Response(PAGE, { status: 503, headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8' } });

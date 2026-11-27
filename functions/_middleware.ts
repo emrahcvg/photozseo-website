@@ -8,7 +8,7 @@ export const onRequest: PagesFunction<{ STORE_SUSPENDED?: string }> = async (ctx
     return Response.redirect(url.toString(), 301);
   }
   const { pathname } = url;
-  const suspended = isStoreSuspended(ctx.env) && isSuspendedPath(pathname);
+  const suspended = isStoreSuspended(ctx.env) && isSuspendedPath(pathname, ctx.request.method);
   const response = suspended ? suspendedResponse(pathname) : await ctx.next();
 
   // Base headers applied to every response
