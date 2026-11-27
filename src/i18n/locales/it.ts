@@ -240,8 +240,6 @@ const c: HomeContent = {
           "Tutte le piattaforme: 46 marketplace + social",
           "Rimozione dello sfondo AI: 100/mese",
           "Generazione di testo alternativo AI",
-          "Negozio online su photozseo.com",
-          "Quotazione sul marketplace photoZseo",
           "1.000 importazioni di foto al mese"
         ],
         "cta": "Ottieni Pro"

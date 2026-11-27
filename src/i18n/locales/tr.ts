@@ -230,8 +230,6 @@ const tr: HomeContent = {
           '**Tüm platformlar**: 46 pazaryeri + sosyal kanallar',
           '**Yapay zekâ arka plan kaldırma**: ayda 100',
           '**Yapay zekâ alt metni**',
-          "photozseo.com'da online mağaza",
-          'photoZseo pazar yerinde listeleme',
           'Ayda 1.000 fotoğraf içe aktarma',
         ],
         cta: "Pro'yu al",

@@ -1,5 +1,6 @@
 ---
 import LegalShell from './LegalShell.astro';
+import StoreSuspendedNotice from './StoreSuspendedNotice.astro';
 import { defaultLang, type Lang, useTranslations } from '../../i18n/ui';
 
 interface Props { lang: Lang }
@@ -12,6 +13,7 @@ const sections = ['intro', 'contact', 'role', 'listing', 'trader', 'ranking', 'r
 const after = ['decisions', 'appeal', 'misuse', 'ads', 'law'] as const;
 ---
 <LegalShell lang={lang} title={t('mrules.title')} kicker={t('mrules.kicker')} updatedLabel={t('aup.updated')} date={t('mrules.date')} version={t('mrules.version')}>
+  <StoreSuspendedNotice lang={lang} />
   {sections.map((s) => (
     <>
       <h2 id={s}>{t(`mrules.${s}.title`)}</h2>

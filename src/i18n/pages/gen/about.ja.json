@@ -1,10 +1,10 @@
 {
  "title": "photoZseo について: オンライン販売者向けの製品写真および出品ツール",
- "desc": "photoZseo は、独立系オンライン販売者向けの製品写真および出品ツール (iPhone および iPad アプリ、Chrome 拡張機能、photozseo.com のオンライン ストア) を作成します。",
+ "desc": "photoZseo は、独立系オンライン販売者向けの製品写真および出品ツール、つまり iPhone および iPad アプリと Chrome 拡張機能を作成しています。",
  "crumb": "会社概要",
  "kicker": "私たちについて",
  "h1": "photoZseoについて",
- "answer": "photoZseo は、製品の写真をマーケットプレイスに対応したリストに変換するツールを構築します。主な製品は photoZseo: iPhone および iPad (App Store、2026) 用の SEO 製品写真アプリです。 Google Chrome 用の別の photoZseo 拡張機能や、photozseo.com でホストされているシンプルなオンライン ストアもあります。",
+ "answer": "photoZseo は、製品の写真をマーケットプレイスに対応したリストに変換するツールを構築します。主な製品は photoZseo: iPhone および iPad (App Store、2026) 用の SEO 製品写真アプリです。 Google Chrome 用の個別の photoZseo 拡張機能もあります。",
  "facts": [
   {
    "k": "設立目的",
@@ -37,8 +37,7 @@
    "h2": "製品",
    "bullets": [
     "[iPhone および iPad 用 photoZseo](/ja/download) — カメラ、46 マーケットプレイスのサイズ変更、背景削除、リストテキスト、CSV/XLSX エクスポート、B2B 見積、Shopify プッシュ。",
-    "[Chrome 用 photoZseo](/ja/chrome-extension) — Web ページから製品の写真と詳細を収集し、マーケットプレイスで使用できる ZIP および CSV ファイルをエクスポートするデスクトップのサイドパネル拡張機能。独自のプランを持つ別の製品です。",
-    "オンライン ストア — Pro および Business プランの販売者は、photozseo.com でシンプルなストアフロントを公開できます。"
+    "[Chrome 用 photoZseo](/ja/chrome-extension) — Web ページから製品の写真と詳細を収集し、マーケットプレイスで使用できる ZIP および CSV ファイルをエクスポートするデスクトップのサイドパネル拡張機能。独自のプランを持つ別の製品です。"
    ]
   },
   {

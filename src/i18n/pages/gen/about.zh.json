@@ -1,10 +1,10 @@
 {
  "title": "关于photoZseo：在线卖家的产品照片和列表工具",
- "desc": "photoZseo 为独立在线卖家制作产品照片和列表工具：iPhone 和 iPad 应用程序、Chrome 扩展程序以及 photozseo.com 上的在线商店。",
+ "desc": "photoZseo 为独立在线卖家制作产品照片和列表工具：iPhone 和 iPad 应用程序以及 Chrome 扩展。",
  "crumb": "关于我们",
  "kicker": "关于我们",
  "h1": "关于photoZseo",
- "answer": "photoZseo 构建的工具可将产品照片转换为市场就绪的列表。主要产品是 photoZseo：iPhone 和 iPad 的 SEO 产品照片应用程序（App Store，2026）。还有一个针对 Google Chrome 的单独的 photoZseo 扩展以及在 photozseo.com 上托管的简单在线商店。",
+ "answer": "photoZseo 构建的工具可将产品照片转换为市场就绪的列表。主要产品是 photoZseo：iPhone 和 iPad 的 SEO 产品照片应用程序（App Store，2026）。 Google Chrome 还有一个单独的 photoZseo 扩展。",
  "facts": [
   {
    "k": "成立于",
@@ -37,8 +37,7 @@
    "h2": "产品",
    "bullets": [
     "[iPhone 和 iPad 版 photoZseo](/zh/download) — 相机、针对 46 个市场调整大小、背景删除、列表文本、CSV/XLSX 导出、B2B 报价和 Shopify 推送。",
-    "[Chrome 版 photoZseo](/zh/chrome-extension) — 桌面侧面板扩展程序，可从网页收集产品照片和详细信息，并导出可用于市场的 ZIP 和 CSV 文件。它是一个独立的产品，有自己的计划。",
-    "在线商店 - Pro 和 Business 计划的卖家可以在 photozseo.com 上发布一个简单的店面。"
+    "[Chrome 版 photoZseo](/zh/chrome-extension) — 桌面侧面板扩展程序，可从网页收集产品照片和详细信息，并导出可用于市场的 ZIP 和 CSV 文件。它是一个独立的产品，有自己的计划。"
    ]
   },
   {

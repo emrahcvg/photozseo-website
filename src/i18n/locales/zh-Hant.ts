@@ -224,8 +224,6 @@ const zhHant: HomeContent = {
           "**AI SEO 自動填入** — 13 個字段，15 種語言",
           "**AI 背景去除** — 100/月",
           "**AI替代文字**生成",
-          "線上商店 (photozseo.com)",
-          "市場上市推送",
           "庫存和條碼",
           "1,000 張圖像/月",
           "iPhone 和 iPad 通用",

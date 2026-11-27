@@ -240,8 +240,6 @@ const c: HomeContent = {
           "Toutes les plateformes — 46 places de marché + réseaux sociaux",
           "Suppression de l’arrière-plan de l’IA – 100/mois",
           "Génération de texte alternatif IA",
-          "Boutique en ligne sur photozseo.com",
-          "Cotation sur la place de marché photoZseo",
           "1 000 importations de photos / mois"
         ],
         "cta": "Obtenez Pro"

@@ -237,8 +237,6 @@ const c: HomeContent = {
           "所有平台 — 46 个市场 + 社交",
           "AI背景去除——100/月",
           "AI替代文本生成",
-          "photozseo.com 上的在线商店",
-          "在photoZseo市场上市",
           "每月导入 1,000 张照片"
         ],
         "cta": "获取Pro"

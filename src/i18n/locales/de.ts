@@ -239,8 +239,6 @@ const c: HomeContent = {
           "Alle Plattformen – 46 Marktplätze + soziale Netzwerke",
           "KI-Hintergrundentfernung – 100/Monat",
           "KI-Alttextgenerierung",
-          "Online-Shop auf photozseo.com",
-          "Listung auf dem photoZseo-Marktplatz",
           "1.000 Fotoimporte / Monat"
         ],
         "cta": "Holen Sie sich Pro"

@@ -336,8 +336,6 @@ const en: HomeContent = {
           '**All platforms** — 46 marketplaces + social',
           '**AI background removal** — 100/month',
           '**AI alt text** generation',
-          'Online store on photozseo.com',
-          'Listing on the photoZseo marketplace',
           '1,000 photo imports / month',
         ],
         cta: 'Get Pro',

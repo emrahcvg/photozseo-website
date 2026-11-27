@@ -1,0 +1,27 @@
+---
+import type { Lang } from '../../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const MSG: Record<string, string> = {
+  en: 'The photoZseo online store and marketplace are temporarily paused. Nothing has been deleted. This page is kept for existing sellers and visitors.',
+  tr: 'photoZseo online mağaza ve pazar yeri geçici olarak askıdadır. Hiçbir veri silinmedi. Bu sayfa mevcut satıcılar ve ziyaretçiler için korunmaktadır.',
+  de: 'Der photoZseo-Onlineshop und der Marktplatz sind vorübergehend pausiert. Es wurde nichts gelöscht. Diese Seite bleibt für bestehende Verkäufer und Besucher erhalten.',
+  es: 'La tienda en línea y el marketplace de photoZseo están en pausa temporalmente. No se ha eliminado nada. Esta página se mantiene para vendedores y visitantes actuales.',
+  fr: 'La boutique en ligne et la place de marché photoZseo sont temporairement suspendues. Rien n’a été supprimé. Cette page est conservée pour les vendeurs et visiteurs existants.',
+  it: 'Il negozio online e il marketplace di photoZseo sono temporaneamente sospesi. Nulla è stato eliminato. Questa pagina resta disponibile per i venditori e i visitatori esistenti.',
+  pt: 'A loja online e o marketplace da photoZseo estão temporariamente suspensos. Nada foi excluído. Esta página é mantida para vendedores e visitantes existentes.',
+  pl: 'Sklep internetowy i marketplace photoZseo są tymczasowo wstrzymane. Nic nie zostało usunięte. Ta strona jest zachowana dla obecnych sprzedawców i odwiedzających.',
+  ja: 'photoZseo のオンラインストアとマーケットプレイスは一時的に停止しています。データは削除されていません。このページは既存の出品者と訪問者のために公開を続けています。',
+  ko: 'photoZseo 온라인 상점과 마켓플레이스는 일시적으로 중단되었습니다. 삭제된 데이터는 없습니다. 이 페이지는 기존 판매자와 방문자를 위해 유지됩니다.',
+  zh: 'photoZseo 在线商店和市场已暂时暂停。未删除任何内容。本页面将继续保留，供现有卖家和访客查阅。',
+  ar: 'متجر photoZseo الإلكتروني وسوقه متوقفان مؤقتًا. لم يتم حذف أي شيء. تبقى هذه الصفحة متاحة للبائعين والزوار الحاليين.',
+  hi: 'photoZseo का ऑनलाइन स्टोर और मार्केटप्लेस अस्थायी रूप से रुके हुए हैं। कुछ भी हटाया नहीं गया है। यह पृष्ठ मौजूदा विक्रेताओं और आगंतुकों के लिए बना रहेगा।',
+  fa: 'فروشگاه آنلاین و بازار photoZseo موقتاً متوقف شده‌اند. چیزی حذف نشده است. این صفحه برای فروشندگان و بازدیدکنندگان فعلی حفظ می‌شود.',
+  ur: 'photoZseo کا آن لائن اسٹور اور مارکیٹ پلیس عارضی طور پر روک دیے گئے ہیں۔ کچھ بھی حذف نہیں کیا گیا۔ یہ صفحہ موجودہ فروخت کنندگان اور وزیٹرز کے لیے برقرار رکھا گیا ہے۔',
+};
+const msg = MSG[lang] ?? MSG.en;
+---
+<p class="store-paused" role="status">{msg}</p>
+<style>
+  .store-paused { margin: 0 0 24px; padding: 14px 16px; border: 1px solid var(--line, rgba(128,128,128,0.35)); border-inline-start: 4px solid #F59E0B; border-radius: 10px; background: rgba(245,158,11,0.08); color: var(--fg, inherit); font-size: 0.95rem; line-height: 1.5; }
+</style>

@@ -240,8 +240,6 @@ const c: HomeContent = {
           "Todas las plataformas: 46 mercados + redes sociales",
           "Eliminación de fondo de IA: 100/mes",
           "Generación de texto alternativo con IA",
-          "Tienda online en photozseo.com",
-          "Listado en el mercado photoZseo",
           "1.000 importaciones de fotografías/mes"
         ],
         "cta": "Obtener Pro"

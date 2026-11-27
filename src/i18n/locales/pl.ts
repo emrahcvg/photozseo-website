@@ -240,8 +240,6 @@ const c: HomeContent = {
           "Wszystkie platformy — 46 rynków + społecznościowe",
           "Usuwanie tła AI — 100/miesiąc",
           "Generowanie tekstu alternatywnego AI",
-          "Sklep internetowy na photozseo.com",
-          "Wystawienie na rynku photoZseo",
           "1000 importów zdjęć/miesiąc"
         ],
         "cta": "Kup Pro"

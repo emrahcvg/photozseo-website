@@ -1,5 +1,6 @@
 ---
 import LegalShell from './LegalShell.astro';
+import StoreSuspendedNotice from './StoreSuspendedNotice.astro';
 import { defaultLang, type Lang, useTranslations } from '../../i18n/ui';
 
 interface Props { lang: Lang }
@@ -8,6 +9,7 @@ const t = useTranslations(lang);
 const href = (page: string) => (lang === defaultLang ? `/${page}` : `/${lang}/${page}`);
 ---
 <LegalShell lang={lang} title={t('storeterms.title')} kicker={t('storeterms.kicker')} updatedLabel={t('storeterms.updated')} date={t('storeterms.date2')} version={t('storeterms.version2')}>
+  <StoreSuspendedNotice lang={lang} />
   <h2>{t('storeterms.intro.title')}</h2>
   <p>{t('storeterms.intro.desc')}</p>
 
