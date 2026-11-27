@@ -9,6 +9,7 @@ export default defineConfig({
   site: 'https://photozseo.com',
   integrations: [
     sitemap({
+      filter: (page) => !/\/(aup|store-terms|marketplace-rules)\/?$/.test(page),
       i18n: { defaultLocale: 'en', locales: Object.fromEntries(locales.map((l) => [l, l])) },
     }),
     react(),

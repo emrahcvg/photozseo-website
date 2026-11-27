@@ -12,7 +12,7 @@ const V2 = new Set(['trader', 'safety']);
 const sections = ['intro', 'contact', 'role', 'listing', 'trader', 'ranking', 'reviews', 'prices', 'safety'] as const;
 const after = ['decisions', 'appeal', 'misuse', 'ads', 'law'] as const;
 ---
-<LegalShell lang={lang} title={t('mrules.title')} kicker={t('mrules.kicker')} updatedLabel={t('aup.updated')} date={t('mrules.date')} version={t('mrules.version')}>
+<LegalShell noindex lang={lang} title={t('mrules.title')} kicker={t('mrules.kicker')} updatedLabel={t('aup.updated')} date={t('mrules.date')} version={t('mrules.version')}>
   <StoreSuspendedNotice lang={lang} />
   {sections.map((s) => (
     <>
