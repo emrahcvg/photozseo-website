@@ -44,3 +44,4 @@ Allow: /
 # AI guidance file: /llms.txt
 
 Sitemap: https://photozseo.com/sitemap-index.xml
+Sitemap: https://photozseo.com/image-sitemap.xml

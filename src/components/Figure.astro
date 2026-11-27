@@ -1,0 +1,41 @@
+---
+import type { Lang } from '../i18n/ui';
+import { FIGURES, FIG_W, FIG_H } from '../i18n/figures';
+
+interface Props { id: string; lang: Lang; pageUrl: string }
+const { id, lang, pageUrl } = Astro.props;
+const f = FIGURES[id]?.[lang] ?? FIGURES[id]?.en;
+const src = `/img/figures/${id}-${lang}.webp`;
+const abs = `https://photozseo.com${src}`;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'ImageObject',
+  '@id': `${abs}#image`,
+  contentUrl: abs,
+  url: abs,
+  name: f.caption,
+  caption: f.caption,
+  description: f.alt,
+  width: FIG_W,
+  height: FIG_H,
+  encodingFormat: 'image/webp',
+  inLanguage: lang,
+  creator: { '@type': 'Organization', name: 'photoZseo', url: 'https://photozseo.com' },
+  creditText: 'photoZseo',
+  copyrightNotice: '© photoZseo',
+  representativeOfPage: false,
+  isPartOf: { '@type': 'WebPage', '@id': pageUrl },
+};
+---
+{f && (
+  <figure class="pz-figure">
+    <img src={src} alt={f.alt} width={FIG_W} height={FIG_H} loading="lazy" decoding="async" />
+    <figcaption>{f.caption}</figcaption>
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </figure>
+)}
+<style>
+  .pz-figure { margin: 28px 0 32px; }
+  .pz-figure img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line, rgba(128,128,128,0.25)); }
+  .pz-figure figcaption { margin-top: 10px; font-size: 0.88rem; line-height: 1.45; color: var(--muted, var(--text-dim, inherit)); }
+</style>

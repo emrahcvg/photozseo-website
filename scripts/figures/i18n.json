@@ -1,0 +1,3124 @@
+{
+ "marketplace-product-image-sizes-2026|tr": {
+  "foot": "Son doğrulama: Kasım 2026 · resmi yardım sayfalarından",
+  "type": "table",
+  "title": "Kanala göre ürün görseli boyutları (2026)",
+  "subtitle": "Resmi yardım sayfalarından minimum ve önerilen boyutlar",
+  "head": [
+   "Kanal",
+   "Asgari",
+   "Tavsiye edilen",
+   "Sınırlar"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 piksel, kare",
+    "5000 × 5000 piksele kadar, 20 MB'ın altında"
+   ],
+   [
+    "Etsy",
+    "İlk fotoğraf: 635 piksel",
+    "2000 piksel veya daha büyük",
+    "sRGB, şeffaf PNG yok"
+   ],
+   [
+    "eBay",
+    "500 piksel, en uzun kenar",
+    "Yaklaşık 1600 × 1600 piksel",
+    "En fazla 24 fotoğraf, her biri 12 MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 piksel (31 Ocak 2027'den itibaren)",
+    "1500 × 1500 piksel veya daha büyük",
+    "16 MB'a ve 64 MP'ye kadar"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 piksel",
+    "1024 × 1024 piksel",
+    "JPEG veya PNG, 8 MB'a kadar"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 piksel",
+    "1500 × 1500 piksel",
+    "5 MB'ın altında, RGB"
+   ]
+  ],
+  "alt": "2026'da Shopify, Etsy, eBay, Google Merchant Center, Meta Catalog ve HKTDC Sourcing için minimum ve önerilen ürün görseli boyutları tablosu",
+  "caption": "Satış kanalına göre ürün görseli boyutları, Kasım 2026'da her platformun resmi yardım sayfalarıyla karşılaştırılarak kontrol edilmiştir."
+ },
+ "marketplace-product-image-sizes-2026|de": {
+  "foot": "Zuletzt überprüft: November 2026 · über offizielle Hilfeseiten",
+  "type": "table",
+  "title": "Produktbildgrößen nach Kanal (2026)",
+  "subtitle": "Mindest- und empfohlene Größen auf offiziellen Hilfeseiten",
+  "head": [
+   "Kanal",
+   "Minimum",
+   "Empfohlen",
+   "Grenzen"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 px, quadratisch",
+    "Bis zu 5000 × 5000 Pixel, unter 20 MB"
+   ],
+   [
+    "Etsy",
+    "Erstes Foto: 635 px",
+    "2000 Pixel oder größer",
+    "sRGB, kein transparentes PNG"
+   ],
+   [
+    "eBay",
+    "500 px, längste Seite",
+    "Ungefähr 1600 × 1600 Pixel",
+    "Bis zu 24 Fotos, jeweils 12 MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (ab 31.01.2027)",
+    "1500 × 1500 Pixel oder größer",
+    "Bis zu 16 MB und 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 Pixel",
+    "1024 × 1024 Pixel",
+    "JPEG oder PNG, bis zu 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 Pixel",
+    "1500 × 1500 Pixel",
+    "Unter 5 MB, RGB"
+   ]
+  ],
+  "alt": "Tabelle der minimalen und empfohlenen Produktbildgrößen für Shopify, Etsy, eBay, Google Merchant Center, Meta Catalog und HKTDC Sourcing im Jahr 2026",
+  "caption": "Produktbildgrößen nach Vertriebskanal, verglichen mit den offiziellen Hilfeseiten jeder Plattform im November 2026."
+ },
+ "marketplace-product-image-sizes-2026|es": {
+  "foot": "Última verificación: noviembre de 2026 · de páginas de ayuda oficiales",
+  "type": "table",
+  "title": "Tamaños de imágenes de productos por canal (2026)",
+  "subtitle": "Tamaños mínimos y recomendados de las páginas de ayuda oficiales.",
+  "head": [
+   "Canal",
+   "Mínimo",
+   "Recomendado",
+   "Límites"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 píxeles, cuadrado",
+    "Hasta 5000 × 5000 px, menos de 20 MB"
+   ],
+   [
+    "Etsy",
+    "Primera foto: 635 px",
+    "2000 píxeles o más",
+    "sRGB, sin PNG transparente"
+   ],
+   [
+    "eBay",
+    "500 px, lado más largo",
+    "Aproximadamente 1600 × 1600 píxeles",
+    "Hasta 24 fotos, 12 MB cada una"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (desde el 31 de enero de 2027)",
+    "1500 × 1500 píxeles o más",
+    "Hasta 16 MB y 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 píxeles",
+    "1024 × 1024 píxeles",
+    "JPEG o PNG, hasta 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 píxeles",
+    "1500 × 1500 píxeles",
+    "Menos de 5 MB, RGB"
+   ]
+  ],
+  "alt": "Tabla de tamaños de imagen de producto mínimos y recomendados para Shopify, Etsy, eBay, Google Merchant Center, Meta Catalog y HKTDC Sourcing en 2026",
+  "caption": "Tamaños de imágenes de productos por canal de ventas, comparados con las páginas de ayuda oficiales de cada plataforma en noviembre de 2026."
+ },
+ "marketplace-product-image-sizes-2026|fr": {
+  "foot": "Dernière vérification : novembre 2026 · à partir des pages d'aide officielles",
+  "type": "table",
+  "title": "Tailles des images de produits par canal (2026)",
+  "subtitle": "Tailles minimales et recommandées sur les pages d'aide officielles",
+  "head": [
+   "Canal",
+   "Minimum",
+   "Recommandé",
+   "Limites"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 px, carré",
+    "Jusqu'à 5 000 × 5 000 px, moins de 20 Mo"
+   ],
+   [
+    "Etsy",
+    "Première photo : 635 px",
+    "2 000 px ou plus",
+    "sRVB, pas de PNG transparent"
+   ],
+   [
+    "eBay",
+    "500 px, côté le plus long",
+    "Environ 1600 × 1600 px",
+    "Jusqu'à 24 photos, 12 Mo chacune"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (à partir du 31 janvier 2027)",
+    "1 500 × 1 500 px ou plus",
+    "Jusqu'à 16 Mo et 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 pixels",
+    "1024 × 1024 pixels",
+    "JPEG ou PNG, jusqu'à 8 Mo"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 pixels",
+    "1 500 × 1 500 pixels",
+    "Moins de 5 Mo, RVB"
+   ]
+  ],
+  "alt": "Tableau des tailles d'image de produit minimales et recommandées pour Shopify, Etsy, eBay, Google Merchant Center, Meta Catalog et HKTDC Sourcing en 2026",
+  "caption": "Tailles des images de produits par canal de vente, vérifiées par rapport aux pages d'aide officielles de chaque plateforme en novembre 2026."
+ },
+ "marketplace-product-image-sizes-2026|it": {
+  "foot": "Ultima verifica: novembre 2026 · dalle pagine di aiuto ufficiali",
+  "type": "table",
+  "title": "Dimensioni delle immagini del prodotto per canale (2026)",
+  "subtitle": "Dimensioni minime e consigliate dalle pagine di aiuto ufficiali",
+  "head": [
+   "Canale",
+   "Minimo",
+   "Raccomandato",
+   "Limiti"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 px, quadrato",
+    "Fino a 5000 × 5000 px, meno di 20 MB"
+   ],
+   [
+    "Etsy",
+    "Prima foto: 635 px",
+    "2000 px o superiore",
+    "sRGB, non PNG trasparente"
+   ],
+   [
+    "eBay",
+    "500 px, lato più lungo",
+    "Circa 1600×1600px",
+    "Fino a 24 foto, 12 MB ciascuna"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (dal 31 gennaio 2027)",
+    "1500 × 1500 px o superiore",
+    "Fino a 16 MB e 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500×500px",
+    "1024×1024px",
+    "JPEG o PNG, fino a 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550×550px",
+    "1500×1500px",
+    "Meno di 5 MB, RGB"
+   ]
+  ],
+  "alt": "Tabella delle dimensioni minime e consigliate delle immagini dei prodotti per Shopify, Etsy, eBay, Google Merchant Center, Meta Catalog e HKTDC Sourcing nel 2026",
+  "caption": "Dimensioni delle immagini dei prodotti per canale di vendita, confrontate con le pagine di aiuto ufficiali di ciascuna piattaforma nel novembre 2026."
+ },
+ "marketplace-product-image-sizes-2026|pt": {
+  "foot": "Última verificação: novembro de 2026 · nas páginas de ajuda oficiais",
+  "type": "table",
+  "title": "Tamanhos de imagem do produto por canal (2026)",
+  "subtitle": "Tamanhos mínimos e recomendados nas páginas de ajuda oficiais",
+  "head": [
+   "Canal",
+   "Mínimo",
+   "Recomendado",
+   "Limites"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 px, quadrado",
+    "Até 5.000 × 5.000 px, menos de 20 MB"
+   ],
+   [
+    "Etsy",
+    "Primeira foto: 635 px",
+    "2.000 px ou maior",
+    "sRGB, sem PNG transparente"
+   ],
+   [
+    "eBay",
+    "500 px, lado mais longo",
+    "Cerca de 1600 × 1600 px",
+    "Até 24 fotos, 12 MB cada"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (a partir de 31 de janeiro de 2027)",
+    "1500 × 1500 px ou maior",
+    "Até 16 MB e 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 pixels",
+    "1024 × 1024 pixels",
+    "JPEG ou PNG, até 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 pixels",
+    "1.500 × 1.500 pixels",
+    "Menos de 5 MB, RGB"
+   ]
+  ],
+  "alt": "Tabela de tamanhos de imagem de produto mínimos e recomendados para Shopify, Etsy, eBay, Google Merchant Center, Meta Catálogo e HKTDC Sourcing em 2026",
+  "caption": "Tamanhos de imagens de produtos por canal de vendas, verificados nas páginas de ajuda oficiais de cada plataforma em novembro de 2026."
+ },
+ "marketplace-product-image-sizes-2026|pl": {
+  "foot": "Ostatnia weryfikacja: listopad 2026 · z oficjalnych stron pomocy",
+  "type": "table",
+  "title": "Rozmiary obrazów produktów według kanałów (2026)",
+  "subtitle": "Minimalne i zalecane rozmiary z oficjalnych stron pomocy",
+  "head": [
+   "Kanał",
+   "Minimum",
+   "Zalecony",
+   "Limity"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 pikseli, kwadrat",
+    "Do 5000 × 5000 pikseli, poniżej 20 MB"
+   ],
+   [
+    "Etsy",
+    "Pierwsze zdjęcie: 635 px",
+    "2000 pikseli lub większy",
+    "sRGB, bez przezroczystego PNG"
+   ],
+   [
+    "eBay",
+    "500 px, najdłuższy bok",
+    "Około 1600 × 1600 pikseli",
+    "Do 24 zdjęć, każde o rozmiarze 12 MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (od 31 stycznia 2027)",
+    "1500 × 1500 pikseli lub większy",
+    "Do 16 MB i 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 pikseli",
+    "1024 × 1024 pikseli",
+    "JPEG lub PNG, do 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 pikseli",
+    "1500 × 1500 pikseli",
+    "Poniżej 5 MB, RGB"
+   ]
+  ],
+  "alt": "Tabela minimalnych i zalecanych rozmiarów obrazów produktów dla Shopify, Etsy, eBay, Google Merchant Center, Meta Catalog i HKTDC Sourcing w 2026 roku",
+  "caption": "Rozmiary obrazów produktów według kanałów sprzedaży sprawdzone na oficjalnych stronach pomocy każdej platformy w listopadzie 2026 r."
+ },
+ "marketplace-product-image-sizes-2026|ja": {
+  "foot": "最終確認日: 2026 年 11 月 · 公式ヘルプページより",
+  "type": "table",
+  "title": "チャネル別の商品画像サイズ (2026)",
+  "subtitle": "公式ヘルプページの最小サイズと推奨サイズ",
+  "head": [
+   "チャネル",
+   "最小",
+   "推奨",
+   "限界"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 ピクセル、正方形",
+    "最大 5000 × 5000 ピクセル、20 MB 未満"
+   ],
+   [
+    "Etsy",
+    "最初の写真: 635 ピクセル",
+    "2000ピクセル以上",
+    "sRGB、透明PNGなし"
+   ],
+   [
+    "eBay",
+    "500ピクセル、最長辺",
+    "約1600×1600ピクセル",
+    "最大 24 枚の写真、各 12 MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 ピクセル (2027 年 1 月 31 日から)",
+    "1500×1500ピクセル以上",
+    "最大 16 MB および 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500×500ピクセル",
+    "1024 × 1024 ピクセル",
+    "JPEG または PNG、最大 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 ピクセル",
+    "1500×1500ピクセル",
+    "5MB未満、RGB"
+   ]
+  ],
+  "alt": "2026 年の Shopify、Etsy、eBay、Google Merchant Center、メタ カタログ、および HKTDC Sourcing の最小および推奨される商品画像サイズの表",
+  "caption": "2026 年 11 月に各プラットフォームの公式ヘルプ ページと照合して、販売チャネルごとの商品画像のサイズを確認しました。"
+ },
+ "marketplace-product-image-sizes-2026|ko": {
+  "foot": "최종 확인 날짜: 2026년 11월 · 공식 도움말 페이지에서",
+  "type": "table",
+  "title": "채널별 제품 이미지 크기(2026년)",
+  "subtitle": "공식 도움말 페이지의 최소 및 권장 크기",
+  "head": [
+   "채널",
+   "최저한의",
+   "추천",
+   "제한"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048px, 정사각형",
+    "최대 5000 × 5000px, 20MB 미만"
+   ],
+   [
+    "Etsy",
+    "첫 번째 사진: 635px",
+    "2000px 이상",
+    "sRGB, 투명 PNG 없음"
+   ],
+   [
+    "eBay",
+    "500px, 가장 긴 면",
+    "약 1600×1600px",
+    "최대 24장의 사진, 각 12MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500px(2027년 1월 31일부터)",
+    "1500×1500px 이상",
+    "최대 16MB 및 64MP"
+   ],
+   [
+    "Meta Catalog",
+    "500×500픽셀",
+    "1024×1024픽셀",
+    "JPEG 또는 PNG, 최대 8MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550×550픽셀",
+    "1500×1500픽셀",
+    "5MB 미만, RGB"
+   ]
+  ],
+  "alt": "2026년 Shopify, Etsy, eBay, Google Merchant Center, 메타 카탈로그 및 HKTDC 소싱에 대한 최소 및 권장 제품 이미지 크기 표",
+  "caption": "판매 채널별 제품 이미지 크기는 2026년 11월 각 플랫폼의 공식 도움말 페이지에서 확인되었습니다."
+ },
+ "marketplace-product-image-sizes-2026|zh": {
+  "foot": "最后验证时间：2026 年 11 月·来自官方帮助页面",
+  "type": "table",
+  "title": "按渠道划分的产品图片尺寸 (2026)",
+  "subtitle": "官方帮助页面的最小和推荐尺寸",
+  "head": [
+   "渠道",
+   "最低限度",
+   "受到推崇的",
+   "限制"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 像素，正方形",
+    "最大 5000 × 5000 像素，小于 20 MB"
+   ],
+   [
+    "Etsy",
+    "第一张照片：635 像素",
+    "2000 像素或更大",
+    "sRGB，无透明 PNG"
+   ],
+   [
+    "eBay",
+    "500 px，最长边",
+    "约1600×1600像素",
+    "最多 24 张照片，每张 12 MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 像素（2027 年 1 月 31 日起）",
+    "1500 × 1500 像素或更大",
+    "高达 16 MB 和 64 MP"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 像素",
+    "1024 × 1024 像素",
+    "JPEG 或 PNG，最大 8 MB"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 像素",
+    "1500 × 1500 像素",
+    "5 MB 以下，RGB"
+   ]
+  ],
+  "alt": "2026 年 Shopify、Etsy、eBay、Google、Merchant Center、Meta Catalog 和 HKTDC Sourcing 的最小和建议产品图像尺寸表",
+  "caption": "按销售渠道划分的产品图片尺寸，根据 2026 年 11 月每个平台的官方帮助页面进行检查。"
+ },
+ "marketplace-product-image-sizes-2026|ar": {
+  "foot": "آخر التحقق: نوفمبر 2026 · من صفحات المساعدة الرسمية",
+  "type": "table",
+  "title": "أحجام صور المنتج حسب القناة (2026)",
+  "subtitle": "الحد الأدنى والأحجام الموصى بها من صفحات المساعدة الرسمية",
+  "head": [
+   "قناة",
+   "الحد الأدنى",
+   "مُستَحسَن",
+   "حدود"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 بكسل، مربع",
+    "ما يصل إلى 5000 × 5000 بكسل، أقل من 20 ميجابايت"
+   ],
+   [
+    "Etsy",
+    "الصورة الأولى: 635 بكسل",
+    "2000 بكسل أو أكبر",
+    "sRGB، بدون PNG شفافة"
+   ],
+   [
+    "eBay",
+    "500 بيكسل، الجانب الأطول",
+    "حوالي 1600 × 1600 بكسل",
+    "ما يصل إلى 24 صورة، حجم كل منها 12 ميجابايت"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 بكسل (من 31 يناير 2027)",
+    "1500 × 1500 بكسل أو أكبر",
+    "تصل إلى 16 ميجابايت و64 ميجابيكسل"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 بكسل",
+    "1024 × 1024 بكسل",
+    "JPEG أو PNG، بحجم يصل إلى 8 ميجابايت"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 بكسل",
+    "1500 × 1500 بكسل",
+    "أقل من 5 ميجابايت، RGB"
+   ]
+  ],
+  "alt": "جدول بأحجام صور المنتج الدنيا والموصى بها لمصادر Shopify وEtsy وeBay وGoogle Merchant Center وMeta Catalog وHKTDC في عام 2026",
+  "caption": "أحجام صور المنتج حسب قناة المبيعات، وتم فحصها مقابل صفحات المساعدة الرسمية لكل منصة في نوفمبر 2026."
+ },
+ "marketplace-product-image-sizes-2026|hi": {
+  "foot": "अंतिम सत्यापन: नवंबर 2026 · आधिकारिक सहायता पृष्ठों से",
+  "type": "table",
+  "title": "चैनल के अनुसार उत्पाद छवि आकार (2026)",
+  "subtitle": "आधिकारिक सहायता पृष्ठों से न्यूनतम और अनुशंसित आकार",
+  "head": [
+   "चैनल",
+   "न्यूनतम",
+   "अनुशंसित",
+   "सीमाएं"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 पिक्सेल, वर्ग",
+    "5000 × 5000 px तक, 20 एमबी से कम"
+   ],
+   [
+    "Etsy",
+    "पहली फोटो: 635 पिक्सल",
+    "2000 px या इससे बड़ा",
+    "एसआरजीबी, कोई पारदर्शी पीएनजी नहीं"
+   ],
+   [
+    "eBay",
+    "500 पिक्सेल, सबसे लंबी भुजा",
+    "लगभग 1600 × 1600 पिक्सेल",
+    "अधिकतम 24 फ़ोटो, प्रत्येक 12 एमबी"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 पिक्सेल (31 जनवरी, 2027 से)",
+    "1500 × 1500 px या बड़ा",
+    "16 एमबी और 64 एमपी तक"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 पिक्सल",
+    "1024 × 1024 पिक्सल",
+    "जेपीईजी या पीएनजी, 8 एमबी तक"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 पिक्सल",
+    "1500 × 1500 पिक्सल",
+    "5 एमबी से कम, आरजीबी"
+   ]
+  ],
+  "alt": "2026 में Shopify, Etsy, eBay, Google Merchant Center, मेटा कैटलॉग और HKTDC सोर्सिंग के लिए न्यूनतम और अनुशंसित उत्पाद छवि आकार की तालिका",
+  "caption": "बिक्री चैनल द्वारा उत्पाद छवि आकार, नवंबर 2026 में प्रत्येक प्लेटफ़ॉर्म के आधिकारिक सहायता पृष्ठों के विरुद्ध जांचा गया।"
+ },
+ "marketplace-product-image-sizes-2026|fa": {
+  "foot": "آخرین تأیید: نوامبر 2026 · از صفحات راهنمای رسمی",
+  "type": "table",
+  "title": "اندازه تصویر محصول بر اساس کانال (2026)",
+  "subtitle": "اندازه های حداقل و توصیه شده از صفحات راهنمای رسمی",
+  "head": [
+   "کانال",
+   "حداقل",
+   "توصیه می شود",
+   "محدودیت ها"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 پیکسل، مربع",
+    "حداکثر 5000 × 5000 پیکسل، کمتر از 20 مگابایت"
+   ],
+   [
+    "Etsy",
+    "عکس اول: 635 پیکسل",
+    "2000 پیکسل یا بزرگتر",
+    "sRGB، بدون PNG شفاف"
+   ],
+   [
+    "eBay",
+    "500 پیکسل، طولانی ترین ضلع",
+    "حدود 1600 × 1600 پیکسل",
+    "حداکثر 24 عکس، هر کدام 12 مگابایت"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 پیکسل (از 31 ژانویه 2027)",
+    "1500 × 1500 پیکسل یا بزرگتر",
+    "حداکثر 16 مگابایت و 64 مگاپیکسل"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 پیکسل",
+    "1024 × 1024 پیکسل",
+    "JPEG یا PNG، تا 8 مگابایت"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 پیکسل",
+    "1500 × 1500 پیکسل",
+    "زیر 5 مگابایت، RGB"
+   ]
+  ],
+  "alt": "جدول حداقل اندازه و اندازه تصویر محصول توصیه شده برای Shopify، Etsy، eBay، Google Merchant Center، متا کاتالوگ و منبع HKTDC در سال 2026",
+  "caption": "اندازه‌های تصویر محصول بر اساس کانال فروش، با صفحات راهنمای رسمی هر پلتفرم در نوامبر 2026 بررسی شد."
+ },
+ "marketplace-product-image-sizes-2026|ur": {
+  "foot": "آخری بار تصدیق شدہ: نومبر 2026 · سرکاری مدد کے صفحات سے",
+  "type": "table",
+  "title": "چینل کے لحاظ سے مصنوعات کی تصویر کے سائز (2026)",
+  "subtitle": "سرکاری مدد کے صفحات سے کم از کم اور تجویز کردہ سائز",
+  "head": [
+   "چینل",
+   "کم از کم",
+   "تجویز کردہ",
+   "حدود"
+  ],
+  "rows": [
+   [
+    "Shopify",
+    "—",
+    "2048 × 2048 px، مربع",
+    "5000 × 5000 px تک، 20 MB سے کم"
+   ],
+   [
+    "Etsy",
+    "پہلی تصویر: 635 px",
+    "2000 px یا اس سے بڑا",
+    "sRGB، کوئی شفاف PNG نہیں ہے۔"
+   ],
+   [
+    "eBay",
+    "500 px، سب سے لمبی سائیڈ",
+    "تقریباً 1600 × 1600 px",
+    "24 تصاویر تک، ہر ایک میں 12 MB"
+   ],
+   [
+    "Google Merchant Center",
+    "500 × 500 px (31 جنوری 2027 سے)",
+    "1500 × 1500 px یا اس سے بڑا",
+    "16 MB اور 64 MP تک"
+   ],
+   [
+    "Meta Catalog",
+    "500 × 500 px",
+    "1024 × 1024 px",
+    "JPEG یا PNG، 8 MB تک"
+   ],
+   [
+    "HKTDC Sourcing",
+    "550 × 550 px",
+    "1500 × 1500 px",
+    "5 MB سے کم، RGB"
+   ]
+  ],
+  "alt": "2026 میں Shopify، Etsy، eBay، Google Merchant Center، میٹا کیٹلاگ اور HKTDC سورسنگ کے لیے کم از کم اور تجویز کردہ پروڈکٹ امیج سائز کا جدول",
+  "caption": "سیلز چینل کے ذریعہ پروڈکٹ کی تصویر کے سائز، نومبر 2026 میں ہر پلیٹ فارم کے آفیشل ہیلپ پیجز کے خلاف چیک کیا گیا۔"
+ },
+ "product-photo-angles-checklist|tr": {
+  "foot": "photoZseo iPhone uygulamasında şablon kamera",
+  "type": "cards",
+  "title": "Her ilanda ihtiyaç duyulan 7 ürün fotoğraf açısı",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Amazon, Etsy, eBay, Shopify ve 40'tan fazla pazar yeri için fotoğraf listesi",
+  "items": [
+   [
+    "Ön",
+    "Temiz bir arka plan üzerinde ana resim"
+   ],
+   [
+    "Geri",
+    "Arka ayrıntılar, bağlantı noktaları ve etiketler"
+   ],
+   [
+    "Taraf",
+    "Derinlik ve kalınlık"
+   ],
+   [
+    "Detay",
+    "Malzemenin ve dikişin yakından görünümü"
+   ],
+   [
+    "Tepe",
+    "Ürünün yukarıdan aşağıya görünümü"
+   ],
+   [
+    "Etiket",
+    "Barkod, boyut veya içerik etiketi"
+   ],
+   [
+    "Yaşam Tarzı",
+    "Ölçek için kullanılan ürün"
+   ]
+  ],
+  "alt": "E-ticaret listelemeleri için yedi ürün fotoğraf açısının kontrol listesi: photoZseo iPhone şablon kamerasıyla ön, arka, yan, ayrıntı, üst, etiket ve yaşam tarzı",
+  "caption": "Yedi ürün fotoğraf açısı pazarları en sık talep ediyor."
+ },
+ "product-photo-angles-checklist|de": {
+  "foot": "Vorlagenkamera in der photoZseo iPhone-App",
+  "type": "cards",
+  "title": "7 Produktfotowinkel, die jedes Angebot braucht",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Eine Fotoliste für Amazon, Etsy, eBay, Shopify und über 40 weitere Marktplätze",
+  "items": [
+   [
+    "Front",
+    "Hauptbild auf einem sauberen Hintergrund"
+   ],
+   [
+    "Zurück",
+    "Details auf der Rückseite, Anschlüsse und Etiketten"
+   ],
+   [
+    "Seite",
+    "Tiefe und Dicke"
+   ],
+   [
+    "Detail",
+    "Nahaufnahme von Material und Nähten"
+   ],
+   [
+    "Spitze",
+    "Draufsicht auf das Produkt"
+   ],
+   [
+    "Etikett",
+    "Barcode, Größe oder Zutatenetikett"
+   ],
+   [
+    "Lebensstil",
+    "Das verwendete Produkt zur Skalierung"
+   ]
+  ],
+  "alt": "Checkliste der sieben Produktfotowinkel für E-Commerce-Angebote: Vorderseite, Rückseite, Seite, Detail, Oberseite, Etikett und Lifestyle, mit der Vorlagenkamera photoZseo iPhone",
+  "caption": "Die sieben Marktplätze für Produktfotowinkel fragen am häufigsten nach."
+ },
+ "product-photo-angles-checklist|es": {
+  "foot": "Cámara de plantilla en la aplicación photoZseo iPhone",
+  "type": "cards",
+  "title": "7 ángulos de fotografías de productos que todo anuncio necesita",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Una lista de fotos para Amazon, Etsy, eBay, Shopify y más de 40 mercados más",
+  "items": [
+   [
+    "Frente",
+    "Imagen principal sobre un fondo limpio."
+   ],
+   [
+    "Atrás",
+    "Detalles traseros, puertos y etiquetas."
+   ],
+   [
+    "Lado",
+    "Profundidad y espesor"
+   ],
+   [
+    "Detalle",
+    "Primer plano del material y las costuras."
+   ],
+   [
+    "Arriba",
+    "Vista de arriba hacia abajo del producto."
+   ],
+   [
+    "Etiqueta",
+    "Etiqueta de código de barras, tamaño o ingrediente"
+   ],
+   [
+    "Estilo de vida",
+    "El producto en uso, a escala."
+   ]
+  ],
+  "alt": "Lista de verificación de los siete ángulos de las fotografías de productos para listados de comercio electrónico: frontal, posterior, lateral, detalle, parte superior, etiqueta y estilo de vida, con la cámara de plantilla photoZseo iPhone",
+  "caption": "Los siete ángulos fotográficos de productos que los mercados solicitan con más frecuencia."
+ },
+ "product-photo-angles-checklist|fr": {
+  "foot": "Caméra modèle dans l'application photoZseo iPhone",
+  "type": "cards",
+  "title": "7 angles de photo de produit dont chaque annonce a besoin",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Une liste de photos pour Amazon, Etsy, eBay, Shopify et plus de 40 autres marchés",
+  "items": [
+   [
+    "Devant",
+    "Image principale sur un fond propre"
+   ],
+   [
+    "Dos",
+    "Détails arrière, ports et étiquettes"
+   ],
+   [
+    "Côté",
+    "Profondeur et épaisseur"
+   ],
+   [
+    "Détail",
+    "Gros plan sur le matériau et les coutures"
+   ],
+   [
+    "Haut",
+    "Vue descendante du produit"
+   ],
+   [
+    "Étiquette",
+    "Code-barres, taille ou étiquette d'ingrédient"
+   ],
+   [
+    "Mode de vie",
+    "Le produit utilisé, pour l'échelle"
+   ]
+  ],
+  "alt": "Liste de contrôle des sept angles de photo de produits pour les listes de commerce électronique : recto, verso, côté, détail, dessus, étiquette et style de vie, avec l'appareil photo modèle photoZseo iPhone",
+  "caption": "Les sept angles de photo de produits que les marchés demandent le plus souvent."
+ },
+ "product-photo-angles-checklist|it": {
+  "foot": "Modello di fotocamera nell'app photoZseo iPhone",
+  "type": "cards",
+  "title": "7 angolazioni fotografiche dei prodotti di cui ogni inserzione ha bisogno",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Un elenco di foto per Amazon, Etsy, eBay, Shopify e oltre 40 altri marketplace",
+  "items": [
+   [
+    "Fronte",
+    "Immagine principale su uno sfondo pulito"
+   ],
+   [
+    "Indietro",
+    "Dettagli posteriori, porte ed etichette"
+   ],
+   [
+    "Lato",
+    "Profondità e spessore"
+   ],
+   [
+    "Dettaglio",
+    "Primo piano del materiale e delle cuciture"
+   ],
+   [
+    "Superiore",
+    "Vista dall'alto del prodotto"
+   ],
+   [
+    "Etichetta",
+    "Etichetta del codice a barre, della dimensione o dell'ingrediente"
+   ],
+   [
+    "Stile di vita",
+    "Il prodotto in uso, per scala"
+   ]
+  ],
+  "alt": "Lista di controllo dei sette angoli di foto dei prodotti per le inserzioni di e-commerce: fronte, retro, lato, dettaglio, parte superiore, etichetta e stile di vita, con la fotocamera modello photoZseo iPhone",
+  "caption": "I sette prodotti che i mercati degli angoli fotografici richiedono più spesso."
+ },
+ "product-photo-angles-checklist|pt": {
+  "foot": "Câmera modelo no aplicativo photoZseo iPhone",
+  "type": "cards",
+  "title": "7 ângulos de fotos de produtos que toda listagem precisa",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Uma lista de fotos para Amazon, Etsy, eBay, Shopify e mais de 40 mercados",
+  "items": [
+   [
+    "Frente",
+    "Imagem principal em um fundo limpo"
+   ],
+   [
+    "Voltar",
+    "Detalhes traseiros, portas e etiquetas"
+   ],
+   [
+    "Lado",
+    "Profundidade e espessura"
+   ],
+   [
+    "Detalhe",
+    "Close de material e costura"
+   ],
+   [
+    "Principal",
+    "Visão de cima para baixo do produto"
+   ],
+   [
+    "Rótulo",
+    "Código de barras, tamanho ou etiqueta de ingrediente"
+   ],
+   [
+    "Estilo de vida",
+    "O produto em uso, para escala"
+   ]
+  ],
+  "alt": "Checklist dos sete ângulos de fotos de produtos para listagens de e-commerce: frente, verso, lateral, detalhe, topo, rótulo e estilo de vida, com a câmera modelo photoZseo iPhone",
+  "caption": "Os sete ângulos fotográficos de produtos que os mercados solicitam com mais frequência."
+ },
+ "product-photo-angles-checklist|pl": {
+  "foot": "Kamera szablonowa w aplikacji photoZseo iPhone",
+  "type": "cards",
+  "title": "7 ujęć zdjęć produktów, których potrzebuje każda oferta",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Lista zdjęć dla Amazon, Etsy, eBay, Shopify i ponad 40 innych rynków",
+  "items": [
+   [
+    "Przód",
+    "Główny obraz na czystym tle"
+   ],
+   [
+    "Z powrotem",
+    "Szczegóły z tyłu, porty i etykiety"
+   ],
+   [
+    "Strona",
+    "Głębokość i grubość"
+   ],
+   [
+    "Szczegół",
+    "Zbliżenie materiału i szycia"
+   ],
+   [
+    "Szczyt",
+    "Widok produktu z góry"
+   ],
+   [
+    "Etykieta",
+    "Etykieta z kodem kreskowym, rozmiarem lub składnikiem"
+   ],
+   [
+    "Styl życia",
+    "Produkt w użyciu, dla skali"
+   ]
+  ],
+  "alt": "Lista kontrolna siedmiu ujęć zdjęć produktów do ofert e-commerce: przód, tył, bok, szczegóły, góra, etykieta i styl życia, z użyciem aparatu szablonowego photoZseo iPhone",
+  "caption": "Siedem kątów zdjęć produktów, o które najczęściej pytają rynki."
+ },
+ "product-photo-angles-checklist|ja": {
+  "foot": "photoZseo iPhone アプリのテンプレート カメラ",
+  "type": "cards",
+  "title": "すべてのリストに必要な 7 つの製品写真アングル",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Amazon、Etsy、eBay、Shopify、および 40 以上のマーケットプレイスの写真リスト",
+  "items": [
+   [
+    "フロント",
+    "きれいな背景にメイン画像"
+   ],
+   [
+    "戻る",
+    "背面の詳細、ポートおよびラベル"
+   ],
+   [
+    "側",
+    "深さと厚さ"
+   ],
+   [
+    "詳細",
+    "素材と縫製のクローズアップ"
+   ],
+   [
+    "トップ",
+    "製品を上から見た図"
+   ],
+   [
+    "ラベル",
+    "バーコード、サイズまたは成分ラベル"
+   ],
+   [
+    "ライフスタイル",
+    "使用中の製品、スケール用"
+   ]
+  ],
+  "alt": "photoZseo iPhone テンプレート カメラを使用した、電子商取引出品用の 7 つの製品写真アングルのチェックリスト: 前面、背面、側面、詳細、上面、ラベル、ライフスタイル。",
+  "caption": "マーケットプレイスで最も頻繁に求められる 7 つの製品写真の角度。"
+ },
+ "product-photo-angles-checklist|ko": {
+  "foot": "photoZseo iPhone 앱의 템플릿 카메라",
+  "type": "cards",
+  "title": "모든 목록에 필요한 7가지 제품 사진 각도",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Amazon, Etsy, eBay, Shopify 외 40개 이상의 마켓플레이스에 대한 사진 목록",
+  "items": [
+   [
+    "앞쪽",
+    "깔끔한 배경의 메인 이미지"
+   ],
+   [
+    "뒤쪽에",
+    "후면 세부 정보, 포트 및 라벨"
+   ],
+   [
+    "옆",
+    "깊이와 두께"
+   ],
+   [
+    "세부 사항",
+    "소재와 스티치의 클로즈업"
+   ],
+   [
+    "맨 위",
+    "제품을 위에서 아래로 본 모습"
+   ],
+   [
+    "상표",
+    "바코드, 크기 또는 성분 라벨"
+   ],
+   [
+    "라이프스타일",
+    "사용중인 제품, 스케일용"
+   ]
+  ],
+  "alt": "전자 상거래 목록을 위한 7가지 제품 사진 각도 체크리스트: photoZseo iPhone 템플릿 카메라를 사용한 전면, 후면, 측면, 디테일, 상단, 라벨 및 라이프스타일",
+  "caption": "마켓플레이스에서 가장 자주 요구하는 7가지 제품 사진 앵글입니다."
+ },
+ "product-photo-angles-checklist|zh": {
+  "foot": "photoZseo iPhone 应用程序中的模板相机",
+  "type": "cards",
+  "title": "每个列表都需要 7 个产品照片角度",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Amazon、Etsy、eBay、Shopify 和 40 多个市场的照片列表",
+  "items": [
+   [
+    "正面",
+    "干净背景上的主图像"
+   ],
+   [
+    "后退",
+    "背面细节、端口和标签"
+   ],
+   [
+    "边",
+    "深度和厚度"
+   ],
+   [
+    "细节",
+    "材质和缝线特写"
+   ],
+   [
+    "顶部",
+    "产品的自上而下视图"
+   ],
+   [
+    "标签",
+    "条形码、尺寸或成分标签"
+   ],
+   [
+    "生活方式",
+    "正在使用的产品，用于规模"
+   ]
+  ],
+  "alt": "电子商务清单的七个产品照片角度清单：正面、背面、侧面、细节、顶部、标签和生活方式，使用 photoZseo iPhone 模板相机",
+  "caption": "市场最常要求的七个产品照片角度。"
+ },
+ "product-photo-angles-checklist|ar": {
+  "foot": "قالب الكاميرا في تطبيق photoZseo iPhone",
+  "type": "cards",
+  "title": "7 زوايا لصورة المنتج تحتاجها كل قائمة",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "قائمة صور لـ Amazon وEtsy وeBay وShopify وأكثر من 40 سوقًا أخرى",
+  "items": [
+   [
+    "أمام",
+    "الصورة الرئيسية على خلفية نظيفة"
+   ],
+   [
+    "خلف",
+    "التفاصيل الخلفية والمنافذ والملصقات"
+   ],
+   [
+    "جانب",
+    "العمق والسمك"
+   ],
+   [
+    "التفاصيل",
+    "لقطة مقربة للمواد والخياطة"
+   ],
+   [
+    "قمة",
+    "عرض من أعلى إلى أسفل للمنتج"
+   ],
+   [
+    "ملصق",
+    "الباركود أو الحجم أو تسمية المكونات"
+   ],
+   [
+    "نمط الحياة",
+    "المنتج قيد الاستخدام، للحجم"
+   ]
+  ],
+  "alt": "قائمة مرجعية لزوايا صور المنتج السبعة لقوائم التجارة الإلكترونية: الأمامية والخلفية والجانبية والتفاصيل والأعلى والملصق وأسلوب الحياة، باستخدام الكاميرا النموذجية photoZseo iPhone",
+  "caption": "تطلب أسواق زوايا صور المنتجات السبعة في أغلب الأحيان."
+ },
+ "product-photo-angles-checklist|hi": {
+  "foot": "photoZseo iPhone ऐप में टेम्प्लेट कैमरा",
+  "type": "cards",
+  "title": "प्रत्येक लिस्टिंग के लिए आवश्यक 7 उत्पाद फोटो कोण",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Amazon, Etsy, eBay, Shopify और 40+ अधिक बाज़ारों के लिए एक फोटो सूची",
+  "items": [
+   [
+    "सामने",
+    "साफ़ पृष्ठभूमि पर मुख्य छवि"
+   ],
+   [
+    "पीछे",
+    "पीछे का विवरण, पोर्ट और लेबल"
+   ],
+   [
+    "ओर",
+    "गहराई और मोटाई"
+   ],
+   [
+    "विवरण",
+    "सामग्री और सिलाई का पास से चित्र"
+   ],
+   [
+    "शीर्ष",
+    "उत्पाद का ऊपर से नीचे का दृश्य"
+   ],
+   [
+    "लेबल",
+    "बारकोड, आकार या घटक लेबल"
+   ],
+   [
+    "जीवन शैली",
+    "पैमाने के लिए उपयोग में आने वाला उत्पाद"
+   ]
+  ],
+  "alt": "ई-कॉमर्स लिस्टिंग के लिए सात उत्पाद फोटो कोणों की चेकलिस्ट: फ्रंट, बैक, साइड, डिटेल, टॉप, लेबल और लाइफस्टाइल, photoZseo iPhone टेम्पलेट कैमरा के साथ",
+  "caption": "सात उत्पाद फोटो एंगल बाज़ार अक्सर मांगते हैं।"
+ },
+ "product-photo-angles-checklist|fa": {
+  "foot": "دوربین الگو در برنامه photoZseo iPhone",
+  "type": "cards",
+  "title": "7 زاویه عکس محصول که هر لیست نیاز دارد",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "یک لیست عکس برای Amazon، Etsy، eBay، Shopify و بیش از 40 بازار دیگر",
+  "items": [
+   [
+    "جلو",
+    "تصویر اصلی در پس زمینه تمیز"
+   ],
+   [
+    "برگشت",
+    "جزئیات عقب، پورت ها و برچسب ها"
+   ],
+   [
+    "سمت",
+    "عمق و ضخامت"
+   ],
+   [
+    "جزئیات",
+    "نمای نزدیک از مواد و دوخت"
+   ],
+   [
+    "بالا",
+    "نمای بالا به پایین محصول"
+   ],
+   [
+    "برچسب بزنید",
+    "بارکد، اندازه یا برچسب مواد تشکیل دهنده"
+   ],
+   [
+    "سبک زندگی",
+    "محصول در حال استفاده، برای مقیاس"
+   ]
+  ],
+  "alt": "چک لیست هفت زاویه عکس محصول برای لیست های تجارت الکترونیک: جلو، پشت، کنار، جزئیات، بالا، برچسب و سبک زندگی، با دوربین قالب photoZseo iPhone",
+  "caption": "هفت زوایای عکس محصول که بازارها بیشتر درخواست می کنند."
+ },
+ "product-photo-angles-checklist|ur": {
+  "foot": "photoZseo iPhone ایپ میں ٹیمپلیٹ کیمرہ",
+  "type": "cards",
+  "title": "7 مصنوعات کی تصویر کے زاویے ہر فہرست کی ضرورت ہے۔",
+  "shot": {
+   "file": "slot-02.png"
+  },
+  "subtitle": "Amazon، Etsy، eBay، Shopify اور 40+ مزید بازاروں کے لیے ایک تصویری فہرست",
+  "items": [
+   [
+    "سامنے والا",
+    "صاف پس منظر پر مرکزی تصویر"
+   ],
+   [
+    "پیچھے",
+    "پیچھے کی تفصیلات، بندرگاہیں اور لیبل"
+   ],
+   [
+    "طرف",
+    "گہرائی اور موٹائی"
+   ],
+   [
+    "تفصیل",
+    "مواد اور سلائی کا کلوز اپ"
+   ],
+   [
+    "اوپر",
+    "پروڈکٹ کا اوپر سے نیچے کا منظر"
+   ],
+   [
+    "لیبل",
+    "بارکوڈ، سائز یا اجزاء کا لیبل"
+   ],
+   [
+    "طرز زندگی",
+    "پیمانے کے لیے استعمال میں آنے والی پروڈکٹ"
+   ]
+  ],
+  "alt": "ای کامرس کی فہرستوں کے لیے سات پروڈکٹ تصویری زاویوں کی چیک لسٹ: سامنے، پیچھے، سائیڈ، تفصیل، اوپر، لیبل اور طرز زندگی، photoZseo iPhone ٹیمپلیٹ کیمرے کے ساتھ",
+  "caption": "سات پروڈکٹ فوٹو اینگلز مارکیٹ پلیس اکثر مانگتے ہیں۔"
+ },
+ "seo-product-photo-file-name-formula|tr": {
+  "foot": "photoZseo iPhone uygulamasında SEO dosya adları ve alternatif metin",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "Ürün fotoğrafları için SEO dosya adı formülü",
+  "subtitle": "Resimde ne olduğunu basit kelimelerle açıklayın",
+  "parts": [
+   "marka",
+   "ürün",
+   "boyut",
+   "görüş"
+  ],
+  "good_label": "İyi",
+  "bad_label": "Kaçınmak",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Yalnızca küçük harfler",
+   "Boşluk yerine kısa çizgi",
+   "Üç ila altı tanımlayıcı kelime",
+   "Görünümü ekleyin: ön, arka, detay"
+  ],
+  "alt": "Ürün fotoğrafları için SEO dosya adı formülü: marka, ürün, boyut ve görünüm, iyi bir örnek, kötü bir örnek ve dosya adını ve alternatif metni gösteren photoZseo iPhone uygulaması ekran görüntüsü",
+  "caption": "Ürün fotoğrafları için basit bir dosya adı formülü: marka, ürün, boyut, görünüm."
+ },
+ "seo-product-photo-file-name-formula|de": {
+  "foot": "SEO-Dateinamen und Alternativtext in der photoZseo iPhone-App",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "SEO-Dateinamenformel für Produktfotos",
+  "subtitle": "Beschreiben Sie in einfachen Worten, was auf dem Bild zu sehen ist",
+  "parts": [
+   "Marke",
+   "Produkt",
+   "Größe",
+   "Sicht"
+  ],
+  "good_label": "Gut",
+  "bad_label": "Vermeiden",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Nur Kleinbuchstaben",
+   "Bindestriche statt Leerzeichen",
+   "Drei bis sechs beschreibende Wörter",
+   "Fügen Sie die Ansicht hinzu: vorne, hinten, Detail"
+  ],
+  "alt": "SEO-Dateinamenformel für Produktfotos: Marke, Produkt, Größe und Ansicht, mit einem guten Beispiel, einem schlechten Beispiel und einem photoZseo iPhone-App-Screenshot mit Dateiname und Alternativtext",
+  "caption": "Eine einfache Dateinamenformel für Produktfotos: Marke, Produkt, Größe, Ansicht."
+ },
+ "seo-product-photo-file-name-formula|es": {
+  "foot": "Nombres de archivos SEO y texto alternativo en la aplicación photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "Fórmula de nombre de archivo SEO para fotografías de productos",
+  "subtitle": "Describe lo que hay en la imagen, en palabras sencillas.",
+  "parts": [
+   "marca",
+   "producto",
+   "tamaño",
+   "vista"
+  ],
+  "good_label": "Bien",
+  "bad_label": "Evitar",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Sólo letras minúsculas",
+   "Guiones en lugar de espacios",
+   "De tres a seis palabras descriptivas",
+   "Añade la vista: frontal, trasera, detalle."
+  ],
+  "alt": "Fórmula de nombre de archivo SEO para fotografías de productos: marca, producto, tamaño y vista, con un buen ejemplo, un mal ejemplo y una captura de pantalla de la aplicación photoZseo iPhone que muestra el nombre del archivo y el texto alternativo.",
+  "caption": "Una fórmula simple de nombre de archivo para fotografías de productos: marca, producto, tamaño, vista."
+ },
+ "seo-product-photo-file-name-formula|fr": {
+  "foot": "Noms de fichiers SEO et texte alternatif dans l'application photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "Formule de nom de fichier SEO pour les photos de produits",
+  "subtitle": "Décrivez ce qu'il y a dans l'image, avec des mots simples",
+  "parts": [
+   "marque",
+   "produit",
+   "taille",
+   "voir"
+  ],
+  "good_label": "Bien",
+  "bad_label": "Éviter",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Lettres minuscules uniquement",
+   "Des traits d'union au lieu d'espaces",
+   "Trois à six mots descriptifs",
+   "Ajouter la vue : recto, verso, détail"
+  ],
+  "alt": "Formule de nom de fichier SEO pour les photos de produits : marque, produit, taille et vue, avec un bon exemple, un mauvais exemple et une capture d'écran de l'application photoZseo iPhone montrant le nom du fichier et le texte alternatif",
+  "caption": "Une formule simple de nom de fichier pour les photos de produits : marque, produit, taille, vue."
+ },
+ "seo-product-photo-file-name-formula|it": {
+  "foot": "Nomi dei file SEO e testo alternativo nell'app photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "Formula del nome file SEO per le foto dei prodotti",
+  "subtitle": "Descrivi cosa c'è nell'immagine, in parole semplici",
+  "parts": [
+   "marca",
+   "prodotto",
+   "misurare",
+   "visualizzazione"
+  ],
+  "good_label": "Bene",
+  "bad_label": "Evitare",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Solo lettere minuscole",
+   "Trattini invece di spazi",
+   "Da tre a sei parole descrittive",
+   "Aggiungi la vista: fronte, retro, dettaglio"
+  ],
+  "alt": "Formula del nome file SEO per le foto dei prodotti: marca, prodotto, dimensioni e vista, con un buon esempio, un cattivo esempio e uno screenshot dell'app photoZseo iPhone che mostra il nome del file e il testo alternativo",
+  "caption": "Una semplice formula per il nome del file per le foto dei prodotti: marca, prodotto, dimensione, vista."
+ },
+ "seo-product-photo-file-name-formula|pt": {
+  "foot": "Nomes de arquivos SEO e texto alternativo no aplicativo photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "Fórmula de nome de arquivo SEO para fotos de produtos",
+  "subtitle": "Descreva o que está na imagem, em palavras simples",
+  "parts": [
+   "marca",
+   "produto",
+   "tamanho",
+   "visualizar"
+  ],
+  "good_label": "Bom",
+  "bad_label": "Evitar",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Somente letras minúsculas",
+   "Hífens em vez de espaços",
+   "Três a seis palavras descritivas",
+   "Adicione a visualização: frente, verso, detalhe"
+  ],
+  "alt": "Fórmula de nome de arquivo SEO para fotos de produtos: marca, produto, tamanho e visualização, com um bom exemplo, um mau exemplo e uma captura de tela do aplicativo photoZseo iPhone mostrando o nome do arquivo e o texto alternativo",
+  "caption": "Uma fórmula simples de nome de arquivo para fotos de produtos: marca, produto, tamanho, visualização."
+ },
+ "seo-product-photo-file-name-formula|pl": {
+  "foot": "Nazwy plików SEO i tekst alternatywny w aplikacji photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "Formuła nazwy pliku SEO dla zdjęć produktów",
+  "subtitle": "Opisz prostymi słowami, co jest na obrazku",
+  "parts": [
+   "marka",
+   "produkt",
+   "rozmiar",
+   "pogląd"
+  ],
+  "good_label": "Dobry",
+  "bad_label": "Unikać",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "Tylko małe litery",
+   "Myślniki zamiast spacji",
+   "Trzy do sześciu słów opisowych",
+   "Dodaj widok: przód, tył, detal"
+  ],
+  "alt": "Formuła nazwy pliku SEO dla zdjęć produktów: marka, produkt, rozmiar i widok, z dobrym przykładem, złym przykładem i zrzutem ekranu aplikacji photoZseo iPhone pokazującym nazwę pliku i tekst alternatywny",
+  "caption": "Prosta formuła nazwy pliku dla zdjęć produktów: marka, produkt, rozmiar, widok."
+ },
+ "seo-product-photo-file-name-formula|ja": {
+  "foot": "photoZseo iPhone アプリの SEO ファイル名と代替テキスト",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "商品写真のSEOファイル名の計算式",
+  "subtitle": "画像に何が写っているのかをわかりやすい言葉で説明する",
+  "parts": [
+   "ブランド",
+   "製品",
+   "サイズ",
+   "ビュー"
+  ],
+  "good_label": "良い",
+  "bad_label": "避ける",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "小文字のみ",
+   "スペースの代わりにハイフン",
+   "3 ～ 6 個の説明的な単語",
+   "ビューを追加: 正面、背面、詳細"
+  ],
+  "alt": "製品写真の SEO ファイル名の公式: ブランド、製品、サイズ、ビュー、良い例、悪い例、ファイル名と代替テキストを示す photoZseo iPhone アプリのスクリーンショット",
+  "caption": "製品写真の簡単なファイル名の公式: ブランド、製品、サイズ、ビュー。"
+ },
+ "seo-product-photo-file-name-formula|ko": {
+  "foot": "photoZseo iPhone 앱의 SEO 파일 이름 및 대체 텍스트",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "제품 사진의 SEO 파일명 공식",
+  "subtitle": "이미지에 있는 내용을 간단한 단어로 설명하세요.",
+  "parts": [
+   "상표",
+   "제품",
+   "크기",
+   "보다"
+  ],
+  "good_label": "좋은",
+  "bad_label": "피하다",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "소문자만 가능",
+   "공백 대신 하이픈",
+   "3~6개의 설명 단어",
+   "뷰 추가: 전면, 후면, 상세"
+  ],
+  "alt": "제품 사진의 SEO 파일 이름 공식: 브랜드, 제품, 크기 및 보기(좋은 예, 나쁜 예 및 파일 이름과 대체 텍스트를 보여주는 photoZseo iPhone 앱 스크린샷)",
+  "caption": "제품 사진의 간단한 파일 이름 공식: 브랜드, 제품, 크기, 보기."
+ },
+ "seo-product-photo-file-name-formula|zh": {
+  "foot": "photoZseo iPhone 应用程序中的 SEO 文件名和替代文本",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "产品照片的SEO文件名公式",
+  "subtitle": "用简单的语言描述图像中的内容",
+  "parts": [
+   "品牌",
+   "产品",
+   "尺寸",
+   "看法"
+  ],
+  "good_label": "好的",
+  "bad_label": "避免",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "仅限小写字母",
+   "用连字符代替空格",
+   "三到六个描述性词语",
+   "添加视图：正面、背面、细节"
+  ],
+  "alt": "产品照片的 SEO 文件名公式：品牌、产品、尺寸和视图，包含一个好示例、一个坏示例以及显示文件名和替代文本的 photoZseo iPhone 应用屏幕截图",
+  "caption": "产品照片的简单文件名公式：品牌、产品、尺寸、视图。"
+ },
+ "seo-product-photo-file-name-formula|ar": {
+  "foot": "أسماء ملفات SEO والنص البديل في تطبيق photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "صيغة اسم ملف SEO لصور المنتج",
+  "subtitle": "صف ما هو موجود في الصورة بكلمات واضحة",
+  "parts": [
+   "ماركة",
+   "منتج",
+   "مقاس",
+   "منظر"
+  ],
+  "good_label": "جيد",
+  "bad_label": "يتجنب",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "الحروف الصغيرة فقط",
+   "الواصلات بدلاً من المسافات",
+   "ثلاث إلى ست كلمات وصفية",
+   "أضف المنظر: أمامي، خلفي، تفاصيل"
+  ],
+  "alt": "صيغة اسم ملف SEO لصور المنتج: العلامة التجارية والمنتج والحجم والعرض، مع مثال جيد ومثال سيء ولقطة شاشة لتطبيق photoZseo iPhone تعرض اسم الملف والنص البديل",
+  "caption": "صيغة اسم ملف بسيطة لصور المنتج: العلامة التجارية، المنتج، الحجم، العرض."
+ },
+ "seo-product-photo-file-name-formula|hi": {
+  "foot": "photoZseo iPhone ऐप में SEO फ़ाइल नाम और वैकल्पिक टेक्स्ट",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "उत्पाद फ़ोटो के लिए SEO फ़ाइल नाम फ़ॉर्मूला",
+  "subtitle": "छवि में क्या है, इसका स्पष्ट शब्दों में वर्णन करें",
+  "parts": [
+   "ब्रांड",
+   "उत्पाद",
+   "आकार",
+   "देखना"
+  ],
+  "good_label": "अच्छा",
+  "bad_label": "टालना",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "केवल छोटे अक्षर",
+   "रिक्त स्थान के स्थान पर हाइफ़न",
+   "तीन से छह वर्णनात्मक शब्द",
+   "दृश्य जोड़ें: सामने, पीछे, विवरण"
+  ],
+  "alt": "उत्पाद फ़ोटो के लिए SEO फ़ाइल नाम फ़ॉर्मूला: ब्रांड, उत्पाद, आकार और दृश्य, एक अच्छे उदाहरण के साथ, एक ख़राब उदाहरण और एक photoZseo iPhone ऐप स्क्रीनशॉट जिसमें फ़ाइल नाम और वैकल्पिक टेक्स्ट दिखाया गया है",
+  "caption": "उत्पाद फ़ोटो के लिए एक सरल फ़ाइल नाम सूत्र: ब्रांड, उत्पाद, आकार, दृश्य।"
+ },
+ "seo-product-photo-file-name-formula|fa": {
+  "foot": "نام فایل های SEO و متن جایگزین در برنامه photoZseo iPhone",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "فرمول نام فایل SEO برای عکس محصول",
+  "subtitle": "آنچه در تصویر است را با کلمات ساده توصیف کنید",
+  "parts": [
+   "نام تجاری",
+   "محصول",
+   "اندازه",
+   "مشاهده کنید"
+  ],
+  "good_label": "خوب",
+  "bad_label": "اجتناب کنید",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "فقط حروف کوچک",
+   "خط فاصله به جای فاصله",
+   "سه تا شش کلمه توصیفی",
+   "نما را اضافه کنید: جلو، عقب، جزئیات"
+  ],
+  "alt": "فرمول نام فایل SEO برای عکس های محصول: نام تجاری، محصول، اندازه و نمای، با یک مثال خوب، یک مثال بد و یک اسکرین شات برنامه photoZseo iPhone که نام فایل و متن جایگزین را نشان می دهد.",
+  "caption": "فرمول ساده نام فایل برای عکس های محصول: نام تجاری، محصول، اندازه، نمای."
+ },
+ "seo-product-photo-file-name-formula|ur": {
+  "foot": "photoZseo iPhone ایپ میں SEO فائل کے نام اور Alt متن",
+  "type": "formula",
+  "shot": {
+   "file": "slot-07.png"
+  },
+  "title": "مصنوعات کی تصاویر کے لیے SEO فائل کا نام فارمولا",
+  "subtitle": "واضح الفاظ میں تصویر میں کیا ہے بیان کریں۔",
+  "parts": [
+   "برانڈ",
+   "مصنوعات",
+   "سائز",
+   "دیکھیں"
+  ],
+  "good_label": "اچھا",
+  "bad_label": "اجتناب کریں۔",
+  "good": "nordvik-steel-water-bottle-750ml-front.jpg",
+  "bad": "IMG_4032.jpg",
+  "tips": [
+   "صرف چھوٹے حروف",
+   "خالی جگہوں کے بجائے ہائفنز",
+   "تین سے چھ وضاحتی الفاظ",
+   "منظر شامل کریں: سامنے، پیچھے، تفصیل"
+  ],
+  "alt": "پروڈکٹ فوٹوز کے لیے SEO فائل کا نام فارمولا: برانڈ، پروڈکٹ، سائز اور ویو، اچھی مثال کے ساتھ، ایک بری مثال اور photoZseo iPhone ایپ اسکرین شاٹ جس میں فائل کا نام اور Alt ٹیکسٹ دکھایا گیا ہے",
+  "caption": "پروڈکٹ کی تصاویر کے لیے ایک سادہ فائل نام کا فارمولا: برانڈ، پروڈکٹ، سائز، ویو۔"
+ },
+ "product-listing-optimization-checklist|tr": {
+  "foot": "photoZseo iPhone uygulamasındaki SEO alanları",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Ürün listeleme optimizasyonu kontrol listesi",
+  "subtitle": "Bu sırayla düzeltilmesi gereken dört şey",
+  "cols": [
+   [
+    "Başlık",
+    [
+     "Önce ana anahtar kelime",
+     "Marka, model ve temel özellik",
+     "Promosyon metni veya fiyat yok"
+    ]
+   ],
+   [
+    "Görseller",
+    [
+     "Ana resmi temizle",
+     "Dört veya daha fazla açı",
+     "Her kanalın kurallarına göre boyutlandırılmıştır"
+    ]
+   ],
+   [
+    "Nitelikler",
+    [
+     "Gerekli her alanı doldurun",
+     "Boyut, renk ve malzeme",
+     "Başlık ve fotoğrafları eşleştir"
+    ]
+   ],
+   [
+    "Tanım",
+    [
+     "Alıcı sorularını yanıtlayın",
+     "Kısa listelerdeki özellikler",
+     "Durum hakkında dürüst olun"
+    ]
+   ]
+  ],
+  "alt": "photoZseo iPhone SEO alanları ekranının yanında başlık, görseller, özellikler ve açıklamayı kapsayan ürün listeleme optimizasyon kontrol listesi",
+  "caption": "Dört bölümlü ürün listeleme optimizasyonu kontrol listesi: başlık, resimler, özellikler ve açıklama."
+ },
+ "product-listing-optimization-checklist|de": {
+  "foot": "SEO-Felder in der photoZseo iPhone-App",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Checkliste zur Optimierung der Produktauflistung",
+  "subtitle": "Vier Dinge, die behoben werden müssen, in dieser Reihenfolge",
+  "cols": [
+   [
+    "Titel",
+    [
+     "Hauptschlüsselwort zuerst",
+     "Marke, Modell und Schlüsselattribut",
+     "Kein Werbetext oder Preise"
+    ]
+   ],
+   [
+    "Bilder",
+    [
+     "Hauptbild reinigen",
+     "Vier oder mehr Winkel",
+     "Angepasst an die Regeln jedes Kanals"
+    ]
+   ],
+   [
+    "Attribute",
+    [
+     "Füllen Sie alle erforderlichen Felder aus",
+     "Größe, Farbe und Material",
+     "Passen Sie Titel und Fotos an"
+    ]
+   ],
+   [
+    "Beschreibung",
+    [
+     "Beantworten Sie Käuferfragen",
+     "Spezifikationen in kurzen Listen",
+     "Seien Sie ehrlich über den Zustand"
+    ]
+   ]
+  ],
+  "alt": "Checkliste zur Produktlistenoptimierung mit Titel, Bildern, Attributen und Beschreibung, neben dem Bildschirm „SEO-Felder“ photoZseo iPhone",
+  "caption": "Eine vierteilige Checkliste zur Optimierung von Produktlisten: Titel, Bilder, Attribute und Beschreibung."
+ },
+ "product-listing-optimization-checklist|es": {
+  "foot": "Campos de SEO en la aplicación photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Lista de verificación de optimización del listado de productos",
+  "subtitle": "Cuatro cosas que arreglar, en este orden",
+  "cols": [
+   [
+    "Título",
+    [
+     "Palabra clave principal primero",
+     "Marca, modelo y atributo clave.",
+     "Sin texto promocional ni precios"
+    ]
+   ],
+   [
+    "Imágenes",
+    [
+     "Limpiar imagen principal",
+     "Cuatro o más ángulos",
+     "Dimensionado según las reglas de cada canal."
+    ]
+   ],
+   [
+    "Atributos",
+    [
+     "Complete todos los campos requeridos",
+     "Tamaño, color y material.",
+     "Título y fotos coincidentes."
+    ]
+   ],
+   [
+    "Descripción",
+    [
+     "Responder preguntas del comprador",
+     "Especificaciones en listas cortas",
+     "Sea honesto acerca de la condición"
+    ]
+   ]
+  ],
+  "alt": "Lista de verificación de optimización del listado de productos que cubre título, imágenes, atributos y descripción, junto a la pantalla de campos SEO photoZseo iPhone",
+  "caption": "Una lista de verificación de optimización de listado de productos de cuatro partes: título, imágenes, atributos y descripción."
+ },
+ "product-listing-optimization-checklist|fr": {
+  "foot": "Champs SEO dans l'application photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Liste de contrôle pour l'optimisation des listes de produits",
+  "subtitle": "Quatre choses à corriger, dans cet ordre",
+  "cols": [
+   [
+    "Titre",
+    [
+     "Mot-clé principal en premier",
+     "Marque, modèle et attribut clé",
+     "Pas de texte promotionnel ni de prix"
+    ]
+   ],
+   [
+    "Images",
+    [
+     "Nettoyer l'image principale",
+     "Quatre angles ou plus",
+     "Adapté aux règles de chaque chaîne"
+    ]
+   ],
+   [
+    "Attributs",
+    [
+     "Remplissez tous les champs obligatoires",
+     "Taille, couleur et matière",
+     "Faire correspondre le titre et les photos"
+    ]
+   ],
+   [
+    "Description",
+    [
+     "Répondre aux questions des acheteurs",
+     "Spécifications dans les listes restreintes",
+     "Soyez honnête sur l'état"
+    ]
+   ]
+  ],
+  "alt": "Liste de contrôle d'optimisation de la liste de produits couvrant le titre, les images, les attributs et la description, à côté de l'écran des champs SEO photoZseo iPhone",
+  "caption": "Une liste de contrôle d'optimisation de la liste de produits en quatre parties : titre, images, attributs et description."
+ },
+ "product-listing-optimization-checklist|it": {
+  "foot": "Campi SEO nell'app photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Elenco di controllo per l'ottimizzazione dell'elenco dei prodotti",
+  "subtitle": "Quattro cose da sistemare, in questo ordine",
+  "cols": [
+   [
+    "Titolo",
+    [
+     "Prima la parola chiave principale",
+     "Marca, modello e attributo chiave",
+     "Nessun testo promozionale o prezzi"
+    ]
+   ],
+   [
+    "Immagini",
+    [
+     "Pulisci l'immagine principale",
+     "Quattro o più angoli",
+     "Dimensionato in base alle regole di ciascun canale"
+    ]
+   ],
+   [
+    "Attributi",
+    [
+     "Compila ogni campo obbligatorio",
+     "Dimensioni, colore e materiale",
+     "Abbina titolo e foto"
+    ]
+   ],
+   [
+    "Descrizione",
+    [
+     "Rispondi alle domande dell'acquirente",
+     "Specifiche in brevi elenchi",
+     "Sii onesto riguardo alle condizioni"
+    ]
+   ]
+  ],
+  "alt": "Elenco di controllo per l'ottimizzazione dell'elenco dei prodotti che comprende titolo, immagini, attributi e descrizione, accanto alla schermata dei campi SEO photoZseo iPhone",
+  "caption": "Una lista di controllo per l'ottimizzazione dell'elenco dei prodotti in quattro parti: titolo, immagini, attributi e descrizione."
+ },
+ "product-listing-optimization-checklist|pt": {
+  "foot": "Campos de SEO no aplicativo photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Lista de verificação de otimização da lista de produtos",
+  "subtitle": "Quatro coisas para consertar, nesta ordem",
+  "cols": [
+   [
+    "Título",
+    [
+     "Palavra-chave principal primeiro",
+     "Marca, modelo e atributo principal",
+     "Nenhum texto promocional ou preços"
+    ]
+   ],
+   [
+    "Imagens",
+    [
+     "Limpar imagem principal",
+     "Quatro ou mais ângulos",
+     "Dimensionado de acordo com as regras de cada canal"
+    ]
+   ],
+   [
+    "Atributos",
+    [
+     "Preencha todos os campos obrigatórios",
+     "Tamanho, cor e material",
+     "Combine o título e as fotos"
+    ]
+   ],
+   [
+    "Descrição",
+    [
+     "Responda às perguntas do comprador",
+     "Especificações em listas curtas",
+     "Seja honesto sobre a condição"
+    ]
+   ]
+  ],
+  "alt": "Lista de verificação de otimização da lista de produtos cobrindo título, imagens, atributos e descrição, ao lado da tela de campos SEO photoZseo iPhone",
+  "caption": "Uma lista de verificação de otimização da lista de produtos em quatro partes: título, imagens, atributos e descrição."
+ },
+ "product-listing-optimization-checklist|pl": {
+  "foot": "Pola SEO w aplikacji photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "Lista kontrolna optymalizacji listy produktów",
+  "subtitle": "Cztery rzeczy do naprawienia, w tej kolejności",
+  "cols": [
+   [
+    "Tytuł",
+    [
+     "Najpierw główne słowo kluczowe",
+     "Marka, model i kluczowy atrybut",
+     "Brak tekstów promocyjnych i cen"
+    ]
+   ],
+   [
+    "Obrazy",
+    [
+     "Wyczyść główny obraz",
+     "Cztery lub więcej kątów",
+     "Rozmiar dostosowany do zasad każdego kanału"
+    ]
+   ],
+   [
+    "Atrybuty",
+    [
+     "Wypełnij każde wymagane pole",
+     "Rozmiar, kolor i materiał",
+     "Dopasuj tytuł i zdjęcia"
+    ]
+   ],
+   [
+    "Opis",
+    [
+     "Odpowiedz na pytania kupującego",
+     "Specyfikacje w krótkich listach",
+     "Bądź szczery co do stanu"
+    ]
+   ]
+  ],
+  "alt": "Lista kontrolna optymalizacji listy produktów obejmująca tytuł, obrazy, atrybuty i opis, obok ekranu pól SEO photoZseo iPhone",
+  "caption": "Czteroczęściowa lista kontrolna optymalizacji listy produktów: tytuł, obrazy, atrybuty i opis."
+ },
+ "product-listing-optimization-checklist|ja": {
+  "foot": "photoZseo iPhone アプリの SEO フィールド",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "商品リストの最適化チェックリスト",
+  "subtitle": "修正すべき 4 つの点をこの順序で",
+  "cols": [
+   [
+    "タイトル",
+    [
+     "まずはメインキーワード",
+     "ブランド、モデル、および主要な属性",
+     "プロモーションテキストや価格はありません"
+    ]
+   ],
+   [
+    "画像",
+    [
+     "きれいなメイン画像",
+     "4 つの角度以上",
+     "各チャンネルのルールに合わせたサイズ設定"
+    ]
+   ],
+   [
+    "属性",
+    [
+     "すべての必須フィールドに入力します",
+     "サイズ、色、素材",
+     "タイトルと写真を一致させる"
+    ]
+   ],
+   [
+    "説明",
+    [
+     "購入者の質問に答える",
+     "短いリストの仕様",
+     "状態については正直に言う"
+    ]
+   ]
+  ],
+  "alt": "photoZseo iPhone SEO フィールド画面の横にある、タイトル、画像、属性、説明を含む商品リスト最適化チェックリスト",
+  "caption": "商品リスト最適化チェックリストは、タイトル、画像、属性、説明の 4 つの部分から構成されています。"
+ },
+ "product-listing-optimization-checklist|ko": {
+  "foot": "photoZseo iPhone 앱의 SEO 필드",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "제품 목록 최적화 체크리스트",
+  "subtitle": "수정해야 할 네 가지 항목(순서대로)",
+  "cols": [
+   [
+    "제목",
+    [
+     "주요 키워드 먼저",
+     "브랜드, 모델 및 주요 속성",
+     "프로모션 텍스트나 가격이 없습니다."
+    ]
+   ],
+   [
+    "이미지",
+    [
+     "깔끔한 메인 이미지",
+     "4개 이상의 각도",
+     "각 채널의 규칙에 맞게 크기 조정"
+    ]
+   ],
+   [
+    "속성",
+    [
+     "모든 필수 필드를 작성하세요",
+     "사이즈, 색상, 소재",
+     "제목 및 사진 일치"
+    ]
+   ],
+   [
+    "설명",
+    [
+     "구매자 질문에 답변",
+     "짧은 목록의 사양",
+     "상태에 대해 솔직하게 말하라"
+    ]
+   ]
+  ],
+  "alt": "photoZseo iPhone SEO 필드 화면 옆에 있는 제목, 이미지, 속성 및 설명을 다루는 제품 목록 최적화 체크리스트",
+  "caption": "제목, 이미지, 속성, 설명의 네 부분으로 구성된 제품 목록 최적화 체크리스트입니다."
+ },
+ "product-listing-optimization-checklist|zh": {
+  "foot": "photoZseo iPhone 应用程序中的 SEO 字段",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "产品列表优化清单",
+  "subtitle": "按此顺序需要解决四件事",
+  "cols": [
+   [
+    "标题",
+    [
+     "主关键词优先",
+     "品牌、型号和关键属性",
+     "没有促销文字或价格"
+    ]
+   ],
+   [
+    "图片",
+    [
+     "干净的主图",
+     "四个或更多角度",
+     "根据每个渠道的规则调整大小"
+    ]
+   ],
+   [
+    "属性",
+    [
+     "填写每个必填字段",
+     "尺寸、颜色和材质",
+     "匹配标题和照片"
+    ]
+   ],
+   [
+    "描述",
+    [
+     "解答买家问题",
+     "简短列表中的规格",
+     "诚实地描述病情"
+    ]
+   ]
+  ],
+  "alt": "产品列表优化清单，涵盖标题、图像、属性和描述，位于 photoZseo iPhone SEO 字段屏幕旁边",
+  "caption": "由四部分组成的产品列表优化清单：标题、图像、属性和描述。"
+ },
+ "product-listing-optimization-checklist|ar": {
+  "foot": "حقول تحسين محركات البحث (SEO) في تطبيق photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "قائمة التحقق من تحسين قائمة المنتجات",
+  "subtitle": "أربعة أشياء يجب إصلاحها، بهذا الترتيب",
+  "cols": [
+   [
+    "عنوان",
+    [
+     "الكلمة الرئيسية أولاً",
+     "العلامة التجارية والنموذج والسمة الرئيسية",
+     "لا يوجد نص ترويجي أو أسعار"
+    ]
+   ],
+   [
+    "الصور",
+    [
+     "الصورة الرئيسية نظيفة",
+     "أربع زوايا أو أكثر",
+     "الحجم وفقًا لقواعد كل قناة"
+    ]
+   ],
+   [
+    "صفات",
+    [
+     "املأ كل حقل مطلوب",
+     "الحجم واللون والمواد",
+     "تطابق العنوان والصور"
+    ]
+   ],
+   [
+    "وصف",
+    [
+     "الإجابة على أسئلة المشتري",
+     "المواصفات في قوائم قصيرة",
+     "كن صادقا بشأن الحالة"
+    ]
+   ]
+  ],
+  "alt": "قائمة التحقق من تحسين قائمة المنتجات التي تغطي العنوان والصور والسمات والوصف، بجوار شاشة حقول photoZseo iPhone SEO",
+  "caption": "قائمة مرجعية لتحسين قائمة المنتجات مكونة من أربعة أجزاء: العنوان والصور والسمات والوصف."
+ },
+ "product-listing-optimization-checklist|hi": {
+  "foot": "photoZseo iPhone ऐप में SEO फ़ील्ड",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "उत्पाद सूचीकरण अनुकूलन चेकलिस्ट",
+  "subtitle": "इस क्रम में चार चीजें ठीक करनी होंगी",
+  "cols": [
+   [
+    "शीर्षक",
+    [
+     "मुख्य कीवर्ड पहले",
+     "ब्रांड, मॉडल और मुख्य विशेषता",
+     "कोई प्रोमो टेक्स्ट या कीमतें नहीं"
+    ]
+   ],
+   [
+    "इमेजिस",
+    [
+     "मुख्य छवि साफ़ करें",
+     "चार या अधिक कोण",
+     "प्रत्येक चैनल के नियमों के अनुसार आकार"
+    ]
+   ],
+   [
+    "गुण",
+    [
+     "प्रत्येक आवश्यक फ़ील्ड भरें",
+     "आकार, रंग और सामग्री",
+     "शीर्षक और फ़ोटो का मिलान करें"
+    ]
+   ],
+   [
+    "विवरण",
+    [
+     "खरीदार के प्रश्नों का उत्तर दें",
+     "छोटी सूचियों में विवरण",
+     "स्थिति के प्रति ईमानदार रहें"
+    ]
+   ]
+  ],
+  "alt": "photoZseo iPhone SEO फ़ील्ड स्क्रीन के बगल में शीर्षक, चित्र, विशेषताएँ और विवरण को कवर करने वाली उत्पाद सूची अनुकूलन चेकलिस्ट",
+  "caption": "चार-भाग वाली उत्पाद सूची अनुकूलन चेकलिस्ट: शीर्षक, चित्र, विशेषताएँ और विवरण।"
+ },
+ "product-listing-optimization-checklist|fa": {
+  "foot": "زمینه های SEO در برنامه photoZseo iPhone",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "چک لیست بهینه سازی فهرست محصولات",
+  "subtitle": "به این ترتیب، چهار چیز باید اصلاح شود",
+  "cols": [
+   [
+    "عنوان",
+    [
+     "ابتدا کلمه کلیدی اصلی",
+     "نام تجاری، مدل و ویژگی کلیدی",
+     "بدون متن تبلیغاتی یا قیمت"
+    ]
+   ],
+   [
+    "تصاویر",
+    [
+     "تصویر اصلی را تمیز کنید",
+     "چهار یا چند زاویه",
+     "اندازه قوانین هر کانال"
+    ]
+   ],
+   [
+    "صفات",
+    [
+     "هر فیلد مورد نیاز را پر کنید",
+     "اندازه، رنگ و جنس",
+     "عنوان و عکس ها را مطابقت دهید"
+    ]
+   ],
+   [
+    "توضیحات",
+    [
+     "به سوالات خریدار پاسخ دهید",
+     "مشخصات در لیست های کوتاه",
+     "در مورد شرایط صادق باشید"
+    ]
+   ]
+  ],
+  "alt": "چک لیست بهینه سازی فهرست محصولات شامل عنوان، تصاویر، ویژگی ها و توضیحات، در کنار صفحه فیلدهای SEO photoZseo iPhone",
+  "caption": "چک لیست چهار قسمتی بهینه سازی فهرست محصولات: عنوان، تصاویر، ویژگی ها و توضیحات."
+ },
+ "product-listing-optimization-checklist|ur": {
+  "foot": "photoZseo iPhone ایپ میں SEO فیلڈز",
+  "type": "columns",
+  "shot": {
+   "file": "slot-03.png"
+  },
+  "title": "پروڈکٹ لسٹنگ آپٹیمائزیشن چیک لسٹ",
+  "subtitle": "اس ترتیب میں چار چیزوں کو ٹھیک کرنا ہے۔",
+  "cols": [
+   [
+    "عنوان",
+    [
+     "مین کلیدی لفظ پہلے",
+     "برانڈ، ماڈل اور کلیدی وصف",
+     "کوئی پرومو ٹیکسٹ یا قیمتیں نہیں۔"
+    ]
+   ],
+   [
+    "امیجز",
+    [
+     "مرکزی تصویر کو صاف کریں۔",
+     "چار یا زیادہ زاویہ",
+     "ہر چینل کے قواعد کے مطابق سائز"
+    ]
+   ],
+   [
+    "صفات",
+    [
+     "ہر مطلوبہ فیلڈ کو بھریں۔",
+     "سائز، رنگ اور مواد",
+     "مماثل عنوان اور تصاویر"
+    ]
+   ],
+   [
+    "تفصیل",
+    [
+     "خریدار کے سوالات کے جوابات دیں۔",
+     "مختصر فہرستوں میں تفصیلات",
+     "حالت کے بارے میں ایماندار رہو"
+    ]
+   ]
+  ],
+  "alt": "photoZseo iPhone SEO فیلڈز اسکرین کے ساتھ، عنوان، تصاویر، اوصاف اور تفصیل کا احاطہ کرنے والی مصنوعات کی فہرست سازی کی اصلاح کی فہرست",
+  "caption": "چار حصوں پر مشتمل مصنوعات کی فہرست سازی کی اصلاح کی فہرست: عنوان، تصاویر، صفات اور تفصیل۔"
+ },
+ "bulk-product-listing-workflow|tr": {
+  "foot": "photoZseo iPhone uygulamasından 46 pazaryerine ihracat yapın",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Toplu ürün listeleme iş akışı",
+  "subtitle": "Tek bir ana fotoğraftan birçok pazar yerine",
+  "steps": [
+   "Bir kez fotoğrafla",
+   "Kanal başına yeniden boyutlandırın ve sıkıştırın",
+   "SEO dosya adlarıyla yeniden adlandırın",
+   "CSV veya XLSX şablonunu dışa aktar",
+   "Hataları yükleyin ve düzeltin"
+  ],
+  "alt": "Beş adımlı toplu ürün listeleme iş akışı: photoZseo iPhone pazar seçiciyle bir kez fotoğraf çekin, kanal başına yeniden boyutlandırın, dosyaları yeniden adlandırın, CSV veya XLSX şablonunu dışa aktarın, hataları yükleyin ve düzeltin",
+  "caption": "Bir ana fotoğraftan pazar yeri yüklemelerine kadar toplu ürün listeleme iş akışı nasıl çalışır?"
+ },
+ "bulk-product-listing-workflow|de": {
+  "foot": "Exportieren Sie aus der photoZseo iPhone-App auf 46 Marktplätze",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Workflow zur Massenproduktauflistung",
+  "subtitle": "Von einem Masterfoto bis hin zu vielen Marktplätzen",
+  "steps": [
+   "Einmal fotografieren",
+   "Größe ändern und pro Kanal komprimieren",
+   "Mit SEO-Dateinamen umbenennen",
+   "Exportieren Sie eine CSV- oder XLSX-Vorlage",
+   "Fehler hochladen und beheben"
+  ],
+  "alt": "Fünfstufiger Arbeitsablauf für die Massenproduktauflistung: einmal fotografieren, Größe pro Kanal ändern, Dateien umbenennen, eine CSV- oder XLSX-Vorlage exportieren, Fehler hochladen und beheben, mit der Marktplatzauswahl photoZseo iPhone",
+  "caption": "Wie ein Massenproduktauflistungs-Workflow abläuft, von einem Masterfoto bis hin zu Marktplatz-Uploads."
+ },
+ "bulk-product-listing-workflow|es": {
+  "foot": "Exporte a 46 mercados desde la aplicación photoZseo iPhone",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Flujo de trabajo de listado de productos en masa",
+  "subtitle": "De una fotografía maestra a muchos mercados",
+  "steps": [
+   "Fotografiar una vez",
+   "Cambiar el tamaño y comprimir por canal",
+   "Cambiar el nombre con nombres de archivos SEO",
+   "Exportar plantilla CSV o XLSX",
+   "Subir y corregir errores"
+  ],
+  "alt": "Flujo de trabajo de listado de productos masivos de cinco pasos: fotografiar una vez, cambiar el tamaño por canal, cambiar el nombre de los archivos, exportar una plantilla CSV o XLSX, cargar y corregir errores, con el selector de mercado photoZseo iPhone",
+  "caption": "Cómo se ejecuta un flujo de trabajo de listado de productos en masa, desde una fotografía maestra hasta cargas en el mercado."
+ },
+ "bulk-product-listing-workflow|fr": {
+  "foot": "Exportez vers 46 places de marché depuis l'application photoZseo iPhone",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Flux de travail de liste de produits en masse",
+  "subtitle": "D'une photo principale à de nombreux marchés",
+  "steps": [
+   "Photographier une fois",
+   "Redimensionner et compresser par canal",
+   "Renommer avec les noms de fichiers SEO",
+   "Exporter un modèle CSV ou XLSX",
+   "Télécharger et corriger les erreurs"
+  ],
+  "alt": "Flux de travail de liste de produits en masse en cinq étapes : photographiez une fois, redimensionnez par canal, renommez des fichiers, exportez un modèle CSV ou XLSX, téléchargez et corrigez les erreurs, avec le sélecteur de marché photoZseo iPhone",
+  "caption": "Comment fonctionne un flux de travail de liste de produits en masse, depuis une photo principale jusqu'aux téléchargements sur la place de marché."
+ },
+ "bulk-product-listing-workflow|it": {
+  "foot": "Esporta in 46 marketplace dall'app photoZseo iPhone",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Flusso di lavoro dell'elenco di prodotti in blocco",
+  "subtitle": "Da una foto principale a molti mercati",
+  "steps": [
+   "Fotografa una volta",
+   "Ridimensiona e comprimi per canale",
+   "Rinomina con nomi di file SEO",
+   "Esporta modello CSV o XLSX",
+   "Carica e correggi gli errori"
+  ],
+  "alt": "Flusso di lavoro per l'elenco di prodotti in blocco in cinque passaggi: fotografa una volta, ridimensiona per canale, rinomina i file, esporta un modello CSV o XLSX, carica e correggi errori, con il selettore del marketplace photoZseo iPhone",
+  "caption": "Come viene eseguito il flusso di lavoro di un elenco di prodotti in blocco, da una foto principale ai caricamenti sul marketplace."
+ },
+ "bulk-product-listing-workflow|pt": {
+  "foot": "Exporte para 46 mercados a partir do aplicativo photoZseo iPhone",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Fluxo de trabalho de listagem de produtos em massa",
+  "subtitle": "De uma foto mestre a vários mercados",
+  "steps": [
+   "Fotografe uma vez",
+   "Redimensionar e compactar por canal",
+   "Renomear com nomes de arquivos SEO",
+   "Exportar modelo CSV ou XLSX",
+   "Carregar e corrigir erros"
+  ],
+  "alt": "Fluxo de trabalho de listagem de produtos em massa em cinco etapas: fotografar uma vez, redimensionar por canal, renomear arquivos, exportar um modelo CSV ou XLSX, fazer upload e corrigir erros, com o seletor de mercado photoZseo iPhone",
+  "caption": "Como funciona um fluxo de trabalho de listagem de produtos em massa, desde uma foto mestre até uploads no mercado."
+ },
+ "bulk-product-listing-workflow|pl": {
+  "foot": "Eksportuj do 46 rynków z aplikacji photoZseo iPhone",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "Przepływ pracy z masową listą produktów",
+  "subtitle": "Od jednego zdjęcia wzorcowego po wiele rynków",
+  "steps": [
+   "Zrób zdjęcie raz",
+   "Zmień rozmiar i kompresję na kanał",
+   "Zmień nazwę na nazwy plików SEO",
+   "Eksportuj szablon CSV lub XLSX",
+   "Prześlij i napraw błędy"
+  ],
+  "alt": "Pięcioetapowy przepływ zbiorczej listy produktów: jedno zdjęcie, zmiana rozmiaru dla każdego kanału, zmiana nazwy plików, eksport szablonu CSV lub XLSX, przesyłanie i naprawianie błędów za pomocą selektora rynkowego photoZseo iPhone",
+  "caption": "Jak przebiega przepływ zbiorczej listy produktów, od jednego zdjęcia głównego do przesłania na rynek."
+ },
+ "bulk-product-listing-workflow|ja": {
+  "foot": "photoZseo iPhone アプリから 46 のマーケットプレイスにエクスポート",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "一括商品リストのワークフロー",
+  "subtitle": "1 枚のマスター写真から多くのマーケットプレイスへ",
+  "steps": [
+   "1回写真を撮る",
+   "チャンネルごとのサイズ変更と圧縮",
+   "SEO ファイル名で名前を変更する",
+   "CSV または XLSX テンプレートをエクスポート",
+   "アップロードしてエラーを修正する"
+  ],
+  "alt": "5 段階の一括商品リスト ワークフロー: photoZseo iPhone マーケットプレイス ピッカーを使用した、一度の写真撮影、チャネルごとのサイズ変更、ファイル名の変更、CSV または XLSX テンプレートのエクスポート、アップロードとエラーの修正",
+  "caption": "1 枚のマスター写真からマーケットプレイスへのアップロードまで、一括商品リストのワークフローがどのように実行されるか。"
+ },
+ "bulk-product-listing-workflow|ko": {
+  "foot": "photoZseo iPhone 앱에서 46개 마켓플레이스로 내보내기",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "대량 제품 목록 작업 흐름",
+  "subtitle": "하나의 마스터 사진부터 여러 마켓플레이스까지",
+  "steps": [
+   "한 번 사진을 찍으세요",
+   "채널당 크기 조정 및 압축",
+   "SEO 파일 이름으로 이름 바꾸기",
+   "CSV 또는 XLSX 템플릿 내보내기",
+   "업로드 및 오류 수정"
+  ],
+  "alt": "5단계 대량 제품 목록 워크플로: photoZseo iPhone 마켓플레이스 선택기를 사용하여 사진 한 번 찍기, 채널당 크기 조정, 파일 이름 바꾸기, CSV 또는 XLSX 템플릿 내보내기, 오류 업로드 및 수정",
+  "caption": "하나의 마스터 사진부터 마켓플레이스 업로드까지 대량 제품 목록 작업 흐름이 실행되는 방식입니다."
+ },
+ "bulk-product-listing-workflow|zh": {
+  "foot": "从 photoZseo iPhone 应用程序导出到 46 个市场",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "批量产品列表工作流程",
+  "subtitle": "从一张主照片到多个市场",
+  "steps": [
+   "拍照一次",
+   "调整每个通道的大小和压缩",
+   "使用 SEO 文件名重命名",
+   "导出 CSV 或 XLSX 模板",
+   "上传并修复错误"
+  ],
+  "alt": "五步批量产品列表工作流程：使用 photoZseo iPhone 市场选择器拍摄一次、调整每个通道的大小、重命名文件、导出 CSV 或 XLSX 模板、上传并修复错误",
+  "caption": "批量产品列表工作流程如何运行，从一张主照片到市场上传。"
+ },
+ "bulk-product-listing-workflow|ar": {
+  "foot": "قم بالتصدير إلى 46 سوقًا من تطبيق photoZseo iPhone",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "سير عمل قائمة المنتجات المجمعة",
+  "subtitle": "من صورة رئيسية واحدة إلى العديد من الأسواق",
+  "steps": [
+   "تصوير مرة واحدة",
+   "تغيير الحجم والضغط لكل قناة",
+   "إعادة التسمية بأسماء ملفات SEO",
+   "تصدير قالب CSV أو XLSX",
+   "تحميل وإصلاح الأخطاء"
+  ],
+  "alt": "سير عمل قائمة المنتجات المجمعة المكونة من خمس خطوات: التقاط صورة مرة واحدة، وتغيير الحجم لكل قناة، وإعادة تسمية الملفات، وتصدير قالب CSV أو XLSX، وتحميل الأخطاء وإصلاحها، باستخدام منتقي السوق photoZseo iPhone",
+  "caption": "كيفية تشغيل سير عمل قائمة المنتجات المجمعة، بدءًا من صورة رئيسية واحدة وحتى تحميلات السوق."
+ },
+ "bulk-product-listing-workflow|hi": {
+  "foot": "photoZseo iPhone ऐप से 46 बाज़ारों में निर्यात करें",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "थोक उत्पाद सूचीकरण वर्कफ़्लो",
+  "subtitle": "एक मास्टर फ़ोटो से लेकर अनेक बाज़ार तक",
+  "steps": [
+   "एक बार फोटो खींचो",
+   "प्रति चैनल आकार बदलें और संपीड़ित करें",
+   "SEO फ़ाइल नामों के साथ नाम बदलें",
+   "CSV या XLSX टेम्पलेट निर्यात करें",
+   "अपलोड करें और त्रुटियाँ ठीक करें"
+  ],
+  "alt": "पाँच-चरणीय थोक उत्पाद सूचीकरण वर्कफ़्लो: एक बार फ़ोटोग्राफ़ लें, प्रति चैनल का आकार बदलें, फ़ाइलों का नाम बदलें, CSV या XLSX टेम्पलेट निर्यात करें, photoZseo iPhone मार्केटप्लेस पिकर के साथ त्रुटियों को अपलोड करें और ठीक करें।",
+  "caption": "एक मास्टर फोटो से लेकर मार्केटप्लेस अपलोड तक, थोक उत्पाद सूचीकरण वर्कफ़्लो कैसे चलता है।"
+ },
+ "bulk-product-listing-workflow|fa": {
+  "foot": "از برنامه photoZseo iPhone به 46 بازار صادر کنید",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "گردش کار فهرست انبوه محصولات",
+  "subtitle": "از یک عکس اصلی گرفته تا بسیاری از بازارها",
+  "steps": [
+   "یکبار عکس بگیرید",
+   "تغییر اندازه و فشرده سازی در هر کانال",
+   "تغییر نام با نام فایل SEO",
+   "قالب CSV یا XLSX را صادر کنید",
+   "آپلود و رفع خطاها"
+  ],
+  "alt": "گردش کار فهرست انبوه محصولات پنج مرحله ای: یک بار عکس بگیرید، اندازه هر کانال را تغییر دهید، نام فایل ها را تغییر دهید، یک قالب CSV یا XLSX صادر کنید، خطاها را آپلود و رفع کنید، با انتخابگر بازار photoZseo iPhone",
+  "caption": "نحوه اجرای گردش کار فهرست انبوه محصول، از یک عکس اصلی تا آپلود در بازار."
+ },
+ "bulk-product-listing-workflow|ur": {
+  "foot": "photoZseo iPhone ایپ سے 46 بازاروں میں برآمد کریں۔",
+  "type": "flow",
+  "shot": {
+   "file": "slot-01.png",
+   "crop": [
+    0,
+    270,
+    405,
+    880
+   ]
+  },
+  "title": "بلک پروڈکٹ لسٹنگ ورک فلو",
+  "subtitle": "ایک ماسٹر تصویر سے لے کر کئی بازاروں تک",
+  "steps": [
+   "ایک بار فوٹو",
+   "فی چینل کا سائز تبدیل کریں اور کمپریس کریں۔",
+   "SEO فائل کے ناموں کے ساتھ نام تبدیل کریں۔",
+   "CSV یا XLSX ٹیمپلیٹ برآمد کریں۔",
+   "اپ لوڈ کریں اور غلطیاں ٹھیک کریں۔"
+  ],
+  "alt": "پانچ قدمی بلک پروڈکٹ لسٹنگ ورک فلو: ایک بار تصویر بنائیں، فی چینل کا سائز تبدیل کریں، فائلوں کا نام تبدیل کریں، CSV یا XLSX ٹیمپلیٹ برآمد کریں، photoZseo iPhone مارکیٹ پلیس چننے والے کے ساتھ اپ لوڈ کریں اور غلطیوں کو ٹھیک کریں۔",
+  "caption": "بلک پروڈکٹ لسٹنگ ورک فلو کیسے چلتا ہے، ایک ماسٹر تصویر سے لے کر مارکیٹ پلیس اپ لوڈز تک۔"
+ },
+ "listing-rejection-reasons|tr": {
+  "foot": "Son doğrulama: Kasım 2026 · resmi yardım sayfalarından",
+  "type": "reasons",
+  "title": "Ürün listelemelerinin reddedilmesinin başlıca nedenleri",
+  "subtitle": "Bastırmaya neden olan görüntü ve veri sorunları",
+  "items": [
+   [
+    "Filigran veya logo",
+    "Fotoğraftaki kaplamalar"
+   ],
+   [
+    "Kenarlık veya metin eklendi",
+    "Çerçeveler, afişler ve tanıtım metni"
+   ],
+   [
+    "Beyaz olmayan ana resim",
+    "Amazon arka planı kontrol ediyor"
+   ],
+   [
+    "Fotoğraf çok küçük",
+    "Kanal minimumunun altında"
+   ],
+   [
+    "Stok fotoğraf, kullanılmış ürün",
+    "eBay gerçek fotoğraflar gerektirir"
+   ],
+   [
+    "Eksik özellikler",
+    "Zorunlu alanlar boş bırakıldı"
+   ]
+  ],
+  "alt": "Ürün listelemelerinin gizlenmesinin veya reddedilmesinin altı yaygın nedeni: filigranlar, eklenen kenarlıklar veya metinler, beyaz olmayan ana resimler, küçük fotoğraflar, kullanılmış öğelerin stok fotoğrafları ve eksik özellikler",
+  "caption": "Reddedilen veya gizlenen ürün listelemelerinin ardındaki en yaygın görüntü ve veri sorunları."
+ },
+ "listing-rejection-reasons|de": {
+  "foot": "Zuletzt überprüft: November 2026 · über offizielle Hilfeseiten",
+  "type": "reasons",
+  "title": "Die häufigsten Gründe, warum Produkteinträge abgelehnt werden",
+  "subtitle": "Bild- und Datenprobleme, die eine Unterdrückung verursachen",
+  "items": [
+   [
+    "Wasserzeichen oder Logo",
+    "Überlagerungen auf dem Foto"
+   ],
+   [
+    "Rahmen oder Text hinzugefügt",
+    "Rahmen, Banner und Werbetexte"
+   ],
+   [
+    "Nicht weißes Hauptbild",
+    "Amazon prüft den Hintergrund"
+   ],
+   [
+    "Foto zu klein",
+    "Unterhalb des Kanalminimums"
+   ],
+   [
+    "Stockfoto, gebrauchter Artikel",
+    "eBay erfordert echte Fotos"
+   ],
+   [
+    "Fehlende Attribute",
+    "Erforderliche Felder bleiben leer"
+   ]
+  ],
+  "alt": "Sechs häufige Gründe, warum Produkteinträge unterdrückt oder abgelehnt werden: Wasserzeichen, hinzugefügte Ränder oder Text, nicht weiße Hauptbilder, kleine Fotos, Archivfotos gebrauchter Artikel und fehlende Attribute",
+  "caption": "Die häufigsten Bild- und Datenprobleme hinter abgelehnten oder unterdrückten Produkteinträgen."
+ },
+ "listing-rejection-reasons|es": {
+  "foot": "Última verificación: noviembre de 2026 · de páginas de ayuda oficiales",
+  "type": "reasons",
+  "title": "Principales razones por las que se rechazan los listados de productos",
+  "subtitle": "Problemas de imagen y datos que causan supresión.",
+  "items": [
+   [
+    "Marca de agua o logotipo",
+    "Superposiciones en la foto."
+   ],
+   [
+    "Borde o texto agregado",
+    "Marcos, pancartas y textos promocionales."
+   ],
+   [
+    "Imagen principal no blanca",
+    "Amazon comprueba el fondo"
+   ],
+   [
+    "Foto demasiado pequeña",
+    "Por debajo del mínimo del canal"
+   ],
+   [
+    "Fotografía de archivo, artículo usado.",
+    "eBay requiere fotos reales"
+   ],
+   [
+    "Atributos faltantes",
+    "Los campos obligatorios se dejan vacíos"
+   ]
+  ],
+  "alt": "Seis razones comunes por las que se suprimen o rechazan los listados de productos: marcas de agua, bordes o texto añadidos, imágenes principales que no sean blancas, fotografías pequeñas, fotografías de archivo de artículos usados ​​y atributos faltantes.",
+  "caption": "Los problemas de imágenes y datos más comunes detrás de listados de productos rechazados o suprimidos."
+ },
+ "listing-rejection-reasons|fr": {
+  "foot": "Dernière vérification : novembre 2026 · à partir des pages d'aide officielles",
+  "type": "reasons",
+  "title": "Principales raisons pour lesquelles les listes de produits sont rejetées",
+  "subtitle": "Problèmes d’image et de données entraînant une suppression",
+  "items": [
+   [
+    "Filigrane ou logo",
+    "Superpositions sur la photo"
+   ],
+   [
+    "Bordure ou texte ajouté",
+    "Cadres, bannières et copie promotionnelle"
+   ],
+   [
+    "Image principale non blanche",
+    "Amazon vérifie l'arrière-plan"
+   ],
+   [
+    "Photo trop petite",
+    "En dessous du minimum du canal"
+   ],
+   [
+    "Photo de stock, article utilisé",
+    "eBay nécessite de vraies photos"
+   ],
+   [
+    "Attributs manquants",
+    "Champs obligatoires laissés vides"
+   ]
+  ],
+  "alt": "Six raisons courantes pour lesquelles les listes de produits sont supprimées ou rejetées : filigranes, bordures ou texte ajoutés, images principales non blanches, petites photos, photos d'archives d'articles utilisés et attributs manquants.",
+  "caption": "Les problèmes d'image et de données les plus courants derrière les listes de produits rejetées ou supprimées."
+ },
+ "listing-rejection-reasons|it": {
+  "foot": "Ultima verifica: novembre 2026 · dalle pagine di aiuto ufficiali",
+  "type": "reasons",
+  "title": "Principali motivi per cui le schede dei prodotti vengono rifiutate",
+  "subtitle": "Problemi di immagini e dati che causano la soppressione",
+  "items": [
+   [
+    "Filigrana o logo",
+    "Sovrapposizioni sulla foto"
+   ],
+   [
+    "Bordo o testo aggiunto",
+    "Cornici, banner e testi promozionali"
+   ],
+   [
+    "Immagine principale non bianca",
+    "Amazon controlla lo sfondo"
+   ],
+   [
+    "Foto troppo piccola",
+    "Sotto il minimo del canale"
+   ],
+   [
+    "Foto d'archivio, oggetto usato",
+    "eBay richiede foto reali"
+   ],
+   [
+    "Attributi mancanti",
+    "Campi obbligatori lasciati vuoti"
+   ]
+  ],
+  "alt": "Sei motivi comuni per cui le schede di prodotto vengono soppresse o rifiutate: filigrane, bordi o testo aggiunti, immagini principali non bianche, piccole foto, foto d'archivio di articoli usati e attributi mancanti",
+  "caption": "I problemi più comuni relativi a immagini e dati dietro le inserzioni di prodotti rifiutati o soppressi."
+ },
+ "listing-rejection-reasons|pt": {
+  "foot": "Última verificação: novembro de 2026 · nas páginas de ajuda oficiais",
+  "type": "reasons",
+  "title": "Principais motivos pelos quais as listagens de produtos são rejeitadas",
+  "subtitle": "Problemas de imagem e dados que causam supressão",
+  "items": [
+   [
+    "Marca d'água ou logotipo",
+    "Sobreposições na foto"
+   ],
+   [
+    "Borda ou texto adicionado",
+    "Molduras, banners e copy promocional"
+   ],
+   [
+    "Imagem principal não branca",
+    "Amazon verifica o plano de fundo"
+   ],
+   [
+    "Foto muito pequena",
+    "Abaixo do mínimo do canal"
+   ],
+   [
+    "Foto de estoque, item usado",
+    "eBay requer fotos reais"
+   ],
+   [
+    "Atributos ausentes",
+    "Campos obrigatórios deixados em branco"
+   ]
+  ],
+  "alt": "Seis motivos comuns pelos quais as listagens de produtos são suprimidas ou rejeitadas: marcas d'água, bordas ou texto adicionados, imagens principais não brancas, fotos pequenas, fotos de estoque de itens usados ​​e atributos ausentes",
+  "caption": "Os problemas mais comuns de imagem e dados por trás de listagens de produtos rejeitadas ou suprimidas."
+ },
+ "listing-rejection-reasons|pl": {
+  "foot": "Ostatnia weryfikacja: listopad 2026 · z oficjalnych stron pomocy",
+  "type": "reasons",
+  "title": "Najczęstsze powody, dla których listy produktów są odrzucane",
+  "subtitle": "Problemy z obrazem i danymi powodujące tłumienie",
+  "items": [
+   [
+    "Znak wodny lub logo",
+    "Nakładki na zdjęciu"
+   ],
+   [
+    "Dodano obramowanie lub tekst",
+    "Ramki, banery i kopia promocyjna"
+   ],
+   [
+    "Obraz główny inny niż biały",
+    "Amazon sprawdza tło"
+   ],
+   [
+    "Zdjęcie za małe",
+    "Poniżej minimum kanału"
+   ],
+   [
+    "Zdjęcie stockowe, przedmiot używany",
+    "eBay wymaga prawdziwych zdjęć"
+   ],
+   [
+    "Brakujące atrybuty",
+    "Wymagane pola pozostawiono puste"
+   ]
+  ],
+  "alt": "Sześć typowych powodów, dla których listy produktów są pomijane lub odrzucane: znaki wodne, dodane obramowania lub tekst, obrazy główne w kolorze innym niż biały, małe zdjęcia, zdjęcia stockowe używanych produktów i brakujące atrybuty",
+  "caption": "Najczęstsze problemy z obrazem i danymi związane z odrzuconymi lub ukrytymi listami produktów."
+ },
+ "listing-rejection-reasons|ja": {
+  "foot": "最終確認日: 2026 年 11 月 · 公式ヘルプページより",
+  "type": "reasons",
+  "title": "商品リスティングが拒否される主な理由",
+  "subtitle": "抑制の原因となる画像およびデータの問題",
+  "items": [
+   [
+    "透かしまたはロゴ",
+    "写真にオーバーレイする"
+   ],
+   [
+    "枠線またはテキストを追加しました",
+    "フレーム、バナー、プロモーションコピー"
+   ],
+   [
+    "白以外のメイン画像",
+    "Amazon は背景をチェックします"
+   ],
+   [
+    "写真が小さすぎる",
+    "チャネル最小値を下回る"
+   ],
+   [
+    "ストックフォト、中古品",
+    "eBayには本物の写真が必要です"
+   ],
+   [
+    "欠落している属性",
+    "必須フィールドが空のままになっている"
+   ]
+  ],
+  "alt": "商品リストが抑制または拒否される 6 つの一般的な理由: 透かし、枠線またはテキストの追加、白以外のメイン画像、小さな写真、中古品のストック写真、属性の欠落",
+  "caption": "拒否または抑制された商品リストの背後にある最も一般的な画像とデータの問題。"
+ },
+ "listing-rejection-reasons|ko": {
+  "foot": "최종 확인 날짜: 2026년 11월 · 공식 도움말 페이지에서",
+  "type": "reasons",
+  "title": "제품 목록이 거부되는 주요 이유",
+  "subtitle": "억제를 유발하는 이미지 및 데이터 문제",
+  "items": [
+   [
+    "워터마크 또는 로고",
+    "사진에 오버레이"
+   ],
+   [
+    "테두리 또는 텍스트 추가됨",
+    "프레임, 배너 및 프로모션 카피"
+   ],
+   [
+    "흰색이 아닌 기본 이미지",
+    "Amazon는 배경을 확인합니다"
+   ],
+   [
+    "사진이 너무 작습니다.",
+    "채널 최소값 미만"
+   ],
+   [
+    "재고 사진, 중고품",
+    "eBay에는 실제 사진이 필요합니다."
+   ],
+   [
+    "누락된 속성",
+    "필수 입력란은 비어 있습니다."
+   ]
+  ],
+  "alt": "제품 목록이 표시되지 않거나 거부되는 6가지 일반적인 이유: 워터마크, 추가된 테두리 또는 텍스트, 흰색이 아닌 기본 이미지, 작은 사진, 중고 품목의 스톡 사진 및 속성 누락",
+  "caption": "제품 목록이 거부되거나 표시되지 않는 가장 일반적인 이미지 및 데이터 문제입니다."
+ },
+ "listing-rejection-reasons|zh": {
+  "foot": "最后验证时间：2026 年 11 月·来自官方帮助页面",
+  "type": "reasons",
+  "title": "产品列表被拒绝的主要原因",
+  "subtitle": "导致抑制的图像和数据问题",
+  "items": [
+   [
+    "水印或徽标",
+    "叠加在照片上"
+   ],
+   [
+    "添加边框或文本",
+    "框架、横幅和促销文案"
+   ],
+   [
+    "非白色主图",
+    "Amazon检查背景"
+   ],
+   [
+    "照片太小",
+    "低于通道最小值"
+   ],
+   [
+    "库存照片、二手商品",
+    "eBay需要实拍照片"
+   ],
+   [
+    "缺少属性",
+    "必填字段留空"
+   ]
+  ],
+  "alt": "产品列表被禁止或拒绝的六个常见原因：水印、添加边框或文本、非白色主图像、小照片、使用过的商品的库存照片和缺失的属性",
+  "caption": "被拒绝或禁止的产品列表背后最常见的图像和数据问题。"
+ },
+ "listing-rejection-reasons|ar": {
+  "foot": "آخر التحقق: نوفمبر 2026 · من صفحات المساعدة الرسمية",
+  "type": "reasons",
+  "title": "أهم أسباب رفض قوائم المنتجات",
+  "subtitle": "مشاكل الصور والبيانات التي تسبب القمع",
+  "items": [
+   [
+    "العلامة المائية أو الشعار",
+    "تراكب على الصورة"
+   ],
+   [
+    "وأضاف الحدود أو النص",
+    "الإطارات واللافتات والنسخة الترويجية"
+   ],
+   [
+    "الصورة الرئيسية غير بيضاء",
+    "يقوم Amazon بفحص الخلفية"
+   ],
+   [
+    "الصورة صغيرة جدًا",
+    "تحت الحد الأدنى للقناة"
+   ],
+   [
+    "ألبوم الصور، السلعة المستعملة",
+    "يتطلب eBay صورًا حقيقية"
+   ],
+   [
+    "سمات مفقودة",
+    "الحقول المطلوبة تركت فارغة"
+   ]
+  ],
+  "alt": "ستة أسباب شائعة لحجب قوائم المنتجات أو رفضها: العلامات المائية، والحدود المضافة أو النص، والصور الرئيسية غير البيضاء، والصور الصغيرة، والصور المخزنة للعناصر المستخدمة والسمات المفقودة",
+  "caption": "مشكلات الصور والبيانات الأكثر شيوعًا وراء قوائم المنتجات المرفوضة أو المحظورة."
+ },
+ "listing-rejection-reasons|hi": {
+  "foot": "अंतिम सत्यापन: नवंबर 2026 · आधिकारिक सहायता पृष्ठों से",
+  "type": "reasons",
+  "title": "उत्पाद सूची अस्वीकृत होने के प्रमुख कारण",
+  "subtitle": "छवि और डेटा समस्याएँ जो दमन का कारण बनती हैं",
+  "items": [
+   [
+    "वॉटरमार्क या लोगो",
+    "फोटो पर ओवरले"
+   ],
+   [
+    "बॉर्डर या टेक्स्ट जोड़ा गया",
+    "फ़्रेम, बैनर और प्रोमो कॉपी"
+   ],
+   [
+    "गैर-श्वेत मुख्य छवि",
+    "Amazon पृष्ठभूमि की जाँच करता है"
+   ],
+   [
+    "फोटो बहुत छोटा है",
+    "न्यूनतम चैनल से नीचे"
+   ],
+   [
+    "स्टॉक फोटो, प्रयुक्त वस्तु",
+    "eBay को वास्तविक फ़ोटो की आवश्यकता है"
+   ],
+   [
+    "गुम विशेषताएँ",
+    "आवश्यक फ़ील्ड खाली छोड़ दी गईं"
+   ]
+  ],
+  "alt": "उत्पाद सूची को दबाए जाने या अस्वीकार किए जाने के छह सामान्य कारण हैं: वॉटरमार्क, जोड़े गए बॉर्डर या टेक्स्ट, गैर-सफेद मुख्य छवियां, छोटी तस्वीरें, प्रयुक्त वस्तुओं के स्टॉक फोटो और गायब विशेषताएं",
+  "caption": "अस्वीकृत या दबाई गई उत्पाद लिस्टिंग के पीछे सबसे आम छवि और डेटा समस्याएं हैं।"
+ },
+ "listing-rejection-reasons|fa": {
+  "foot": "آخرین تأیید: نوامبر 2026 · از صفحات راهنمای رسمی",
+  "type": "reasons",
+  "title": "دلایل اصلی رد شدن لیست محصولات",
+  "subtitle": "مشکلات تصویر و داده که باعث سرکوب می شود",
+  "items": [
+   [
+    "واترمارک یا لوگو",
+    "پوشش روی عکس"
+   ],
+   [
+    "حاشیه یا متن اضافه شده است",
+    "قاب ها، بنرها و کپی تبلیغاتی"
+   ],
+   [
+    "تصویر اصلی غیر سفید",
+    "Amazon پس زمینه را بررسی می کند"
+   ],
+   [
+    "عکس خیلی کوچک است",
+    "زیر حداقل کانال"
+   ],
+   [
+    "عکس استوک، مورد استفاده شده",
+    "eBay به عکس های واقعی نیاز دارد"
+   ],
+   [
+    "ویژگی های از دست رفته",
+    "فیلدهای الزامی خالی مانده است"
+   ]
+  ],
+  "alt": "شش دلیل متداول که فهرست‌های محصولات حذف یا رد می‌شوند: واترمارک، حاشیه یا متن اضافه شده، تصاویر اصلی غیرسفید، عکس‌های کوچک، عکس‌های استوک اقلام استفاده‌شده و ویژگی‌های از دست رفته",
+  "caption": "رایج ترین مشکلات تصویر و داده در پس فهرست های محصول رد یا سرکوب شده."
+ },
+ "listing-rejection-reasons|ur": {
+  "foot": "آخری بار تصدیق شدہ: نومبر 2026 · سرکاری مدد کے صفحات سے",
+  "type": "reasons",
+  "title": "مصنوعات کی فہرستیں مسترد ہونے کی اہم وجوہات",
+  "subtitle": "تصویر اور ڈیٹا کے مسائل جو دبانے کا سبب بنتے ہیں۔",
+  "items": [
+   [
+    "واٹر مارک یا لوگو",
+    "تصویر پر اوورلیز"
+   ],
+   [
+    "بارڈر یا متن شامل کیا گیا۔",
+    "فریم، بینرز اور پرومو کاپی"
+   ],
+   [
+    "غیر سفید مرکزی تصویر",
+    "Amazon پس منظر کو چیک کرتا ہے۔"
+   ],
+   [
+    "تصویر بہت چھوٹی ہے۔",
+    "چینل کم از کم کے نیچے"
+   ],
+   [
+    "اسٹاک تصویر، استعمال شدہ شے",
+    "eBay کو حقیقی تصاویر درکار ہیں۔"
+   ],
+   [
+    "غائب صفات",
+    "مطلوبہ فیلڈز خالی رہ گئے ہیں۔"
+   ]
+  ],
+  "alt": "مصنوعات کی فہرستوں کو دبانے یا مسترد کرنے کی چھ عام وجوہات: واٹر مارکس، بارڈرز یا ٹیکسٹ، غیر سفید مین امیجز، چھوٹی تصاویر، استعمال شدہ اشیاء کی اسٹاک فوٹوز اور گمشدہ صفات",
+  "caption": "مسترد شدہ یا دبی ہوئی مصنوعات کی فہرستوں کے پیچھے سب سے عام تصویر اور ڈیٹا کے مسائل۔"
+ }
+}

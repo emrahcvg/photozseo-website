@@ -4,6 +4,8 @@ import type { Lang } from '../i18n/ui';
 import { defaultLang } from '../i18n/ui';
 import { BLOG_UI } from '../i18n/blog-ui';
 import { APP_STORE_URL } from '../i18n/meta';
+import Figure from './Figure.astro';
+import { FIGURE_PLACEMENT } from '../i18n/figures';
 
 interface Props {
   data: {
@@ -21,6 +23,7 @@ const ui = BLOG_UI[lang] ?? BLOG_UI.en;
 const prefix = lang === defaultLang ? '' : `/${lang}`;
 const site = 'https://photozseo.com';
 const url = `${site}${prefix}/blog/${slug}`;
+const figId = FIGURE_PLACEMENT[slug];
 
 const articleSchema = {
   '@context': 'https://schema.org',
@@ -36,6 +39,7 @@ const articleSchema = {
     logo: { '@type': 'ImageObject', url: `${site}/icon-512.png` },
   },
   mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  ...(figId ? { image: [`${site}/img/figures/${figId}-${lang}.webp`] } : {}),
   keywords: data.tags.join(', '),
   inLanguage: lang,
 };
@@ -107,6 +111,8 @@ const faqSchema = data.faqs && data.faqs.length > 0
         </ul>
       </aside>
     )}
+
+    {figId && <Figure id={figId} lang={lang} pageUrl={url} />}
 
     <div class="post-body" data-reveal>
       <Content />

@@ -6,6 +6,7 @@ import { inlineMd, plainMd } from '../lib/inline-md';
 import { APP_STORE_URL } from '../i18n/meta';
 import { FACTS_UPDATED } from '../i18n/facts';
 import ExtensionCallout from './ExtensionCallout.astro';
+import Figure from './Figure.astro';
 
 interface Props {
   doc: PageDoc;
@@ -87,6 +88,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
   )}
 
   <div class="wrap body">
+    {path === '/marketplace-image-sizes' && <Figure id="marketplace-product-image-sizes-2026" lang={lang} pageUrl={pageUrl} />}
     {doc.sections.map((s) => (
       <section id={s.id}>
         <h2>{s.h2}</h2>
