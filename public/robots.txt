@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+# Online mağaza geçici olarak askıda
+Disallow: /market
+Disallow: /store/
 
 # AI / LLM crawlers — explicitly welcomed (content is public product listings).
 User-agent: GPTBot
@@ -41,4 +44,3 @@ Allow: /
 # AI guidance file: /llms.txt
 
 Sitemap: https://photozseo.com/sitemap-index.xml
-Sitemap: https://photozseo.com/marketplace-sitemap

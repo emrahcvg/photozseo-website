@@ -14,15 +14,15 @@ Last updated: 2026-11-26. All prices in USD; the App Store shows local prices.
 - Camera: template camera for 7 angles (front, back, side, detail, top, label, lifestyle), auto-zoom, HDR, live text recognition, 4K, volume-button shutter.
 - SEO: 13 fields (SEO title, slug, file name, category, meta description, description, alt text, 4 tags, keywords, barcode) in 15 languages. On iOS 26 with Apple Intelligence the text is written by Apple's on-device Foundation Models; on iOS 17–25 by on-device image analysis and templates.
 - Background removal: on-device (Apple Vision); transparent PNG, white or custom color; batch.
-- Other: EXIF editor (GPS removed on export by default), JPEG/PNG/WebP, B2B PDF quote builder (VAT, IBAN, Incoterms, HS codes, e-signature), Shopify product push, online store on photozseo.com, iCloud Drive sync, teams.
+- Other: EXIF editor (GPS removed on export by default), JPEG/PNG/WebP, B2B PDF quote builder (VAT, IBAN, Incoterms, HS codes, e-signature), Shopify product push, iCloud Drive sync, teams.
 - Privacy: photos are processed on the device, no ads, no advertising ID; anonymous usage analytics (Firebase) can be turned off in Settings. Subscriptions via App Store / RevenueCat.
-- Works offline except publishing (Shopify, online store), iCloud sync and purchases.
+- Works offline except publishing (Shopify), iCloud sync and purchases.
 
 ## Pricing
 
 - Free ($0): template camera, all image sizes and formats, 5 active platforms, 3 photo imports per month from Photos/Files (camera shots unlimited); exports carry a watermark.
 - Starter: $9.99/month or $71.99/year. No watermark, batch export and sharing, video recording, 15 active platforms, 100 imports per month.
-- Pro: $19.99/month or $143.99/year. Everything in Starter plus all platforms, AI background removal (100/month), AI alt text, online store on photozseo.com, 1,000 imports per month.
+- Pro: $19.99/month or $143.99/year. Everything in Starter plus all platforms, AI background removal (100/month), AI alt text, 1,000 imports per month.
 - Business: $49.99/month or $359.99/year. Everything in Pro plus unlimited imports and background removal, B2B quote builder, Shopify integration, create a team (up to 3 members).
 - Annual plans cost 40% less than monthly and include a 7-day free trial. Cancel any time in iPhone Settings → [name] → Subscriptions.
 
@@ -73,7 +73,6 @@ photoZseo for Chrome is a separate desktop product, not the iPhone & iPad app: a
 
 ## Online stores
 
-- Seller storefronts live at `https://photozseo.com/store/<slug>`, with a marketplace index at `https://photozseo.com/market`. Store and product pages include schema.org Product, Store, Organization and BreadcrumbList data.
 
 ## Legal
 
@@ -85,4 +84,3 @@ photoZseo for Chrome is a separate desktop product, not the iPhone & iPad app: a
 ## Sitemaps
 
 - [Sitemap index](https://photozseo.com/sitemap-index.xml)
-- [Marketplace sitemap](https://photozseo.com/marketplace-sitemap)

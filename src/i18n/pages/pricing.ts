@@ -37,7 +37,6 @@ export const pricing: PageSet = {
             ['Video recording', '—', '✓', '✓', '✓'],
             ['AI alt text', '—', '—', '✓', '✓'],
             ['AI background removal', '—', '—', '100 / month', 'Unlimited'],
-            ['Online store on photozseo.com', '—', '—', '✓', '✓'],
             ['Shopify integration (direct product push)', '—', '—', '—', '✓'],
             ['B2B quote builder (PDF)', '—', '—', '—', '✓'],
             ['Create a team (up to 3 members)', '—', '—', '—', '✓'],
@@ -51,7 +50,7 @@ export const pricing: PageSet = {
         bullets: [
           '**Free** — try the full workflow: shoot with the template camera, resize for up to 5 marketplaces and export in every format. Exports carry a watermark.',
           `**Starter (${usd(starter.monthly!)}/mo)** — for sellers who list a few products a week: no watermark, batch export, video, 100 imports a month and 15 platforms.`,
-          `**Pro (${usd(pro.monthly!)}/mo)** — for sellers on several marketplaces: every platform, AI alt text, 100 AI background removals a month and an online store on photozseo.com.`,
+          `**Pro (${usd(pro.monthly!)}/mo)** — for sellers on several marketplaces: every platform, AI alt text and 100 AI background removals a month.`,
           `**Business (${usd(business.monthly!)}/mo)** — for brands, wholesalers and teams: unlimited imports and background removal, Shopify product push, branded B2B PDF quotes and a shared team.`,
         ],
       },
@@ -116,7 +115,6 @@ export const pricing: PageSet = {
             ['Video kaydı', '—', '✓', '✓', '✓'],
             ['Yapay zekâ alt metni', '—', '—', '✓', '✓'],
             ['Yapay zekâ arka plan kaldırma', '—', '—', 'Ayda 100', 'Sınırsız'],
-            ["photozseo.com'da online mağaza", '—', '—', '✓', '✓'],
             ['Shopify entegrasyonu (doğrudan ürün gönderme)', '—', '—', '—', '✓'],
             ['B2B teklif oluşturucu (PDF)', '—', '—', '—', '✓'],
             ['Ekip kurma (en fazla 3 üye)', '—', '—', '—', '✓'],
@@ -130,7 +128,7 @@ export const pricing: PageSet = {
         bullets: [
           '**Ücretsiz:** Tüm akışı dene. Şablonlu kamerayla çek, en fazla 5 pazaryerine göre boyutlandır ve her formatta dışa aktar. Dışa aktarılan görsellerde filigran olur.',
           `**Starter (${usd(starter.monthly!)}/ay):** Haftada birkaç ürün listeleyen satıcılar için. Filigran yok, toplu dışa aktarma, video, ayda 100 içe aktarma ve 15 platform.`,
-          `**Pro (${usd(pro.monthly!)}/ay):** Birden fazla pazaryerinde satanlar için. Tüm platformlar, yapay zekâ alt metni, ayda 100 yapay zekâ arka plan kaldırma ve photozseo.com'da online mağaza.`,
+          `**Pro (${usd(pro.monthly!)}/ay):** Birden fazla pazaryerinde satanlar için. Tüm platformlar, yapay zekâ alt metni ve ayda 100 yapay zekâ arka plan kaldırma.`,
           `**Business (${usd(business.monthly!)}/ay):** Markalar, toptancılar ve ekipler için. Sınırsız içe aktarma ve arka plan kaldırma, Shopify'a ürün gönderme, markalı B2B PDF teklifleri ve ortak ekip.`,
         ],
       },
