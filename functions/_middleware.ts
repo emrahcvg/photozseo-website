@@ -1,3 +1,4 @@
+import { doubleLangRedirect } from './_lib/lang-redirect';
 import { isStoreSuspended, isSuspendedPath, suspendedResponse } from './_lib/store-suspension';
 
 export const onRequest: PagesFunction<{ STORE_SUSPENDED?: string }> = async (ctx) => {
@@ -8,6 +9,11 @@ export const onRequest: PagesFunction<{ STORE_SUSPENDED?: string }> = async (ctx
     return Response.redirect(url.toString(), 301);
   }
   const { pathname } = url;
+  const fixed = doubleLangRedirect(pathname);
+  if (fixed) {
+    url.pathname = fixed;
+    return Response.redirect(url.toString(), 301);
+  }
   const suspended = isStoreSuspended(ctx.env) && isSuspendedPath(pathname, ctx.request.method);
   const response = suspended ? suspendedResponse(pathname) : await ctx.next();
 
